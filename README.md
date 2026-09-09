@@ -59,4 +59,4 @@
 
 * **Разработчик, дизайнер и менеджер проекта:** Иван Войтков (Argon Studio)
 * **Официальный сайт студии:** [argon-studio.ru](https://argon-studio.ru)
-* **Контакты для связи:** [voit.ne@gmail.com](mailto:voit.ne@gmail.com) / [voitkov.ne@yandex.ru](mailto:voitkov.ne@yandex.ru)
+* **Контакты для связи:** [voit.ne@gmail.com](mailto:voit.ne@gmail.com) 
