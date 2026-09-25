@@ -4,7 +4,7 @@
  *
  * @package Argon_Shop
  * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.1
+ * @version 1.0.0
  * 
  * ГДЕ ТЕСТИРОВАТЬ:
  * 1. Меню сайта (шапка, футер)
