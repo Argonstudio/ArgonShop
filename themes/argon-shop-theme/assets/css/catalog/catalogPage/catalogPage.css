@@ -1,0 +1,243 @@
+.topDescr p{
+    margin: 13px 0 0 0;
+}
+
+.descr{
+    margin:20px 30px;
+}
+
+.catalogPage_openMobile{
+    display:none;
+}
+
+
+@media(min-width:720px){
+    
+    
+    .topDescr{
+        display:block!important;
+    }
+
+    .block-cards-category{
+        display: flex!important;
+        flex-wrap: wrap;
+        margin: 30px 0 0 -32px;
+    }
+    
+    .block-cards-category .block-card-category{
+        width:185px;
+        margin: 0 0 0 32px;
+    }
+    
+    .block-cards-category .card-category{
+        width:185px;
+        height:148px;
+        display:block;
+        border:1px solid #c0dcff;
+        text-decoration:none;
+        margin: 0 0 30px 0;
+        position:relative;
+        z-index:1;
+        background-position: top center;
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+    
+    .block-card-category:nth-of-type(4n) .card-category{
+        /*float:right;*/
+    }
+    
+    .block-cards-category .card-category:before{
+        content: '';
+        width: 100%;
+        height: 74px;
+        display: block;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        background: #578fd4;
+        opacity: 0.8;
+        z-index: -1;
+    }
+    
+    /*
+    .block-cards-category .card-category-notImg:before{
+        height:100%;
+    }*/
+    
+    .block-cards-category .card-category span{
+        color: #fff;
+        display: table-cell;
+        text-align: center;
+        height: 74px;
+        vertical-align: middle;
+        width: 183px;
+        padding: 74px 3px 0 3px;
+    }
+
+}
+@media(min-width:720px) and (max-width:1206px){
+    
+    .block-cards-category .block-card-category {
+        margin: 0 0 0 30px;
+    }
+    
+}
+
+@media(min-width:1000px) and (max-width:1200px){
+    
+    .block-cards-category {
+        margin: 30px 0 0 0;
+    }
+    
+    .block-cards-category .block-card-category{
+        width:33%;
+        margin:0;
+    }
+    
+    .block-card-category .card-category{
+        margin:0 auto 30px auto;
+    }
+    
+    .block-card-category:nth-of-type(3n) .card-category{
+        float:right;
+    }
+    
+    .block-card-category:first-child .card-category,
+    .block-card-category:nth-of-type(3n+1) .card-category{
+        float:left;
+    }
+    
+}
+
+@media(min-width:720px) and (max-width:890px){
+    
+    .block-cards-category {
+        margin: 30px 0 0 0;
+    }
+    
+    .block-cards-category .block-card-category{
+        width:33%;
+        margin:0;
+    }
+    
+    .block-card-category .card-category{
+        margin:0 auto 30px auto;
+    }
+    
+    .block-card-category:nth-of-type(3n) .card-category{
+        float:right;
+        margin-right:20px;
+    }
+    
+    .block-card-category:first-child .card-category,
+    .block-card-category:nth-of-type(3n+1) .card-category{
+        float:left;
+        margin-left:20px;
+    }
+    
+}
+
+@media(max-width:720px){
+    
+    
+    #production_list_page .title{
+        margin-bottom:20px;
+    }
+    
+    .catalogPage_openMobile{
+        display: block;
+        height: 44px;
+        background: #fcfdff;
+        border-top: 1px solid #bcd5f4;
+        color: #245787;
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 15px 0 0 27px;
+        box-sizing: border-box;
+        margin: 0 -20px;
+        cursor: pointer;
+        position: relative;
+    }
+    
+    .catalogPage_openMobile:after {
+        content: '»';
+        display: block;
+        position: absolute;
+        top: 13px;
+        right: 25px;
+        transform: rotate(89deg);
+        font-size: 17px;
+        font-weight: normal;
+    }
+    
+    .topDescr p{
+        margin: 20px 9px;
+    }
+    
+    .block-cards-category{
+        margin: 15px 0 20px 0;
+    }
+
+    .block-card-category{
+        display:block;
+    }
+    
+    .block-card-category .card-category{
+        text-decoration:none;
+        background-image:none!important;
+        color:#245787;
+        font-size:16px;
+        padding-left: 28px;
+        position: relative;
+        display: block;
+        margin: 10px 0;
+    }
+    
+    .block-card-category .card-category span {
+        display: table-cell;
+        vertical-align: middle;
+        height: 33px;
+    }
+    
+    .block-card-category .card-category:before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 5px;
+        left: 14px;
+        width: 4px;
+        height: 23px;
+        background: #dbe4f6;
+    }
+    
+    .catalogPage_mobileExtensible{
+        display:none;
+        
+    }
+    
+    .catalogProductList {
+        margin: 17px 0 0 -23px;
+    }
+    
+}
+
+
+@media(max-width:570px){
+    
+    .catalogProductList .cardProductName {
+        padding: 20px 0;
+        height: auto;
+    }
+    
+}
+
+/**
+ * Развёрнутое состояние блока популярных запросов.
+ * Класс добавляется JS-модулем modules/request.js при клике
+ * по кнопке «Смотреть все».
+ */
+.block-cards-request.is-expanded {
+    max-height: none;
+}

@@ -1,0 +1,46 @@
+.title-detailed-fields {
+    background-color: #f8dcc1;
+    border: 1px solid #fe8714;
+    color: #583717;
+    font-weight: bold;
+    min-height: 30px;
+    padding: 12px 10px 10px 10px;
+    text-align: center;
+    letter-spacing: 1.1px;
+    float: left;
+    width: 100%;
+}
+
+.detailed-fields {
+    padding: 0 0 30px 0;
+    width: 100%;
+    text-align: initial;
+}
+
+.detailed-fields tr {
+    width: 100%;
+    min-height: 40px;
+    border: 1px solid #c0d8ee;
+}
+
+.detailed-fields td {
+    width: 50%;
+    padding: 12px 0;
+}
+
+.detailed-fields-key {
+    font-size: 15px;
+    padding: 22px 10px !important;
+    border-right: 1px solid #c0d8ee;
+}
+
+.fieldDescription{
+    /*display:none;*/
+    padding:10px 0;
+    
+}
+
+.detailed-fields-value {
+    font-size: 15px;
+    text-align: center;
+}

@@ -1,0 +1,122 @@
+/**
+ * Фиксированный блок
+ * =========================================== */
+
+.admin-bar .top-block{
+    top:32px;
+}
+
+@media screen and (max-width: 782px){
+    
+    .admin-bar .top-block {
+        top: 46px;
+    }
+    
+}
+
+@media screen and (max-width: 600px){
+    
+    #wpadminbar {
+        z-index: 899;
+    }
+    
+    .admin-bar .top-block {
+        top: 0;
+    }
+    
+}
+
+.top-block{
+    position:fixed;
+    left:0;
+    right:0;
+    top:0;
+    height:46px;
+    background:#4e83c6;
+    z-index:900;
+  
+}
+
+.top-content{
+    margin: 0 auto 0 auto;
+    max-width:1200px;
+    position: relative;
+}
+
+.block-rightElementsTopContent{
+    max-width:350px;
+    float:right;
+    
+}
+
+.block-rightElementsTopContent a{
+    text-decoration:none;
+    
+}
+
+/* Кнопка Мой кабинет */
+
+.block-rightElementsTopContent .myCabinetButton{
+    border: 1px solid #8bbfff;
+    background-color: #5489cb;
+    color: #fff;
+    cursor:pointer;
+    font-weight: 700;
+    width: 131px;
+    height: 25px;
+    font-size: 14px;
+    letter-spacing: .7px;
+    float: left;
+    margin: 10px 30px 0 16px;
+}
+
+@media(max-width:410px){
+
+    .block-rightElementsTopContent .myCabinetButton {
+        font-weight: normal;
+        width: 85px;
+        font-size: 9px;
+        letter-spacing: .7px;
+        margin: 10px 15px 0 5px;
+        padding: 0 1px 0 2px;
+        text-transform: uppercase;
+        box-sizing: border-box;
+    }    
+}
+
+@media(max-width:335px){
+
+    .block-rightElementsTopContent .myCabinetButton {
+        margin: 10px 5px 0 5px;
+    }    
+}   
+
+
+/**
+ * Форма поиска >> см. search
+ * =========================================== */
+    
+/**
+ * Мобильная карта
+ * =========================================== */
+ 
+.openMobileMap{
+    display:none;
+    -webkit-appearance: none;
+    float:left;
+    border: 0;
+    background: url("../../img/img-baseBlock.png");
+    background-color: #5c8fce;
+    background-position: -51px 0;
+    cursor: pointer;
+    width: 49px;
+    height: 46px;
+} 
+
+@media(max-width:1199px){
+
+    .openMobileMap{
+        display:block;
+    }
+    
+}

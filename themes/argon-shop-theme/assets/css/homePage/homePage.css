@@ -1,0 +1,10 @@
+.homepage-block-title{
+    background:#255785;
+    height:50px;
+    font-size:19px;
+    font-weight:700;
+    color:#fff;
+    text-transform:uppercase;
+    padding: 14px 0 0 35px;
+    box-sizing: border-box;
+}

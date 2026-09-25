@@ -1,0 +1,307 @@
+/**
+ * ArgonShop — слайдер изображений на странице товара.
+ *
+ * @package ArgonShopTheme
+ * @author  Иван Войтков (Ivan Voitkov)
+ * @version 1.0.0
+ *
+ * ============================================================
+ * НАЗНАЧЕНИЕ
+ * ============================================================
+ *
+ * Стилизует два связанных Swiper-слайдера на странице товара:
+ *
+ *   .as-slider-product-main        — большие изображения
+ *   .as-slider-product-thumbs      — миниатюры под основным
+ *   .as-slider-product-thumbs-stage — обёртка миниатюр со стрелками
+ *
+ * Разметка выводится PHP-функцией плагина as_slider_product()
+ * (см. includes/interface/slider/sliderProduct.php), а инициализация
+ * Swiper и GLightbox — модулем slider-product.js.
+ *
+ * ============================================================
+ * ЦВЕТА
+ * ============================================================
+ *
+ * Основной акцент — #4e83c6
+ * Фон и границы — #fff / #9ebce0
+ */
+
+/* ============================================================
+   КОНТЕЙНЕР
+   ============================================================ */
+
+.block-productSlider {
+    float: left;
+    width: 420px;
+}
+
+.as-slider-product {
+    width: 100%;
+}
+
+/* ============================================================
+   ОСНОВНОЙ СЛАЙДЕР (большие изображения)
+   ============================================================
+ *
+ * Фиксированная высота, рамка цвета темы, белый фон.
+ * Изображение масштабируется через object-fit: contain,
+ * поэтому не искажается и не выходит за пределы блока.
+ */
+
+.as-slider-product-main {
+    width: 100%;
+    max-width: 400px;
+    height: 270px;
+    border: 1px solid #9ebce0;
+    background: #fff;
+    box-sizing: border-box;
+    overflow: hidden;
+    border-radius: 4px;
+    transition: border-color 0.2s;
+}
+
+.as-slider-product-main:hover {
+    border-color: #4e83c6;
+}
+
+.as-slider-product-main .swiper-wrapper {
+    height: 100%;
+}
+
+.as-slider-product-main .swiper-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: #fff;
+}
+
+.as-slider-product-main .swiper-slide a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    cursor: zoom-in;
+}
+
+.as-slider-product-main .swiper-slide img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* ============================================================
+   ОБЁРТКА МИНИАТЮР СО СТРЕЛКАМИ
+   ============================================================
+ *
+ * Строка из трёх элементов: стрелка влево, слайдер миниатюр,
+ * стрелка вправо. Swiper рассчитывает ширину слайдов сам
+ * (slidesPerView: 3), поэтому стрелки просто прижимаются
+ * к слайдеру по бокам.
+ */
+
+.as-slider-product-thumbs-stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 17px;
+}
+
+.as-slider-product-thumbs {
+    flex: 1 1 auto;
+    max-width: 282px;
+    height: 79px;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* ============================================================
+   МИНИАТЮРЫ (оформление слайдов)
+   ============================================================
+ *
+ * Три миниатюры на виду. Активная миниатюра выделяется
+ * синей рамкой цвета темы.
+ */
+
+.as-slider-product-thumbs .swiper-wrapper {
+    height: 100%;
+}
+
+.as-slider-product-thumbs .swiper-slide {
+    height: 79px;
+    box-sizing: border-box;
+    border: 1px solid #9ebce0;
+    background: #fff;
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    border-radius: 3px;
+}
+
+.as-slider-product-thumbs .swiper-slide:hover {
+    border-color: #4e83c6;
+}
+
+.as-slider-product-thumbs .swiper-slide img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+}
+
+/* Активная миниатюра — синяя рамка цвета темы */
+.as-slider-product-thumbs .swiper-slide-thumb-active {
+    border-color: #4e83c6;
+    box-shadow: 0 0 0 2px rgba(78, 131, 198, 0.25);
+}
+
+/* ============================================================
+   СТРЕЛКИ МИНИАТЮР
+   ============================================================
+ *
+ * Квадратные кнопки 26×26 по бокам миниатюр.
+ * Цвет — синий темы #4e83c6.
+ */
+
+.as-slider-product-thumbs-prev,
+.as-slider-product-thumbs-next {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid #4e83c6;
+    border-radius: 4px;
+    background: #fff;
+    color: #4e83c6;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+    outline: none;
+}
+
+.as-slider-product-thumbs-prev:hover,
+.as-slider-product-thumbs-next:hover {
+    background: #4e83c6;
+    color: #fff;
+}
+
+.as-slider-product-thumbs-prev:focus-visible,
+.as-slider-product-thumbs-next:focus-visible {
+    box-shadow: 0 0 0 2px rgba(78, 131, 198, 0.4);
+}
+
+.as-slider-product-thumbs-prev svg,
+.as-slider-product-thumbs-next svg {
+    display: block;
+    pointer-events: none;
+}
+
+/* Стрелка в неактивном состоянии (нечего листать дальше) */
+.as-slider-product-thumbs-nav-disabled {
+    opacity: 0.35;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* ============================================================
+   СКРЫТИЕ СТРЕЛОК, КОГДА ВСЕ МИНИАТЮРЫ ВИДНЫ
+   ============================================================
+ *
+ * Класс .as-slider-product-thumbs-no-nav ставит JS, если
+ * количество слайдов не превышает slidesPerView (по умолчанию 3).
+ * В этом случае стрелки скрываются, слайдер растягивается
+ * на всю ширину блока.
+ */
+
+.as-slider-product-thumbs-stage.as-slider-product-thumbs-no-nav {
+    gap: 0;
+}
+
+.as-slider-product-thumbs-stage.as-slider-product-thumbs-no-nav .as-slider-product-thumbs-prev,
+.as-slider-product-thumbs-stage.as-slider-product-thumbs-no-nav .as-slider-product-thumbs-next {
+    display: none;
+}
+
+/* ============================================================
+   АДАПТИВ
+   ============================================================ */
+
+@media (min-width: 1000px) and (max-width: 1215px) {
+
+    .block-productSlider {
+        width: 350px;
+    }
+
+    .as-slider-product-main {
+        max-width: 350px;
+    }
+}
+
+@media (min-width: 1000px) and (max-width: 1030px) {
+
+    .block-productSlider {
+        width: 335px;
+    }
+
+    .as-slider-product-main {
+        max-width: 335px;
+    }
+}
+
+@media (min-width: 720px) and (max-width: 870px) {
+
+    .block-productSlider {
+        width: 350px;
+    }
+
+    .as-slider-product-main {
+        max-width: 350px;
+    }
+}
+
+@media (max-width: 720px) {
+
+    .block-productSlider {
+        float: none;
+        width: 100%;
+        margin-bottom: 50px;
+    }
+
+    .as-slider-product-main {
+        max-width: 640px;
+        width: auto;
+        height: 300px;
+        margin: 0 auto;
+    }
+
+    /* На узких экранах обёртка со стрелками центрируется.
+       Само .as-slider-product-thumbs уже центрируется
+       через flex в .as-slider-product-thumbs-stage. */
+}
+
+@media (max-width: 388px) {
+
+    .as-slider-product-main {
+        height: 270px;
+    }
+}

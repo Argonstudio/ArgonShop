@@ -1,0 +1,344 @@
+/*Формы отправки */
+
+.form-cart{
+    margin-top:30px;
+    padding: 0 15px;
+}
+
+@media(max-width:720px){
+    
+    .form-cart {
+        padding: 0;
+    }
+
+}
+
+/* Поля форм */
+
+
+.form-cart .cartFieldsTitle{
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.cartFields50,
+.cartLogin{
+    display: table;
+    width: 100%;
+    height: 55px;
+}
+
+.cartLogin{
+    display:none;
+    margin-top: 25px;
+    padding: 0 15px;
+    box-sizing: border-box;
+}
+
+.cartFieldsEmail-person{
+    margin-top:33px;
+}
+
+.cartFields100{
+    display: table;
+    width: 100%;
+    margin: 15px 0 25px 0;
+}
+
+.cartFields50 .cartFieldsTitle,
+.cartLogin .cartFieldsTitle{
+    float: left;
+    width: 30%;
+    padding-top: 9px;
+}
+
+.cartFields50 .cartFieldInput,
+.cartLogin .cartFieldInput{
+    float: left;
+    width: 70%;
+}
+
+.cartFields100 .cartFieldsTitle{
+    float: left;
+    padding-bottom: 15px;
+}
+
+.cartFields100 .cartFieldInput{
+    float: left;
+}
+
+
+.cartFields100 textarea{
+    float: left;
+}
+
+@media(max-width:720px){
+    
+    .cartFields50, .cartLogin {
+        height: auto;
+        margin-top: 23px;
+    }
+    
+    .cartFields50 .cartFieldsTitle, 
+    .cartLogin .cartFieldsTitle {
+        float: none;
+        width: auto;
+        padding: 0 0 15px 0;
+    }
+    
+    .cartFields50 .cartFieldInput, 
+    .cartLogin .cartFieldInput {
+        float: none;
+        width: 100%;
+    }
+    
+    .cartFields100 {
+        margin: 23px 0 0 0;
+    }
+    
+}
+
+/* Прикрепление файла */
+
+.labelAddFile {
+    display: block;
+    margin: 57px auto 5px auto;
+    min-width: 200px;
+    background-color: #679de0;
+    color: #fff;
+    height: 39px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 700;
+    text-align: center;
+    padding-top: 12px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.block-fileCartMessage{
+    display: none;
+}
+
+.block-fileCartMessage .loadedFiles{
+    display: none;
+}
+
+.block-fileCartMessage .fileCartMessage{
+    text-align: center;
+}
+
+.block-fileCartMessage .loadError{
+    height: 30px;
+    padding-top: 7px;
+    box-sizing: border-box;
+    margin: 10px 0;
+}
+
+.block-fileCartMessage .loadSaccess{
+    background: #e9f2ff;
+    height: 39px;
+    border: 0;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding-top: 13px;
+    box-sizing: border-box;
+    color: #679de0;
+    margin-top: 9px;
+}
+
+.block-fileCartMessage .loadedFiles{
+    text-align: center;
+}
+
+.block-fileCartMessage .loadedFiles ol{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.block-fileCartMessage .loadedFiles ol li{
+    border: 1px solid #e9f2ff;
+    border-top: 0;
+    min-height: 50px;
+    padding: 18px 0 15px 0;
+    box-sizing: border-box;
+    color: #7d6a6a;
+    overflow: hidden;
+}
+
+.infoFileCart {
+    text-align: center;
+    color: #a2a6a2;
+    padding-top: 5px;
+}
+
+#personFile,
+#legalPersonFile{
+    display: none;
+}
+
+@media(max-width:450px){
+    
+    .infoFileCart {
+        padding-top: 15px;
+    }
+
+}
+
+/* Зарегистрировать вас? */
+
+.cartRegistration .block-regQuestion{
+    display: block;
+    margin: 35px auto 5px auto;
+    min-width: 200px;
+    background-color: #679de0;
+    color: #fff;
+    height: 39px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 700;
+    text-align: center;
+    padding-top: 12px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.cartRegistration .block-regQuestion input[type=checkbox]{
+    display:none;
+}
+
+/* Блок доставка/оплата */
+
+.block-shippingPayment{
+    display: table;
+    margin: 45px 0 50px 0;
+    width: 100%;
+}
+
+.block-shippingPayment .block-shippingMethod,
+.block-shippingPayment .block-paymentMethod{
+    display: table-cell;
+    width: 50%;
+}
+
+.block-shippingPayment .shippingyMethodTitle,
+.block-paymentMethod .paymentMethodTitle{
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #679de0;
+    height: 35px;
+    padding: 10px 0 0 0;
+    box-sizing: border-box;
+    text-align: center;
+    border: 1px solid #e6f2fd;
+}
+
+.block-paymentMethod .paymentMethodTitle{
+    border-left:0;
+}
+
+.block-shippingPayment .block-shippingMethodTypes,
+.block-paymentMethod .block-paymentMethodTypes{
+    box-sizing: border-box;
+    min-height: 100px;
+    border-top: 0;
+    padding: 20px 0 0 24%;
+}
+
+.block-shippingPayment .shippingMethodType,
+.block-paymentMethod .paymentMethodType{
+    padding-bottom: 3px;
+}
+
+
+@media(max-width:600px){
+    
+    .block-shippingPayment .block-shippingMethodTypes, 
+    .block-paymentMethod .block-paymentMethodTypes {
+        padding: 20px 0 0 12%;
+    }
+
+}
+
+@media(max-width:500px){
+    
+    .block-shippingPayment {
+        margin: 45px 0 0 0;
+    }
+    
+    .block-shippingPayment .block-shippingMethodTypes, 
+    .block-paymentMethod .block-paymentMethodTypes {
+        min-height: auto;
+    }
+    
+    .block-shippingPayment .block-shippingMethod, 
+    .block-shippingPayment .block-paymentMethod {
+        display: block;
+        width: 100%;
+        margin: 0 0 30px 0;
+    }
+    
+    .block-paymentMethod .paymentMethodTitle {
+        border: 1px solid #e6f2fd;
+    }
+
+}
+
+/* Кнопка отправки */
+
+.form-cart input[type=submit] {
+    border: 0;
+    margin: 35px auto 0 auto;
+    padding-top: 4px;
+    background-color: #255785;
+    color: #fff;
+    font-weight: 700;
+    width: 272px;
+    height: 49px;
+    font-size: 16px;
+    letter-spacing: .7px;
+    display: block;
+    cursor: pointer;
+}
+
+.form-cart .submitError{
+    text-align: center;
+    margin-top: 15px;
+}
+
+.checkboxFormCart{
+    font-size: 13px;
+    color: #555;
+    width: 88%;
+    margin: 15px auto;
+}
+
+/* Стили при наведении на АКТИВНУЮ кнопку */
+.submitCart:hover:not([disabled]) {
+    background-color: #3d83c2; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Специфические стили для кнопки в состоянии DISABLED */
+.submitCart:disabled,
+.submitCart[disabled] {
+    background-color: #cccccc !important; /* Серый цвет вместо цветного */
+    color: #888888 !important;            /* Блеклый цвет текста */
+    opacity: 0.6;                         /* Полупрозрачность */
+    cursor: not-allowed !important;       /* Курсор запрета (красный перечеркнутый круг) */
+    box-shadow: none !important;          /* Убираем тени */
+    transform: none !important;           /* Отменяем любые эффекты смещения */
+}
+
+@media(max-width:720px){
+    
+    .form-cart input[type="submit"] {
+        width: 232px;
+        font-size: 15px;
+    }
+
+}

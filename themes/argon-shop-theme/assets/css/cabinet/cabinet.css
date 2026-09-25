@@ -1,0 +1,143 @@
+.blockItemCabinet .editErrorActive{
+    border: 1px solid #ea6d8e;
+}
+
+/* таблицы(поля с данными пользователя)*/
+
+#block_cabinetAccount table{
+    width: 80%;
+    margin-left: 10px;
+}
+
+#block_cabinetAccount table .block-userField50{
+    height: 55px;
+}
+
+#block_cabinetAccount table .block-userField100{
+    height: 117px;
+    vertical-align: bottom;
+}
+
+
+#block_cabinetAccount table .block-userField50 .userFieldTitle,
+#block_cabinetAccount table .block-userField100 .userFieldTitle{
+    width: 22%;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+#block_cabinetAccount .block-accountSave{
+    width: 80%;
+    margin-left: 10px;
+}
+
+#block_cabinetAccount .block-accountSave #accountSaveButton{
+    border: 0;
+    margin-top: 15px;
+    padding-top: 1px;
+    background-color: #7fa8dc;
+    color: #fff;
+    font-weight: 700;
+    width: 250px;
+    height: 37px;
+    font-size: 16px;
+    letter-spacing: .7px;
+    cursor: pointer;
+}
+
+
+/* Специфические стили для кнопки в состоянии DISABLED */
+#block_cabinetAccount .block-accountSave #accountSaveButton:disabled,
+#block_cabinetAccount .block-accountSave #accountSaveButton[disabled] {
+    background-color: #cccccc !important; /* Серый цвет вместо цветного */
+    color: #888888 !important;            /* Блеклый цвет текста */
+    opacity: 0.6;                         /* Полупрозрачность */
+    cursor: not-allowed !important;       /* Курсор запрета (красный перечеркнутый круг) */
+    box-shadow: none !important;          /* Убираем тени */
+    transform: none !important;           /* Отменяем любые эффекты смещения */
+}
+
+#block_cabinetAccount .block-accountSave .accountResult{
+    margin: 20px 0;
+}
+
+#block_cabinetAccount .block-accountSave .consentPersonalData{
+    font-size: 14px;
+}
+
+
+@media(min-width:1000px) and (max-width:1150px){
+    
+    #block_cabinetAccount table{
+        width: 100%;
+        margin:0;
+    }
+    
+    #block_cabinetAccount .block-accountSave{
+        width: 100%;
+        margin:0;
+    }
+    
+}
+
+@media(max-width:800px){
+    
+    #block_cabinetAccount table{
+        width: 100%;
+        margin:0;
+    }
+    
+    #block_cabinetAccount .block-accountSave{
+        width: 100%;
+        margin:0;
+    }
+    
+}
+
+@media(max-width:720px){
+    
+    
+    #block_cabinetAccount table .block-userField50 .userFieldTitle, 
+    #block_cabinetAccount table .block-userField100 .userFieldTitle{
+        
+        font-size: 13px;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+    
+    #block_cabinetAccount .block-accountSave #accountSaveButton{
+        width: 225px;
+        font-size: 14px;
+    }
+    
+}
+
+@media(max-width:550px){
+    
+    #block_cabinetAccount table .block-userField50 .userFieldTitle, 
+    #block_cabinetAccount table .block-userField100 .userFieldTitle{
+        
+        width: 28%;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+    
+    #block_cabinetAccount .block-accountSave #accountSaveButton{
+        width: 225px;
+        font-size: 14px;
+    }
+    
+}
+
+@media(max-width:400px){
+    
+    #block_cabinetAccount table .block-userField50 .userFieldTitle, 
+    #block_cabinetAccount table .block-userField100 .userFieldTitle{
+        
+        width: 35%;
+    }
+    
+}
+

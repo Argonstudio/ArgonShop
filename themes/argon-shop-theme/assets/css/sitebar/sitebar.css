@@ -1,0 +1,137 @@
+ .block-sidebar{
+     float:left;
+     width:300px;
+ }
+ 
+ @media(max-width:1200px){
+
+    .block-sidebar {
+        width: 280px;
+    }
+    
+ } 
+ 
+  @media(max-width:1000px){
+
+    .block-sidebar {
+        float:none;
+        width:100%;
+    }
+    
+ } 
+ 
+ /**
+ * ССЫЛКИ В САЙТБАРЕ
+ * =========================================== */
+ 
+ .block-linkSidebar{
+     margin-left:17px;
+ }
+ 
+ .block-linkSidebar a{
+        display: block;
+        background: #ff6b6b;
+        width: 260px;
+        height: 62px;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 700;
+        margin: 3px 0;
+        padding: 25px 0 0 65px;
+        position: relative;
+        text-decoration: none;
+        text-transform: uppercase;
+        box-sizing: border-box;
+ }
+ 
+ .block-linkSidebar a span{
+     background-color:#fff;
+     border-radius:20px;
+     width:30px;
+     height:30px;
+     position:absolute;
+     top:16px;
+     left:16px;
+ }
+ 
+ .block-linkSidebar .promoDiscontLink span{
+     color:#ff6b6b;
+     font-size:15px;
+     text-align:center;
+     padding: 7px 0 0 1px;
+     box-sizing:border-box;
+ }
+ 
+ .block-linkSidebar .historyLink{
+     display:none;
+ }
+ 
+ .block-linkSidebar .historyLink span{
+     background-image: url("../../img/img-baseBlock.png");
+     background-position: -21px -53px;
+ }
+ 
+ 
+ .widget-hits .linkHistory {
+    display: block;
+    margin-top: 10px;
+    text-align: center;
+    padding-top: 5px;
+    height: 30px;
+    background: #f5f5f5;
+    border: 1px solid #ccc;
+    color: #000;
+}
+
+.openMobileCatalog{
+    display:none;
+    background: #ffecec;
+    border-top: 1px solid #ffbbbb;
+    border-bottom: 1px solid #ffbbbb;
+    height: 53px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #ff6b6b;
+    text-align: center;
+    text-transform: uppercase;
+    padding-top: 12px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.openMobileCatalog:after{
+    content: '»';
+    display: inline-block;
+    font-size: 22px;
+    -webkit-transform: scaleX(1.2) translate(10px, 1px) rotate(89deg);
+    transform: scaleX(1.2) translate(10px, 1px) rotate(89deg);
+}
+
+ @media(max-width:1200px){
+    
+    .block-linkSidebar {
+        margin-left: 5px;
+    }
+    
+ } 
+ 
+  @media(max-width:1000px){
+    
+    .openMobileCatalog{
+        display:block;
+    }
+    
+    .block-linkSidebar {
+        margin-left: 0;
+    }
+    
+    .block-linkSidebar a {
+        width: 100%;
+    }
+    
+    .block-linkSidebar .historyLink{
+        display:block;
+    }
+    
+ } 
+ 

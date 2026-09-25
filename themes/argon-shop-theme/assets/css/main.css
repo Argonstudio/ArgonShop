@@ -1,0 +1,303 @@
+/**
+ * Common
+ * =========================================== */
+ 
+html,body{
+	font-family: Arial;
+	margin:0;
+	position: relative;
+	box-sizing: border-box;
+}
+
+html{
+    height:100%;
+}
+
+a{
+    outline:none;
+}
+
+input {
+    border-radius: 0;
+}
+
+.h1, .h2, .h3, .h4, h1, h2, h3, h4 {
+    font-family: inherit;
+    font-weight: 500;
+    line-height: 1.1;
+    color: inherit;
+}
+
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    margin-bottom: 1rem;
+    border-radius: 0;
+}
+
+/**
+ * Главные блоки и секции
+ * =========================================== */
+
+.row {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    overflow: visible;
+}
+
+.block-sidebar{
+     float:left;
+     width:300px;
+ }
+ 
+ .block-content{
+     float: left;
+    max-width: 900px;
+    padding-left: 20px;
+    box-sizing: border-box;
+    width: 88%;
+ }
+ 
+ 
+ .block-contentPage{
+     padding-left: 30px;
+ }
+ 
+ @media(max-width:1250px){
+     
+     .block-contentPage{
+         padding-left: 20px;
+     }
+     
+ }
+
+/* --- */
+
+
+.title{
+    color:#255784;
+    font-size:25px;
+    font-weight:700;
+    margin: 45px 0;
+}
+
+.titlePage{
+    margin: 40px 0 35px 0;
+}
+
+.titleHistory{
+    margin: 45px 0 0 0;
+}
+
+h2{
+    color: #5f90bc;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 35px 0 0 0;
+    padding-bottom: 12px;
+    box-sizing: border-box;
+
+}
+
+.ajaxError{
+    /*border: 1px solid red;*/
+    margin: 20px 0;
+    /*padding: 10px 0 10px 12px;*/
+    color: red;
+    text-decoration: underline;
+    text-transform: uppercase;
+}
+
+/* Пути */
+
+.kama_breadcrumbs,
+.kama_breadcrumbs a{
+    color:#255784;
+    font-size:15px;
+}
+
+.kama_breadcrumbs a{
+    text-decoration:none;
+}
+
+
+/* Переключатели страниц */
+
+.wp-pagenavi {
+    vertical-align: middle;
+    padding: 15px 0;
+    text-align: center;
+    width: 100%;
+    margin-top: 30px;
+}
+
+.wp-pagenavi a, .wp-pagenavi span {
+    display: inline-block;
+    color: #444;
+    text-decoration: none;
+    line-height: 18px;
+    border: 1px solid #fff;
+    padding: 5px 10px;
+    margin-left: 0;
+}
+
+.wp-pagenavi a.active, .wp-pagenavi .current {
+    background-color: #4e83c6;
+    border: 1px solid #4e83c6;
+    border-radius: 2px;
+    color: #fff;
+}
+
+.wp-pagenavi .extend,
+.wp-pagenavi .prev,
+.wp-pagenavi .next{
+    padding:0;
+}
+
+@media(max-width:1215px){
+    .block-content {
+        float: left;
+        max-width: 800px;
+    }
+}
+@media(max-width:1200px){
+    
+    .block-content {
+        padding: 0 20px;
+        width: 70%;
+    }
+    
+}
+
+@media(max-width:1000px){
+    
+    .block-content {
+        /*float: none;*/
+        width: 100%;
+        margin: 30px auto;
+
+    }
+    
+    .home .block-content {
+        float: none;
+        width: 100%;
+        margin: 30px auto;
+
+    }
+    
+}
+
+@media(max-width:650px){
+    
+    .block-content {
+        margin: 35px auto;
+
+    }
+    
+}
+
+
+.pageContacts .descr{
+    margin: 30px 0 33px 0;
+}
+
+.pageContacts .pageMap iframe{
+    max-width: 97% !important;
+    height: 300px;
+}
+
+.pageContacts .pageContactForm{
+    margin: 57px 0 50px 0;
+}
+
+.pageContacts .pageContactForm .pageContactForm-title{
+    font-family: inherit;
+    line-height: 1.1;
+    color: inherit;
+    font-size: 1.4em;
+    font-weight: bold;
+    margin-bottom: 35px;
+}
+
+.pageContacts .pageContactForm #wpcf7-f7-o2{
+    width: 97%;
+}
+
+@media(max-width:1000px){
+    
+    .pageContacts .pageMap iframe{
+        max-width: 100% !important;
+    }
+
+    .pageContacts .pageContactForm #wpcf7-f7-o2{
+        width: 100%;
+    }
+}
+
+
+/* Контейнер Gutenberg для видео */
+.wp-block-embed-youtube.wp-embed-aspect-16-9 {
+    width: 100%;
+    /* Максимальная ширина видео как на YouTube + отступы слева/справа */
+    max-width: calc(1280px + 40px); 
+    margin-left: auto;
+    margin-between: auto;
+    box-sizing: border-box;
+}
+
+/* Обертка внутри Gutenberg, которая сохраняет пропорции 16:9 */
+.wp-block-embed-youtube.wp-embed-aspect-16-9 .wp-block-embed__wrapper {
+    position: relative;
+    width: 100%;
+    height: 0;
+    /* Пропорция 16:9 (9 / 16 * 100%) */
+    padding-bottom: 56.25%; 
+}
+
+/* Сам iframe (видео), растягивающийся внутри обертки */
+.wp-block-embed-youtube.wp-embed-aspect-16-9 .wp-block-embed__wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+
+/* Базовый сброс и отступы для списка Гутенберга */
+.wp-block-list {
+    padding-left: 24px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    list-style-type: none; /* Отключаем стандартные точки */
+}
+
+/* Стилизация каждого пункта */
+.wp-block-list li {
+    position: relative;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333333;
+    margin-bottom: 12px;
+}
+
+/* Создаем аккуратную кастомную точку */
+.wp-block-list li::before {
+    content: "•";
+    color: #8c8c8c; /* Приглушенный серый цвет маркера */
+    font-size: 18px;
+    position: absolute;
+    left: -20px;
+    top: -1px;
+}
+
+/* Стиль для жирного текста (названия пунктов) */
+.wp-block-list li strong {
+    color: #111111;
+    font-weight: 600;
+}

@@ -1,0 +1,61 @@
+
+/* Contact form 7 */
+
+#linkFeedback{
+    color: #555555;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 14px;
+    margin: 22px 22px 0 0;
+    display: block;
+    float: left;
+
+}
+
+.fancybox-slide span.wpcf7-list-item {
+    max-width: 500px;
+}
+
+.wpcf7-form label{
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.wpcf7-form label .wpcf7-form-control-wrap{
+    display: block;
+    padding-top: 5px;
+}
+
+.wpcf7-form label .wpcf7-form-control-wrap input{
+    margin:0;
+}
+
+.wpcf7-form input[type=submit] {
+    border: 0;
+    margin-top: 15px;
+    padding-top: 1px;
+    background-color: #7fa8dc;
+    color: #fff;
+    font-weight: 700;
+    width: 250px;
+    height: 37px;
+    font-size: 16px;
+    letter-spacing: .7px;
+}
+
+
+@media(max-width:720px){
+    
+    #linkFeedback {
+        margin: 22px 0 0 28px;
+    }
+    
+}
+
+@media(max-width:550px){
+    
+    #linkFeedback {
+        margin: 22px 0 0 0;
+    }
+    
+}

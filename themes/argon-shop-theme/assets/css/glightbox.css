@@ -1,0 +1,151 @@
+/**
+ * ArgonShopTheme — стилизация GLightbox.
+ *
+ * @package ArgonShopTheme
+ * @author  Иван Войтков (Ivan Voitkov)
+ * @version 1.0.0
+ *
+ * ============================================================
+ * НАЗНАЧЕНИЕ
+ * ============================================================
+ *
+ * Дополняет стандартные стили GLightbox:
+ *
+ *   1. Убирает двойные полосы прокрутки у inline-контента
+ *      (форма обратной связи) — оставляет одну полосу у самого
+ *      модального окна.
+ *
+ *   2. Ограничивает высоту формы, чтобы она помещалась
+ *      на экран без внутреннего скролла.
+ *
+ *   3. Скрывает стрелки навигации, если в галерее только
+ *      один элемент (карта).
+ *
+ *   4. Стилизует модальное окно под тему сайта.
+ *
+ * ============================================================
+ * ПОДКЛЮЧЕНИЕ
+ * ============================================================
+ *
+ * wp_enqueue_style(
+ *     'glightbox-theme',
+ *     $uri . '/assets/css/interface/glightbox.css',
+ *     array( 'glightbox-css' ),
+ *     '1.0.0'
+ * );
+ */
+
+/* ============================================================
+   БЛОКИРОВКА ПРОКРУТКИ СТРАНИЦЫ
+   ============================================================
+ *
+ * Пока модальное окно открыто, страница за ним не должна
+ * скроллиться. GLightbox добавляет класс .glightbox-open
+ * на <body>, но если наша тема перебивает overflow — фиксируем.
+ */
+
+body.glightbox-open {
+    overflow: hidden !important;
+}
+
+/* ============================================================
+   INLINE-КОНТЕНТ (форма обратной связи)
+   ============================================================
+ *
+ * Стандартные стили GLightbox ставят на .gslide-inline
+ * max-height: calc(100vh - 40px) и overflow: auto. Это
+ * создаёт первую полосу. Вторая появляется, если внутри
+ * есть контейнер со своей прокруткой.
+ *
+ * Убираем внутренний overflow у form-обёрток и оставляем
+ * один скролл у .gslide-inline.
+ */
+
+.glightbox-container .gslide-inline {
+    max-height: 85vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #fff;
+    border-radius: 4px;
+    padding: 24px 28px 28px;
+    box-sizing: border-box;
+}
+
+/* Форма CF7 и её обёртки — не создают собственный скролл */
+
+.glightbox-container .gslide-inline .wpcf7,
+.glightbox-container .gslide-inline form,
+.glightbox-container .gslide-inline .ginlined-content {
+    max-height: none !important;
+    overflow: visible !important;
+    height: auto !important;
+}
+
+/* Убираем лишние отступы CF7 внутри модалки */
+
+.glightbox-container .gslide-inline .wpcf7 {
+    margin: 0;
+}
+
+/* ============================================================
+   СКРЫТИЕ СТРЕЛОК ПРИ ОДНОМ ЭЛЕМЕНТЕ
+   ============================================================
+ *
+ * Если в галерее только один элемент (например, карта),
+ * стрелки не нужны. GLightbox добавляет класс
+ * .glightbox-button-hidden, но на всякий случай фиксируем.
+ */
+
+.glightbox-container .gbtn.glightbox-button-hidden {
+    display: none !important;
+}
+
+/* ============================================================
+   IFRAME (карта)
+   ============================================================
+ *
+ * Убираем лишние отступы вокруг iframe и задаём ему
+ * аккуратный скруглённый контур.
+ */
+
+.glightbox-container .gslide-iframe .gslide-media iframe {
+    border-radius: 4px;
+    display: block;
+}
+
+/* ============================================================
+   КНОПКА ЗАКРЫТИЯ
+   ============================================================
+ *
+ * Стандартная кнопка GLightbox — в правом верхнем углу.
+ * Увеличим кликабельную область и добавим контраст.
+ */
+
+.glightbox-container .gclose {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    top: 16px;
+    right: 16px;
+    transition: background-color 0.2s;
+}
+
+.glightbox-container .gclose:hover {
+    background-color: rgba(0, 0, 0, 0.85);
+}
+
+@media (max-width: 480px) {
+
+    .glightbox-container .gslide-inline {
+        padding: 18px 16px 22px;
+        max-height: 90vh;
+    }
+
+    .glightbox-container .gclose {
+        width: 32px;
+        height: 32px;
+        top: 10px;
+        right: 10px;
+    }
+}

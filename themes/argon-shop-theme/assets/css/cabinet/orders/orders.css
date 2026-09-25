@@ -1,0 +1,132 @@
+.as-orderCabinet-blockFilter{
+    margin: 0 0 17px 3px;
+}
+
+.as-orderCabinet-blockFilter .as-orderCabinet-filterTitle{
+    color:#6d6d6d;
+    font-size:14px;
+    font-weight:700;
+}
+
+.as-orderCabinet-blockFilter .as-orderCabinet-filterStatus {
+    width: 120px;
+    height: 23px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-overflow: clip;
+    -ms-appearance: none;
+    appearance: none !important;
+    background-image: url("../../../img/img-baseBlock.png");
+    background-position: -311px -58px;
+    background-repeat: no-repeat;
+    color: #5a5656;
+    padding-left: 5px;
+    margin-left:7px;
+    font-size: 14px;
+    border: 1px solid #d7e8fd;
+    cursor: pointer;
+}
+
+/* for ie11 */
+.as-orderCabinet-blockFilter .as-orderCabinet-filterStatus::-ms-expand {
+  display: none;
+}
+
+.as-ordersCabinet-block .as-ordersCabinet-table td{
+    border:1px solid #d7e8fd;
+    border-top:0;
+    text-align:center;
+}
+
+.as-ordersCabinet-block .as-ordersCabinet-table .as-orderCabinet-tdTitle{
+    background: #679de0;
+    color: #fff;
+    height: 36px;
+    border:0;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    /*padding: 3px 0 0 10px;*/
+    padding-top:3px;
+    box-sizing: border-box;
+}
+
+.as-ordersCabinet-block .as-ordersCabinet-table .as-orderCabinet-tdTitle:last-child{
+    padding-left:7%;
+    text-align:left;
+}
+
+.as-ordersCabinet-block .as-ordersCabinet-table .as-orderCabinet-tdNumber{
+    text-align:center;
+    min-width: 7%;
+}
+
+.as-ordersCabinet-block .as-ordersCabinet-table .as-orderCabinet-tdDate{
+    min-width: 22%;
+}
+
+.as-ordersCabinet-block .as-ordersCabinet-table .as-orderCabinet-tdDetailOrder{
+}
+
+.as-ordersCabinet-block .as-ordersCabinet-table .as-orderCabinet-tdDetailOrder ul{
+    text-align: left;
+    max-width: 300px;
+    margin: 20px 0 20px 0;
+    padding-left: 10%;
+}
+
+.as-orderCabinet-mobileDate{
+    display:none;
+}
+
+.as-ordersCabinet-block .as-ordersCabinet-table .as-orderCabinet-tdDetailOrder ul li{
+    list-style-type: none;
+    padding: 3px 0;
+}
+
+@media(max-width:720px){
+    
+    #block_cabinetOrdering{
+        margin: 23px 20px 0px;
+    }
+    
+    .as-ordersCabinet-block .as-ordersCabinet-table .as-orderCabinet-tdTitle {
+        font-size: 13px;
+        padding-top: 5px;
+    }
+    
+    .as-ordersCabinet-block .as-ordersCabinet-table td {
+        font-size: 14px;
+    }
+
+    
+}
+
+@media(max-width:550px){
+    
+    .as-orderCabinet-mobileDate{
+        display:block;
+        padding: 3px 0 10px 0!important;
+    }
+    
+    
+    .as-orderCabinet-tdDate,
+    .as-orderCabinet-tdDate{
+        display:none;
+    }
+    
+    .as-ordersCabinet-block .as-ordersCabinet-table .as-orderCabinet-tdNumber {
+        min-width: 15%;
+    }
+    
+}
+
+@media(max-width:420px){
+    
+    .as-orderCabinet-blockFilter .as-orderCabinet-filterStatus{
+        margin: 10px 0 0 0;
+        display: block;
+        font-size: 12px;
+        padding-top: 2px;
+    }
+}

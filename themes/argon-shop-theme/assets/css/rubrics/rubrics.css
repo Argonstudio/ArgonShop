@@ -1,0 +1,337 @@
+.block-contentRubric .title{
+    margin: 38px 0 45px 0;
+}
+
+.block-rubricEntrys{
+    display:table;
+    margin-top: 38px;
+    width: 100%;
+}
+
+.block-rubricEntrys .block-entry{
+    display:table;
+    margin-bottom: 73px;
+    width: 100%;
+}
+
+.block-rubricEntrys .block-entry .block-entryImage{
+    float: left;
+    width: 233px;
+    height: 161px;
+    box-sizing: border-box;
+    border: 1px solid #d9ebfd;
+}
+
+.block-rubricEntrys .block-entry .block-entryImage a{
+    display: table-cell;
+    width: 233px;
+    height: 161px;
+    vertical-align: middle;
+    text-align: center;
+} 
+
+
+.block-rubricEntrys .block-entry .block-entryImage img{
+    width: auto;
+    height: auto;
+    max-width: 223px;
+    max-height: 151px;
+}
+
+
+.block-rubricEntrys .block-entry .block-entryPreview{
+    float: left;
+    max-width: 573px;
+    margin: 7px 0 0 37px;
+    width: 65%;
+}
+
+.block-entry .block-entryPreview .entryName a{
+    font-size: 19px;
+    font-weight: 700;
+    color: #255785;
+    text-decoration:none;
+    
+}
+
+.block-entry .block-entryPreview .entryDescr p{
+    margin: 16px 0 18px 0;
+}
+
+.block-entry .block-entryPreview .entryDescr{
+    font-size: 16px;
+    min-height: 20px;
+    color: #002344;
+    
+}
+
+.block-entry .block-entryPreview .entryButtons a{
+    display: block;
+    width: 215px;
+    height: 39px;
+    box-sizing: border-box;
+    background: #ff9797;
+    border: 1px solid #ff6969;
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: 700;
+    padding-top: 12px;
+    
+}
+
+@media(min-width:1050px) and (max-width:1200px){
+    
+    .block-rubricEntrys .block-entry .block-entryPreview{
+        width: 60%;
+    }
+    
+}
+
+@media(min-width:1000px) and (max-width:1050px){
+    
+    .block-rubricEntrys .block-entry .block-entryPreview{
+        width: 55%;
+    }
+    
+}
+
+@media(max-width:850px){
+    
+    .block-rubricEntrys .block-entry .block-entryPreview{
+        width: 60%;
+    }
+    
+}
+
+@media(max-width:750px){
+    
+    .block-rubricEntrys .block-entry .block-entryPreview{
+        width: 55%;
+    }
+    
+}
+
+@media(max-width:660px){
+    
+    .block-rubricEntrys .block-entry {
+        margin-bottom: 53px;
+    }
+    
+    .block-rubricEntrys .block-entry .block-entryImage {
+        display: none;
+    }
+    
+   .block-rubricEntrys .block-entry .block-entryPreview {
+        width: 100%;
+        margin: 7px 0 0 5px;
+    }
+    
+}
+
+.block-entryPage .title{
+    /*margin:38px 0 35px 0;*/
+}
+
+.block-entryContent .block-entryImage img{
+    max-width: 500px;
+    max-height: 200px;
+    width: auto;
+    height: auto;
+    /*float: left;
+    margin: 0 30px 0 0;*/
+}
+
+.block-entryContent .block-entryText{
+    margin-top: 35px;
+}
+
+.block-entryContent .block-entryText iframe,
+.block-entryContent .block-entryText img{
+        margin:30px 0;
+        
+    }
+
+.block-entryContent .block-entryText img{
+        margin:30px 0;
+        height: auto;
+        max-width: 100%;
+    }
+
+.block-entryContent .block-entryText .alignleft{
+    float:left;
+    margin: 0 30px 30px 0;
+}
+
+.block-entryContent .block-entryText .alignright{
+    float:right;
+    margin: 0 0 30px 30px;
+}
+
+.block-entryContent .block-entryText .aligncenter{
+    display:block;
+    margin: 30px auto 30px auto;
+}
+    
+
+
+@media(max-width:650px){
+    
+    .block-entryPage .title {
+        margin: 38px 0 35px 0;
+        font-size: 23px;
+    }
+    
+    .block-entryContent .block-entryImage img {
+        max-width: 100%;
+    }
+    
+    .block-entryContent .block-entryText {
+        margin-top: 25px;
+    }
+    
+    .block-entryContent .block-entryText iframe,
+    .block-entryContent .block-entryText img{
+        width:100%!important;
+    }
+    
+}
+
+/* Мобильные заголовки */
+
+.block-contentRubric .itemControlPanel{
+    display:none;
+    height: 44px;
+    background: #fcfdff;
+    border-top: 1px solid #bcd5f4;
+    color: #245787;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 15px 0 0 27px;
+    box-sizing: border-box;
+    margin: 0 -20px;
+    cursor: pointer;
+    position: relative;
+}
+    
+.block-contentRubric .itemControlPanel:after {
+    content: '»';
+    display: block;
+    position: absolute;
+    top: 13px;
+    right: 25px;
+    transform: rotate(89deg);
+    font-size: 17px;
+    font-weight: normal;
+}
+
+
+@media(max-width:720px){
+    
+    .block-contentRubric .itemControlPanel{
+        display:block;
+    }
+    
+    .rubricPage_mobileExtensible{
+        display:none;
+        
+    }
+    
+}
+
+/* Теги на странице */
+
+.block-mobileEntryTags{
+    display:none;
+    margin: 12px 20px 50px;
+}
+
+.block-mobileEntryTags .tag-cloud-link{
+    color: #3c6991;
+    font-weight: 700;
+    text-decoration: none;
+    border: 1px solid #caddf4;
+    padding: 9px 10px 7px 10px;
+    box-sizing: border-box;
+    margin: 5px 2px;
+    display: inline-block;
+}
+
+@media(min-width:720px) and (max-width:1000px){
+    
+    
+    .block-contentRubric .itemControlPanel-tags{
+        display: block;
+        border-bottom: 1px solid #bcd5f4;
+        margin: 15px 0 0 0;
+        max-width: 830px;
+    }
+    
+    
+}
+
+@media(min-width:720px) and (max-width:890px){
+    
+    
+    .block-contentRubric .itemControlPanel-tags{
+        margin: 15px 20px 0 0;
+    }
+    
+    
+}
+
+@media(max-width:720px){
+    
+    .block-contentRubric .itemControlPanel-tags{
+        display: block;
+    }
+    
+}
+
+.block-archive a{
+    height: 44px;
+    background: #fcfdff;
+    border-top: 1px solid #bcd5f4;
+    color: #245787;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 15px 0 0 0;
+    box-sizing: border-box;
+    margin: 30px 20px;
+    cursor: pointer;
+    position: relative;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    border-bottom: 1px solid #bcd5f4;
+}
+
+.block-promoArchive{
+    height: 44px;
+    background: #fef9f9;
+    border-top: 1px solid #f6c8c8;
+    color: #ff6b6b;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 15px 0 0 0;
+    box-sizing: border-box;
+    margin: 30px 20px;
+    position: relative;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    border-bottom: 1px solid #f6c8c8;
+}
+
+@media(max-width:720px){
+    
+    .block-archive a{
+    margin: 30px 0;
+}
+    
+}

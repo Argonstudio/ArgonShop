@@ -1,0 +1,67 @@
+/*
+ * Plugin Name:       Argon Shop
+ * Plugin URI:        https://github.com/Argonstudio/ArgonShop
+ * Description:       Высокооптимизированный плагин интернет-магазина для WordPress с AJAX-поиском и кастомной шаблонизацией корзины и ЛК.
+ * Version:           1.0.0
+ * Requires at least: 6.0
+ * Tested up to:      7.1
+ * Requires PHP:      8.0
+ * Author:            Иван Войтков (Ivan Voitkov)
+ * Author URI:        https://argon-studio.ru
+ * License:           GPL-3.0-or-later
+ * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
+ * Text Domain:       argon-shop
+Tags: e-commerce, custom-menu, custom-logo, featured-images, translation-ready
+
+ArgonShopTheme — часть проекта ArgonShop.
+
+============================================================
+ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
+============================================================
+
+Тема и плагин образуют единое целое:
+
+  plugins/argon-shop/     — логика магазина
+  themes/argon-shop-theme/ — вёрстка и стили
+
+Тема подключает ES-модули плагина (main.js), вызывает функции
+плагина в шаблонах (kama_breadcrumbs, as_search, as_infocart,
+view_products_list и др.) и полагается на его хуки.
+
+Плагин без темы не выводит ничего на фронтенде.
+Тема без плагина не работает — нет типов записей, таксономий
+и API-функций магазина.
+
+============================================================
+СТРУКТУРА СТИЛЕЙ
+============================================================
+
+Все стили темы разбиты по папкам и подключаются из
+functions.php (astheme_scripts):
+
+  assets/css/
+    main.css                 — базовые стили
+    form.css                 — поля форм
+    controlPanels.css        — переключатели-табы
+    modal.css                — модальное окно темы
+    footer.css               — подвал
+    topBlock/                — фиксированная верхняя полоса
+    header/                  — основная шапка
+    sitebar/                 — сайдбар с каталогом
+    homePage/                — главная страница
+    product/                 — карточка и страница товара
+    catalog/                 — каталог
+    cart/                    — корзина
+    cabinet/                 — личный кабинет
+    rubrics/                 — рубрики, статьи, акции
+    search/                  — форма и результаты поиска
+    aboutCompany.css         — страница «О компании»
+    и другие файлы.
+
+Этот файл (style.css) используется WordPress только для чтения
+метаданных темы. Реальные стили — в папках assets/css/.
+
+============================================================
+*/
+
+ 

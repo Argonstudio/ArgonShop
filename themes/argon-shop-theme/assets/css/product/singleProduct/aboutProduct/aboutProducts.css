@@ -1,0 +1,28 @@
+.block-productAbout{
+    max-width:805px;
+}
+
+.productPageControlPanel{
+    display:block;
+    height: 49px;
+}
+
+.productPageControlPanel .itemControlPanel {
+    font-size: 18px;
+    padding: 15px 25px 0 25px;
+    height: 49px;
+}
+
+.block-productDescription .blockItemPage p,
+.block-productUsage .blockItemPage p,
+.block-productCharacteristics .blockItemPage p{
+    margin:20px 10px;
+}
+
+@media(max-width:720px){
+    
+    .productPageControlPanel{
+        display:none;
+    } 
+    
+}

@@ -1,0 +1,85 @@
+
+.block-topSearch{
+    z-index:991;
+    position: absolute;
+    top: 0px;
+    right: 0;
+    width:51px;
+    transition: width 1s;
+}
+
+
+.block-topSearch:hover,
+.block-topSearch.is-open {
+    width: 100%;
+}
+
+
+.topSearchForm .topSearchSubmit{
+    border: 0;
+    background: url("../../../img/img-baseBlock.png");
+    background-color:#7fa8dc;
+    background-position: -148px 0; 
+    cursor:pointer;
+    width: 51px;
+    height: 46px;
+    position: absolute;
+    top: 0;
+    right: -1px;
+}
+
+.topSearchForm .topSearchInput{
+    border:1px solid #4e83c6;
+    width:100%;
+    height:44px;
+    height: 46px;
+    box-sizing: border-box;
+    padding: 0 0 0 10px;
+    
+}
+
+.topSearchBlockResult{
+    background:#fff;
+    border:1px solid #4e83c6;
+    width: 99%;
+    margin: 0 auto;
+    border-top: 0;
+    overflow:auto;
+    padding: 15px 39px 15px 39px;
+    box-sizing:border-box;
+}
+
+
+.topSearchBlockResult .blockOneTypeResult{
+    /*border-bottom: 1px solid #dcdcdc;*/
+    padding: 15px 0;
+}
+
+.topSearchBlockResult .blockOneTypeResult .titleOneTypeResult{
+    font-size:15px;
+    font-weight:bold;
+    color:#255785;
+    text-transform: uppercase;
+    margin-bottom:15px;
+}
+
+.topSearchBlockResult .blockOneTypeResult .resultProduct{
+    margin-bottom:5px;
+}
+
+.topSearchBlockResult .blockOneTypeResult .resultProduct a{
+    color:#000;
+    font-size:16px;
+    /*text-decoration:none;*/
+}
+
+.topSearchBlockResult .resultEntry .titleOneTypeResult{
+    color:#ff6b6b;
+}
+
+
+.topSearchBlockResult .resultEntry .resultProduct a{
+    border-left: 4px solid #ffd9d9;
+    padding-left: 9px;
+    text-decoration: none;
+}    

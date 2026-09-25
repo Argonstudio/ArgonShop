@@ -1,0 +1,227 @@
+/**
+ * ArgonShop — стили слайдера на главной странице.
+ *
+ * @package ArgonShop
+ * @author  Иван Войтков (Ivan Voitkov)
+ * @version 1.0.0
+ *
+ * ============================================================
+ * НАЗНАЧЕНИЕ
+ * ============================================================
+ *
+ * Оформляет Swiper-слайдер на главной странице. Разметка
+ * выводится PHP-функцией as_slider_main() из плагина,
+ * инициализация — модулем slider-main.js.
+ *
+ * ============================================================
+ * ЛОГИКА МАСШТАБИРОВАНИЯ
+ * ============================================================
+ *
+ * Изображение всегда занимает всю ширину контейнера,
+ * высота рассчитывается автоматически по пропорциям картинки
+ * (height: auto). Никаких фиксированных высот и обрезки —
+ * слайдер адаптируется под любую ширину.
+ *
+ * ============================================================
+ * ЦВЕТА
+ * ============================================================
+ *
+ * Основной акцент — #4e83c6 (синий темы).
+ * Пагинация и стрелки — в этом цвете.
+ */
+
+/* ============================================================
+   КОНТЕЙНЕР
+   ============================================================ */
+
+
+.as-slider-main {
+    position: relative;
+    width: 100%;
+    max-width: 836px;
+    overflow: hidden;
+    border: 1px solid #cfe4ff;
+    background: #fff;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.as-slider-main .swiper-wrapper {
+    /* Swiper сам управляет высотой, но на всякий случай
+     * не даём wrapper'у растягиваться. */
+    align-items: stretch;
+}
+
+/* ============================================================
+   СЛАЙДЫ
+   ============================================================ */
+
+.as-slider-main .swiper-slide {
+    /* Слайд — флекс-контейнер, чтобы ссылка и картинка
+     * занимали всю ширину и высоту. */
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    width: 100%;
+    height: auto;
+    background: #fff;
+}
+
+.as-slider-main .swiper-slide a {
+    display: block;
+    width: 100%;
+    line-height: 0; /* убирает вертикальный зазор под картинкой */
+}
+
+.as-slider-main .swiper-slide img,
+.as-slider-main .swiper-slide .img-responsive {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* ============================================================
+   ПАГИНАЦИЯ
+   ============================================================
+ *
+ * Стандартные точки Swiper, но крупнее и в цвете темы.
+ *
+ * Способ настройки — CSS-переменные, которые Swiper объявляет
+ * на :root. Достаточно переопределить их на контейнере слайдера,
+ * и все вложенные элементы пагинации подхватят новые значения.
+ *
+ * Такой подход:
+ *   - не перебивает классы Swiper через !important;
+ *   - не конфликтует с логикой активного слайда;
+ *   - не мешает обновлению точки при переключении.
+ *
+ * Значения:
+ *   --swiper-pagination-bullet-size              — размер точки
+ *   --swiper-pagination-bullet-horizontal-gap    — отступ между точками
+ *   --swiper-pagination-color                    — цвет активной
+ *   --swiper-pagination-bullet-inactive-color    — цвет обычной
+ *   --swiper-pagination-bullet-inactive-opacity  — прозрачность обычной
+ */
+
+.as-slider-main {
+    --swiper-pagination-bullet-size: 14px;
+    --swiper-pagination-bullet-horizontal-gap: 6px;
+    --swiper-pagination-color: #4e83c6;
+    --swiper-pagination-bullet-inactive-color: #ffffff;
+    --swiper-pagination-bullet-inactive-opacity: 0.9;
+}
+
+/* Дополнительная тень — чтобы точки были видны
+ * на светлых слайдах. Перебивать размер и цвет не нужно,
+ * их уже дали переменные выше. */
+.as-slider-main .swiper-pagination-bullet {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+    transition: transform 0.2s;
+}
+
+.as-slider-main .swiper-pagination-bullet-active {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.as-slider-main .swiper-pagination-bullet:hover {
+    transform: scale(1.15);
+}
+
+/* ============================================================
+   СТРЕЛКИ НАВИГАЦИИ
+   ============================================================
+ *
+ * Квадратные кнопки-стрелки по бокам слайдера.
+ * Появляются при наведении на слайдер — чтобы не мешали
+ * просмотру изображений.
+ */
+
+.as-slider-main .swiper-button-prev,
+.as-slider-main .swiper-button-next {
+    position: absolute;
+    top: 50%;
+    width: 32px;
+    height: 32px;
+    margin-top: -16px;
+    display: flex;
+    padding: 5px;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid #4e83c6;
+    border-radius: 4px;
+    color: #4e83c6;
+    cursor: pointer;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.2s, background-color 0.2s, color 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+    outline: none;
+}
+
+.as-slider-main:hover .swiper-button-prev,
+.as-slider-main:hover .swiper-button-next {
+    opacity: 1;
+}
+
+.as-slider-main .swiper-button-prev {
+    left: 8px;
+}
+
+.as-slider-main .swiper-button-next {
+    right: 8px;
+}
+
+.as-slider-main .swiper-button-prev:hover,
+.as-slider-main .swiper-button-next:hover {
+    background: #4e83c6;
+    color: #fff;
+}
+
+.as-slider-main .swiper-button-prev::after,
+.as-slider-main .swiper-button-next::after {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.as-slider-main .swiper-button-prev:focus-visible,
+.as-slider-main .swiper-button-next:focus-visible {
+    box-shadow: 0 0 0 2px rgba(78, 131, 198, 0.4);
+    opacity: 1;
+}
+
+/* ============================================================
+   АДАПТИВ
+   ============================================================ */
+
+@media(min-width:1201px){
+    .as-slider{
+        width: 836px;
+        float: left;
+        margin-bottom: 30px;
+    }
+}
+
+@media (max-width: 720px) {
+
+    .as-slider-main {
+        max-width: 100%;
+        border-radius: 0;
+        margin-bottom: 30px;
+    }
+
+    /* На мобильных стрелки скрываем — свайп работает сам */
+    .as-slider-main .swiper-button-prev,
+    .as-slider-main .swiper-button-next {
+        display: none;
+    }
+
+    .as-slider-main .swiper-pagination {
+        bottom: 6px;
+    }
+}

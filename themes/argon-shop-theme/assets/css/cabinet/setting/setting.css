@@ -1,0 +1,204 @@
+#block_cabinetSetting{
+    padding:0 20px;
+}
+
+/* Форма */
+
+.block-settingForm{
+    margin: 40px 0 40px 0;
+
+}
+
+.block-settingFieldEmail{
+    width: 70%;
+    float: left;
+    padding-bottom: 30px;
+}
+
+.block-settingForm .settingFieldTitle{
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.block-settingField50{
+    display: table;
+    width: 100%;
+    height: 55px;
+}
+
+.block-settingField50 .settingFieldTitle{
+    float: left;
+    width: 30%;
+    padding: 9px 15px 0 0;
+    box-sizing: border-box;
+}
+
+.block-settingField50 .settingFieldInput{
+    float: left;
+    width: 70%;
+}
+
+.block-settingFieldEmail .settingFieldInput{
+    width: 100%;
+}
+
+
+.block-settingFieldEmail .settingFieldInput:disabled{
+    background: #f5f5f5;
+    color: #635c5c;
+}
+
+
+.block-settingFieldEmail #editEmailActive{
+    background: #83ace0;
+    color: #fff;
+    height: 36px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 13px 0 0 20px;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 3px 0 0 0;
+    position: relative;
+    display: block;
+    float: left;
+    cursor: pointer;
+}
+
+.block-settingForm .editError{
+    display: table;
+    width: 100%;
+}
+
+.block-settingForm .editError.editErrorActive,
+.block-settingForm .editEmailError.editErrorActive{
+    display: block;
+    border: 1px solid red;
+    width: 70%;
+    float: right;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+.block-settingForm .editNewPassConfirmError .editErrorActive{
+    margin-bottom: 0;
+}
+
+.block-settingForm .editEmailError .editErrorActive{
+    width: 100%;
+    margin: 16px 0 0 0;
+}
+
+#block_cabinetSetting .block-settingSave #editEmailPasswordButton{
+    border: 0;
+    padding-top: 1px;
+    background-color: #7fa8dc;
+    color: #fff;
+    font-weight: 700;
+    width: 250px;
+    height: 37px;
+    font-size: 16px;
+    letter-spacing: .7px;
+    cursor: pointer;
+}
+
+/* Специфические стили для кнопки в состоянии DISABLED */
+#block_cabinetSetting .block-settingSave #editEmailPasswordButton:disabled,
+#block_cabinetSetting .block-settingSave #editEmailPasswordButton[disabled] {
+    background-color: #cccccc !important; /* Серый цвет вместо цветного */
+    color: #888888 !important;            /* Блеклый цвет текста */
+    opacity: 0.6;                         /* Полупрозрачность */
+    cursor: not-allowed !important;       /* Курсор запрета (красный перечеркнутый круг) */
+    box-shadow: none !important;          /* Убираем тени */
+    transform: none !important;           /* Отменяем любые эффекты смещения */
+}
+
+
+#block_cabinetSetting .block-settingSave .editResult{
+    margin: 20px 0;
+}
+
+#block_cabinetSetting .block-settingSave .consentPersonalData{
+    font-size: 14px;
+}
+
+
+.exitSite{
+    font-weight: 700;
+    width: 180px;
+    height: 33px;
+    font-size: 14px;
+    letter-spacing: .7px;
+    cursor: pointer;
+    display: block;
+    text-decoration: none;
+    background: #f3f8ff;
+    border: 1px solid #4b85cd;
+    color: #455d73;
+    text-transform: uppercase;
+    padding: 8px 0 0 0;
+    box-sizing: border-box;
+    text-align: center;
+    margin-top: 40px;
+}
+
+@media(max-width:720px){
+    
+    #block_cabinetSetting {
+        padding: 0 20px 40px 20px;
+    }
+    
+    .block-settingForm {
+        margin: 0 0 40px 0;
+    }
+    
+    .block-settingField50{
+        height: auto;
+        margin-top: 23px;
+    }
+    
+    .block-settingFieldEmail {
+        width: 100%;
+        padding-bottom: 10px;
+    }
+    
+    .block-settingField50 .settingFieldTitle{
+        float: none;
+        width: auto;
+        padding: 0 0 10px 0;
+        font-size: 12px;
+    }
+    
+    .block-settingField50 .settingFieldInput{
+        float: none;
+        width: 100%;
+        font-size: 14px;
+        padding-top: 12px;
+    }
+    
+    .block-settingForm .editError .editErrorActive {
+        width: 100%;
+        margin: 12px 0 5px 0;
+        padding: 7px 10px 5px 10px;
+        font-size: 12px;
+    }
+    
+    .block-settingForm .editNewPassConfirmError .editErrorActive {
+        margin-bottom: 0;
+    }
+    
+    #block_cabinetSetting .block-settingSave #editEmailPasswordButton {
+        width: 230px;
+        font-size: 14px;
+    }
+    
+    .exitSite {
+        width: 170px;
+        font-size: 12px;
+        padding: 10px 0 0 0;
+    }
+    
+}

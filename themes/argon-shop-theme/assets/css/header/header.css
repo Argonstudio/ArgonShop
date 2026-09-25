@@ -1,0 +1,227 @@
+/**
+ * ШАПКА
+ * =========================================== */
+
+#header{
+    padding-top:46px;
+}
+
+#header .header_top {
+    position: relative;
+    min-height: 192px;
+    box-sizing: border-box;
+}
+
+#header .header_top .block-address .address span,
+.paginations a {
+    display: inline-block
+}
+
+#header .header_top .logo {
+    min-width: 270px;
+    float: left;
+    margin: 39px 0 0 33px;
+}
+
+#header .header_top .logo a img{
+    height: 75px;
+}
+
+/*Блок адрес */
+
+#header .header_top .block-address {
+    float: left;
+    width: 350px;
+    padding: 43px 0 0 5%;
+}
+
+#header .header_top .block-address .address {
+    color: #444;
+    font-size: 13px;
+    padding-bottom: 5px;
+}
+
+#header .header_top .block-address p {
+    margin: 0;
+}
+
+#header .header_top .block-address .map_icon{
+    width:23px;
+    height:32px;
+    background: url("../../img/img-baseBlock.png");
+    background-position: -214px -8px;
+    position: absolute;
+}
+
+#header .header_top .block-address .maps_link {
+    color: #000049;
+    font-size: 16px;
+    line-height: 20px;
+    text-decoration: none;
+    border-bottom: 1px dashed #078b17;
+    display: inline-block;
+    font-weight: 700;
+    margin: 5px 0 0 33px;
+}
+
+#header .header_top .block-address .work_time{
+    font-size:14px;
+    margin: 7px 0 0 33px;
+}
+
+/* Блок связь */
+
+#header .header_top .block-communication {
+    width:289px;
+    height:105px;
+    float: right;
+    padding: 45px 50px 0 0;
+}
+
+#header .header_top .block-communication .phone{
+    font-size: 24px;
+    color: #000;
+    text-decoration: none;
+    float: left;
+    padding: 4px 0 0 45px;
+    position: relative;
+}
+
+#header .header_top .block-communication .phone_icon {
+    width: 34px;
+    height: 33px;
+    background: url("../../img/img-baseBlock.png");
+    background-position: -258px -9px;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+#header .header_top .block-communication a1 {
+    font-size: 24px;
+    color: #000;
+    text-decoration: none;
+}
+
+#header .header_top .block-communication .sitySelect{
+    width: 110px;
+    height: 26px;
+    
+     /*for WebKit*/
+     -webkit-appearance: none;
+     /* for FF */
+      -moz-appearance: none;
+      text-indent: 0.01px; 
+      text-overflow: '';
+      /* for IE */
+      -ms-appearance: none;
+      appearance: none!important;
+    
+    background-color: #4e83c6;
+    background-image: url("../../img/img-baseBlock.png");
+    background-position: -322px -15px;
+    background-repeat: no-repeat;
+    
+    color: #fff;
+    padding-left: 2%;
+    font-size: 14px;
+    font-weight: 700;
+    border: 0;
+    float: left;
+    margin-top: 17px;
+
+}
+
+/* IE11 */
+#header .header_top .block-communication .sitySelect::-ms-expand {
+  display: none;
+}
+
+@media(max-width:1050px){
+    
+    #header .header_top .logo {
+        min-width: 230px;
+    }
+    
+}
+
+@media(max-width:1000px){
+    #header .header_top .block-address {
+        display:none;
+    }
+}
+
+@media(max-width:720px){
+    
+   #header .header_top .block-communication .phone_icon {
+        width: 26px;
+        height: 25px;
+        background-position: -180px -6px;
+        background-size: 350px 161px;
+        left: 0;
+        top: 0;
+    }
+    
+    #header .header_top .block-communication .phone {
+        float: right;
+        padding: 0 0 0 41px;
+    }
+    
+    #header .header_top .block-communication .sitySelect {
+        float: right;
+    }
+    
+}
+
+@media(max-width:650px){
+    
+    #header .header_top .logo {
+        min-width: 150px;
+        margin: 39px 0 0 15px;
+    }
+    
+    #header .header_top .logo a img {
+        height: 58px;
+    }
+    
+    #header .header_top .block-communication {
+        padding: 39px 20px 0 0;
+    }
+    
+}
+
+@media(max-width:550px){
+    
+    #header .header_top .logo {
+        min-width: 100%;
+        text-align: center;
+        margin: 30px 0 0 0;
+    }
+    
+    #header .header_top .logo a img {
+        height: 75px;
+        margin-left: -12px;
+    }
+    
+    #header .header_top .block-communication {
+        margin: 0 auto;
+        float: none; 
+        padding: 139px 0 0 0;
+    }
+    
+    #header .header_top .block-communication .phone {
+        margin-right: 5px;
+        float: left;
+    }
+    
+    #linkFeedback {
+        margin: 22px 0 0 0;
+        margin-left: -17px;
+    }
+    
+    #header .header_top .block-communication .sitySelect {
+        margin-right: 5px;
+        display: none;
+    }
+    
+}

@@ -1,0 +1,79 @@
+.block-pageSearch{
+    position:relative;
+    margin: 30px 0;
+}
+
+.pageSearchForm{
+    position:relative;
+}
+
+.pageSearchForm .pageSearchSubmit{
+    border: 0;
+    background: url("../../img/img-baseBlock.png");
+    background-color:#7fa8dc;
+    background-position: -148px 0; 
+    cursor:pointer;
+    width: 51px;
+    height: 46px;
+    position: absolute;
+    top: 0;
+    right: -1px;
+}
+
+.pageSearchForm .pageSearchInput{
+    border:1px solid #4e83c6;
+    width:100%;
+    height:44px;
+    height: 46px;
+    box-sizing: border-box;
+    padding: 0 0 0 10px;
+    
+}
+
+.pageSearchBlockResult{
+    background:#fff;
+    border:1px solid #4e83c6;
+    width: 100%;
+    /*border-top: 0;*/
+    overflow:auto;
+    padding: 15px 39px 15px 39px;
+    position:absolute;
+    top:51px;
+    right:0;
+    box-sizing:border-box;
+    z-index: 3;
+}
+
+.pageSearchBlockResult .blockOneTypeResult{
+    /*border-bottom: 1px solid #dcdcdc;*/
+    padding: 15px 0;
+}
+
+.pageSearchBlockResult .blockOneTypeResult .titleOneTypeResult{
+    font-size:15px;
+    font-weight:bold;
+    color:#255785;
+    text-transform: uppercase;
+    margin-bottom:15px;
+}
+
+.pageSearchBlockResult .blockOneTypeResult .resultProduct{
+    margin-bottom:5px;
+}
+
+.pageSearchBlockResult .blockOneTypeResult .resultProduct a{
+    color:#000;
+    font-size:16px;
+    /*text-decoration:none;*/
+}
+
+.pageSearchBlockResult .resultEntry .titleOneTypeResult{
+    color:#ff6b6b;
+}
+
+
+.pageSearchBlockResult .resultEntry .resultProduct a{
+    border-left: 4px solid #ffd9d9;
+    padding-left: 9px;
+    text-decoration: none;
+}    
