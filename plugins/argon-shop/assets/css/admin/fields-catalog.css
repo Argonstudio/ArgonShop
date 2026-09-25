@@ -1,0 +1,92 @@
+/**
+ * ArgonShop — стили характеристик.
+ *
+ * @package ArgonShop
+ * @author  Иван Войтков (Ivan Voitkov)
+ * @version 1.0.0
+ *
+ */
+
+.choiceCategory{
+    padding-left:0px;
+}
+
+.choiceCategory li{
+    padding:10px;
+    border: 1px solid #ccc;
+    background: #659bdd;
+    color: #fff;
+}
+
+.checkAllCategory{
+    background: #4e83c6!important;
+    color: #fff;
+}
+
+.checkCategory ul{
+    display:none;
+}
+
+.checkCategory .showHideButton{
+    border:0;
+    background:url("../../img/iconDisclose.png");
+    width: 29px;
+    height: 28px;
+    cursor:pointer;
+    background-size: 100% 100%;
+}
+
+.choiceCategoryChild{
+    padding:15px 0 5px 20px;
+}
+
+.choiceCategoryChild li{
+    border:1px solid #ccc;
+    background: #fff;
+    color: #000;
+}
+
+
+.advanced-field{
+    font-family: 'Open Sans', sans-serif;
+    color: #333;
+    padding:0 0 15px 0;
+    margin:0 0 10px 0;
+    border-bottom:1px solid #e8e8e8;
+}
+
+.checkbox-advanced-fields{
+    padding: 3px 0;
+}
+
+.advanced-field input[type="text"]::placeholder{
+    font-size:10px;
+}
+
+.promotion-price{
+    border:1px solid #c3fbc3!important;
+}
+
+.promotion-price::placeholder{
+    color:#8a9f8a;
+}
+
+.span-advanced-fields{
+    font-weight:bold;
+    margin:0 0 4px 0;
+}
+
+@media screen and (max-width: 477px){
+    
+    .advanced-field input[type="text"] {
+        margin-top:5px;
+    }
+}
+
+/* 
+ ** Настройки магазина
+*/
+
+.settingShopForm textarea{
+    min-height:200px;
+}
