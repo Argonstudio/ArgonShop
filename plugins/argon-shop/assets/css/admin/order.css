@@ -1,0 +1,179 @@
+/**
+ * ArgonShop — стили заказов в админке.
+ *
+ * @package ArgonShop
+ * @author  Иван Войтков (Ivan Voitkov)
+ * @version 1.0.0
+ *
+ */
+
+#menu-posts-shoporder .wp-submenu li:nth-child(3){
+    display:none;
+}
+
+.orderProductTitle{
+    color: #255784;
+    font-size: 18px;
+    text-decoration:none;
+    padding: 15px 0;
+    float:left;
+}
+
+.blockOrderProduct{
+    max-width:750px;
+}
+
+.blockOrderProduct, .block-orderCharactProduct{
+    
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    margin-bottom: 1rem;
+    border-radius: 0;
+    
+}
+
+
+.block-orderDescrProduct .block-orderProductImg{
+    border:1px solid #c7d8ed;
+    width:100px;
+    text-align:center;
+}
+
+.orderProductImg{
+    max-width:70px;
+    margin:0 auto;
+}
+
+.block-orderDeleteShoppingCart{
+    width:34px;
+}
+
+.deleteProduct{
+    border:0;
+    background:url("../../img/deleteProductImg.jpg");
+    width: 30px;
+    height: 30px;
+    float: right;
+    padding:15px 0;
+    cursor:pointer;
+    background-size: 100% 100%;
+}
+
+.block-orderProductNameArticle{
+    padding-left:20px;
+    
+}
+
+
+.block-orderProductNameArticle a{
+    color:#255784;
+    font-size:18px;
+    
+}
+.block-orderProductArticle{
+    padding-top:7px;
+    color:#9cbbd7;
+    font-weight:bold;
+}
+
+.block-orderCharactProductTitle td{
+    background:#e6f2fd;
+    color:#7295b4;
+    padding: 12px 0 9px 10px;
+}
+
+.block-orderCharactProductContent td{
+    border:1px solid #e6f2fd;
+    border-collapse: collapse;
+    padding: 12px 0 9px 10px;
+    
+}
+
+.block-orderAmountProduct input[type="text"]{
+    border:1px solid #ccc;
+    border-right:0;
+    margin:0;
+    padding-left:7px;
+    box-sizing: border-box;
+    float:left;
+    max-width:100px;
+    height:46px;
+}
+
+.block-orderAmountProduct .block-orderChangeValue{
+    float:left;
+    width:22px;
+}
+
+.block-orderAmountProduct .block-orderChangeValue input[type="button"]{
+    border:1px solid #ccc;
+    max-width:100px;
+    padding:0;
+    margin:0;
+    cursor:pointer;
+    width:26px;
+    height:23px;
+}
+
+.block-orderAmountProduct .block-orderChangeValue input[type="button"]:last-child{
+    border-top:0;
+}
+
+
+/*
+  *  Блок добавить товар
+*/
+
+.blockAddOrderProduct{
+    font-size: 15px;
+    padding-top: 30px;
+}
+
+.valueAddOrder{
+    margin-left: 15px;
+    width: 230px;
+}
+
+.addOrderResult{
+    padding-top: 12px;
+}
+
+.addOrderResult ul{
+    margin-top: 0;
+}
+
+.as-order-foundProduct{
+    width:300px;
+}
+
+.as-order-foundProduct a{
+    width:270px;
+    float: left;
+    padding: 5px 0;
+    font-size: 15px;
+}
+
+.as-addProduct{
+    border:0;
+    background:url("../../img/iconplus.png");
+    width: 28px;
+    height: 28px;
+    margin: 3px 0;
+    cursor:pointer;
+    background-size: 100% 100%;
+}
+
+/*
+  *  Информация от заказчика
+*/
+
+.as-order-itemTitle{
+    font-size:15px;
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+.as-order-fieldAddress input{
+    width:70%;
+}

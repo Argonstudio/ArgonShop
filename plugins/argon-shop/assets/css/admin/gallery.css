@@ -1,0 +1,196 @@
+/**
+ * ArgonShop — стили метабокса «Галерея» на странице товара.
+ *
+ * @package ArgonShop
+ * @author  Иван Войтков (Ivan Voitkov)
+ * @version 1.0.0
+ *
+ * ============================================================
+ * НАЗНАЧЕНИЕ
+ * ============================================================
+ *
+ * Оформляет метабокс галереи в админке WordPress:
+ *   - сетку миниатюр;
+ *   - кнопку удаления на каждой миниатюре;
+ *   - кнопку «Добавить изображения»;
+ *   - состояние перетаскивания (drag-and-drop через
+ *     jQuery UI Sortable из ядра WordPress).
+ *
+ * Префикс классов — .ars-gallery-.
+ *
+ * ============================================================
+ * РАСКЛАДКА И SORTABLE
+ * ============================================================
+ *
+ * Миниатюры используют display: inline-table, а не flexbox
+ * и не inline-block. Это принципиально: jQuery UI Sortable
+ * изначально разрабатывался под table-модель и корректно
+ * работает с inline-table. С flexbox swap не срабатывает,
+ * с inline-block — «залипает» при перетаскивании.
+ *
+ * Параметры sortable в JS (tolerance: 'pointer',
+ * containment: 'parent') рассчитаны именно на эту раскладку.
+ *
+ * ============================================================
+ * ЦВЕТА
+ * ============================================================
+ *
+ * Стилистика стандартной админки WordPress:
+ *   фон метабокса — #fff
+ *   границы       — #c3c4c7 / #dcdcde
+ *   акцент        — #2271b1 (синий WP)
+ *   удаление      — #d63638 (красный WP)
+ */
+
+/* ============================================================
+   КОНТЕЙНЕР
+   ============================================================ */
+
+.ars-gallery {
+    padding: 8px 0 4px;
+}
+
+.ars-gallery-list {
+    margin: 0 0 8px;
+    padding: 0;
+    list-style: none;
+    min-height: 60px;
+}
+
+/* ============================================================
+   МИНИАТЮРЫ
+   ============================================================
+ *
+ * display: inline-table — как в оригинальном плагине
+ * ACF Photo Gallery Field. Даёт корректное поведение
+ * jQuery UI Sortable с tolerance: 'pointer'.
+ */
+
+.ars-gallery-item {
+    display: inline-table;
+    position: relative;
+    vertical-align: top;
+    width: 120px;
+    height: 120px;
+    padding: 3px;
+    margin: 8px;
+    border: 1px solid #c3c4c7;
+    box-sizing: border-box;
+    background: #fff;
+    cursor: move;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.ars-gallery-item:hover {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 2px rgba(34, 113, 177, 0.15);
+}
+
+.ars-gallery-item img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* ============================================================
+   КНОПКА УДАЛЕНИЯ
+   ============================================================
+ *
+ * Круглая иконка крестика в правом верхнем углу миниатюры.
+ * Показывается всегда, чтобы пользователь сразу видел
+ * возможность удаления.
+ */
+
+.ars-gallery-remove {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    cursor: pointer;
+    opacity: 0.85;
+    transition: background-color 0.15s, opacity 0.15s;
+    -webkit-appearance: none;
+    appearance: none;
+    outline: none;
+}
+
+.ars-gallery-remove:hover {
+    background: #d63638;
+    opacity: 1;
+}
+
+.ars-gallery-remove:focus-visible {
+    box-shadow: 0 0 0 2px rgba(34, 113, 177, 0.6);
+}
+
+.ars-gallery-remove .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    pointer-events: none;
+}
+
+/* ============================================================
+   СОСТОЯНИЕ ПЕРЕТАСКИВАНИЯ
+   ============================================================
+ *
+ * Плейсхолдер — отдельный класс без .ars-gallery-item.
+ * Так было в плагине-образце: placeholder существует как
+ * самостоятельный элемент со своим размером и не путается
+ * с перетаскиваемыми миниатюрами.
+ *
+ * Размер меньше миниатюры — точка вставки явно видна.
+ */
+
+.ars-gallery-sortable-placeholder {
+    display: inline-block;
+    vertical-align: top;
+    width: 80px;
+    height: 80px;
+    margin: 8px;
+    border: 1px dashed #c3c4c7;
+    box-sizing: border-box;
+}
+
+/* Перетаскиваемый helper — небольшая тень, чтобы визуально
+ * «отрывался» от списка. Никаких pointer-events и
+ * трансформаций: Sortable сам управляет позиционированием
+ * helper'а, вмешательство даёт смещение относительно курсора. */
+
+.ars-gallery-item.ui-sortable-helper {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    cursor: grabbing;
+}
+
+/* ============================================================
+   КНОПКА ДОБАВЛЕНИЯ
+   ============================================================ */
+
+.ars-gallery-add {
+    margin-top: 4px !important;
+}
+
+/* ============================================================
+   ПОДСКАЗКА
+   ============================================================ */
+
+.ars-gallery-hint {
+    margin: 12px 0 0;
+    color: #646970;
+    font-size: 12px;
+    font-style: italic;
+}
