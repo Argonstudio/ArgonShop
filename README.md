@@ -1,4 +1,4 @@
-# Argon Shop
+# ArgonShop
 
 Плагин интернет-магазина.
 
