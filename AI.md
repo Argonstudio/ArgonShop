@@ -302,8 +302,39 @@ wp plugin install advanced-custom-fields contact-form-7 --activate
 
 - **Мультирегиональность (Москва / Истра)** реализована на уровне
   шаблонов (`single-aktsii-moskva.php`, `single-aktsii-istra.php`)
-  и не использует WP Multisite. В теме только файл Москвы, по его логике можно добавлять файлы для других городов.
-  Если в задаче на доработку плагина очень много городов, то предложи Мультисайт.
+  и не использует WP Multisite. Для её работы в таком виде нужен небольшой плагин AA-DomainMirror , пример его кода:
+
+$main     = "voitkoze.beget.tech";  // главный домен
+$mirror   = "istra.voitkoze.beget.tech"; // зеркало
+$mirror1   = "istra1.voitkoze.beget.tech"; // зеркало
+
+$serverName = $_SERVER['SERVER_NAME'];
+
+if ($serverName == $mirror || $serverName == $mirror1) {
+
+	function wpdm_filter_url($content) {
+		global $serverName;
+		return "http://".$serverName;
+	}
+
+	function wpdm_filter_text($content) {
+		global $main, $serverName;
+		$content = str_replace($main, $serverName, $content);
+		return $content;
+	}
+
+	add_filter('option_siteurl', 'wpdm_filter_url', 1);
+	add_filter('option_home', 'wpdm_filter_url', 1);
+	add_filter('option_stats_url', 'wpdm_filter_url', 1);
+	add_filter('the_content', 'wpdm_filter_text');
+	add_filter('the_excerpt', 'wpdm_filter_text');
+	add_filter('comment_text', 'wpdm_filter_text');
+	add_filter('get_comment_author_link', 'wpdm_filter_text');
+
+}
+
+В теме только файл Москвы, по его логике можно добавлять файлы для других городов.
+Если в задаче на доработку плагина очень много городов, то предложи Мультисайт.
 - **ACF опционален.** Если не установлен — часть полей на страницах
   «О компании», категориях каталога останется пустой, но ошибок не будет.
 - **Contact Form 7 опционален.** Без него форма обратной связи не выведется.
