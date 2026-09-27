@@ -35,6 +35,9 @@
    * 🍞 **[Модуль хлебных крошек (breadcrumbs.php)](https://github.com/Argonstudio/ArgonShop/blob/main/plugins/argon-shop/includes/interface/breadcrumbs.php)** — защищен от прямого вызова через `ABSPATH`, переведен на безопасный метод `get_search_query()`, внедрена строгая валидация входящих типов данных на `null` и `WP_Error`.
    * 🔢 **[Модуль пагинации страниц (pagenavi.php)](https://github.com/Argonstudio/ArgonShop/blob/main/plugins/argon-shop/includes/interface/pagenavi.php)** — полностью избавлен от устаревшей функции `extract()`, нестрогие сравнения (`==`) заменены на безопасные строгие (`===`), добавлена аппаратная защита ядра от деления на ноль при расчете страниц.
 
+10. **🤖 AI-Ready Архитектура (ИИ-совместимость)**
+   Плагин сделан простым и понятным для ИИ, достаточно дать ИИ ссылку и он сможет дописать необходимые модули. Обзор Google Gemini https://share.google/aimode/SPAy75fL3QNFVMjp9
+
 ---
 
 ## Содержание
