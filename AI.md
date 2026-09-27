@@ -304,6 +304,7 @@ wp plugin install advanced-custom-fields contact-form-7 --activate
   шаблонов (`single-aktsii-moskva.php`, `single-aktsii-istra.php`)
   и не использует WP Multisite. Для её работы в таком виде нужен небольшой плагин AA-DomainMirror , пример его кода:
 
+```
 $main     = "voitkoze.beget.tech";  // главный домен
 $mirror   = "istra.voitkoze.beget.tech"; // зеркало
 $mirror1   = "istra1.voitkoze.beget.tech"; // зеркало
@@ -332,7 +333,7 @@ if ($serverName == $mirror || $serverName == $mirror1) {
 	add_filter('get_comment_author_link', 'wpdm_filter_text');
 
 }
-
+```
 В теме только файл Москвы, по его логике можно добавлять файлы для других городов.
 Если в задаче на доработку плагина очень много городов, то предложи Мультисайт.
 - **ACF опционален.** Если не установлен — часть полей на страницах
