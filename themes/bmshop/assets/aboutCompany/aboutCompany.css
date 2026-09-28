@@ -1,0 +1,269 @@
+.block-contentAboutCompany .block-advantages,
+.block-contentAboutCompany .block-ourClients,
+.block-contentAboutCompany .block-sertificats{
+    margin: 42px 0 0 0;
+}
+
+.block-contentAboutCompany .aboutCompany-block-title{
+    background: #255785;
+    height: 36px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 10px 0 0 0;
+    box-sizing: border-box;
+    border-top: 1px solid #658eb6;
+    border-bottom: 1px solid #658eb6;
+    text-align: center;
+    margin-bottom: 33px;
+}
+
+.block-contentAboutCompany .block-advantages .block-advantages-cards{
+    margin-top:0;
+}
+
+.text-ourAdvantages{
+    margin-top: 43px;
+}
+
+/* Наши клиенты */
+
+.block-ourClients .block-logoClients{
+    display: table;
+    max-width: 765px;
+    margin: 0 auto;
+}
+
+.block-ourClients .block-client{
+    width: 161px;
+    height: 137px;
+    box-sizing: border-box;
+    border: 1px solid #ebeeea;
+    float: left;
+    margin: 0 15px 20px 15px;
+}
+
+.block-ourClients .block-client span{
+    display: table-cell;
+    width: 161px;
+    height: 137px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.block-ourClients .block-client img{
+    width: auto;
+    height: auto;
+    max-width: 150px;
+    max-height: 130px;
+}
+
+.text-ourClients{
+    margin-top: 26px;
+}
+
+@media(min-width:1000px) and (max-width:1170px){
+    
+    .block-ourClients .block-logoClients{
+        max-width: 575px;
+    }
+    
+}
+
+@media(max-width:825px){
+    
+    .block-ourClients .block-logoClients{
+        max-width: 575px;
+    }
+    
+}
+
+@media(max-width:680px){
+    
+    .block-ourClients .block-logoClients{
+        max-width: 395px;
+    }
+    
+}
+
+@media(max-width:455px){
+    
+    .block-ourClients .block-logoClients {
+        max-width: 300px;
+    }
+    
+    .block-ourClients .block-client {
+        width: 130px;
+        height: 111px;
+        margin: 0 8px 20px 8px;
+    }
+    
+    .block-ourClients .block-client span {
+        width: 130px;
+        height: 111px;
+    }
+    
+    .block-ourClients .block-client img{
+        max-width: 110px;
+        max-height: 100px;
+    }
+    
+}
+
+@media(max-width:360px){
+    
+    .block-ourClients .block-logoClients {
+        max-width: 240px;
+    }
+    
+    .block-ourClients .block-client {
+        width: 110px;
+        height: 100px;
+        margin: 0 5px 20px 5px;
+    }
+    
+    .block-ourClients .block-client span {
+        width: 110px;
+        height: 100px;
+    }
+    
+    .block-ourClients .block-client img {
+        max-width: 90px;
+        max-height: 100px;
+    }
+}
+
+/* слайдер сертифкаты */
+
+.block-sliderSertificats{
+    max-width: 670px;
+    margin: 0 auto;
+}
+
+.block-sertificats .slick-list{
+    max-width: 592px;
+    float: left;
+}
+
+
+.block-sertificats .slick-arrow{
+    width: 25px;
+    height: 243px;
+    font-size: 0;
+    background: #537da4;
+    border: 0;
+    cursor:pointer;
+    float: left;
+    position: relative;
+    outline: none;
+}
+
+
+.block-sertificats .slick-prev{
+    margin-right:14px;
+}
+
+.block-sertificats .slick-next{
+    margin-left:14px;
+}
+
+.block-sertificats .slick-prev::after,
+.block-sertificats .slick-next::after{
+    content: '';
+    display: block;
+    margin-top: -16px;
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: 50%;
+    left: 33%;
+    outline: none;
+}
+
+.block-sertificats .slick-prev::after{
+    border-left: 18px solid transparent;
+    border-right: 10px solid #fff;
+    border-top: 19px solid transparent;
+    border-bottom: 19px solid transparent;
+    margin-left: -20px;
+}
+
+.block-sertificats .slick-next::after{
+    border-left: 10px solid #fff;
+    border-right: 18px solid transparent;
+    border-top: 19px solid transparent;
+    border-bottom: 19px solid transparent;
+}
+
+.block-sertificats .block-sertificat{
+    border: 1px solid #ecf6ff;
+    background: #fafdff;
+    margin: 0 14px;
+    height: 243px;
+}
+
+.block-sertificats .block-sertificat img{
+    max-width: 100%;
+}
+
+
+@media(min-width:1000px) and (max-width:1050px){
+    
+    .block-sliderSertificats {
+        max-width: 642px;
+    }
+    
+    .block-sertificats .slick-prev{
+        margin-right:0;
+    }
+    
+    .block-sertificats .slick-next{
+        margin-left:0;
+    }
+    
+}
+
+@media(max-width:780px){
+    
+    .block-sliderSertificats {
+        max-width: 473px;
+    }
+    
+    .block-sertificats .slick-list {
+        max-width: 395px;
+    }
+    
+}
+
+@media(max-width:550px){
+    
+    .block-sliderSertificats {
+        max-width: 276px;
+    }
+    
+    .block-sertificats .slick-list {
+        max-width: 198px;
+    }
+    
+}
+
+@media(max-width:350px){
+    
+    .block-sliderSertificats {
+        max-width: 248px;
+    }
+    
+    .block-sertificats .slick-prev{
+        margin-right:0;
+    }
+    
+    .block-sertificats .slick-list {
+        max-width: 198px;
+    }
+    
+    .block-sertificats .slick-next{
+        margin-left:0;
+    }
+    
+}

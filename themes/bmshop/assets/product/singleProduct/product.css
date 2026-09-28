@@ -1,0 +1,343 @@
+.articlePost{
+    font-size:17px;
+    font-weight:700;
+    color:#6394c1;
+    
+}
+
+.block-productMain{
+    margin:28px 0 50px 0;
+    display:table;
+    width: 100%;
+}
+
+.block-productSlider{
+    float:left;
+    width:420px;
+}
+
+@media(min-width:720px){
+    
+    .block-productSlider{
+        min-height: 160px;
+    }
+    
+}
+
+/*Блок с ценами */
+
+.product-table-details{
+    width:348px;
+    float:left;
+    margin-left: 37px;
+}
+
+.product-table-details .block-basePrice{
+    height:59px;
+    vertical-align:center;
+    background:#255785;
+    color:#fff;
+    font-size:24px;
+    font-weight:700;
+    padding: 11px 10px 7px 26px;
+    box-sizing:border-box;
+}
+
+.block-wholesale-price{
+    padding:0;
+}
+
+.block-wholesale-price .title-wholesale-price{
+    height:45px;
+    vertical-align:center;
+    background:#e6f2fd;
+    color:#255784;
+    font-size:16px;
+    font-weight:700;
+    padding:15px 0 0 20px;
+    margin-top: 13px;
+    box-sizing:border-box;
+    
+}
+
+.block-wholesale-price table{
+    margin:0;
+}
+
+.block-wholesale-price table tr{
+    border:1px solid #e6f2fd;
+    border-top:0;
+    height:32px;
+    box-sizing:border-box;
+    color:#000;
+    font-size:16px;
+    /*font-weight:700;*/
+    vertical-align:middle;
+}
+
+.block-wholesale-price table tr td{
+    padding-top: 3px;
+    width:50%;
+}
+
+.block-wholesale-price table tr .step-discont-name span{
+    padding-left:18px;
+}
+
+.block-wholesale-price table tr .step-discont-value{
+    padding: 11px 7px 7px 20px;
+}
+
+.block-wholesale-price table tr .step-discont-value span{
+    padding-left:0;
+}
+
+.block-wholesale-price table .actualStepDiscont{
+    color:#fff;
+    background:#ff6b6b;
+}
+
+.block-wholesale-price .clarify{
+    color:#4f4f4f;
+    font-size:12px;
+    padding: 12px 0 0 5px;
+}
+
+.block-pageAmountProduct{
+    margin-top:17px;
+    display: table;
+}
+
+.block-pageAmountProduct input[type=text]{
+    border: 1px solid #255785;
+    border-right: 0;
+    /*padding: 3px 0 0 7px;*/
+    padding: 3px 0 0 9px;
+    box-sizing: border-box;
+    float: left;
+    /*max-width: 55px;*/
+    max-width: 76px;
+    height: 46px;
+    color: #7f7f7f;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.block-pageAmountProduct .block-pageChangeValue {
+    float: left;
+    width: 26px;
+}
+
+.block-pageAmountProduct .block-pageChangeValue input[type="button"]:last-child {
+    border-top: 1px solid #578fd4;
+}
+
+.block-pageAmountProduct .block-pageChangeValue input[type="button"] {
+    border: 1px solid #255785;
+    -webkit-appearance: none;
+    background:#578fd4;
+    cursor: pointer;
+    color:#fff;
+    width: 26px;
+    height: 23px;
+}
+
+.block-pageAmountProduct .buttonPurchase{
+    float:left;
+    height:46px;
+    width: 120px;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight:700;
+    color: #fff;
+    border:0;
+    cursor: pointer;
+    margin-left: 2px;
+}
+
+.block-pageAmountProduct #addShoppingCart{
+    background: #578fd4;
+}
+
+.block-pageAmountProduct #productPageCartBuy{
+    background: #ff6b6b;
+}
+
+.totalPrice{
+    color:#3d3d3d;
+    font-size:16px;
+    font-weight:700;
+    margin-top: 15px;
+    float: left;
+}
+
+#howManyProducts{
+    padding: 15px 0 0 0;
+    /*text-align: center;*/
+}
+
+#howManyProducts .howManyProductsText{
+    color: #4f4f4f;
+    font-size: 12px;
+    padding-left: 5px;
+    
+}
+
+#howManyProducts a{
+    text-decoration:none;
+}
+
+#howManyProducts input[type="button"] {
+    width: 100%;
+    height: 30px;
+    text-transform: uppercase;
+    font-size: 12px;
+    cursor: pointer;
+    background: #f3f8ff;
+    border: 1px solid #c7d8ed;
+    color: #455d73;
+    margin-bottom: 10px;
+}
+
+@media (min-width:1000px) and (max-width:1200px){
+    
+    .product-table-details {
+        float: right;
+        margin-left: 0;
+    }
+    
+}
+
+@media (min-width:1000px) and (max-width:1125px){
+
+    .product-table-details {
+        width:328px;
+    }
+    
+    .block-pageAmountProduct .buttonPurchase {
+        width: 110px;
+    }
+
+}
+
+@media (min-width:1000px) and (max-width:1100px){
+
+    .product-table-details {
+        width: 280px;
+        float: right;
+        margin-left: 0;
+    }
+    
+    .block-pageAmountProduct .buttonPurchase {
+        width: 86px;
+        font-size:12px;
+    }
+
+}
+
+@media (min-width:720px) and (max-width:870px){
+    
+    .product-table-details {
+        float: right;
+        margin-left: 0;
+    }
+    
+}
+
+@media (min-width:720px) and (max-width:795px){
+
+    .product-table-details {
+        width:328px;
+    }
+    
+    .block-pageAmountProduct .buttonPurchase {
+        width: 110px;
+    }
+
+}
+
+@media (min-width:720px) and (max-width:770px){
+
+    .product-table-details {
+        width: 280px;
+        float: right;
+        margin-left: 0;
+    }
+    
+    .block-pageAmountProduct .buttonPurchase {
+        width: 86px;
+        font-size:12px;
+    }
+
+}
+
+@media (max-width:720px){
+    
+    .block-productMain {
+        display: block;
+        margin-bottom: 50px;
+    }
+    
+    .product-table-details {
+        width: 100%;
+        float: none;
+        margin: 0 auto;
+    }
+    
+}
+
+@media (min-width:440px) and (max-width:720px){
+    
+    .block-wholesale-price table tr .step-discont-name span {
+        padding-left: 11%;
+    }
+    
+    .block-wholesale-price table tr .step-discont-value{
+        padding: 11px 7px 7px 5%;
+    }
+    
+    /*.block-wholesale-price table tr .step-discont-value span {
+        padding-left: 30%;
+    }*/
+    
+    .block-pageAmountProduct {
+        margin-top: 25px;
+        /*float: right;
+        max-width: 348px;
+        display: table;*/
+    }
+    
+    .totalPrice {
+        width: 370px;
+    }
+    
+    #howManyProducts {
+        padding: 20px 0 0 0;
+    }
+    
+}
+
+@media(max-width:440px){
+    
+    .product-table-details .block-basePrice {
+        height: 45px;
+        background: #3e77ab;
+        font-size: 22px;
+        padding: 8px 10px 4px 20px;
+    }
+    
+    .block-wholesale-price .title-wholesale-price {
+        font-size: 15px;
+        padding: 16px 0 0 20px;
+    }
+    
+    .block-pageAmountProduct input[type="text"] {
+        max-width: 20%;
+    }
+    
+    .block-pageAmountProduct .buttonPurchase {
+        width: 33%;
+        font-size: 12px;
+    }
+    
+}

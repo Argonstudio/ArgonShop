@@ -1,0 +1,167 @@
+
+@media(min-width:720px){
+    
+    .block-cards-childRubric{
+        display: flex!important;
+        flex-wrap: wrap;
+        margin: 30px 0 45px -32px;
+    }
+    
+    .block-cards-childRubric .block-card-childRubric{
+        width:185px;
+        margin: 0 0 0 32px;
+    }
+    
+    .block-cards-childRubric .card-childRubric{
+        width:185px;
+        height:148px;
+        display:block;
+        border:1px solid #c0dcff;
+        text-decoration:none;
+        margin: 0 0 30px 0;
+        position:relative;
+        z-index:1;
+        background-position: top center;
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+    
+    .block-card-childRubric:nth-of-type(4n) .card-childRubric{
+        /*float:right;*/
+    }
+    
+    .block-cards-childRubric .card-childRubric:before{
+        content: '';
+        width: 100%;
+        height: 74px;
+        display: block;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        background: #578fd4;
+        opacity: 0.8;
+        z-index: -1;
+    }
+    
+    .block-cards-childRubric .card-childRubric span{
+        color: #fff;
+        display: table-cell;
+        text-align: center;
+        height: 74px;
+        vertical-align: middle;
+        width: 183px;
+        padding: 74px 3px 0 3px;
+    }
+
+}
+@media(min-width:720px) and (max-width:1206px){
+    
+    .block-cards-childRubric .block-card-childRubric {
+        margin: 0 0 0 30px;
+    }
+    
+}
+
+@media(min-width:1000px) and (max-width:1200px){
+    
+    .block-cards-childRubric {
+        margin: 30px 0 50px 0;
+    }
+    
+    .block-cards-childRubric .block-card-childRubric{
+        width:33%;
+        margin:0;
+    }
+    
+    .block-card-childRubric .card-childRubric{
+        margin:0 auto 30px auto;
+    }
+    
+    .block-card-childRubric:nth-of-type(3n) .card-childRubric{
+        float:right;
+    }
+    
+    .block-card-childRubric:first-child .card-childRubric,
+    .block-card-childRubric:nth-of-type(3n+1) .card-childRubric{
+        float:left;
+    }
+    
+}
+
+@media(min-width:890px) and (max-width:1000px){
+    
+    .block-cards-childRubric {
+        margin: 30px 0 45px -32px;
+    }
+    
+    
+}
+
+@media(min-width:720px) and (max-width:890px){
+    
+    .block-cards-childRubric {
+        margin: 30px 0 55px 0;
+    }
+    
+    .block-cards-childRubric .block-card-childRubric{
+        width:33%;
+        margin:0;
+    }
+    
+    .block-card-childRubric .card-childRubric{
+        margin:0 auto 30px auto;
+    }
+    
+    .block-card-childRubric:nth-of-type(3n) .card-childRubric{
+        float:right;
+        margin-right:20px;
+    }
+    
+    .block-card-childRubric:first-child .card-childRubric,
+    .block-card-childRubric:nth-of-type(3n+1) .card-childRubric{
+        float:left;
+        margin-left:20px;
+    }
+    
+}
+
+@media(max-width:720px){
+    
+    .block-cards-childRubric{
+        margin: 15px 0 20px 0;
+    }
+
+    .block-card-childRubric{
+        display:block;
+    }
+    
+    .block-card-childRubric .card-childRubric{
+        text-decoration:none;
+        background-image:none!important;
+        color:#245787;
+        font-size:16px;
+        padding-left: 28px;
+        position: relative;
+        display: block;
+        margin: 10px 0;
+    }
+    
+    .block-card-childRubric .card-childRubric span {
+        display: table-cell;
+        vertical-align: middle;
+        height: 33px;
+    }
+    
+    .block-card-childRubric .card-childRubric:before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 5px;
+        left: 14px;
+        width: 4px;
+        height: 23px;
+        background: #dbe4f6;
+    }
+    
+    
+}

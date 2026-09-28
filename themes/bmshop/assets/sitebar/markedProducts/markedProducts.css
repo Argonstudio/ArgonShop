@@ -1,0 +1,39 @@
+.block-marked-products{
+    margin: 59px auto 0 auto;
+    width: 260px;
+}
+
+.block-marked-products:first-child{
+    margin-top: 45px;
+}
+
+.block-marked-products .title-marked-products{
+    font-size:18px;
+    font-weight:700;
+    margin: 0 0 31px 0;
+    text-transform:uppercase;
+}
+
+.block-marked-products .linkHistory{
+    background:#255785;
+    color:#fff;
+    font-size:14px;
+    font-weight:700;
+    text-transform:uppercase;
+    text-decoration:none;
+    text-align:center;
+    display:block;
+    width:226px;
+    height:29px;
+    padding-top: 7px;
+    box-sizing: border-box;
+    
+}
+
+@media(max-width:1000px){
+    
+    .block-marked-lists {
+        display:none;
+    }
+    
+}

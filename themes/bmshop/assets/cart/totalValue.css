@@ -1,0 +1,130 @@
+/** Стоимость товаров, общий вес, очистка корзины */
+
+.block-cartProductsControl{
+    display: table;
+    width: 100%;
+    margin: 18px 0 35px 0;
+    border-top: 1px solid #e6f2fd;
+    padding: 20px 10px;
+    border-bottom: 1px solid #e6f2fd;
+    box-sizing: border-box;
+}
+
+#shoppingCart .block-totalResult{
+    float: left;
+}
+
+#shoppingCart .block-totalResult .cartTotalPrice{
+    font-size: 18px;
+    text-transform: uppercase;
+    padding: 0 0 10px 0;
+    text-align: right;
+    color: #255784;
+}
+
+#shoppingCart .block-totalResult .cartTotalWeight{
+    font-size: 16px;
+    text-transform: uppercase;
+    /*text-align: right;*/
+    color: #255784;
+}
+
+#shoppingCart .block-deleteAllProducts{
+    display: table-cell;
+    height: 100%;
+    vertical-align: middle;
+    width: 20%;
+}
+
+#shoppingCart .block-cartControlAfter .block-deleteAllProducts{
+    width:50%;
+}
+
+#shoppingCart .block-deleteAllProducts .deleteAllProducts{
+    border: 1px solid #8bbfff;
+    background-color: #fff;
+    color: #4b85cd;
+    cursor: pointer;
+    font-weight: 700;
+    width: 171px;
+    height: 35px;
+    font-size: 12px;
+    letter-spacing: .7px;
+    text-transform: uppercase;
+    float: right;
+}
+
+.block-deleteAllProducts .errorDeleteProducts{
+    float: right;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.block-cartControlAfter{
+    border:0;
+}
+
+#shoppingCart .block-cartControlAfter .block-totalResult {
+    float: right;
+    width: 100%;
+}
+
+#shoppingCart .block-cartControlAfter .block-deleteAllProducts {
+    float: right;
+    margin-top: 8px;
+}
+
+#shoppingCart .block-cartControlAfter .cartTotalWeight {
+    text-align: right;
+}
+
+#shoppingCart .block-cartControlAfter  .deleteAllProducts {
+    height: 28px;
+    margin-top: 10px;
+}
+
+@media(max-width:520px){
+    
+    .block-cartProductsControl {
+        padding: 20px 0;
+    }
+    
+    #shoppingCart .block-totalResult {
+        float: none;
+        text-align: center;
+    }
+    
+    #shoppingCart .block-totalResult .cartTotalPrice {
+        text-align: center;
+    }
+    
+    #shoppingCart .block-totalResult .cartTotalWeight {
+        text-align: center;
+    }
+    
+    #shoppingCart .block-deleteAllProducts {
+        display: block;
+        text-align: center;
+        margin-top: 10px;
+        width: 100%;
+    }
+    
+    #shoppingCart .block-cartControlAfter .block-deleteAllProducts{
+        width:100%;
+    }
+    
+    .block-deleteAllProducts .errorDeleteProducts {
+        float: none;
+        margin-top: 15px;
+    }
+    
+    #shoppingCart .block-deleteAllProducts .deleteAllProducts {
+        float: none;
+    }
+    
+    #shoppingCart .block-cartControlAfter .block-deleteAllProducts {
+        float: none;
+        margin-top: 10px;
+    }
+    
+}

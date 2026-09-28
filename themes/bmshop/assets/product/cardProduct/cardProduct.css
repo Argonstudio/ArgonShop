@@ -1,0 +1,205 @@
+.block-productCard{
+    margin: 25px 0 35px 0;
+}
+
+.catalogProductList .block-productCard{
+    margin: 35px 0 35px 30px;
+    width: 250px;
+}
+
+.cardHeader{
+    display: inline-block;
+}
+
+/* img */
+
+.block-cardProductImage{
+    width: 120px;
+    height: 98px;
+    border: 1px solid #c7d8ed;
+    float: left;
+    position:relative;
+}
+
+.block-cardProductImage a{
+    width: 120px;
+    height: 98px;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.block-cardProductImage a img{
+    max-width: 110px;
+    height: auto;
+    width: auto;
+    max-height: 88px;
+    vertical-align: bottom;
+}
+
+/* new и хит */
+
+.cardProductMarked{
+    position: absolute;
+    z-index: 1;
+    color: #fff;
+    font-size: 14px;
+}
+
+.cardProductMarked span{
+    display: block;
+    letter-spacing: 0.3px;
+}
+
+.cardProductMarked::before {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+}
+
+.cardProductHit::before{
+    border-left: 39px solid #078b17;
+    border-right: 33px solid transparent;
+    border-bottom: 39px solid transparent;
+    border-top: 0px solid transparent;
+}
+
+.cardProductHit span{
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    padding: 7px 0 0 2px;
+}
+
+.cardProductNew{
+    top:0;
+    right:0;
+}
+
+.cardProductNew::before{
+    border-left: 33px solid transparent;
+    border-right: 39px solid #ff6b6b;
+    border-bottom: 39px solid transparent;
+    border-top: 0px solid transparent;
+    right: 0;
+}
+
+.cardProductNew span{
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    padding: 5px 0 0 0;
+    letter-spacing: 0;
+}
+
+
+
+/* характеристики */
+
+.block-cardProductCharact{
+    float:left;
+    color: #525252;
+    font-size: 14px;
+    padding-left: 10px;
+    width:110px;
+    margin: 5px 0 0 0;
+}
+
+.block-cardProductCharact li{
+    list-style-type: none;
+    padding-bottom: 7px;
+}
+
+.cardProductName{
+    font-size:18px;
+    width:228px;
+    color:#3d3d3d;
+    padding: 20px 0;
+    display: block;
+    text-decoration: none;
+}
+
+.catalogProductList .cardProductName {
+    font-size: 18px;
+    width: 228px;
+    color: #3d3d3d;
+    padding: 20px 0 10px 0;
+    height: 106px;
+    box-sizing: border-box;
+}
+
+.cardProductPrice{
+    background: #4e83c6;
+    width:228px;
+    /*height: 34px;*/
+    color: #fff;
+    font-size: 18px;
+    padding: 9px 0 7px 12px;
+    box-sizing: border-box;
+}
+
+.block-cardProductBascet,
+.card-alreadyAdded{
+    margin:15px 0 0 0;
+}
+
+.block-cardProductBascet input[type=button]{
+    width:110px;
+    height:30px;
+    text-transform:uppercase;
+    font-size:12px;
+    cursor:pointer;
+}
+
+.card-inBascet{
+    background:#f3f8ff;
+    border:1px solid #c7d8ed;
+    color:#455d73;
+}
+
+.card-buy{
+    background:#ffe8e8;
+    border:1px solid #ff6b6b;
+    color:#ae3a3a;
+    margin-left:3px;
+}
+
+.card-alreadyAdded{
+    color: #525252;
+    font-size: 14px;
+}
+
+.card-alreadyAdded a{
+    text-decoration:none;
+}
+
+.card-alreadyAdded input[type=button]{
+    width:228px;
+    height:30px;
+    text-transform:uppercase;
+    font-size:12px;
+    cursor:pointer;
+    background:#f3f8ff;
+    border:1px solid #c7d8ed;
+    color:#455d73;
+}
+
+@media(max-width:1250px){
+    
+    .catalogProductList .block-productCard {
+        margin: 35px 0 35px 23px;
+    }
+    
+}
+
+.card-addProductError{
+    max-width: 228px;
+    box-sizing: border-box;
+    margin-top: 20px;
+    font-size: 14px;
+    padding: 10px 15px;
+    color: red;
+    font-weight: 700;
+}
