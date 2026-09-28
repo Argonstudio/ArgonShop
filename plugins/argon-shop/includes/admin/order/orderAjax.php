@@ -282,6 +282,10 @@ add_action( 'wp_ajax_as_admin_recount_order', 'as_admin_recount_order_callback' 
 function as_add_fields_order_callback() {
     
     check_ajax_referer( 'argon_shop_order_nonce', 'nonce' );
+
+    if ( ! current_user_can( 'manage_options' ) ) {
+        wp_die( 'Недостаточно прав' );
+    }
     
     if ( ! isset( $_POST['type'] ) || ! isset( $_POST['fieldsInStock'] ) ) {
         wp_die( 'Недостаточно данных' );
