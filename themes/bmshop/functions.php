@@ -311,61 +311,6 @@ ini_set('display_errors','off');
 	add_filter('excerpt_more', 'bito_excerpt_more');
 
 
-	function bito_comments($comment, $args, $depth){
-		$GLOBALS['comment'] = $comment;
-		?>
-			<div class="commentary-item clearfix">
-                <div class="commentary-post clearfix">
-                	<div class="time-name">
-                        <span class="user-name">
-                            <?php echo get_comment_author(); ?>
-                        </span>
-                        <span class="data-time">
-                            <i class="time-ico"></i>
-                            <span><?php echo get_comment_time('H:i'); ?></span> <span><?php echo get_comment_date('d.m.Y'); ?></span>
-                        </span>
-                    </div>
-                    <div class="commentary-text">
-                        <?php comment_text(); ?>
-                    </div>
-                    <div class="reply-block"><i class="fa fa-reply-all" aria-hidden="true"></i>
-                    	<?php comment_reply_link( array_merge( $args, array( 'reply_text' => __( 'Ответить', 'bito' ), 'depth' => $depth, 'max_depth' => $args['max_depth'] ) ) ); ?>
-                    </div>
-                    
-                </div>                            
-            </div>
-		<?php 
-	}
-
-	add_filter('comment_reply_link', 'replace_reply_link_class');
-
-
-	function replace_reply_link_class($class){
-	    $class = str_replace("class='comment-reply-link", "class='reply", $class);
-	    return $class;
-	}
-
-	add_filter('comment_form_fields', 'bito_reorder_comment_fields' );
-	function bito_reorder_comment_fields( $fields ){
-
-		$new_fields = array();
-
-		$myorder = array('author','email','comment');
-
-		foreach( $myorder as $key ){
-			$new_fields[ $key ] = $fields[ $key ];
-			unset( $fields[ $key ] );
-		}
-
-		// если остались еще какие-то поля добавим их в конец
-		if( $fields )
-			foreach( $fields as $key => $val )
-				$new_fields[ $key ] = $val;
-
-		return $new_fields;
-	}
-
-
 // Display three posts per page is home
 function custom_posts_per_page_home($query) {
 	if ($query->is_home() && $query->is_main_query()) {
