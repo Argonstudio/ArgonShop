@@ -237,19 +237,5 @@
    $userID === get_current_user_id();
    ```
 
----
 
-## Известные TODO в безопасности
-
-- ⚠️ `as_search_suitable_product_order_callback` — **нет проверки прав**.
-- ⚠️ `as_add_fields_order_callback` — **нет проверки прав**.
-
-Эти эндпоинты доступны **любому авторизованному пользователю**. Работают
-только в админке (`wp_ajax_`, не `nopriv_`), но подписчик тоже авторизован.
-
-**Если будешь править — добавь:**
-
-```php
-current_user_can('manage_options');
-```
 
