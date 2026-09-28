@@ -277,12 +277,6 @@ $imgs_count = count($post_imgs);
 |----------|-----|------------|------------------|
 | `slide_link` | URL | Ссылка слайда | `index.php` |
 
-#### Для таксономии `boilers` (опционально, для калькулятора)
-
-| Имя поля | Тип | Назначение | Где используется |
-|----------|-----|------------|------------------|
-| `price_boilers` | Number | Базовая цена | `functions.php` → `html_detailed_fields()` |
-| `price_promotion` | Number | Цена со скидкой | `functions.php` → `html_detailed_fields()` |
 
 ---
 
