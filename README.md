@@ -4,8 +4,6 @@
 > с поддержкой PHP 5.6 и jQuery 2.2.
 
 **Ветка:** `historic/php56-jquery`
-**Автор:** Иван Войтков (Argon Studio) — http://argon-studio.ru
-**Лицензия:** GNU General Public License v2.0 or later
 
 ---
 
