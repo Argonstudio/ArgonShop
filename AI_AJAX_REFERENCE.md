@@ -253,6 +253,3 @@
 current_user_can('manage_options');
 ```
 
----
-
-*Конец файла AI_AJAX_REFERENCE.md*
