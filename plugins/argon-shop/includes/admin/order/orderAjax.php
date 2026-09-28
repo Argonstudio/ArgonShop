@@ -390,6 +390,10 @@ function as_add_product_order_callback() {
 function as_search_suitable_product_order_callback() {
     
     check_ajax_referer( 'argon_shop_order_nonce', 'nonce' );
+
+    if ( ! current_user_can( 'manage_options' ) ) {
+        wp_die( 'Недостаточно прав' );
+    }
     
     if ( ! isset( $_POST['searchStr'] ) ) {
         wp_die( 'Недостаточно данных' );
