@@ -420,4 +420,3 @@ arsApi.post('sortingCatalog', { typeSort, howSorting, catId, pageNum });
 
 ---
 
-*Конец файла AI_DATA_FLOWS.md*
