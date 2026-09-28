@@ -468,9 +468,7 @@ themes/argon-shop-theme/
 ├── single.php                          Диспетчер: выбирает шаблон по категории
 ├── single-default.php                  Запись по умолчанию
 ├── single-product.php                  Страница товара
-├── single-shoporder.php                Страница заказа (заглушка)
 ├── single-aktsii-moskva.php            Акция (Москва)
-├── single-aktsii-istra.php             Акция (Истра)
 │
 ├── category-aktsii-moskva.php          Рубрика акций (Москва)
 ├── category-aktsii-istra.php           Рубрика акций (Истра) — заглушка
@@ -484,7 +482,6 @@ themes/argon-shop-theme/
 ├── contacts.php                        Template Name: Контакты
 ├── addressMap.php                      Template Name: Карта AJAX
 │
-├── archive-product1.php                (legacy, не используется)
 │
 ├── template-parts/
 │   ├── cabinet/
