@@ -1,5 +1,14 @@
 # ArgonShop
 
+---
+
+### 🌍 International Code & Localization Note
+
+* **AI-Assisted Translation Ready:** Since ArgonShop features a clean, standard WordPress API architecture and a fully documented file structure, **any AI coding assistant (Cursor, Windsurf, Claude, DeepSeek) can completely translate the plugin and theme interfaces into English (or any other language) within minutes during installation.** Simply ask your AI tool to replace the core UI strings in the PHP/JS files.
+* **Official English Version:** The current release is primarily tailored for the CIS market. However, **I am fully ready to develop and release a comprehensive, out-of-the-box English localization (including proper text-domain routing)** if there is sufficient interest from the international community. Feel free to open an Issue or give the repository a ⭐ Star to show your support!
+
+---
+
 WordPress e-commerce plugin. Live demo: [https://plugin.argon-studio.ru/](https://plugin.argon-studio.ru/)
 
 ---
