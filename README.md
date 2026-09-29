@@ -181,7 +181,15 @@
 
 Плагин разрабатывался в качестве главного плагина системы. В идеале ставить его на новый чистый Wordpress первым.
 
-### Способ 1. Клонирование в `wp-content`
+### Способ 1. Ручная установка
+
+Скопировать:
+- `plugins/argon-shop/` → `wp-content/plugins/argon-shop/`
+- `themes/argon-shop-theme/` → `wp-content/themes/argon-shop-theme/`
+
+Активировать плагин в админке, затем включить тему.
+
+### Способ 2. Клонирование в `wp-content`
 
 В корне WordPress:
 
@@ -195,14 +203,6 @@ ln -s argon-shop-repo/themes/argon-shop-theme themes/argon-shop-theme
 ```
 
 На Windows — через `mklink /D` в командной строке с правами администратора.
-
-### Способ 2. Ручная установка
-
-Скопировать:
-- `plugins/argon-shop/` → `wp-content/plugins/argon-shop/`
-- `themes/argon-shop-theme/` → `wp-content/themes/argon-shop-theme/`
-
-Активировать плагин в админке, затем включить тему.
 
 ### Способ 3. Установка через ИИ-ассистента
 
