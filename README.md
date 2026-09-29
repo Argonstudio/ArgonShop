@@ -2,6 +2,8 @@
 
 Плагин интернет-магазина. Сайт-пример [https://plugin.argon-studio.ru/](https://plugin.argon-studio.ru/)
 
+[ENGLISH README](README.en.md)
+
 ---
 
 ## Содержание
