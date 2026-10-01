@@ -2,16 +2,12 @@
 
 ---
 
+WordPress e-commerce plugin.
+
 [РУССКАЯ ВЕРСИЯ ОПИСАНИЯ](README.ru.md)
 
-### 🌍 International Code & Localization Note
-
-* **AI-Assisted Translation Ready:** Since ArgonShop features a clean, standard WordPress API architecture and a fully documented file structure, **any AI coding assistant (Cursor, Windsurf, Claude, DeepSeek) can completely translate the plugin and theme interfaces into English (or any other language) within minutes during installation.** Simply ask your AI tool to replace the core UI strings in the PHP/JS files.
-* **Official English Version:** The current release is primarily tailored for the CIS market. However, **I am fully ready to develop and release a comprehensive, out-of-the-box English localization (including proper text-domain routing)** if there is sufficient interest from the international community. Feel free to open an Issue or give the repository a ⭐ Star to show your support!
-
----
-
-WordPress e-commerce plugin. Live demo: [https://plugin.argon-studio.ru/](https://plugin.argon-studio.ru/)
+> [!IMPORTANT]
+> For any questions about the plugin, its operation, or installation, you can turn to DeepSeek/Gemini and other AIs. The plugin ships with a dedicated AI documentation set (AI.md, AI_ARCHITECTURE.md, and related files) designed to give AI assistants reliable context. Note: the site theme example and comments are in Russian, so for an English-speaking reader (and readers of other languages) it will be easier to work through an AI.
 
 ---
 
@@ -67,6 +63,10 @@ WordPress e-commerce plugin. Live demo: [https://plugin.argon-studio.ru/](https:
 
 10. **🤖 AI-Ready Architecture**
     The plugin is designed to be simple and understandable for AI — just give the AI a link and it will be able to write the necessary modules. Google Gemini review: [https://share.google/aimode/SPAy75fL3QNFVMjp9](https://share.google/aimode/jR6zYbetF8yqLALi5)
+
+---
+🌐 Live Demo: [https://plugin.argon-studio.ru/](https://plugin.argon-studio.ru/)
+(Note: The demo site is in Russian, but you can seamlessly explore it using your browser's built-in auto-translate feature. Check out the smooth AJAX search, cart operations, and mobile responsiveness!)
 
 ---
 
