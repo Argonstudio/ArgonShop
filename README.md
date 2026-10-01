@@ -1,7 +1,5 @@
 # ArgonShop
 
----
-
 [ССЫЛКА НА РУССКУЮ ВЕРСИЮ ОПИСАНИЯ](README.ru.md)
 
 WordPress e-commerce plugin.
