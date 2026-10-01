@@ -5,11 +5,11 @@ This file is the entry point. It is short. Detailed information is in specialize
 | File | About |
 |---|---|
 | **AI.md** | this file — index, key contracts, hard prohibitions |
-| [AI_ARCHITECTURE.md](AI_ARCHITECTURE.md) | layers, modules, folder map |
-| [AI_DATA_FLOWS.md](AI_DATA_FLOWS.md) | 7 key data scenarios |
-| [AI_AJAX_REFERENCE.md](AI_AJAX_REFERENCE.md) | all AJAX actions with parameters |
-| [AI_TEMPLATE_MAP.md](AI_TEMPLATE_MAP.md) | theme templates ↔ plugin functions |
-| [AI_EXTENDING.md](AI_EXTENDING.md) | how to add a feature without breaking the architecture |
+| [docs/ai/AI_ARCHITECTURE.md](docs/ai/AI_ARCHITECTURE.md) | layers, modules, folder map |
+| [docs/ai/AI_DATA_FLOWS.md](docs/ai/AI_DATA_FLOWS.md) | 7 key data scenarios |
+| [docs/ai/AI_AJAX_REFERENCE.md](docs/ai/AI_AJAX_REFERENCE.md) | all AJAX actions with parameters |
+| [docs/ai/AI_TEMPLATE_MAP.md](docs/ai/AI_TEMPLATE_MAP.md) | theme templates ↔ plugin functions |
+| [docs/ai/AI_EXTENDING.md](docs/ai/AI_EXTENDING.md) | how to add a feature without breaking the architecture |
 | [AGENTS.md](AGENTS.md) | pointer for Cursor / Codex / Claude Code |
 
 ---
