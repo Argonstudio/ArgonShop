@@ -10,12 +10,9 @@ fits a particular project.
 > will usually be a better fit.
 
 ---
-
 ## 1. What ArgonShop is
 
-ArgonShop is a **lightweight, self-contained e-commerce stack** for WordPress:
-a plugin (business logic) plus a theme (markup and styles). It is a monorepo,
-explicitly designed to be **readable, extensible, and AI-friendly**.
+ArgonShop is a **lightweight, self-contained e-commerce stack** for WordPress: a plugin (business logic) plus a theme (markup and styles). It is a modern monorepo built with **Vanilla JS and native ES modules—completely free of bundlers, build steps, or framework lock-in**. The entire codebase is explicitly designed to be **readable, extensible, and AI-friendly**.
 
 It is not a WooCommerce competitor by feature count. It is a **foundation
 for custom shops** where WooCommerce would get in the way.
@@ -87,6 +84,8 @@ that most platforms — including WooCommerce — do not and cannot have:
 
 | Property | Why it matters for AI |
 |---|---|
+| **No DB bloat & Legacy** | The DB schema is minimal. The AI doesn't have to navigate years of WooCommerce postmeta workarounds. |
+| **Vanilla JS, no framework** | No hidden magic, no build step to explain, no framework version drift. |
 | **Small codebase** | The entire project fits in an LLM context window. The AI sees the whole picture. |
 | **Explicit contracts** | DOM selectors, AJAX actions, meta keys, and cookie formats are documented. The AI does not guess. |
 | **Hard prohibitions** | "Do not do X" rules work better as prompts than "do Y" descriptions. |
@@ -118,8 +117,8 @@ To set expectations correctly:
   different goals.
 - **Not a marketplace platform.** No multi-vendor logic out of the box.
 - **Not a SaaS.** Self-hosted only.
-- **Not feature-complete.** Payments, shipping, taxes, and reporting are
-  built per-project, not shipped by default.
+- **Not feature-complete.** Basic cart and catalog actions are there, but payments, shipping, complex taxes,
+  and advanced reporting are built or integrated per-project, not shipped by default.
 - **Not for "I want it to look like WooCommerce".** If that is the goal,
   use WooCommerce.
 
