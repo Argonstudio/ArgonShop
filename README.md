@@ -4,10 +4,10 @@
 
 WordPress e-commerce plugin.
 
-[ССЫЛКА НА РУССКУЮ ВЕРСИЮ ОПИСАНИЯ](README.ru.md)
-
 > [!IMPORTANT]
 > For any questions about the plugin, its operation, or installation, you can turn to DeepSeek/Gemini and other AIs. The plugin ships with a dedicated AI documentation set (AI.md, AI_ARCHITECTURE.md, and related files) designed to give AI assistants reliable context. Note: the site theme example and comments are in Russian, so for an English-speaking reader (and readers of other languages) it will be easier to work through an AI.
+
+[ССЫЛКА НА РУССКУЮ ВЕРСИЮ ОПИСАНИЯ](README.ru.md)
 
 ---
 
