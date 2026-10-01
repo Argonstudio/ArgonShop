@@ -5,7 +5,7 @@
 WordPress e-commerce plugin.
 
 > [!IMPORTANT]
-> For any questions about the plugin, its operation, or installation, feel free to consult DeepSeek, Gemini, or other AI assistants. The plugin includes a dedicated AI documentation set (AI.md, AI_ARCHITECTURE.md, and related files) specifically designed to provide AIs with accurate context. Note: since the site theme examples and comments are in Russian, using an AI assistant will make it much easier for English-speaking readers (and speakers of other languages) to navigate and work with the code.
+> For any questions about the plugin, its operation, or installation, feel free to consult DeepSeek, [ChatGPT](https://chatgpt.com/s/t_6abe8276fabc8191a0389d716ed8ace2), or other AI assistants. The plugin includes a dedicated AI documentation set (AI.md, AI_ARCHITECTURE.md, and related files) specifically designed to provide AIs with accurate context. Note: since the site theme examples and comments are in Russian, using an AI assistant will make it much easier for English-speaking readers (and speakers of other languages) to navigate and work with the code.
 
 ---
 
