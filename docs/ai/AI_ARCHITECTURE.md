@@ -1,84 +1,84 @@
-# AI_ARCHITECTURE.md — layers, modules, folder map
+# AI_ARCHITECTURE.md — слои, модули, карта папок
 
-Continuation of [AI.md](../../AI.md). Here — how the project is structured internally.
+Продолжение [AI.md](AI.md). Здесь — как устроен проект внутри.
 
-## 1. Monorepo
+## 1. Монорепозиторий
 
 ```
-plugins/argon-shop/          Shop logic
-themes/argon-shop-theme/     Markup and styles
+plugins/argon-shop/          Логика магазина
+themes/argon-shop-theme/     Вёрстка и стили
 ```
 
-**Plugin without the theme** outputs nothing on the frontend — its functions are simply never called. **Theme without the plugin** does not work — there is no `product` CPT, no `catalog` taxonomy, no `as_search` function, etc.
+**Плагин без темы** не выводит ничего на фронтенде — его функции просто не вызываются. **Тема без плагина** не работает — нет CPT `product`, таксономии `catalog`, функций `as_search` и др.
 
-## 2. Plugin: three levels
+## 2. Плагин: три уровня
 
-### 2.1. Entry point — `argon-shop.php`
+### 2.1. Точка входа — `argon-shop.php`
 
-Reads constants, defines paths, registers the `admin_enqueue_scripts` and `wp_enqueue_scripts` hooks, localizes JS (`arsWpAjax`, `myajax`), includes all modules via `require_once`, adds `type="module"` to `main.js`.
+Читает константы, определяет пути, регистрирует хуки `admin_enqueue_scripts` и `wp_enqueue_scripts`, локализует JS (`arsWpAjax`, `myajax`), подключает все модули через `require_once`, добавляет `type="module"` к `main.js`.
 
-The order of `require_once` follows the layers: first API, then VIEW, then interfaces, then admin.
+Порядок `require_once` соответствует слоям: сначала API, потом VIEW, потом интерфейсы, потом админка.
 
-### 2.2. The `includes/` folder
+### 2.2. Папка `includes/`
 
-| Subfolder | Responsible for |
+| Подпапка | Отвечает за |
 |---|---|
-| `includes/*.php` (root) | `createPostType.php` — CPTs and taxonomies; `siteLine.php` — multi-region support |
-| `includes/admin/` | Meta boxes and admin hooks: product, order, filters, gallery |
-| `includes/api/` | Internal API: data retrieval (`getData/`), output (`view/`), settings, checks |
-| `includes/interface/` | Public interfaces: cart, account, search, sliders, pagination, breadcrumbs |
+| `includes/*.php` (корень) | `createPostType.php` — CPT и таксономии; `siteLine.php` — мультирегиональность |
+| `includes/admin/` | Метабоксы и хуки админки: товар, заказ, фильтры, галерея |
+| `includes/api/` | Внутреннее API: получение данных (`getData/`), вывод (`view/`), настройки, проверки |
+| `includes/interface/` | Публичные интерфейсы: корзина, ЛК, поиск, слайдеры, пагинация, хлебные крошки |
 
-**The `api/` folder is not a REST API.** These are internal PHP functions for data retrieval. There are no REST endpoints in the project; everything goes through `admin-ajax.php`.
+**Папка `api/` — это не REST API.** Это внутренние PHP-функции для получения данных. REST-эндпоинтов в проекте нет, всё идёт через `admin-ajax.php`.
 
-### 2.3. The `assets/` folder
+### 2.3. Папка `assets/`
 
-- `assets/css/interface/interface-style.css` — functional CSS (initial states controlled by JS).
-- `assets/css/admin/` — meta box styles.
-- `assets/js/interface/` — frontend ES modules.
-- `assets/js/admin/modules/` — admin scripts (with jQuery).
-- `assets/vendor/` — Swiper and GLightbox with retained licenses.
+- `assets/css/interface/interface-style.css` — функциональный CSS (начальные состояния, управляемые JS).
+- `assets/css/admin/` — стили метабоксов.
+- `assets/js/interface/` — ES-модули фронтенда.
+- `assets/js/admin/modules/` — скрипты админки (с jQuery).
+- `assets/vendor/` — Swiper и GLightbox с сохранёнными лицензиями.
 
-## 3. Frontend ES module structure
+## 3. Структура ES-модулей фронтенда
 
 ```
 assets/js/interface/
-├── main.js                    Entry point
-├── core/                      Core
+├── main.js                    Точка входа
+├── core/                      Ядро
 │   ├── config.js              url, nonce, cartUrl
-│   ├── api.js                 fetch client (arsApi)
-│   └── nonce.js               XMLHttpRequest interceptor
-├── shared/                    Shared utilities
+│   ├── api.js                 fetch-клиент (arsApi)
+│   └── nonce.js               перехватчик XMLHttpRequest
+├── shared/                    Общие утилиты
 │   ├── dom.js                 qs, qsa, on, delegate
 │   └── format.js              formatPrice, formatWeight, parseNumber
-└── modules/                   21 functional modules
-    ├── cart.js                cart: quantity, removal, submit
-    ├── cart-form.js           form: registration, files
-    ├── cart-widget.js         cart widget in the header
-    ├── product.js             product page
-    ├── card-product.js        buttons in product cards
-    ├── add-to-cart.js         shared add-to-cart logic
-    ├── search.js              AJAX search
-    ├── sort.js                sorting
-    ├── cabinet.js             user account
-    ├── orders.js              order filter
-    ├── consent.js             consent checkboxes
-    ├── control-panels.js      tabs
-    ├── mobile-menu.js         mobile menu
-    ├── menu-catalog.js        catalog menu
-    ├── header.js              city selection
-    ├── contact-form.js        CF7 in a modal
-    ├── catalog-page.js        mobile catalog blocks
-    ├── request.js             popular queries
-    ├── slider-main.js         home page slider
-    ├── slider-product.js      product slider
-    └── history.js             view history
+└── modules/                   21 функциональный модуль
+    ├── cart.js                корзина: количество, удаление, submit
+    ├── cart-form.js           форма: регистрация, файлы
+    ├── cart-widget.js         виджет корзины в шапке
+    ├── product.js             страница товара
+    ├── card-product.js        кнопки в карточках
+    ├── add-to-cart.js         общая логика добавления
+    ├── search.js              AJAX-поиск
+    ├── sort.js                сортировка
+    ├── cabinet.js             ЛК
+    ├── orders.js              фильтр заказов
+    ├── consent.js             чекбоксы согласия
+    ├── control-panels.js      табы
+    ├── mobile-menu.js         мобильное меню
+    ├── menu-catalog.js        меню каталога
+    ├── header.js              выбор города
+    ├── contact-form.js        CF7 в модалке
+    ├── catalog-page.js        мобильные блоки каталога
+    ├── request.js             популярные запросы
+    ├── slider-main.js         слайдер главной
+    ├── slider-product.js      слайдер товара
+    └── history.js             история просмотров
 ```
 
-### 3.1. Module pattern
+### 3.1. Паттерн модуля
 
-Each module exports a singleton with an `init()` method. The method is idempotent; if its DOM elements are absent, it does nothing.
+Каждый модуль экспортирует синглтон с методом `init()`. Метод идемпотентный, при отсутствии своих DOM-элементов ничего не делает.
 
-Pattern:
+Схема:
 
 ```js
 class ArsModule {
@@ -87,53 +87,53 @@ class ArsModule {
         if ( this.#initialized ) return;
         if ( ! qs( '.some-selector' ) ) return;
         this.#initialized = true;
-        // handlers
+        // обработчики
     }
 }
 export const arsModule = new ArsModule();
 ```
 
-`initApp()` in `main.js` calls `init()` on every module on every page. This is safe — each module decides for itself what to do.
+`initApp()` в `main.js` вызывает `init()` у всех модулей на всех страницах. Это безопасно — каждый сам решает, что делать.
 
-### 3.2. Why no jQuery
+### 3.2. Почему без jQuery
 
-- No implicit dependencies.
-- No load-order issues (handlers are attached via delegation on `document`).
-- No competition for `$`.
-- Less weight.
+- Нет неявных зависимостей.
+- Нет проблем с порядком загрузки (обработчики навешиваются делегированием на `document`).
+- Нет конкуренции за `$`.
+- Меньше веса.
 
-## 4. Theme: layers
+## 4. Тема: слои
 
 ```
 themes/argon-shop-theme/
-├── style.css                  Theme metadata (header only)
-├── functions.php              Enqueue scripts, register ourclients/sertificates CPTs
-├── header.php, footer.php,    Global templates
+├── style.css                  Метаданные темы (только заголовок)
+├── functions.php              Подключение скриптов, CPT ourclients/sertificates
+├── header.php, footer.php,    Глобальные шаблоны
 │   sidebar.php
-├── index.php, page.php,       Page templates by type
+├── index.php, page.php,       Шаблоны страниц по типам
 │   404.php, search.php, ...
-├── single-*.php,              Single posts
+├── single-*.php,              Одиночные записи
 │   category-*.php, taxonomy-*.php
-├── template-parts/            Partial templates
-│   ├── cabinet/               Account tabs
-│   ├── cart/                  Checkout forms
-│   └── productPage/           Product page blocks
+├── template-parts/            Частичные шаблоны
+│   ├── cabinet/               Вкладки ЛК
+│   ├── cart/                  Формы заказа
+│   └── productPage/           Блоки страницы товара
 ├── includes/cardProduct/      generate_product_card
-└── assets/                    Theme JS and CSS
+└── assets/                    JS и CSS темы
 ```
 
-**What goes where:**
+**Что где лежит:**
 
-- **Page templates** — directly in the theme root (`single-product.php`, `shoppingCartPage.php`).
-- **Template parts** — in `template-parts/`.
-- **Styles** — in `assets/css/`, grouped by block (home, cart, account, catalog).
-- **Theme JS** — `assets/js/` (modal, search expansion, certificates slider).
+- **Шаблоны страниц** — прямо в корне темы (`single-product.php`, `shoppingCartPage.php`).
+- **Части шаблонов** — в `template-parts/`.
+- **Стили** — в `assets/css/`, разложены по блокам (главная, корзина, ЛК, каталог).
+- **JS темы** — `assets/js/` (модалка, раскрытие поиска, слайдер сертификатов).
 
-## 5. Touchpoints between plugin and theme
+## 5. Точки соприкосновения плагина и темы
 
-**The theme calls plugin functions** in templates:
+**Тема вызывает функции плагина** в шаблонах:
 
-| Function | Plugin file |
+| Функция | Файл плагина |
 |---|---|
 | `kama_breadcrumbs` | `includes/interface/breadcrumbs.php` |
 | `kama_pagenavi` | `includes/interface/pagenavi.php` |
@@ -155,28 +155,28 @@ themes/argon-shop-theme/
 | `view_user_orders` | `includes/interface/cabinet/userOrders/ordersView.php` |
 | `get_charact` | `includes/api/getData/admin/get_characteristics.php` |
 
-**The plugin enqueues theme JS** through dependencies — for example, `slider-sertificates.js` depends on `swiper-js` and `glightbox-js`.
+**Плагин подключает JS темы** через зависимости — например, `slider-sertificates.js` зависит от `swiper-js` и `glightbox-js`.
 
-## 6. CPT and taxonomy registration
+## 6. Регистрация CPT и таксономий
 
-Everything is in `includes/createPostType.php`:
+Всё в `includes/createPostType.php`:
 
-| Entity | Name | Type |
+| Сущность | Имя | Тип |
 |---|---|---|
-| Product | `product` | CPT, public |
-| Order | `shoporder` | CPT, `publicly_queryable => false` |
-| Slide | `slider` | CPT, public |
-| Catalog | `catalog` | Hierarchical taxonomy |
-| Characteristics | `characteristics` | Hierarchical taxonomy |
-| Wholesale price steps | `wholesalePrice` | Flat, registered conditionally |
-| Order statuses | `statusorders` | Flat |
-| Clients (theme) | `ourclients` | CPT, registered in the theme's `functions.php` |
-| Certificates (theme) | `sertificates` | CPT, registered in the theme's `functions.php` |
+| Товар | `product` | CPT, публичный |
+| Заказ | `shoporder` | CPT, `publicly_queryable => false` |
+| Слайд | `slider` | CPT, публичный |
+| Каталог | `catalog` | Иерархическая таксономия |
+| Характеристики | `characteristics` | Иерархическая таксономия |
+| Шаги оптовых цен | `wholesalePrice` | Плоская, регистрируется условно |
+| Статусы заказов | `statusorders` | Плоская |
+| Клиенты (тема) | `ourclients` | CPT, регистрируется в `functions.php` темы |
+| Сертификаты (тема) | `sertificates` | CPT, регистрируется в `functions.php` темы |
 
-## 7. Third-party plugin dependencies
+## 7. Зависимости от сторонних плагинов
 
-**ACF** — optional. Used for the fields `unit_product`, `application`, `second_title`, `second_desc`, `bottom_desc`, `image_catalog`, `catalog_type`, `our_advantages`, `our_clients`. If ACF is not present, `get_field()` calls are skipped and the blocks are simply empty.
+**ACF** — опционален. Используется для полей `unit_product`, `application`, `second_title`, `second_desc`, `bottom_desc`, `image_catalog`, `catalog_type`, `our_advantages`, `our_clients`. Если ACF нет — функции `get_field()` не вызываются, блоки просто пустые.
 
-**Contact Form 7** — optional. Used for the contact form. If absent, the form is not rendered.
+**Contact Form 7** — опционален. Используется для формы обратной связи. Если нет — форма не выводится.
 
-**There are no other mandatory dependencies.** The plugin and the theme are self-contained.
+**Других обязательных зависимостей нет.** Плагин и тема самодостаточны.
