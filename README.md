@@ -66,6 +66,7 @@ WordPress e-commerce plugin.
 
 ---
 🌐 Live Demo: [https://plugin.argon-studio.ru/](https://plugin.argon-studio.ru/)
+
 (Note: The demo site is in Russian, but you can seamlessly explore it using your browser's built-in auto-translate feature. Check out the smooth AJAX search, cart operations, and mobile responsiveness!)
 
 ---
