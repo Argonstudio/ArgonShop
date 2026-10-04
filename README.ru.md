@@ -1,8 +1,11 @@
 # ArgonShop
 
-Плагин интернет-магазина. Сайт-пример [https://plugin.argon-studio.ru/](https://plugin.argon-studio.ru/)
+Плагин интернет-магазина. Сайт-пример [https://plugin.argon-studio.ru/](https://plugin.argon-studio.ru/). 
 
 [ENGLISH README](README.en.md)
+
+(Задать вопросы про плагин можно ИИ)[https://chatgpt.com/s/t_6abe82f58c4881919f98514677eedc13], это же показывает высокую понятность плагина для нейросетей.  
+По ссылке выше или скопируйте ссылку на Github плагина для своей нейросети.
 
 ---
 
