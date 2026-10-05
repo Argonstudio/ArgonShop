@@ -1,6 +1,6 @@
 # ArgonShop
 
-Плагин интернет-магазина. Сайт-пример [https://plugin.argon-studio.ru/](https://plugin.argon-studio.ru/). 
+Плагин интернет-магазина. Сайт-пример [https://plugin.argon-studio.ru/](https://plugin.argon-studio.ru/) (доступ для тестирования **логин** admin , **пароль** 123 )
 
 [ENGLISH README](README.en.md)
 
