@@ -37,29 +37,34 @@ WordPress e-commerce plugin.
 3. **📊 Big Data Optimized (50,000+ Products)**
    The database architecture handles huge catalogs without speed loss or increased server response time. The plugin is an excellent lightweight alternative for projects that started suffering from performance issues on heavy CMS platforms (e.g. *1C-Bitrix*).
 
-4. **🔍 Smart AJAX Search Without Reloads**
+   **Here is a real test example**: [https://pagespeed.web.dev/analysis/https-plugin-argon-studio-ru/](https://pagespeed.web.dev/analysis/https-plugin-argon-studio-ru/ji0g2b2rwv?form_factor=desktop)
+   As of 2026, it scores a perfect 100/100 on desktop and 99 on mobile, with 100/100 across all optimization recommendations.   
+   The Speed Index is between 0.8 and 1.1 seconds — nearly three times faster than Google's "Good" benchmark. Best of all, the test theme uses no caching or code optimization plugins, and the code isn't even compressed.
+   It achieves this performance purely through the plugin's clean architecture.
+
+5. **🔍 Smart AJAX Search Without Reloads**
    Intelligent "live" search displays results while the user is typing. Search scopes are configurable via the admin panel without touching the code. Complex ranking mechanisms are implemented, and AJAX results are synchronized with the standard results page.
 
-5. **📂 Open Source and Transparent License**
+6. **📂 Open Source and Transparent License**
    The project is distributed under the **GNU GPL v3.0** license. Source code is thoroughly documented inside files, allowing developers to freely study, modify, and scale the system for their business needs.
 
-6. **🚀 Modern Technology Stack**
+7. **🚀 Modern Technology Stack**
    The plugin architecture is fully adapted and tested on current **PHP 8.5** and **WordPress 7**. All frontend client logic is rewritten in pure native JavaScript (*Vanilla JS*), eliminating unnecessary dependencies.
 
-7. **⚙️ High Ecosystem Compatibility**
+8. **⚙️ High Ecosystem Compatibility**
    The plugin integrates seamlessly with the standard WordPress environment. It works correctly with popular SEO modules, the *Advanced Custom Fields (ACF)* plugin, and other common solutions. No critical conflicts with third-party software were found.
 
-8. **📦 Lightweight JS Library Integration**
+9. **📦 Lightweight JS Library Integration**
    The frontend bundle includes modern third-party libraries with open licenses for interactive elements, as well as custom modals for displaying interactive maps and feedback forms:
    * 🛒 **[Swiper 12.2.0](https://github.com/nolimits4web/swiper)** (*MIT License*) — touch sliders and product galleries.
    * 🖼️ **[GLightbox 3.3.1](https://github.com/biati-digital/glightbox)** (*MIT License*) — responsive modals and media viewing.
 
-9. **🛠️ Modernized Classic Solutions (WP-Kama) for PHP 8.5**
+10. **🛠️ Modernized Classic Solutions (WP-Kama) for PHP 8.5**
    The plugin includes and deeply reworks popular interface modules by Timur Kamaev (Kama). The ten-year-old original code was fully freed from legacy issues and vulnerabilities and adapted to the strict standards of modern servers:
    * 🍞 **[Breadcrumbs module (breadcrumbs.php)](https://github.com/Argonstudio/ArgonShop/blob/main/plugins/argon-shop/includes/interface/breadcrumbs.php)** — protected from direct calls via `ABSPATH`, switched to the safe `get_search_query()` method, with strict validation of input data types against `null` and `WP_Error`.
    * 🔢 **[Pagination module (pagenavi.php)](https://github.com/Argonstudio/ArgonShop/blob/main/plugins/argon-shop/includes/interface/pagenavi.php)** — completely free of the deprecated `extract()` function, loose comparisons (`==`) replaced with safe strict ones (`===`), and hardware-level protection against division by zero added.
 
-10. **🤖 AI-Ready Architecture**
+11. **🤖 AI-Ready Architecture**
     The plugin is designed to be simple and understandable for AI — just give the AI a link and it will be able to write the necessary modules. Google Gemini review: [https://share.google/aimode/SPAy75fL3QNFVMjp9](https://share.google/aimode/jR6zYbetF8yqLALi5)
 
 ---
