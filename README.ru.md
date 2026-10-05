@@ -61,7 +61,8 @@
 
 10. **🤖 AI-Ready Архитектура (ИИ-совместимость)**
    Плагин сделан простым и понятным для ИИ, достаточно дать ИИ ссылку и он сможет дописать необходимые модули. 
-   * Обзор Google Gemini https://share.google/aimode/SPAy75fL3QNFVMjp9
+   * Обзор Google Gemini, сравнение с другими платформами https://share.google/aimode/SPAy75fL3QNFVMjp9
+   * Обзор Google Gemini, почему подобный плагин нужен в эпоху развития ИИ в 2026 https://share.google/aimode/ijHhqNRBlu38KDvAR
    * Обзор ChatGPT https://chatgpt.com/s/t_6abe82f58c4881919f98514677eedc13
 
 ---
