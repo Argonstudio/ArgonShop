@@ -38,6 +38,7 @@ WordPress e-commerce plugin.
    The database architecture handles huge catalogs without speed loss or increased server response time. The plugin is an excellent lightweight alternative for projects that started suffering from performance issues on heavy CMS platforms (e.g. *1C-Bitrix*).
 
    **Here is a real test example**: [https://pagespeed.web.dev/analysis/https-plugin-argon-studio-ru/](https://pagespeed.web.dev/analysis/https-plugin-argon-studio-ru/ji0g2b2rwv?form_factor=desktop)
+
    As of 2026, it scores a perfect 100/100 on desktop and 99 on mobile, with 100/100 across all optimization recommendations.   
    The Speed Index is between 0.8 and 1.1 seconds — nearly three times faster than Google's "Good" benchmark. Best of all, the test theme uses no caching or code optimization plugins, and the code isn't even compressed.
    It achieves this performance purely through the plugin's clean architecture.
