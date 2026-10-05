@@ -69,7 +69,7 @@ WordPress e-commerce plugin.
     The plugin is designed to be simple and understandable for AI — just give the AI a link and it will be able to write the necessary modules. Google Gemini review: [https://share.google/aimode/SPAy75fL3QNFVMjp9](https://share.google/aimode/jR6zYbetF8yqLALi5)
 
 ---
-🌐 Live Demo: [https://plugin.argon-studio.ru/](https://plugin.argon-studio.ru/)
+🌐 Live Demo: [https://plugin.argon-studio.ru/](https://plugin.argon-studio.ru/) ( Test access: login **admin**, password **123** )
 
 (Note: The demo site is in Russian, but you can seamlessly explore it using your browser's built-in auto-translate feature. Check out the smooth AJAX search, cart operations, and mobile responsiveness!)
 
