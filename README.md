@@ -74,17 +74,14 @@ WordPress e-commerce plugin.
     The plugin is designed to be simple and understandable for AI — just give the AI a link and it will be able to write the necessary modules. Google Gemini review: [https://share.google/aimode/SPAy75fL3QNFVMjp9](https://share.google/aimode/jR6zYbetF8yqLALi5)
 
 ---
-🌐 Live Demo: [https://plugin.argon-studio.ru/](https://plugin.argon-studio.ru/) ( Test access: login **admin**, password **123** )
-
-(Note: The demo site is in Russian, but you can seamlessly explore it using your browser's built-in auto-translate feature. Check out the smooth AJAX search, cart operations, and mobile responsiveness!)
-
+🌐 Live Demo: [https://plugin-en.argon-studio.ru/](https://plugin-en.argon-studio.ru/) ( Test access: login **admin**, password **123** )
 ---
 
 ## 📺 Demo and Video Overview
 
 📺 [Watch the ArgonShop video overview](https://www.youtube.com/watch?v=QPdLPoL79vg)
 
-> 💡 **Note about the video:** The video mentions different search result output between the standard GET search and AJAX requests. This and other points were fixed in the current version of the plugin — search was substantially rewritten, so please refer to the code. Most of the video is still relevant; architectural changes are documented in `AI.md`.
+> 💡 **Note about the video:** The video is in Russian, but you can enable automatic YouTube subtitles/translation. Also, please note that the video mentions different search result outputs between standard GET search and AJAX requests. This and other minor issues have been completely fixed in the current version of the plugin—the search logic was substantially rewritten, so please refer directly to the code. Most of the video remains fully relevant, and all recent architectural changes are well-documented in `AI.md`.
 
 ---
 
