@@ -27,9 +27,9 @@ WordPress e-commerce plugin.
 - [🔄 How It Works](#-how-it-works)
 - [🌐 Languages](#-languages)
 - [🧪 Tests](#-tests)
-- [📚 Third-Party Libraries](#-third-party-libraries)
-- [📄 License](#-license)
+- [📚 Third-Party Libraries](#-third-party-libraries)- 
 - [🤖 Recommended AI for Customizing the Plugin](#-recommended-ai-for-customizing-the-plugin)
+- [📄 License](#-license)
 
 ## ✨ Key Features and Advantages
 
