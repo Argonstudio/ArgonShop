@@ -73,6 +73,31 @@ WordPress e-commerce plugin.
 11. **🤖 AI-Ready Architecture**
     The plugin is designed to be simple and understandable for AI — just give the AI a link and it will be able to write the necessary modules. 
 
+    **GPT-6 Luna review:** [View Full Chat Review](https://chatgpt.com/share/6acfa646-1674-83eb-8b56-0674a05ed2bf)
+
+    ### 📈 My Understandability Scores
+    *These scores measure how easily an AI assistant can comprehend the codebase, navigate it, predict side effects, and safely implement new functionality.*
+
+    * **ArgonShop 1.0.0** — `8.0 / 10`
+      > Good architecture and documentation, but more effort required to understand some internal relationships.
+    * **ArgonShop 1.1.0** — `9.2 / 10`
+      > 🚀 **Verdict:** Very high readability for AI-assisted development, with explicit architectural contracts and testing procedures.
+
+    #### 📊 Detailed Breakdown & Comparison
+    
+    | Assessment Area | Version 1.0.0 | Version 1.1.0 | Key Improvements & Notes |
+    | :--- | :---: | :---: | :--- |
+    | **🏢 Overall architecture** | 8.0 | **9.0** | Clearer boundaries and decoupled modules in the newer version. |
+    | **🐘 PHP code navigation** | 8.0 | **9.0** | Enhanced class structures and better type-hinting/strict typing. |
+    | **🟨 JavaScript organization** | 8.5 | **8.5** | Remained stable, well-structured, and easy to maintain. |
+    | **🔄 Understanding data flows** | 8.0 | **9.0** | Predictable state mutations and explicit data pipelines. |
+    | **📝 Documentation** | 8.5 | **9.5** | Exceptional inline comments and comprehensive README/API specs. |
+    | **🤖 AI-assisted development** | 8.0 | **9.5** | Code patterns are highly optimized for LLM context windows. |
+    | **🛡️ Safe modification & regression** | 7.0 | **9.5** | Robust testing procedures and architectural contracts reduce breakages. |
+
+
+    
+
 ---
 🌐 Live Demo: [https://plugin-en.argon-studio.ru/](https://plugin-en.argon-studio.ru/) ( Test access: login **admin**, password **123** )
 ---
