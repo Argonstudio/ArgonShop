@@ -4,10 +4,10 @@
 
 WordPress e-commerce plugin.
 
-> 🤖 **Want to customize the plugin for your project with AI?** See [Recommended AI for Customizing the Plugin](#-recommended-ai-for-customizing-the-plugin).
-
 > [!IMPORTANT]
 > For any questions about the plugin, its operation, or installation, feel free to consult DeepSeek, [ChatGPT](https://chatgpt.com/s/t_6abe8276fabc8191a0389d716ed8ace2), or other AI assistants. The plugin includes a dedicated AI documentation set (AI.md, AI_ARCHITECTURE.md, and related files) specifically designed to provide AIs with accurate context. Note: since the site theme examples and comments are in Russian, using an AI assistant will make it much easier for English-speaking readers (and speakers of other languages) to navigate and work with the code.
+
+> 🤖 **Want to customize the plugin for your project with AI?** See [Recommended AI for Customizing the Plugin](#-recommended-ai-for-customizing-the-plugin).
 
 ---
 
@@ -680,6 +680,28 @@ Details — [tests/README.md](tests/README.md).
 
 ---
 
+## 🤖 Recommended AI for Customizing the Plugin
+
+ArgonShop is designed to be adapted to your project with the help of AI assistants. If you have installed the plugin and want to customize it for your store, here are two proven approaches.
+
+### Option 1. Claude Opus 5.5 — "lazy" development with a minimum of errors
+
+The recommended choice is **Claude Opus 5.5**, preferably via [Notion.com](http://Notion.com). Upload the plugin archive or give it a link to the repository, describe the task in plain words — and the AI will study the code and the AI documentation (`AI.md` and `docs/ai/`), make the changes itself and return ready-made files. This is the fastest and most comfortable path with the fewest errors: you mostly formulate tasks and check the result.
+
+### Option 2. Free AI Assistants (DeepSeek, ChatGPT, Gemini) — more manual work
+
+If the budget is limited, you can successfully leverage the potential of leading free models, such as DeepSeek, ChatGPT, or Google Gemini. These are fully capable intelligent assistants; however, working with them will require more hands-on involvement from your side:
+
+1. Provide the model with a link to the repository or upload the target files alongside your AI documentation (AI.md and docs/ai/).
+2. Formulate the task in the form of highly precise and detailed instructions.
+3. Carefully review the code proposed by the AI: while free versions possess immense potential, they can sometimes overlook the deeper architectural context.
+4. Manually transfer the generated code into your project.
+5. Be sure to conduct thorough manual testing of every change to ensure that the code integrates correctly into your system.
+   
+This approach requires time and strict oversight on your part, but the capabilities of modern free models allow you to significantly optimize development at no additional cost.
+
+---
+
 ## 📚 Third-Party Libraries
 
 The project uses third-party libraries. Their licenses are preserved:
@@ -709,24 +731,5 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 ```
 
----
 
-## 🤖 Recommended AI for Customizing the Plugin
 
-ArgonShop is designed to be adapted to your project with the help of AI assistants. If you have installed the plugin and want to customize it for your store, here are two proven approaches.
-
-### Option 1. Claude Opus 5.5 — "lazy" development with a minimum of errors
-
-The recommended choice is **Claude Opus 5.5**, preferably via [Notion.com](http://Notion.com). Upload the plugin archive or give it a link to the repository, describe the task in plain words — and the AI will study the code and the AI documentation (`AI.md` and `docs/ai/`), make the changes itself and return ready-made files. This is the fastest and most comfortable path with the fewest errors: you mostly formulate tasks and check the result.
-
-### Option 2. DeepSeek — free, but more manual work
-
-If the budget does not allow it, use **DeepSeek**:
-
-1. Give it a link to the repository or the required files and the AI documentation (`AI.md` and `docs/ai/`).
-2. Formulate the tasks as precise prompts.
-3. Read every returned file with code carefully.
-4. Insert the code into the project manually.
-5. Test every change manually.
-
-This is a longer path, and DeepSeek makes mistakes more often — but it is free (for now) and still very fast.
