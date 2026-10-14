@@ -1,34 +1,33 @@
 <?php
 /**
- * Шаблон одиночной записи (single)
+ * Single post template (single)
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * Страницы отдельных записей (постов)
- * URL: /название-записи/
+ * WHERE TO TEST:
+ * Single post pages
+ * URL: /post-name/
  * 
- * ЧТО ВЫВОДИТ:
- * 1. Хлебные крошки (через kama_breadcrumbs из плагина Argon Shop)
- * 2. Заголовок записи
- * 3. Изображение записи (если есть)
- * 4. Контент записи
+ * WHAT IT OUTPUTS:
+ * 1. Breadcrumbs (via kama_breadcrumbs from the Argon Shop plugin)
+ * 2. Post title
+ * 3. Post image (if any)
+ * 4. Post content
  * 
  * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  * 
- * В этом шаблоне используется функция плагина:
+ * This template uses the following plugin function:
  * 
- * - kama_breadcrumbs() → хлебные крошки (includes/interface/breadcrumbs.php)
+ * - as_kama_breadcrumbs() → breadcrumbs (includes/interface/breadcrumbs.php)
  * 
- * Для одиночной записи плагин автоматически строит цепочку:
- * "Главная » [Рубрика] » [Заголовок записи]"
+ * For a single post the plugin automatically builds the chain:
+ * "Home » [Category] » [Post title]"
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -43,9 +42,9 @@ get_header(); ?>
         <main class="block-content block-contentPage block-entryPage">
             
             <?php 
-            // Функция плагина Argon Shop (includes/interface/breadcrumbs.php)
-            if ( function_exists( 'kama_breadcrumbs' ) ) {
-                kama_breadcrumbs( ' » ' );
+            // Argon Shop plugin function (includes/interface/breadcrumbs.php)
+            if ( function_exists( 'as_kama_breadcrumbs' ) ) {
+                AS_Kama_Breadcrumbs( ' » ' );
             }
             ?>
             

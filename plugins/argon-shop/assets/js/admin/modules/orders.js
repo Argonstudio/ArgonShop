@@ -1,17 +1,16 @@
 /**
- * AJAX-функционал страницы заказа в админ-панели
+ * AJAX features of the order page in the admin panel
  * 
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ: WordPress Админка → Заказы → Редактирование заказа
+ * WHERE: WordPress Admin → Orders → Edit order
  * 
- * ЗАВИСИМОСТИ ОТ orderAjax.php:
+ * DEPENDENCIES ON orderAjax.php:
  * - searchSuitableProduct( searchStr, blockResult, addedProduct )
  * - addProduct( product )
  * - addFields( type, fieldsInStock, blockFields )
- * - window.recountOrderPrices() — определяется в этом файле
+ * - window.recountOrderPrices() — defined in this file
  */
 
 (function(){
@@ -20,11 +19,11 @@
     
     
     // ============================================
-    // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+    // HELPER FUNCTIONS
     // ============================================
     
     /**
-     * Приводит число к целому или к строке с двумя знаками после запятой.
+     * Converts a number to an integer or to a string with two decimal places.
      * 
      * @param  {number} value
      * @return {string|number}
@@ -42,8 +41,8 @@
     
     
     /**
-     * Проверяет, является ли значение числом.
-     * Аналог $.isNumeric() из jQuery.
+     * Checks whether a value is a number.
+     * An analogue of jQuery's $.isNumeric().
      * 
      * @param  {*} value
      * @return {boolean}
@@ -54,7 +53,7 @@
     
     
     // ============================================
-    // ИНИЦИАЛИЗАЦИЯ
+    // INITIALIZATION
     // ============================================
     
     const init = () => {
@@ -69,13 +68,13 @@
     
     
     // ============================================
-    // ПОИСК ТОВАРА
+    // PRODUCT SEARCH
     // ============================================
     
     /**
-     * ГДЕ: Поле "Добавить товар" → ввод текста
-     * ЧТО: отправляет AJAX-запрос через searchSuitableProduct()
-     *      (функция из orderAjax.php)
+     * WHERE: "Add product" field → typing text
+     * WHAT: sends an AJAX request via searchSuitableProduct()
+     *      (a function from orderAjax.php)
      */
     const initSearch = () => {
         
@@ -94,7 +93,7 @@
                 return;
             }
             
-            // Собираем ID уже добавленных товаров
+            // Collect the IDs of products already added
             const addedProduct = [];
             
             document.querySelectorAll( '.orderAmountProduct' ).forEach( input => {
@@ -116,12 +115,12 @@
     
     
     // ============================================
-    // ДОБАВЛЕНИЕ ПОЛЕЙ ФОРМЫ
+    // ADDING FORM FIELDS
     // ============================================
     
     /**
-     * ГДЕ: Блок "Информация от заказчика" → кнопка "Добавить"
-     * ЧТО: отправляет AJAX-запрос через addFields() (функция из orderAjax.php)
+     * WHERE: "Customer information" block → "Add" button
+     * WHAT: sends an AJAX request via addFields() (a function from orderAjax.php)
      */
     const initAddFields = () => {
         
@@ -142,7 +141,7 @@
             
             const type = typeSelect.value;
             
-            // Собираем уже существующие поля
+            // Collect the fields that already exist
             const fieldsInStock = [];
             
             document.querySelectorAll( '.advanced-field' ).forEach( field => {
@@ -157,15 +156,15 @@
     
     
     // ============================================
-    // ИЗМЕНЕНИЕ КОЛИЧЕСТВА ТОВАРА
+    // PRODUCT QUANTITY CHANGE
     // ============================================
     
     /**
-     * ГДЕ: Поле количества товара в заказе
-     * ЧТО: валидирует ввод и вызывает recountOrderPrices()
+     * WHERE: Product quantity field in the order
+     * WHAT: validates the input and calls recountOrderPrices()
      * 
-     * ВАЖНО: делегирование события на document — работает для
-     * динамически добавленных товаров.
+     * IMPORTANT: the event is delegated to document — it works for
+     * dynamically added products.
      */
     const initProductAmountChange = () => {
         
@@ -179,12 +178,12 @@
             
             const value = target.value;
             
-            // Валидация ввода
+            // Input validation
             if ( ! value || value <= 0 || ! isNumeric( value ) ) {
                 target.value = 1;
             }
             
-            // Единая функция пересчёта
+            // Shared recalculation function
             recountOrderPrices();
         });
         
@@ -208,12 +207,12 @@
     
     
     // ============================================
-    // КНОПКИ "+" И "-"
+    // "+" AND "-" BUTTONS
     // ============================================
     
     /**
-     * ГДЕ: Кнопки "+" и "-" у поля количества
-     * ЧТО: увеличивает/уменьшает количество и вызывает recountOrderPrices()
+     * WHERE: "+" and "-" buttons next to the quantity field
+     * WHAT: increases/decreases the quantity and calls recountOrderPrices()
      */
     const initQuantityButtons = () => {
         
@@ -221,7 +220,7 @@
             
             const target = event.target;
             
-            // --- Кнопка "+" ---
+            // --- "+" button ---
             if ( target.classList.contains( 'plusProduct' ) ) {
                 
                 const productID  = target.getAttribute( 'data-productid' );
@@ -235,7 +234,7 @@
                 return;
             }
             
-            // --- Кнопка "-" ---
+            // --- "-" button ---
             if ( target.classList.contains( 'minusProduct' ) ) {
                 
                 const productID  = target.getAttribute( 'data-productid' );
@@ -251,12 +250,12 @@
     
     
     // ============================================
-    // УДАЛЕНИЕ ТОВАРА
+    // REMOVING A PRODUCT
     // ============================================
     
     /**
-     * ГДЕ: Кнопка удаления товара в заказе
-     * ЧТО: удаляет блок товара и вызывает recountOrderPrices()
+     * WHERE: Product remove button in the order
+     * WHAT: removes the product block and calls recountOrderPrices()
      */
     const initDeleteProduct = () => {
     
@@ -268,8 +267,8 @@
                 return;
             }
             
-            // Ищем родительскую таблицу товара по классу (без data-productid,
-            // потому что он есть и у самой кнопки — closest вернул бы её).
+            // Find the parent product table by class (not by data-productid,
+            // because the button itself has it too — closest would return the button).
             const productParentBlock = target.closest( '.blockOrderProduct' );
             
             if ( productParentBlock ) {
@@ -283,12 +282,12 @@
     
     
     // ============================================
-    // УДАЛЕНИЕ ВСЕХ ТОВАРОВ
+    // REMOVING ALL PRODUCTS
     // ============================================
     
     /**
-     * ГДЕ: Кнопка "Очистить заказ"
-     * ЧТО: очищает список товаров и вызывает recountOrderPrices()
+     * WHERE: "Clear order" button
+     * WHAT: clears the product list and calls recountOrderPrices()
      */
     const initDeleteAllProducts = () => {
         
@@ -312,36 +311,36 @@
     
     
     // ============================================
-    // ЕДИНАЯ ФУНКЦИЯ ПЕРЕСЧЁТА ЗАКАЗА
+    // SHARED ORDER RECALCULATION FUNCTION
     // ============================================
     
     /**
-     * ФУНКЦИЯ: Пересчёт заказа
+     * FUNCTION: Order recalculation
      * 
-     * Вызывается при любом изменении состава заказа (количество,
-     * добавление, удаление товара). Отправляет на сервер AJAX-запрос
-     * с текущим состоянием заказа и обновляет цены, веса и итоги
-     * на странице.
+     * Called on any change of the order contents (quantity,
+     * adding, removing a product). Sends an AJAX request to the server
+     * with the current order state and updates prices, weights and totals
+     * on the page.
      * 
-     * ГЛОБАЛЬНАЯ: определена как window.recountOrderPrices — вызывается
-     * из функций searchSuitableProduct, addProduct (orderAjax.php).
+     * GLOBAL: defined as window.recountOrderPrices — called
+     * from the searchSuitableProduct and addProduct functions (orderAjax.php).
      */
     window.recountOrderPrices = function() {
         
         // ============================================
-        // ПОЛУЧЕНИЕ ID ЗАКАЗА
+        // GETTING THE ORDER ID
         // ============================================
         
         const postIDField = document.getElementById( 'post_ID' ) || document.querySelector( 'input[name="post_ID"]' );
         const postID      = postIDField ? postIDField.value : '';
         
         if ( ! postID ) {
-            console.warn( 'recountOrderPrices: не найден ID заказа' );
+            console.warn( 'recountOrderPrices: order ID not found' );
             return;
         }
         
         // ============================================
-        // СБОР ТОВАРОВ СО СТРАНИЦЫ
+        // COLLECTING PRODUCTS FROM THE PAGE
         // ============================================
         
         const orderProducts = {};
@@ -357,7 +356,7 @@
             }
         });
         
-        // Если товаров нет — очищаем итоги
+        // If there are no products — clear the totals
         if ( Object.keys( orderProducts ).length === 0 ) {
             
             const totalWeightBlock = document.querySelector( '.cartTotalWeight' );
@@ -376,7 +375,7 @@
         }
         
         // ============================================
-        // AJAX-ЗАПРОС
+        // AJAX REQUEST
         // ============================================
         
         const body = new URLSearchParams();
@@ -385,7 +384,7 @@
         body.append( 'postID', postID );
         body.append( 'nonce',  window.argonShopOrderNonce || '' );
         
-        // orderProducts — объект, сериализуем как orderProducts[ID]=amount
+        // orderProducts is an object, serialized as orderProducts[ID]=amount
         Object.keys( orderProducts ).forEach( productID => {
             body.append( 'orderProducts[' + productID + ']', orderProducts[ productID ] );
         });
@@ -415,12 +414,12 @@
             try {
                 data = JSON.parse( text );
             } catch ( e ) {
-                console.error( 'recountOrderPrices: невалидный JSON в ответе:', text );
+                console.error( 'recountOrderPrices: invalid JSON in the response:', text );
                 return;
             }
             
             // ============================================
-            // ОБНОВЛЕНИЕ ЦЕН ТОВАРОВ
+            // UPDATING PRODUCT PRICES
             // ============================================
             
             if ( data.actualPrices ) {
@@ -435,14 +434,14 @@
                         return;
                     }
                     
-                    // --- Цена за единицу ---
+                    // --- Unit price ---
                     const priceBlock = productBlock.querySelector( '.productPrice span' );
                     
                     if ( priceBlock ) {
                         priceBlock.innerHTML = price;
                     }
                     
-                    // --- Вес ---
+                    // --- Weight ---
                     const amountInput = productBlock.querySelector( '.orderAmountProduct' );
                     const amount      = amountInput ? parseFloat( amountInput.value ) : 0;
                     const weight      = ( data.weights && data.weights[ productID ] ) ? parseFloat( data.weights[ productID ] ) : 0;
@@ -453,7 +452,7 @@
                         weightBlock.innerHTML = formatNumber( weight * amount );
                     }
                     
-                    // --- Итоговая цена товара ---
+                    // --- Product total ---
                     const totalPriceBlock = productBlock.querySelector( '.amountProductPrice span' );
                     
                     if ( totalPriceBlock ) {
@@ -463,7 +462,7 @@
             }
             
             // ============================================
-            // ОБНОВЛЕНИЕ ОБЩЕЙ СУММЫ
+            // UPDATING THE ORDER TOTAL
             // ============================================
             
             if ( data.totalPrice !== undefined ) {
@@ -476,7 +475,7 @@
             }
             
             // ============================================
-            // ОБНОВЛЕНИЕ ОБЩЕГО ВЕСА
+            // UPDATING THE TOTAL WEIGHT
             // ============================================
             
             if ( data.totalWeight ) {
@@ -500,7 +499,7 @@
     
     
     // ============================================
-    // ЗАПУСК
+    // START
     // ============================================
     
     if ( document.readyState === 'loading' ) {

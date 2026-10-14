@@ -1,35 +1,34 @@
 /**
- * ArgonShop — мобильное меню сайта.
+ * ArgonShop — mobile site menu.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Управляет открытием и закрытием мобильного меню в шапке сайта,
- * а также раскрытием вложенных подменю.
+ * Handles opening and closing the mobile menu in the site header,
+ * as well as expanding nested submenus.
  *
  * ============================================================
- * DOM-ЭЛЕМЕНТЫ
+ * DOM ELEMENTS
  * ============================================================
  *
  * .openMobileMenu
- *   Кнопка открытия и закрытия меню.
+ *   Menu open/close button.
  *
  * #block-menu
- *   Контейнер меню.
+ *   Menu container.
  *
  * .menu-item-has-children
- *   Пункт меню с подменю.
+ *   Menu item with a submenu.
  *
  * .sub-menu
- *   Вложенное подменю внутри .menu-item-has-children.
+ *   Nested submenu inside .menu-item-has-children.
  *
  * ============================================================
- * ИСПОЛЬЗОВАНИЕ
+ * USAGE
  * ============================================================
  *
  *     import { arsMobileMenu } from './modules/mobile-menu.js';
@@ -42,14 +41,14 @@ import { qs, qsa, on, delegate } from '../../shared/dom.js';
 
 
 /**
- * Пороговая ширина окна, ниже которой работает мобильное меню.
+ * Window width threshold below which the mobile menu is active.
  *
  * @type {number}
  */
 const MOBILE_WIDTH = 1200;
 
 /**
- * Модуль мобильного меню сайта.
+ * Mobile site menu module.
  */
 class ArsMobileMenu {
 
@@ -57,7 +56,7 @@ class ArsMobileMenu {
     #initialized = false;
 
     /**
-     * Инициализация. Безопасна для повторного вызова.
+     * Initialization. Safe to call repeatedly.
      *
      * @return {void}
      */
@@ -78,7 +77,7 @@ class ArsMobileMenu {
     }
 
     /**
-     * Кнопка открытия и закрытия меню.
+     * Menu open/close button.
      *
      * @return {void}
      */
@@ -106,7 +105,7 @@ class ArsMobileMenu {
     }
 
     /**
-     * Раскрытие вложенных подменю.
+     * Expanding nested submenus.
      *
      * @return {void}
      */
@@ -120,8 +119,8 @@ class ArsMobileMenu {
 
             const target = event.target;
 
-            // Реагируем только на клик по самому пункту или
-            // по его прямому потомку — не по ссылке в подменю.
+            // React only to a click on the item itself or
+            // its direct child — not on a link inside the submenu.
             if ( target !== item && target.parentNode !== item ) {
                 return;
             }
@@ -145,7 +144,7 @@ class ArsMobileMenu {
 }
 
 /**
- * Готовый синглтон модуля мобильного меню.
+ * Ready-made singleton of the mobile menu module.
  *
  * @type {ArsMobileMenu}
  */

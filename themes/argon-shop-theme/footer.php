@@ -1,35 +1,34 @@
 <?php
 /**
- * Подвал сайта
+ * Site footer
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
  * 
- * ЧТО ВЫВОДИТ:
- * 1. Два нижних меню (bottom_menu, bottom_menu2)
- * 2. Адрес и время работы
- * 3. Копирайт с текущим годом
- * 4. Дисклеймер о демонстрационном стенде
+ * WHAT IT OUTPUTS:
+ * 1. Two bottom menus (bottom_menu, bottom_menu2)
+ * 2. Address and opening hours
+ * 3. Copyright with the current year
+ * 4. Demo stand disclaimer
  * 
  * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  * 
- * В подвале функции плагина не вызываются напрямую.
- * Но меню в подвале может содержать пункты с меткой "as_homepage",
- * которые плагин (siteLine.php) заменяет на домен текущего сайта
- * через фильтр wp_nav_menu_objects.
+ * The footer does not call plugin functions directly.
+ * But the footer menu may contain items with the "as_homepage" marker,
+ * which the plugin (siteLine.php) replaces with the current site domain
+ * via the wp_nav_menu_objects filter.
  * 
- * См.:
- * - includes/siteLine.php — замена "as_homepage" на домен
- * - header.php — верхнее меню
+ * See:
+ * - includes/siteLine.php — replacing "as_homepage" with the domain
+ * - header.php — top menu
  * 
  * ============================================================
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -63,11 +62,11 @@ if ( ! defined( 'ABSPATH' ) ) {
             
             <div class="address">
                 
-                <a href="/adres-na-karte-moskva/" class="maps_link" data-modal-ajax="/adres-na-karte-moskva/">Москва, ул. Ленина, дом 1</a>
+                <a href="/adres-na-karte-moskva/" class="maps_link" data-modal-ajax="/adres-na-karte-moskva/"><?php esc_html_e( 'City Hall, New York, NY', 'argon-shop-theme' ); ?></a>
                 
             </div>
                 
-            <div class="work_time">ПН-ПТ: с 9:00 до 18:00</br>СБ: с 10:00 до 15:00</div>
+            <div class="work_time"><?php esc_html_e( 'Mon–Fri: 9:00 to 18:00', 'argon-shop-theme' ); ?></br><?php esc_html_e( 'Sat: 10:00 to 15:00', 'argon-shop-theme' ); ?></div>
             
             
         </div>
@@ -80,7 +79,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             
         </div>
         
-        <div class="footerAddInfo">!!!ВНИМАНИЕ: Демонстрационный стенд. Сайт не является действующим интернет-магазином. Данный веб-сайт работает исключительно в целях демонстрации навыков веб-разработки (портфолио) и не предназначен для ведения коммерческой деятельности. Здесь невозможно заказать или приобрести строительные материалы. Любые цены, товары и описания являются вымышленными. Сбор персональных данных реальных пользователей не осуществляется. Доступ к закрытой части предоставляется только для ознакомления с интерфейсом.</div>
+        <div class="footerAddInfo"><?php esc_html_e( '!!!ATTENTION: Demo stand. This site is not an operating online store. It exists solely to demonstrate web development skills (portfolio) and is not intended for commercial activity. Building materials cannot be ordered or purchased here. All prices, products and descriptions are fictional. No personal data of real users is collected. Access to the private area is provided only to explore the interface.', 'argon-shop-theme' ); ?></div>
         
     </div>
     

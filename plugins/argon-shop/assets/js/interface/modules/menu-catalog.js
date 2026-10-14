@@ -1,55 +1,54 @@
 /**
- * ArgonShop — меню каталога в сайдбаре, большое меню.
+ * ArgonShop — catalog menu in the sidebar, mega menu.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Управляет поведением меню каталога в сайдбаре:
+ * Controls the behaviour of the catalog menu in the sidebar:
  *
- *   1. На десктопе — компенсирует высоту контейнера, если
- *      раскрывающееся подменю не помещается на странице.
- *      Это делается через hover: пока курсор над пунктом,
- *      проверяем высоту, при необходимости увеличиваем min-height
- *      у .row внутри #out.
+ *   1. On desktop — compensates the container height if
+ *      the dropdown submenu does not fit on the page.
+ *      This is done on hover: while the cursor is over an item,
+ *      the height is checked and, if needed, min-height
+ *      of .row inside #out is increased.
  *
- *   2. Открытие и закрытие всего меню на мобильных через кнопку
+ *   2. Opening and closing the whole menu on mobile via the button
  *      .openMobileCatalog.
  *
- *   3. Раскрытие подменю при клике на пункт .itemHasChildren
- *      на мобильных.
+ *   3. Expanding a submenu on click on an .itemHasChildren item
+ *      on mobile.
  *
  * ============================================================
- * DOM-ЭЛЕМЕНТЫ
+ * DOM ELEMENTS
  * ============================================================
  *
  * .openMobileCatalog
- *   Кнопка «Каталог продукции» для мобильных.
+ *   The "Product catalog" button for mobile.
  *
  * .block-menuCatalog
- *   Контейнер меню каталога.
+ *   Catalog menu container.
  *
  * .block-linkSidebar
- *   Блок дополнительных ссылок под меню.
+ *   Block of additional links under the menu.
  *
  * .menuCatalogItem
- *   Пункт меню верхнего уровня.
+ *   Top-level menu item.
  *
  * .itemHasChildren
- *   Пункт меню, у которого есть подменю.
+ *   Menu item that has a submenu.
  *
  * .submenuCatalog
- *   Вложенное подменю.
+ *   Nested submenu.
  *
- * #header          — шапка сайта (для расчёта высоты).
- * #out .row        — обёртка контента страницы.
+ * #header          — site header (for the height calculation).
+ * #out .row        — page content wrapper.
  *
  * ============================================================
- * ИСПОЛЬЗОВАНИЕ
+ * USAGE
  * ============================================================
  *
  *     import { arsMenuCatalog } from './modules/menu-catalog.js';
@@ -61,30 +60,30 @@
 import { qs, qsa, on, delegate } from '../../shared/dom.js';
 
 /**
- * Пороговая ширина окна, ниже которой включается мобильный режим.
+ * Window width threshold below which the mobile mode is enabled.
  *
  * @type {number}
  */
 const MOBILE_WIDTH = 1000;
 
 /**
- * Отступ между пунктом меню и началом подменю, в пикселях.
- * Используется при расчёте высоты.
+ * Gap between the menu item and the start of the submenu, in pixels.
+ * Used in the height calculation.
  *
  * @type {number}
  */
 const MENU_OFFSET = 46;
 
 /**
- * Запас высоты, добавляемый при необходимости увеличить
- * min-height контейнера, в пикселях.
+ * Extra height added when the container min-height
+ * has to be increased, in pixels.
  *
  * @type {number}
  */
 const HEIGHT_BUFFER = 300;
 
 /**
- * Модуль меню каталога.
+ * Catalog menu module.
  */
 class ArsMenuCatalog {
 
@@ -92,7 +91,7 @@ class ArsMenuCatalog {
     #initialized = false;
 
     /**
-     * Инициализация. Безопасна для повторного вызова.
+     * Initialization. Safe to call repeatedly.
      *
      * @return {void}
      */
@@ -114,13 +113,13 @@ class ArsMenuCatalog {
     }
 
     // ============================================================
-    // КОМПЕНСАЦИЯ ВЫСОТЫ НА ДЕСКТОПЕ
+    // HEIGHT COMPENSATION ON DESKTOP
     // ============================================================
 
     /**
-     * При наведении на пункт меню проверяет, помещается ли
-     * выпадающее подменю на странице. Если нет — увеличивает
-     * min-height контейнера.
+     * On hover over a menu item checks whether
+     * the dropdown submenu fits on the page. If not — increases
+     * the container min-height.
      *
      * @return {void}
      */
@@ -174,11 +173,11 @@ class ArsMenuCatalog {
     }
 
     // ============================================================
-    // МОБИЛЬНОЕ ОТКРЫТИЕ МЕНЮ
+    // OPENING THE MENU ON MOBILE
     // ============================================================
 
     /**
-     * Кнопка «Каталог продукции» открывает и закрывает меню.
+     * The "Product catalog" button opens and closes the menu.
      *
      * @return {void}
      */
@@ -210,12 +209,12 @@ class ArsMenuCatalog {
     }
 
     // ============================================================
-    // РАСКРЫТИЕ ПОДМЕНЮ НА МОБИЛЬНЫХ
+    // EXPANDING SUBMENUS ON MOBILE
     // ============================================================
 
     /**
-     * Клик по пункту .itemHasChildren раскрывает подменю
-     * на мобильных.
+     * A click on an .itemHasChildren item expands the submenu
+     * on mobile.
      *
      * @return {void}
      */
@@ -229,7 +228,7 @@ class ArsMenuCatalog {
 
             const target = event.target;
 
-            // Клик на самом пункте или на его прямом потомке
+            // A click on the item itself or on its direct child
             const isDirectClick = ( target === item ) || ! target.closest( '.submenuCatalog' );
 
             if ( ! isDirectClick ) {
@@ -257,7 +256,7 @@ class ArsMenuCatalog {
 }
 
 /**
- * Готовый синглтон модуля меню каталога.
+ * Ready singleton of the catalog menu module.
  *
  * @type {ArsMenuCatalog}
  */

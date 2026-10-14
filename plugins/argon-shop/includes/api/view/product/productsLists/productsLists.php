@@ -1,8 +1,8 @@
 <?php
 
-function view_products_list($productsList){
+function as_view_products_list($productsList){
     
-    $productsShoppingCart = getCookie("productsShoppingCart");
+    $productsShoppingCart = as_getCookie("productsShoppingCart");
     
     while ( $productsList  -> have_posts() ) : $productsList  -> the_post();
     	

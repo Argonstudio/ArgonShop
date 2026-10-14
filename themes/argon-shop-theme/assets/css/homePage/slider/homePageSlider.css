@@ -1,37 +1,36 @@
 /**
- * ArgonShop — стили слайдера на главной странице.
+ * ArgonShop — home page slider styles.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Оформляет Swiper-слайдер на главной странице. Разметка
- * выводится PHP-функцией as_slider_main() из плагина,
- * инициализация — модулем slider-main.js.
+ * Styles the Swiper slider on the home page. The markup
+ * is output by the plugin's PHP function as_slider_main(),
+ * initialization — by the slider-main.js module.
  *
  * ============================================================
- * ЛОГИКА МАСШТАБИРОВАНИЯ
+ * SCALING LOGIC
  * ============================================================
  *
- * Изображение всегда занимает всю ширину контейнера,
- * высота рассчитывается автоматически по пропорциям картинки
- * (height: auto). Никаких фиксированных высот и обрезки —
- * слайдер адаптируется под любую ширину.
+ * The image always takes the full container width,
+ * the height is calculated automatically from the image proportions
+ * (height: auto). No fixed heights and no cropping —
+ * the slider adapts to any width.
  *
  * ============================================================
- * ЦВЕТА
+ * COLORS
  * ============================================================
  *
- * Основной акцент — #4e83c6 (синий темы).
- * Пагинация и стрелки — в этом цвете.
+ * The main accent is #4e83c6 (the theme blue).
+ * Pagination and arrows use this color.
  */
 
 /* ============================================================
-   КОНТЕЙНЕР
+   CONTAINER
    ============================================================ */
 
 
@@ -47,18 +46,18 @@
 }
 
 .as-slider-main .swiper-wrapper {
-    /* Swiper сам управляет высотой, но на всякий случай
-     * не даём wrapper'у растягиваться. */
+    /* Swiper manages the height itself, but just in case
+     * do not let the wrapper stretch. */
     align-items: stretch;
 }
 
 /* ============================================================
-   СЛАЙДЫ
+   SLIDES
    ============================================================ */
 
 .as-slider-main .swiper-slide {
-    /* Слайд — флекс-контейнер, чтобы ссылка и картинка
-     * занимали всю ширину и высоту. */
+    /* The slide is a flex container so that the link and the image
+     * take the full width and height. */
     display: flex;
     align-items: stretch;
     justify-content: center;
@@ -70,7 +69,7 @@
 .as-slider-main .swiper-slide a {
     display: block;
     width: 100%;
-    line-height: 0; /* убирает вертикальный зазор под картинкой */
+    line-height: 0; /* removes the vertical gap under the image */
 }
 
 .as-slider-main .swiper-slide img,
@@ -84,26 +83,26 @@
 }
 
 /* ============================================================
-   ПАГИНАЦИЯ
+   PAGINATION
    ============================================================
  *
- * Стандартные точки Swiper, но крупнее и в цвете темы.
+ * Standard Swiper dots, but larger and in the theme color.
  *
- * Способ настройки — CSS-переменные, которые Swiper объявляет
- * на :root. Достаточно переопределить их на контейнере слайдера,
- * и все вложенные элементы пагинации подхватят новые значения.
+ * The configuration method is the CSS variables that Swiper declares
+ * on :root. It is enough to override them on the slider container,
+ * and all nested pagination elements pick up the new values.
  *
- * Такой подход:
- *   - не перебивает классы Swiper через !important;
- *   - не конфликтует с логикой активного слайда;
- *   - не мешает обновлению точки при переключении.
+ * This approach:
+ *   - does not override the Swiper classes with !important;
+ *   - does not conflict with the active slide logic;
+ *   - does not interfere with updating the dot on switching.
  *
- * Значения:
- *   --swiper-pagination-bullet-size              — размер точки
- *   --swiper-pagination-bullet-horizontal-gap    — отступ между точками
- *   --swiper-pagination-color                    — цвет активной
- *   --swiper-pagination-bullet-inactive-color    — цвет обычной
- *   --swiper-pagination-bullet-inactive-opacity  — прозрачность обычной
+ * Values:
+ *   --swiper-pagination-bullet-size              — dot size
+ *   --swiper-pagination-bullet-horizontal-gap    — gap between dots
+ *   --swiper-pagination-color                    — active dot color
+ *   --swiper-pagination-bullet-inactive-color    — regular dot color
+ *   --swiper-pagination-bullet-inactive-opacity  — regular dot opacity
  */
 
 .as-slider-main {
@@ -114,9 +113,9 @@
     --swiper-pagination-bullet-inactive-opacity: 0.9;
 }
 
-/* Дополнительная тень — чтобы точки были видны
- * на светлых слайдах. Перебивать размер и цвет не нужно,
- * их уже дали переменные выше. */
+/* An extra shadow so that the dots are visible
+ * on light slides. No need to override the size and color,
+ * the variables above already set them. */
 .as-slider-main .swiper-pagination-bullet {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
     transition: transform 0.2s;
@@ -131,12 +130,12 @@
 }
 
 /* ============================================================
-   СТРЕЛКИ НАВИГАЦИИ
+   NAVIGATION ARROWS
    ============================================================
  *
- * Квадратные кнопки-стрелки по бокам слайдера.
- * Появляются при наведении на слайдер — чтобы не мешали
- * просмотру изображений.
+ * Square arrow buttons on the sides of the slider.
+ * They appear on hovering over the slider so that they do not get in the way
+ * of viewing the images.
  */
 
 .as-slider-main .swiper-button-prev,
@@ -196,7 +195,7 @@
 }
 
 /* ============================================================
-   АДАПТИВ
+   RESPONSIVE
    ============================================================ */
 
 @media(min-width:1201px){
@@ -215,7 +214,7 @@
         margin-bottom: 30px;
     }
 
-    /* На мобильных стрелки скрываем — свайп работает сам */
+    /* Hide the arrows on mobile — swiping works by itself */
     .as-slider-main .swiper-button-prev,
     .as-slider-main .swiper-button-next {
         display: none;

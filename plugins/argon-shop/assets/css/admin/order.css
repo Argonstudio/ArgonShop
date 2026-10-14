@@ -1,9 +1,8 @@
 /**
- * ArgonShop — стили заказов в админке.
+ * ArgonShop — order styles in the admin.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  */
 
@@ -122,7 +121,7 @@
 
 
 /*
-  *  Блок добавить товар
+  *  Add product block
 */
 
 .blockAddOrderProduct{
@@ -165,7 +164,7 @@
 }
 
 /*
-  *  Информация от заказчика
+  *  Customer information
 */
 
 .as-order-itemTitle{

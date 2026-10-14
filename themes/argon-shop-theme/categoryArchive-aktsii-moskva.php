@@ -1,29 +1,28 @@
 <?php
 /**
- * Template Name: Архив акций Москва
+ * Template Name: Promotions archive (Moscow)
  * 
- * Шаблон страницы "Архив акций Москва"
+ * "Moscow promotions archive" page template
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0 
+ * @author  Ivan Voitkov
  * 
- * ЧТО ВЫВОДИТ:
- * 1. Хлебные крошки
- * 2. Заголовок "Архив акций"
- * 3. Список архивных акций (post_type = post, promo_active = 0, category = 36)
+ * WHAT IT OUTPUTS:
+ * 1. Breadcrumbs
+ * 2. The "Promotions archive" title
+ * 3. List of archived promotions (post_type = post, promo_active = 0, category = 36)
  * 
  * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  * 
- * В этом шаблоне используются функции плагина:
+ * This template uses the following plugin functions:
  * 
- * - kama_pagenavi()    → пагинация (includes/interface/pagenavi.php) * 
+ * - as_kama_pagenavi()    → pagination (includes/interface/pagenavi.php) *
  * 
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -39,38 +38,38 @@ get_header(); ?>
             
             <?php 
             // ============================================
-            // ХЛЕБНЫЕ КРОШКИ
+            // BREADCRUMBS
             // ============================================
             ?>
             
             <div class="kama_breadcrumbs" itemscope="" itemtype="http://schema.org/BreadcrumbList">
                 
                 <span itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem">
-                    <a href="<?php echo esc_url( get_home_url() ); ?>" itemprop="item"><span itemprop="name">Главная</span></a>
+                    <a href="<?php echo esc_url( get_home_url() ); ?>" itemprop="item"><span itemprop="name"><?php esc_html_e( 'Home', 'argon-shop-theme' ); ?></span></a>
                 </span>
                 
                 <span class="kb_sep"> » </span>
                 
                 <span itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem">
-                    <a href="/aktsii-moskva/" itemprop="item"><span itemprop="name">Акции и скидки</span></a>
+                    <a href="/aktsii-moskva/" itemprop="item"><span itemprop="name"><?php esc_html_e( 'Promotions and discounts', 'argon-shop-theme' ); ?></span></a>
                 </span>
                 
                 <span class="kb_sep"> » </span>
                 
-                <span class="kb_title">Архив акций</span>
+                <span class="kb_title"><?php esc_html_e( 'Promotions archive', 'argon-shop-theme' ); ?></span>
                 
             </div>
            
             
             
-            <h1 class="title">Архив акций</h1>
+            <h1 class="title"><?php esc_html_e( 'Promotions archive', 'argon-shop-theme' ); ?></h1>
             
             <div class="block-rubricEntrys">
             
             <?php 
             
             // ============================================
-            // АРХИВНЫЕ АКЦИИ
+            // ARCHIVED PROMOTIONS
             // ============================================
             
             $arg = array(
@@ -130,7 +129,7 @@ get_header(); ?>
                             </div>
                             
                             <div class="entryButtons">
-                                <a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title_attribute(); ?>">Узнать больше</a>
+                                <a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title_attribute(); ?>"><?php esc_html_e( 'Learn more', 'argon-shop-theme' ); ?></a>
                             </div>
                             
                         </div>
@@ -145,16 +144,16 @@ get_header(); ?>
                 
             } else {
                 
-                echo 'Архив пуст';
+                echo __( 'The archive is empty', 'argon-shop-theme' );
             }
             ?>
             
             <?php 
-            // Функция плагина Argon Shop (includes/interface/pagenavi.php)
+            // Argon Shop plugin function (includes/interface/pagenavi.php)
             // 
-            // ВНИМАНИЕ: posts_per_page => -1 значит одна страница.
+            // NOTE: posts_per_page => -1 means a single page.
             //if ( function_exists( 'kama_pagenavi' ) ) {
-                //kama_pagenavi();
+                //as_kama_pagenavi();
             //}
             ?>
             

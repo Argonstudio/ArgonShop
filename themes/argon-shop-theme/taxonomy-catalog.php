@@ -1,54 +1,54 @@
 <?php
 /**
- * Шаблон таксономии "Каталог"
+ * "Catalog" taxonomy template
  * 
- * Шаблон для вывода категории каталога товаров
+ * Template for displaying a product catalog category
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0 * 
+ * @author  Ivan Voitkov
+ *
  * 
- * ЧТО ВЫВОДИТ:
- * 1. Хлебные крошки (через kama_breadcrumbs)
- * 2. Заголовок категории (или кастомный через ACF second_title)
- * 3. Описание категории (term_description)
- * 4. Дочерние категории карточками
- * 5. Популярные запросы (карточки)
- * 6. Второе описание (ACF second_desc)
- * 7. Фильтр товаров (если подключен)
- * 8. Сортировку товаров
- * 9. Список товаров категории
- * 10. Нижнее описание (ACF bottom_desc)
- * 11. Пагинацию
+ * WHAT IT OUTPUTS:
+ * 1. Breadcrumbs (via kama_breadcrumbs)
+ * 2. Category title (or a custom one via ACF second_title)
+ * 3. Category description (term_description)
+ * 4. Child categories as cards
+ * 5. Popular queries (cards)
+ * 6. Second description (ACF second_desc)
+ * 7. Product filter (if enabled)
+ * 8. Product sorting
+ * 9. List of category products
+ * 10. Bottom description (ACF bottom_desc)
+ * 11. Pagination
  * 
  * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  * 
- * В этом шаблоне используются функции плагина:
+ * This template uses the following plugin functions:
  * 
- * - kama_breadcrumbs()     → хлебные крошки (breadcrumbs.php)
- * - kama_pagenavi()        → пагинация (pagenavi.php)
- * - getCookie()            → чтение куки сортировки (getData.php)
- * - as_sort()              → вывод сортировки (sort.php)
- * - get_sort_products()    → сортировка товаров (catalog.php)
- * - view_products_list()   → вывод списка товаров (productsLists.php)
+ * - as_kama_breadcrumbs()     → breadcrumbs (breadcrumbs.php)
+ * - as_kama_pagenavi()        → pagination (pagenavi.php)
+ * - as_getCookie()            → reading the sort cookie (getData.php)
+ * - as_sort()              → sort output (sort.php)
+ * - as_get_sort_products()    → product sorting (catalog.php)
+ * - as_view_products_list()   → product list output (productsLists.php)
  * 
- * ВНЕШНИЕ ЗАВИСИМОСТИ:
- * - ACF (Advanced Custom Fields) — поля second_title, second_desc, bottom_desc, image_catalog, catalog_type
- * - wp_product_filter() — функция фильтрации (если установлена)
+ * EXTERNAL DEPENDENCIES:
+ * - ACF (Advanced Custom Fields) — second_title, second_desc, bottom_desc, image_catalog, catalog_type fields
+ * - wp_product_filter() — filter function (if installed)
  * 
  * ============================================================
  *
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 // ============================================
-// ПОЛУЧЕНИЕ ДАННЫХ О ТЕКУЩЕЙ КАТЕГОРИИ
+// GET DATA ABOUT THE CURRENT CATEGORY
 // ============================================
 // 
 
@@ -73,12 +73,12 @@ get_header(); ?>
             
             <?php 
             // ============================================
-            // ХЛЕБНЫЕ КРОШКИ
+            // BREADCRUMBS
             // ============================================
-            // Функция плагина Argon Shop (includes/interface/breadcrumbs.php)
+            // Argon Shop plugin function (includes/interface/breadcrumbs.php)
             
-            if ( function_exists( 'kama_breadcrumbs' ) ) {
-                kama_breadcrumbs( '<span class="b"> » </span>' );
+            if ( function_exists( 'as_kama_breadcrumbs' ) ) {
+                AS_Kama_Breadcrumbs( '<span class="b"> » </span>' );
             }
             ?>
 
@@ -87,10 +87,10 @@ get_header(); ?>
 					<h1 class="title"> 
 						<?php 
 						// ============================================
-						// ЗАГОЛОВОК КАТЕГОРИИ
+						// CATEGORY TITLE
 						// ============================================
-						// Если у категории задано ACF-поле second_title — выводим его.
-						// Иначе — стандартный заголовок термина.
+						// If the category has the ACF second_title field, output it.
+						// Otherwise — the standard term title.
 						
 						$second_title = '';
 						
@@ -110,12 +110,12 @@ get_header(); ?>
 					    
 					$termDescription = term_description();
 
-                    // PHP 8.5: $_GET всегда массив, но проверим на всякий случай
+                    // PHP 8.5: $_GET is always an array, but check just in case
                     $get_is_empty = ! is_array( $_GET ) || empty( $_GET );
                     
                     if ( $termDescription && $get_is_empty ) { ?>
                         
-                        <div class="catalogPage_openMobile mobileOpen-topDescr">Описание категории</div>
+                        <div class="catalogPage_openMobile mobileOpen-topDescr"><?php esc_html_e( 'Category description', 'argon-shop-theme' ); ?></div>
                             
                         <div class="catalogPage_mobileExtensible topDescr"><?php echo $termDescription; ?></div>
                      
@@ -124,7 +124,7 @@ get_header(); ?>
 					<?php 
 					
 					// ============================================
-					// ДОЧЕРНИЕ КАТЕГОРИИ И ПОПУЛЯРНЫЕ ЗАПРОСЫ
+					// CHILD CATEGORIES AND POPULAR QUERIES
 					// ============================================
 					// 
 					
@@ -142,7 +142,7 @@ get_header(); ?>
 						$i = 0;  
 						?>
 							
-						<div class="catalogPage_openMobile mobileOpen-cardsCategory">Дочерние категории</div>
+						<div class="catalogPage_openMobile mobileOpen-cardsCategory"><?php esc_html_e( 'Subcategories', 'argon-shop-theme' ); ?></div>
 							
 						<div class="catalogPage_mobileExtensible block-cards-category">
 							    
@@ -150,11 +150,11 @@ get_header(); ?>
     							
     							<?php 
     							
-    							// PHP 8.5: get_field может вернуть false/null/массив
+    							// PHP 8.5: get_field may return false/null/an array
     							$image = function_exists( 'get_field' ) ? get_field( 'image_catalog', $term ) : false;
     							$type  = function_exists( 'get_field' ) ? get_field( 'catalog_type', $term ) : false;
     							
-    							// Извлекаем URL из массива ACF
+    							// Extract the URL from the ACF array
     							$image_url = '';
     							
     							if ( is_array( $image ) && isset( $image['url'] ) ) {
@@ -165,7 +165,7 @@ get_header(); ?>
     							
     							if ( $type === 'base' ) {
     								
-    								// Ссылка на термин
+    								// Term link
     								$term_link = get_term_link( $term );
     								
     								if ( is_wp_error( $term_link ) ) {
@@ -209,7 +209,7 @@ get_header(); ?>
 						
 						<div class="block-request">
 						        
-            				<div class="catalogPage_openMobile titleCardsRequest">Популярные запросы</div>
+            				<div class="catalogPage_openMobile titleCardsRequest"><?php esc_html_e( 'Popular searches', 'argon-shop-theme' ); ?></div>
             				
             				<div class="catalogPage_mobileExtensible">
             							
@@ -236,7 +236,7 @@ get_header(); ?>
                         						    
                         		</div><!-- .block-cards-request -->
                 		
-                		        <div class="view-allCards-request">смотреть все</div>
+                		        <div class="view-allCards-request"><?php esc_html_e( 'view all', 'argon-shop-theme' ); ?></div>
                 		        
                 		    </div>
                 		</div><!-- .block-request -->				    
@@ -247,7 +247,7 @@ get_header(); ?>
 						
 						<?php 
 						// ============================================
-						// ВТОРОЕ ОПИСАНИЕ (ACF second_desc)
+						// SECOND DESCRIPTION (ACF second_desc)
 						// ============================================
 						
 						$second_desc = '';
@@ -263,7 +263,7 @@ get_header(); ?>
 					
 					<?php 
 					// ============================================
-					// ФИЛЬТР ТОВАРОВ (если подключен)
+					// PRODUCT FILTER (if enabled)
 					// ============================================
 					
 					if ( function_exists( 'wp_product_filter' ) ) { ?>
@@ -276,7 +276,7 @@ get_header(); ?>
 					
 					<?php 
 					// ============================================
-					// ВЫВОД ПОСТОВ
+					// POSTS OUTPUT
 					// ============================================
 					
 					if ( have_posts() ) { 
@@ -284,8 +284,8 @@ get_header(); ?>
 					    $pageNum = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1;
 					    $catID   = absint( get_queried_object_id() );
 					    
-					    // Функция плагина Argon Shop (includes/api/getData/getData.php)
-					    $typeSort = function_exists( 'getCookie' ) ? getCookie( 'AS_CatalogSorting' ) : false;
+					    // Argon Shop plugin function (includes/api/getData/getData.php)
+					    $typeSort = function_exists( 'as_getCookie' ) ? as_getCookie( 'AS_CatalogSorting' ) : false;
 					    
 					    $settingSort = array(
 					        
@@ -295,9 +295,9 @@ get_header(); ?>
 					        ),
 					            
 					        'typesSort' => array(
-					            'price' => array( 'name' => 'Цене' ),
-					            'name'  => array( 'name' => 'Названию' ),
-					            'date'  => array( 'name' => 'Дате добавления' ),
+					            'price' => array( 'name' => _x( 'Price', 'sort by', 'argon-shop-theme' ) ),
+					            'name'  => array( 'name' => __( 'Name', 'argon-shop-theme' ) ),
+					            'date'  => array( 'name' => __( 'Date added', 'argon-shop-theme' ) ),
 					        ),
 					    );
 					    
@@ -305,12 +305,12 @@ get_header(); ?>
 					    
 					    <div class="block-catalogSort">
 					        
-					        <div class="catalogPage_openMobile titleCatalogSort">Сортировать по:</div>
+					        <div class="catalogPage_openMobile titleCatalogSort"><?php esc_html_e( 'Sort by:', 'argon-shop-theme' ); ?></div>
 					        
 					        <span class="catalogPage_mobileExtensible">
 					        
 					            <?php 
-					            // Функция плагина Argon Shop (includes/interface/catalog/sort.php)
+					            // Argon Shop plugin function (includes/interface/catalog/sort.php)
 					            if ( function_exists( 'as_sort' ) ) {
 					                as_sort( $settingSort, $catID, $pageNum );
 					            }
@@ -326,24 +326,24 @@ get_header(); ?>
 					    
 					        <?php 
 					        
-					        // Функция плагина Argon Shop (includes/api/getData/product/productLists/catalog.php)
+					        // Argon Shop plugin function (includes/api/getData/product/productLists/catalog.php)
 					        $productsList = false;
 					        
-					        if ( function_exists( 'get_sort_products' ) ) {
+					        if ( function_exists( 'as_get_sort_products' ) ) {
 					            
     					        if ( $typeSort && isset( $typeSort['typeSort'], $typeSort['howSort'] ) ) {
     					            
-    					            $productsList = get_sort_products( $typeSort['typeSort'], $typeSort['howSort'], $catID, $pageNum );
+    					            $productsList = as_get_sort_products( $typeSort['typeSort'], $typeSort['howSort'], $catID, $pageNum );
     					            
     					        } else {
     					            
-    					            $productsList = get_sort_products( 'date', 'DESC', $catID, $pageNum );
+    					            $productsList = as_get_sort_products( 'date', 'DESC', $catID, $pageNum );
     					        }
 					        }
 					        
-					        // Функция плагина Argon Shop (includes/api/view/product/productsLists/productsLists.php)
-					        if ( $productsList && function_exists( 'view_products_list' ) ) {
-					            view_products_list( $productsList );
+					        // Argon Shop plugin function (includes/api/view/product/productsLists/productsLists.php)
+					        if ( $productsList && function_exists( 'as_view_products_list' ) ) {
+					            as_view_products_list( $productsList );
 					        }
 					        ?> 
     					
@@ -351,14 +351,14 @@ get_header(); ?>
     					
 					<?php } else {
 					    
-					    echo '<p>Категория пуста.</p>';
+					    echo __( '<p>The category is empty.</p>', 'argon-shop-theme' );
 					    
 					} ?>
 					    
 					    <div class="descr">
 							<?php 
 							// ============================================
-							// НИЖНЕЕ ОПИСАНИЕ (ACF bottom_desc)
+							// BOTTOM DESCRIPTION (ACF bottom_desc)
 							// ============================================
 							
 							$bottom_desc = '';
@@ -375,9 +375,9 @@ get_header(); ?>
 					
 					     
 			<?php 
-			// Функция плагина Argon Shop (includes/interface/pagenavi.php)
-			if ( function_exists( 'kama_pagenavi' ) ) {
-			    kama_pagenavi();
+			// Argon Shop plugin function (includes/interface/pagenavi.php)
+			if ( function_exists( 'as_kama_pagenavi' ) ) {
+			    as_kama_pagenavi();
 			}
 			?>	
 			</div><!-- #production_list_page -->

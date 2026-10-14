@@ -1,69 +1,68 @@
 <?php
 /**
- * ArgonShop — вывод слайдера на главной странице.
+ * ArgonShop — home page slider output.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Функция выводит HTML-структуру слайдера для Swiper. Используется
- * в шаблоне главной страницы темы (index.php)
+ * The function outputs the HTML structure of the Swiper slider. Used
+ * in the theme's home page template (index.php)
  *
- * Структура HTML совместима со Swiper и содержит:
- *   - контейнер .as-slider-main с классом .swiper;
- *   - обёртку .swiper-wrapper;
- *   - слайды .swiper-slide;
- *   - пагинацию и стрелки навигации.
+ * The HTML structure is Swiper-compatible and contains:
+ *   - the .as-slider-main container with the .swiper class;
+ *   - the .swiper-wrapper wrapper;
+ *   - .swiper-slide slides;
+ *   - pagination and navigation arrows.
  *
- * Инициализация Swiper выполняется JS-модулем slider-main.js
- * из плагина (см. assets/interface/js/modules/slider-main.js).
+ * Swiper is initialized by the slider-main.js JS module
+ * of the plugin (see assets/js/interface/modules/slider-main.js).
  *
  * ============================================================
- * ГДЕ ИСПОЛЬЗУЕТСЯ
+ * WHERE IT IS USED
  * ============================================================
  *
- * В шаблоне index.php темы:
+ * In the theme's index.php template:
  *
  *     <?php as_slider_main(); ?>
  *
- * Если слайдов нет — функция ничего не выводит.
+ * If there are no slides — the function outputs nothing.
  *
  * ============================================================
- * ДАННЫЕ
+ * DATA
  * ============================================================
  *
- * Слайды — это записи типа 'slider' (регистрируется в createPostType.php).
- * Мета-поле:
- *   slide_link — URL, куда ведёт клик по слайду (опционально).
+ * Slides are posts of the 'slider' type (registered in createPostType.php).
+ * Meta field:
+ *   slide_link — URL the slide click leads to (optional).
  *
- * Размер изображения: slider_thumb (регистрируется в functions.php темы).
+ * Image size: slider_thumb (registered in the theme's functions.php).
  *
  * ============================================================
- * ПАРАМЕТРЫ
+ * PARAMETERS
  * ============================================================
  *
  * @param array $args {
- *     Аргументы WP_Query. По умолчанию:
+ *     WP_Query arguments. Default:
  *
  *     @type string $post_type      'slider'
  *     @type string $post_status    'publish'
- *     @type int    $posts_per_page -1 (все слайды)
+ *     @type int    $posts_per_page -1 (all slides)
  * }
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 /**
- * Выводит HTML слайдера главной страницы.
+ * Outputs the home page slider HTML.
  *
- * @param  array $args — аргументы WP_Query
+ * @param  array $args — WP_Query arguments
  * @return void
  */
 function as_slider_main( $args = array() ) {

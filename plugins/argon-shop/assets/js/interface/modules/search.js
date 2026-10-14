@@ -1,72 +1,71 @@
 /**
- * ArgonShop — AJAX-поиск по сайту.
+ * ArgonShop — AJAX site search.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Управляет формой AJAX-поиска в шапке сайта и на странице
- * результатов поиска. Отправляет запрос при вводе текста,
- * показывает результаты в выпадающем блоке и скрывает его
- * при клике вне формы.
+ * Manages the AJAX search form in the site header and on the search
+ * results page. Sends a request while the user types,
+ * shows results in a dropdown block and hides it
+ * on a click outside the form.
  *
  * ============================================================
- * DOM-ЭЛЕМЕНТЫ
+ * DOM ELEMENTS
  * ============================================================
  *
  * .asInputSearchForm
- *   Поле ввода поиска. Может присутствовать на странице несколько
- *   раз (шапка, страница поиска).
+ *   Search input. May be present on the page several
+ *   times (header, search page).
  *
- * Атрибуты поля ввода:
- *   data-ajax         — JSON-строка с параметрами поиска
+ * Input attributes:
+ *   data-ajax         — JSON string with search parameters
  *                       (productResult, catalogResult, postResult).
- *                       Если атрибута нет — это обычный GET-поиск,
- *                       модуль его не обрабатывает.
+ *                       Without this attribute it is a regular GET search,
+ *                       the module does not handle it.
  *
- *   data-blockresult  — CSS-класс блока, в который выводятся
- *                       результаты поиска (например,
+ *   data-blockresult  — CSS class of the block that receives
+ *                       the search results (for example,
  *                       "topSearchBlockResult").
  *
- * Блок результатов:
- *   .{classBlockResult}  — контейнер с результатами; показывается
- *                          как display: block, скрывается как none.
+ * Results block:
+ *   .{classBlockResult}  — results container; shown
+ *                          as display: block, hidden as none.
  *
  * ============================================================
- * AJAX-ДЕЙСТВИЕ
+ * AJAX ACTION
  * ============================================================
  *
  * getAjaxSearchResult
- *   Принимает: dataAjax, searchStr.
- *   Возвращает готовый HTML с блоками результатов.
+ *   Accepts: dataAjax, searchStr.
+ *   Returns ready HTML with result blocks.
  *
  * ============================================================
- * ПОВЕДЕНИЕ
+ * BEHAVIOR
  * ============================================================
  *
- * 1. При вводе текста длиной > 1 символа — через 300 мс
- *    отправляется AJAX-запрос (debounce защищает от лишних
- *    запросов при быстром наборе).
+ * 1. When the text is longer than 1 character, an AJAX request is sent
+ *    after 300 ms (debounce prevents extra
+ *    requests during fast typing).
  *
- * 2. Если текст короче 2 символов — блок результатов скрывается,
- *    а таймер предыдущего запроса сбрасывается.
+ * 2. If the text is shorter than 2 characters, the results block is hidden
+ *    and the timer of the previous request is reset.
  *
- * 3. Каждому запросу присваивается токен. Если за время ожидания
- *    ответа поступил новый ввод — старый ответ игнорируется.
- *    Это исключает ситуацию, когда при быстром стирании текста
- *    на экране появляются устаревшие результаты.
+ * 3. Each request gets a token. If new input arrives while
+ *    waiting for the response, the old response is ignored.
+ *    This prevents stale results from appearing on screen
+ *    when the text is erased quickly.
  *
- * 4. При фокусе на поле с уже введённым текстом результаты
- *    появляются сразу, без debounce.
+ * 4. On focus of a field that already contains text, the results
+ *    appear immediately, without debounce.
  *
- * 5. При клике вне формы — блок результатов скрывается.
+ * 5. On a click outside the form, the results block is hidden.
  *
  * ============================================================
- * ИСПОЛЬЗОВАНИЕ
+ * USAGE
  * ============================================================
  *
  *     import { arsSearch } from './modules/search.js';
@@ -76,26 +75,27 @@
 'use strict';
 
 import { arsApi }       from '../core/api.js';
+import { t }            from '../core/config.js';
 import { qs, qsa, on }  from '../../shared/dom.js';
 
 /**
- * Задержка перед отправкой запроса при вводе, в миллисекундах.
- * Защищает от избыточных запросов при быстром наборе текста.
+ * Delay before sending a request while typing, in milliseconds.
+ * Prevents excessive requests during fast typing.
  *
  * @type {number}
  */
 const SEARCH_DEBOUNCE_MS = 300;
 
 /**
- * Минимальная длина запроса, при которой запускается поиск.
- * Более короткие строки игнорируются.
+ * Minimum query length that triggers the search.
+ * Shorter strings are ignored.
  *
  * @type {number}
  */
 const SEARCH_MIN_LENGTH = 2;
 
 /**
- * Модуль AJAX-поиска.
+ * AJAX search module.
  */
 class ArsSearch {
 
@@ -103,24 +103,24 @@ class ArsSearch {
     #initialized = false;
 
     /**
-     * Таймеры debounce для каждого поля ввода.
-     * Ключ — сам элемент input.
+     * Debounce timers for each input field.
+     * The key is the input element itself.
      *
      * @type {WeakMap<Element, number>}
      */
     #timers = new WeakMap();
 
     /**
-     * Токены текущих запросов для каждого поля.
-     * Новый запрос перезаписывает токен — так старые ответы
-     * распознаются и игнорируются.
+     * Tokens of the current requests for each field.
+     * A new request overwrites the token — this way old responses
+     * are recognized and ignored.
      *
      * @type {WeakMap<Element, symbol>}
      */
     #tokens = new WeakMap();
 
     /**
-     * Инициализация. Безопасна для повторного вызова.
+     * Initialization. Safe to call repeatedly.
      *
      * @return {void}
      */
@@ -144,18 +144,18 @@ class ArsSearch {
             on( input, 'focus', () => this.#onFocus( input ) );
         });
 
-        // Глобальный обработчик: клик вне формы скрывает результаты.
+        // Global handler: a click outside the form hides the results.
         on( document, 'mouseup', ( event ) => this.#onDocumentClick( event ) );
     }
 
     // ============================================================
-    // ОБРАБОТЧИКИ
+    // HANDLERS
     // ============================================================
 
     /**
-     * Обработчик ввода в поле поиска.
+     * Search input handler.
      *
-     * @param  {HTMLInputElement} input — поле ввода
+     * @param  {HTMLInputElement} input — input field
      * @return {void}
      */
     #onInput( input ) {
@@ -167,13 +167,13 @@ class ArsSearch {
         const searchStr   = input.value.trim();
         const resultBlock = this.#getResultBlock( input );
 
-        // Всегда сбрасываем предыдущий таймер — иначе старый
-        // debounce может сработать после очистки поля и показать
-        // устаревшие результаты.
+        // Always reset the previous timer — otherwise an old
+        // debounce may fire after the field is cleared and show
+        // stale results.
         this.#cancelPending( input );
 
-        // Слишком короткий запрос — скрываем блок и инвалидируем
-        // текущий запрос, чтобы его ответ не отрисовался.
+        // Query too short — hide the block and invalidate
+        // the current request so that its response is not rendered.
         if ( searchStr.length < SEARCH_MIN_LENGTH ) {
 
             if ( resultBlock ) {
@@ -183,7 +183,7 @@ class ArsSearch {
             return;
         }
 
-        // Debounce: запускаем новый таймер
+        // Debounce: start a new timer
         const timer = window.setTimeout( () => {
             this.#requestSearch( input, searchStr );
         }, SEARCH_DEBOUNCE_MS );
@@ -192,12 +192,12 @@ class ArsSearch {
     }
 
     /**
-     * Обработчик фокуса на поле поиска.
+     * Search field focus handler.
      *
-     * Если в поле уже есть достаточно длинный текст — сразу
-     * запускаем поиск, без debounce.
+     * If the field already contains long enough text, the search
+     * starts immediately, without debounce.
      *
-     * @param  {HTMLInputElement} input — поле ввода
+     * @param  {HTMLInputElement} input — input field
      * @return {void}
      */
     #onFocus( input ) {
@@ -214,12 +214,12 @@ class ArsSearch {
     }
 
     /**
-     * Обработчик клика по документу.
+     * Document click handler.
      *
-     * Скрывает все открытые блоки результатов, если клик был
-     * не внутри формы поиска и не внутри самого блока результатов.
+     * Hides all open result blocks if the click was
+     * neither inside the search form nor inside the results block.
      *
-     * @param  {MouseEvent} event — событие клика
+     * @param  {MouseEvent} event — click event
      * @return {void}
      */
     #onDocumentClick( event ) {
@@ -245,18 +245,18 @@ class ArsSearch {
     }
 
     // ============================================================
-    // AJAX-ЗАПРОС
+    // AJAX REQUEST
     // ============================================================
 
     /**
-     * Отправляет запрос поиска и выводит результаты.
+     * Sends the search request and renders the results.
      *
-     * Каждому запросу присваивается токен. Если за время ожидания
-     * ответа был запущен новый запрос (или поле очищено) — ответ
-     * игнорируется.
+     * Each request gets a token. If a new request was started
+     * (or the field was cleared) while waiting for the response,
+     * the response is ignored.
      *
-     * @param  {HTMLInputElement} input     — поле ввода
-     * @param  {string}           searchStr — текст поиска
+     * @param  {HTMLInputElement} input     — input field
+     * @param  {string}           searchStr — search text
      * @return {Promise<void>}
      */
     async #requestSearch( input, searchStr ) {
@@ -267,16 +267,16 @@ class ArsSearch {
             return;
         }
 
-        // Запоминаем токен этого запроса
+        // Remember the token of this request
         const token = Symbol( 'search' );
         this.#tokens.set( input, token );
 
-        // Показываем блок сразу — иначе пользователь не поймёт,
-        // что поиск начался.
+        // Show the block immediately — otherwise the user will not
+        // understand that the search has started.
         resultBlock.style.display = 'block';
 
         if ( resultBlock.innerHTML === '' ) {
-            resultBlock.innerHTML = 'Ищем результаты...';
+            resultBlock.innerHTML = t( 'searching' );
         }
 
         const dataAjax = input.dataset.ajax || '';
@@ -288,12 +288,12 @@ class ArsSearch {
                 searchStr: searchStr,
             });
 
-            // Если за это время был другой запрос — игнорируем ответ
+            // If another request was made meanwhile — ignore the response
             if ( this.#tokens.get( input ) !== token ) {
                 return;
             }
 
-            // Если поле уже очищено или слишком короткое — не показываем
+            // If the field is already cleared or too short — do not show
             if ( input.value.trim().length < SEARCH_MIN_LENGTH ) {
                 resultBlock.style.display = 'none';
                 return;
@@ -303,24 +303,24 @@ class ArsSearch {
 
         } catch {
 
-            // Ошибку показываем только если запрос всё ещё актуален
+            // Show the error only if the request is still current
             if ( this.#tokens.get( input ) !== token ) {
                 return;
             }
 
-            resultBlock.innerHTML = 'Ошибка на сервере';
+            resultBlock.innerHTML = t( 'serverError' );
         }
     }
 
     // ============================================================
-    // ВСПОМОГАТЕЛЬНЫЕ
+    // HELPERS
     // ============================================================
 
     /**
-     * Сбрасывает отложенный debounce-таймер и инвалидирует
-     * активный запрос для указанного поля.
+     * Resets the pending debounce timer and invalidates
+     * the active request for the given field.
      *
-     * @param  {HTMLInputElement} input — поле ввода
+     * @param  {HTMLInputElement} input — input field
      * @return {void}
      */
     #cancelPending( input ) {
@@ -332,14 +332,14 @@ class ArsSearch {
             this.#timers.delete( input );
         }
 
-        // Смена токена на «пустой» — старые ответы не отрисуются
+        // Switching to an "empty" token — old responses will not be rendered
         this.#tokens.set( input, Symbol( 'cancelled' ) );
     }
 
     /**
-     * Проверяет, настроен ли у поля AJAX-поиск.
+     * Checks whether AJAX search is configured for the field.
      *
-     * @param  {HTMLInputElement} input — поле ввода
+     * @param  {HTMLInputElement} input — input field
      * @return {boolean}
      */
     #hasAjaxParams( input ) {
@@ -359,9 +359,9 @@ class ArsSearch {
     }
 
     /**
-     * Возвращает блок результатов, привязанный к полю ввода.
+     * Returns the results block bound to the input field.
      *
-     * @param  {HTMLInputElement} input — поле ввода
+     * @param  {HTMLInputElement} input — input field
      * @return {Element|null}
      */
     #getResultBlock( input ) {
@@ -377,7 +377,7 @@ class ArsSearch {
 }
 
 /**
- * Готовый синглтон модуля поиска.
+ * Ready-made singleton of the search module.
  *
  * @type {ArsSearch}
  */

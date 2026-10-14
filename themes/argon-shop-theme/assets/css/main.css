@@ -38,7 +38,7 @@ table {
 }
 
 /**
- * Главные блоки и секции
+ * Main blocks and sections
  * =========================================== */
 
 .row {
@@ -112,7 +112,7 @@ h2{
     text-transform: uppercase;
 }
 
-/* Пути */
+/* Paths */
 
 .kama_breadcrumbs,
 .kama_breadcrumbs a{
@@ -125,7 +125,7 @@ h2{
 }
 
 
-/* Переключатели страниц */
+/* Page switchers */
 
 .wp-pagenavi {
     vertical-align: middle;
@@ -239,26 +239,26 @@ h2{
 }
 
 
-/* Контейнер Gutenberg для видео */
+/* Gutenberg container for videos */
 .wp-block-embed-youtube.wp-embed-aspect-16-9 {
     width: 100%;
-    /* Максимальная ширина видео как на YouTube + отступы слева/справа */
+    /* Maximum video width as on YouTube + left/right margins */
     max-width: calc(1280px + 40px); 
     margin-left: auto;
     margin-between: auto;
     box-sizing: border-box;
 }
 
-/* Обертка внутри Gutenberg, которая сохраняет пропорции 16:9 */
+/* Wrapper inside Gutenberg that keeps the 16:9 aspect ratio */
 .wp-block-embed-youtube.wp-embed-aspect-16-9 .wp-block-embed__wrapper {
     position: relative;
     width: 100%;
     height: 0;
-    /* Пропорция 16:9 (9 / 16 * 100%) */
+    /* 16:9 aspect ratio (9 / 16 * 100%) */
     padding-bottom: 56.25%; 
 }
 
-/* Сам iframe (видео), растягивающийся внутри обертки */
+/* The iframe (video) itself, stretching inside the wrapper */
 .wp-block-embed-youtube.wp-embed-aspect-16-9 .wp-block-embed__wrapper iframe {
     position: absolute;
     top: 0;
@@ -269,15 +269,15 @@ h2{
 }
 
 
-/* Базовый сброс и отступы для списка Гутенберга */
+/* Base reset and margins for the Gutenberg list */
 .wp-block-list {
     padding-left: 24px;
     margin-top: 16px;
     margin-bottom: 16px;
-    list-style-type: none; /* Отключаем стандартные точки */
+    list-style-type: none; /* Disable the standard bullets */
 }
 
-/* Стилизация каждого пункта */
+/* Styling of each item */
 .wp-block-list li {
     position: relative;
     font-size: 16px;
@@ -286,17 +286,17 @@ h2{
     margin-bottom: 12px;
 }
 
-/* Создаем аккуратную кастомную точку */
+/* Create a neat custom bullet */
 .wp-block-list li::before {
     content: "•";
-    color: #8c8c8c; /* Приглушенный серый цвет маркера */
+    color: #8c8c8c; /* Muted gray bullet color */
     font-size: 18px;
     position: absolute;
     left: -20px;
     top: -1px;
 }
 
-/* Стиль для жирного текста (названия пунктов) */
+/* Style for bold text (item names) */
 .wp-block-list li strong {
     color: #111111;
     font-weight: 600;

@@ -1,49 +1,48 @@
 /**
- * ArgonShop — чекбоксы согласия.
+ * ArgonShop — consent checkboxes.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Управляет чекбоксами согласия на обработку данных, которые
- * блокируют кнопки отправки, пока пользователь не поставит
- * галочку.
+ * Controls the data processing consent checkboxes that
+ * block the submit buttons until the user checks
+ * the box.
  *
- * Примеры:
- *   - в корзине чекбокс управляет кнопкой «Отправить заказ»;
- *   - в ЛК чекбокс управляет кнопкой «Сохранить» (аккаунт);
- *   - в ЛК чекбокс управляет кнопкой «Сохранить» (email/пароль).
+ * Examples:
+ *   - in the cart the checkbox controls the "Send order" button;
+ *   - in the account the checkbox controls the "Save" button (account);
+ *   - in the account the checkbox controls the "Save" button (email/password).
  *
  * ============================================================
- * DOM-ЭЛЕМЕНТЫ
+ * DOM ELEMENTS
  * ============================================================
  *
  * input[type="checkbox"][data-consent-target]
- *   Чекбокс согласия.
+ *   Consent checkbox.
  *
- *   Атрибут data-consent-target содержит CSS-селектор для
- *   целевых кнопок. Пока чекбокс не отмечен — кнопки disabled;
- *   как только отмечен — disabled снимается.
+ *   The data-consent-target attribute contains a CSS selector for
+ *   the target buttons. While the checkbox is unchecked the buttons are disabled;
+ *   as soon as it is checked, disabled is removed.
  *
- * Примеры разметки:
+ * Markup examples:
  *
  *   <input type="checkbox" data-consent-target=".submitCart">
  *   <input type="checkbox" data-consent-target="#accountSaveButton">
  *   <input type="checkbox" data-consent-target="#editEmailPasswordButton">
  *
  * ============================================================
- * ИСПОЛЬЗОВАНИЕ
+ * USAGE
  * ============================================================
  *
  *     import { arsConsent } from './modules/consent.js';
  *     arsConsent.init();
  *
- * Модуль безопасен для вызова на любой странице: если чекбоксов
- * согласия нет, ничего не выполняется.
+ * The module is safe to call on any page: if there are no consent
+ * checkboxes, nothing happens.
  */
 
 'use strict';
@@ -51,7 +50,7 @@
 import { qs, qsa, on } from '../../shared/dom.js';
 
 /**
- * Модуль чекбоксов согласия.
+ * Consent checkboxes module.
  */
 class ArsConsent {
 
@@ -59,7 +58,7 @@ class ArsConsent {
     #initialized = false;
 
     /**
-     * Инициализация. Безопасна для повторного вызова.
+     * Initialization. Safe to call repeatedly.
      *
      * @return {void}
      */
@@ -79,18 +78,18 @@ class ArsConsent {
 
         checkboxes.forEach( checkbox => {
 
-            // Устанавливаем исходное состояние кнопок
+            // Set the initial state of the buttons
             this.#applyState( checkbox );
 
-            // Реакция на изменение
+            // React to changes
             on( checkbox, 'change', () => this.#applyState( checkbox ) );
         });
     }
 
     /**
-     * Применяет состояние чекбокса к целевым кнопкам.
+     * Applies the checkbox state to the target buttons.
      *
-     * @param  {HTMLInputElement} checkbox — чекбокс согласия
+     * @param  {HTMLInputElement} checkbox — consent checkbox
      * @return {void}
      */
     #applyState( checkbox ) {
@@ -110,7 +109,7 @@ class ArsConsent {
 }
 
 /**
- * Готовый синглтон модуля чекбоксов согласия.
+ * Ready singleton of the consent checkboxes module.
  *
  * @type {ArsConsent}
  */

@@ -1,11 +1,11 @@
-/* Архивная копия старого Jquery 2018 года
+/* Archived copy of the old 2018 jQuery code.
 
-При установке плагина файлы из папки oldJquery не нужны и их можно удалить, это только для Гитхаба
+The files in the oldJquery folder are not needed when installing the plugin and can be deleted; they are kept only for GitHub.
 
-Позднее я переписал все на чистый современный JS, сейчас он в плагине.В файлах же темы остался css и php шаблоны. */
+Later I rewrote everything in plain modern JS, which now lives in the plugin. Only the CSS and PHP templates remained in the theme files. */
 
 
-/* КОНТАКТНАЯ ФОРМА */
+/* CONTACT FORM */
 
 if ( typeof window.FormData !== 'function' ) {
     
@@ -17,13 +17,13 @@ if ( typeof window.FormData !== 'function' ) {
 	
 }
 
-//Выбор контактной формы обратная связь
+//Select the feedback contact form
 var wpcf7Elm = document.getElementById("wpcf7-f7-o1");
  
-//Событие успешной отправки письма
+//Successful mail submission event
 wpcf7Elm.addEventListener( 'wpcf7mailsent', function( event ) {
     
-    //Закрытие активного окна fancybox
+    //Close the active fancybox window
     setTimeout('$.fancybox.close()', 1500);
     
 }, false );
@@ -45,7 +45,7 @@ $(".wpcf7-submit").on("click",function(e){
         
         blockWpcf7.addClass("wpcf7-mail-sent-ok");
         blockWpcf7.css("display","block");
-        blockWpcf7.html("Ваше сообщение успешно отправлено");
+        blockWpcf7.html("Your message has been sent successfully");
         setTimeout('$.fancybox.close()', 1500);
     }
 })

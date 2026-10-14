@@ -1,51 +1,50 @@
 <?php
 /**
- * Замена метки as_homepage в меню на домен сайта
+ * Replacing the as_homepage marker in menus with the site domain
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * 1. Меню сайта (шапка, футер)
- * 2. Ссылка с меткой as_homepage должна заменяться на текущий домен
+ * WHERE TO TEST:
+ * 1. Site menu (header, footer)
+ * 2. A link with the as_homepage marker must be replaced with the current domain
  * 
- * ЧТО ДЕЛАЕТ:
- * Заменяет в URL пунктов меню метку "as_homepage" на домен текущего сайта(в админке при редактировании меню ссылка http://as_homepage).
- * Используется для мультирегиональности — один пункт меню работает
- * как ссылка на главную для разных доменов.
+ * WHAT IT DOES:
+ * Replaces the "as_homepage" marker in menu item URLs with the current site domain (in the admin menu editor the link is http://as_homepage).
+ * Used for multi-region sites — one menu item works
+ * as a link to the home page for different domains.
  * 
  * PHP 8.5:
- * - проверка $_SERVER['SERVER_NAME'] на существование и тип
- * - валидация домена через регулярное выражение (защита от подделки Host)
- * - проверка $item->url на null перед stristr()
- * - fallback на home_url(), если SERVER_NAME пустой или некорректный
+ * - $_SERVER['SERVER_NAME'] is checked for existence and type
+ * - the domain is validated with a regular expression (protection against Host spoofing)
+ * - $item->url is checked for null before stristr()
+ * - fallback to home_url() if SERVER_NAME is empty or invalid
  * 
- * БЕЗОПАСНОСТЬ:
- * - $_SERVER['SERVER_NAME'] может быть подделан через HTTP-заголовок Host,
- *   сделаны валидация и fallback.
+ * SECURITY:
+ * - $_SERVER['SERVER_NAME'] can be spoofed via the Host HTTP header,
+ *   so validation and a fallback are in place.
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-add_filter( 'wp_nav_menu_objects', 'change_nav_menu_objects', 10, 2 );
+add_filter( 'wp_nav_menu_objects', 'as_change_nav_menu_objects', 10, 2 );
 
 /**
- * ФУНКЦИЯ: Замена метки as_homepage в URL меню на домен сайта
+ * FUNCTION: Replace the as_homepage marker in menu URLs with the site domain
  * 
- * @param array    $sorted_menu_items — массив объектов пунктов меню
- * @param stdClass $args              — аргументы wp_nav_menu()
+ * @param array    $sorted_menu_items — array of menu item objects
+ * @param stdClass $args              — wp_nav_menu() arguments
  * 
- * @return array Изменённый массив пунктов меню
+ * @return array Modified array of menu items
  */
-function change_nav_menu_objects( $sorted_menu_items, $args ) {
+function as_change_nav_menu_objects( $sorted_menu_items, $args ) {
     
     
     
-    // Выполняем только на фронтенде (не в админке и не в AJAX)
+    // Run only on the frontend (not in the admin or AJAX)
     if ( is_admin() || wp_doing_ajax() ) {
         return $sorted_menu_items;
     }
@@ -54,37 +53,37 @@ function change_nav_menu_objects( $sorted_menu_items, $args ) {
         return $sorted_menu_items;
     }
     
-    // Получаем безопасное имя домена
-    $server_name = get_safe_server_name();
+    // Get a safe domain name
+    $server_name = as_get_safe_server_name();
     
-    // Если не удалось получить домен — возвращаем как есть
+    // If the domain could not be obtained — return as is
     if ( empty( $server_name ) ) {
         return $sorted_menu_items;
     }
     
     foreach ( $sorted_menu_items as $index => $item ) {
         
-        // PHP 8.5: проверяем, что $item — объект и есть url
+        // PHP 8.5: make sure $item is an object and has a url
         if ( ! is_object( $item ) || ! isset( $item->url ) ) {
             continue;
         }
         
-        // PHP 8.5: $item->url может быть null — приводим к строке
+        // PHP 8.5: $item->url may be null — cast it to a string
         $url = (string) $item->url;
         
         if ( $url === '' ) {
             continue;
         }
         
-        // Ищем метку as_homepage
+        // Look for the as_homepage marker
         if ( stripos( $url, 'as_homepage' ) === false ) {
             continue;
         }
         
-        // Заменяем метку на домен
+        // Replace the marker with the domain
         $new_url = str_ireplace( 'as_homepage', $server_name, $url );
         
-        // Экранируем URL
+        // Escape the URL
         $sorted_menu_items[ $index ]->url = esc_url_raw( $new_url );
     }
     
@@ -92,36 +91,36 @@ function change_nav_menu_objects( $sorted_menu_items, $args ) {
 }
 
 /**
- * ФУНКЦИЯ: Безопасное получение имени домена
+ * FUNCTION: Safe retrieval of the domain name
  * 
- * Приоритет:
- * 1. $_SERVER['SERVER_NAME'] — если существует и валиден
- * 2. home_url() — как fallback (для случаев, когда SERVER_NAME отсутствует)
+ * Priority:
+ * 1. $_SERVER['SERVER_NAME'] — if it exists and is valid
+ * 2. home_url() — as a fallback (when SERVER_NAME is missing)
  * 
- * Валидация SERVER_NAME обязательна, так как значение приходит из
- * HTTP-заголовка Host, который может быть подделан злоумышленником.
+ * SERVER_NAME validation is mandatory, because the value comes from
+ * the Host HTTP header, which can be spoofed by an attacker.
  * 
- * @return string Домен (например, "example.com") или пустая строка
+ * @return string Domain (for example, "example.com") or an empty string
  */
-function get_safe_server_name() {
+function as_get_safe_server_name() {
     
     $server_name = '';
     
-    // Пытаемся получить SERVER_NAME
+    // Try to get SERVER_NAME
     if ( isset( $_SERVER['SERVER_NAME'] ) && is_string( $_SERVER['SERVER_NAME'] ) ) {
         
-        // Убираем экранирование и очищаем
+        // Remove escaping and clean
         $raw = wp_unslash( $_SERVER['SERVER_NAME'] );
         $raw = sanitize_text_field( $raw );
         
-        // Валидация: допустимые символы для домена — буквы, цифры, точки, дефисы
-        // Также допускаем порт (:)
+        // Validation: allowed domain characters — letters, digits, dots, hyphens
+        // The port (:) is also allowed
         if ( preg_match( '/^[a-z0-9.\-]+(:\d+)?$/i', $raw ) ) {
             $server_name = $raw;
         }
     }
     
-    // Fallback — home_url() из настроек WordPress
+    // Fallback — home_url() from the WordPress settings
     if ( empty( $server_name ) ) {
         
         $home_host = wp_parse_url( home_url(), PHP_URL_HOST );

@@ -1,48 +1,47 @@
 <?php
 /**
- * Шаблон статической страницы (page)
+ * Static page template (page)
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * Любая статическая страница WordPress
- * URL: /название-страницы/
+ * WHERE TO TEST:
+ * Any static WordPress page
+ * URL: /page-name/
  * 
- * ЧТО ВЫВОДИТ:
- * 1. Хлебные крошки (через kama_breadcrumbs из плагина Argon Shop)
- * 2. Заголовок страницы
- * 3. Изображение страницы (если есть)
- * 4. Контент страницы
- * 
- * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
- * ============================================================
- * 
- * В этом шаблоне используется функция плагина:
- * 
- * - kama_breadcrumbs( ' » ' )
- *   Файл: includes/interface/breadcrumbs.php
- *   Выводит цепочку вида: "Главная » Название страницы"
- *   Для вложенных страниц: "Главная » Родитель » Дочерняя"
+ * WHAT IT OUTPUTS:
+ * 1. Breadcrumbs (via kama_breadcrumbs from the Argon Shop plugin)
+ * 2. Page title
+ * 3. Page image (if any)
+ * 4. Page content
  * 
  * ============================================================
- * ШАБЛОНЫ, ПЕРЕОПРЕДЕЛЯЮЩИЕ ЭТОТ ФАЙЛ
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  * 
- * Некоторые страницы имеют собственные шаблоны и не используют page.php:
+ * This template uses the following plugin function:
  * 
- * - page-history.php (или Template Name: История просмотров) → history.php
- * - page-contacts.php (Template Name: Контакты) → Контакты
- * - page-about.php (Template Name: О компании) → aboutCompany.php
- * - page-shoppingCart.php (Template Name: shoppingCart) → shoppingCartPage.php
- * - Архив акций Москва → arhiv-aktsij-moskva.php
+ * - as_kama_breadcrumbs( ' » ' )
+ *   File: includes/interface/breadcrumbs.php
+ *   Outputs a chain like: "Home » Page title"
+ *   For nested pages: "Home » Parent » Child"
  * 
- * Этот файл — fallback для всех остальных статических страниц.
+ * ============================================================
+ * TEMPLATES THAT OVERRIDE THIS FILE
+ * ============================================================
+ * 
+ * Some pages have their own templates and do not use page.php:
+ * 
+ * - page-history.php (or Template Name: View history) → history.php
+ * - page-contacts.php (Template Name: Contacts) → Contacts
+ * - page-about.php (Template Name: About company) → aboutCompany.php
+ * - page-shoppingCart.php (Template Name: Cart page) → shoppingCartPage.php
+ * - Moscow promotions archive → arhiv-aktsij-moskva.php
+ * 
+ * This file is the fallback for all other static pages.
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -57,9 +56,9 @@ get_header(); ?>
         <main class="block-content">
             
             <?php 
-            // Функция плагина Argon Shop (includes/interface/breadcrumbs.php)
-            if ( function_exists( 'kama_breadcrumbs' ) ) {
-                kama_breadcrumbs( ' » ' );
+            // Argon Shop plugin function (includes/interface/breadcrumbs.php)
+            if ( function_exists( 'as_kama_breadcrumbs' ) ) {
+                AS_Kama_Breadcrumbs( ' » ' );
             }
             ?>
 

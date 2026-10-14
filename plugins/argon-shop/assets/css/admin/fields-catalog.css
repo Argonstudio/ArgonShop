@@ -1,9 +1,8 @@
 /**
- * ArgonShop — стили характеристик.
+ * ArgonShop — characteristics styles.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  */
 
@@ -84,7 +83,7 @@
 }
 
 /* 
- ** Настройки магазина
+ ** Store settings
 */
 
 .settingShopForm textarea{

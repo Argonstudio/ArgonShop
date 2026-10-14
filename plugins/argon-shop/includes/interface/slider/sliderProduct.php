@@ -1,59 +1,58 @@
 <?php
 /**
- * ArgonShop — вывод слайдера изображений товара.
+ * ArgonShop — product image slider output.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Функция выводит HTML-структуру слайдера изображений для страницы
- * товара. Состоит из двух связанных Swiper-слайдеров:
+ * The function outputs the HTML structure of the image slider for the product
+ * page. It consists of two linked Swiper sliders:
  *
- *   1. .as-slider-product-main  — большие изображения.
- *   2. .as-slider-product-thumbs — миниатюры под основным.
+ *   1. .as-slider-product-main  — large images.
+ *   2. .as-slider-product-thumbs — thumbnails below the main one.
  *
- * Слайдеры синхронизированы: клик по миниатюре переключает
- * основной слайдер, а переключение основного выделяет активную
- * миниатюру. Связка настраивается в JS-модуле slider-product.js.
+ * The sliders are synchronized: clicking a thumbnail switches
+ * the main slider, and switching the main one highlights the active
+ * thumbnail. The link is configured in the slider-product.js JS module.
  *
  * ============================================================
- * ГДЕ ИСПОЛЬЗУЕТСЯ
+ * WHERE IT IS USED
  * ============================================================
  *
- * В шаблоне single-product.php темы:
+ * In the theme's single-product.php template:
  *
  *     <?php as_slider_product( get_the_ID() ); ?>
  *
- * Если у товара нет изображений — функция ничего не выводит.
+ * If the product has no images — the function outputs nothing.
  *
  * ============================================================
- * ДАННЫЕ
+ * DATA
  * ============================================================
  *
- * Мета-поле товара:
- *   slider_imgs — строка с ID изображений через запятую.
- *                 Например: "12,15,18,22".
+ * Product meta field:
+ *   slider_imgs — a string of comma-separated image IDs.
+ *                 For example: "12,15,18,22".
  *
  * ============================================================
- * ПАРАМЕТРЫ
+ * PARAMETERS
  * ============================================================
  *
- * @param int $product_id — ID товара
+ * @param int $product_id — product ID
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 /**
- * Выводит HTML слайдера изображений товара.
+ * Outputs the product image slider HTML.
  *
- * @param  int $product_id — ID товара
+ * @param  int $product_id — product ID
  * @return void
  */
 function as_slider_product( $product_id ) {
@@ -64,8 +63,8 @@ function as_slider_product( $product_id ) {
         return;
     }
 
-    // Список ID изображений галереи товара.
-    // См. includes/api/getData/gallery.php.
+    // List of product gallery image IDs.
+    // See includes/api/getData/gallery.php.
     if ( ! function_exists( 'as_get_product_gallery_ids' ) ) {
         return;
     }
@@ -80,7 +79,7 @@ function as_slider_product( $product_id ) {
 
     <div class="as-slider as-slider-product">
 
-        <!-- Основной слайдер: большие изображения -->
+        <!-- Main slider: large images -->
         <div class="swiper as-slider-product-main">
 
             <div class="swiper-wrapper">
@@ -120,12 +119,12 @@ function as_slider_product( $product_id ) {
 
         </div><!-- .as-slider-product-main -->
 
-        <!-- Миниатюры с боковыми стрелками навигации -->
+        <!-- Thumbnails with side navigation arrows -->
         <div class="as-slider-product-thumbs-stage">
 
             <button type="button"
                     class="as-slider-product-thumbs-prev"
-                    aria-label="Предыдущие миниатюры">
+                    aria-label="<?php esc_attr_e( 'Previous thumbnails', 'argon-shop' ); ?>">
 
                 <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
                     <path d="M15 5 L8 12 L15 19"
@@ -166,7 +165,7 @@ function as_slider_product( $product_id ) {
 
             <button type="button"
                     class="as-slider-product-thumbs-next"
-                    aria-label="Следующие миниатюры">
+                    aria-label="<?php esc_attr_e( 'Next thumbnails', 'argon-shop' ); ?>">
 
                 <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
                     <path d="M9 5 L16 12 L9 19"

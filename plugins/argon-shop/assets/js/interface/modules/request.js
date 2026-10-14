@@ -1,48 +1,47 @@
 /**
- * ArgonShop — блок популярных запросов в каталоге.
+ * ArgonShop — popular queries block in the catalog.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Управляет блоком «Популярные запросы» на странице категории
- * каталога:
+ * Manages the "Popular queries" block on the catalog category
+ * page:
  *
- *   1. Если блок популярных запросов не помещается по высоте
- *      (контент обрезается через CSS max-height), показывает
- *      кнопку «Смотреть все».
+ *   1. If the popular queries block does not fit in height
+ *      (content is clipped by CSS max-height), shows the
+ *      "View all" button.
  *
- *   2. При клике по кнопке блок разворачивается на полную высоту,
- *      при повторном клике — снова сворачивается.
+ *   2. Clicking the button expands the block to full height,
+ *      clicking again collapses it.
  *
- * Разворачивание и сворачивание выполняется переключением класса
- * .is-expanded. Правило CSS для этого класса должно быть добавлено
- * в тему:
+ * Expanding and collapsing is done by toggling the
+ * .is-expanded class. The CSS rule for this class must be added
+ * to the theme:
  *
  *     .block-cards-request.is-expanded {
  *         max-height: none;
  *     }
  *
  * ============================================================
- * DOM-ЭЛЕМЕНТЫ
+ * DOM ELEMENTS
  * ============================================================
  *
- * .block-cards-request      — контейнер с карточками запросов.
- * .view-allCards-request    — кнопка «Смотреть все».
+ * .block-cards-request      — container with query cards.
+ * .view-allCards-request    — "View all" button.
  *
  * ============================================================
- * ИСПОЛЬЗОВАНИЕ
+ * USAGE
  * ============================================================
  *
  *     import { arsRequest } from './modules/request.js';
  *     arsRequest.init();
  *
- * Модуль безопасен для вызова на любой странице: если блока нет,
- * ничего не выполняется.
+ * The module is safe to call on any page: if the block is missing,
+ * nothing is executed.
  */
 
 'use strict';
@@ -50,23 +49,23 @@
 import { qs, on } from '../../shared/dom.js';
 
 /**
- * Класс, который добавляется блоку в развёрнутом состоянии.
+ * Class added to the block in the expanded state.
  *
  * @type {string}
  */
 const EXPANDED_CLASS = 'is-expanded';
 
 /**
- * Запас в пикселях, на который допустимо «недоразворот» блока.
- * Если разница между высотой контента и видимой высотой меньше
- * этого значения — кнопка «Смотреть все» не показывается.
+ * Tolerance in pixels by which the block may "under-expand".
+ * If the difference between the content height and the visible height is less
+ * than this value, the "View all" button is not shown.
  *
  * @type {number}
  */
 const HEIGHT_THRESHOLD = 20;
 
 /**
- * Модуль блока популярных запросов.
+ * Popular queries block module.
  */
 class ArsRequest {
 
@@ -74,7 +73,7 @@ class ArsRequest {
     #initialized = false;
 
     /**
-     * Инициализация. Безопасна для повторного вызова.
+     * Initialization. Safe to call repeatedly.
      *
      * @return {void}
      */
@@ -93,7 +92,7 @@ class ArsRequest {
 
         this.#initialized = true;
 
-        // Показываем кнопку, только если контент обрезается
+        // Show the button only if the content is clipped
         if ( this.#isContentClipped( block ) ) {
             button.style.display = 'block';
         }
@@ -104,9 +103,9 @@ class ArsRequest {
     }
 
     /**
-     * Проверяет, обрезается ли содержимое блока по высоте.
+     * Checks whether the block content is clipped in height.
      *
-     * @param  {Element} block — контейнер карточек запросов
+     * @param  {Element} block — query cards container
      * @return {boolean}
      */
     #isContentClipped( block ) {
@@ -116,7 +115,7 @@ class ArsRequest {
 }
 
 /**
- * Готовый синглтон модуля популярных запросов.
+ * Ready-made singleton of the popular queries module.
  *
  * @type {ArsRequest}
  */

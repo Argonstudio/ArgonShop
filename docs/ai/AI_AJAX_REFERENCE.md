@@ -1,240 +1,246 @@
-# AI_AJAX_REFERENCE.md — Справочник AJAX-действий
+# AI_AJAX_REFERENCE.md — AJAX action reference
 
-> Продолжение [AI.md](../../AI.md). Все AJAX-эндпоинты: имя, файл, параметры,
-> ответ, обработчик в JS.
+> Continuation of [AI.md](../../AI.md). Every AJAX endpoint: name, file, parameters,
+> response, JS handler.
 
-**Базовый URL:** `admin_url('admin-ajax.php')` — в JS: `config.url`
-(из `arsWpAjax.url`).
+**Base URL:** `admin_url('admin-ajax.php')` — in JS: `config.url`
+(from `arsWpAjax.url`).
 
-**Nonce:** фронтенд — `argon_shop_nonce`, админка — `argon_shop_order_nonce`.
-Исключения указаны в колонке «Nonce».
+**Nonce:** front end — `argon_shop_nonce`, admin — `argon_shop_order_nonce`.
+Since 1.1.0 there are no exceptions: **every** action checks the nonce, `config.skipNonceActions` is empty.
+
+**Text in responses:** HTML and messages returned by PHP are already translated (`__()`) and prices use the store currency (`as_price_html()`, since 1.1.0). JS adds its own text only via `t()`.
 
 ---
 
-## Фронтенд
+## Front end
 
 ### `addProducts_shoppingCart`
 
-| Параметр | Значение |
+| Parameter | Value |
 |----------|----------|
-| **Файл** | `includes/interface/shoppingCart/shoppingCart.php` |
-| **Функция** | `addProducts_shoppingCart_callback` |
-| **Nonce** | да |
-| **JS-модуль** | `modules/add-to-cart.js` |
-| **Принимает** | `productID` (int), `amountProduct` (int) |
-| **Возвращает** | JSON: `{ amountProduct, productAmountCart, totalPrice }` |
+| **File** | `includes/interface/shoppingCart/cart-ajax.php` |
+| **Function** | `as_addProducts_shoppingCart_callback` |
+| **Nonce** | yes |
+| **JS module** | `modules/add-to-cart.js` |
+| **Accepts** | `productID` (int), `amountProduct` (int) |
+| **Returns** | JSON: `{ amountProduct, productAmountCart, totalPrice }` |
 
 ### `amountProducts_shoppingCart`
 
-| Параметр | Значение |
+| Parameter | Value |
 |----------|----------|
-| **Файл** | `includes/interface/shoppingCart/shoppingCart.php` |
-| **Функция** | `amountProducts_shoppingCart_callback` |
-| **Nonce** | да |
-| **JS-модуль** | `modules/cart.js` (через `fetch` с `AbortController`) |
-| **Принимает** | `productID`, `productAmount` (float) |
-| **Возвращает** | JSON: `{ weight, actualPrices, productsShoppingCart }` |
+| **File** | `includes/interface/shoppingCart/cart-ajax.php` |
+| **Function** | `as_amountProducts_shoppingCart_callback` |
+| **Nonce** | yes |
+| **JS module** | `modules/cart.js` (via `fetch` with `AbortController`) |
+| **Accepts** | `productID`, `productAmount` (float) |
+| **Returns** | JSON: `{ weight, actualPrices, productsShoppingCart }` |
 
 ### `deleteProducts_shoppingCart`
 
-| Параметр | Значение |
+| Parameter | Value |
 |----------|----------|
-| **Файл** | `includes/interface/shoppingCart/shoppingCart.php` |
-| **Функция** | `deleteProducts_shoppingCart_callback` |
-| **Nonce** | да |
-| **JS-модуль** | `modules/cart.js` |
-| **Принимает** | `productID` |
-| **Возвращает** | JSON актуальных цен ИЛИ строку `'false'` |
+| **File** | `includes/interface/shoppingCart/cart-ajax.php` |
+| **Function** | `as_deleteProducts_shoppingCart_callback` |
+| **Nonce** | yes |
+| **JS module** | `modules/cart.js` |
+| **Accepts** | `productID` |
+| **Returns** | JSON map `{ productID: actualPrice }` (the map itself, no wrapper key) OR the string `'false'` when the cart became empty |
 
 ### `deleteAllProducts_shoppingCart`
 
-| Параметр | Значение |
+| Parameter | Value |
 |----------|----------|
-| **Файл** | `includes/interface/shoppingCart/shoppingCart.php` |
-| **Функция** | `deleteAllProducts_shoppingCart_callback` |
-| **Nonce** | нет (в `config.skipNonceActions`) |
-| **JS-модуль** | `modules/cart.js` |
-| **Принимает** | — |
-| **Возвращает** | пусто |
+| **File** | `includes/interface/shoppingCart/cart-ajax.php` |
+| **Function** | `as_deleteAllProducts_shoppingCart_callback` |
+| **Nonce** | yes (since 1.1.0) |
+| **JS module** | `modules/cart.js` |
+| **Accepts** | — |
+| **Returns** | empty |
 
 ### `wholesalePrice_shoppingCart`
 
-| Параметр | Значение |
+| Parameter | Value |
 |----------|----------|
-| **Файл** | `includes/interface/shoppingCart/shoppingCart.php` |
-| **Функция** | `wholesalePrice_shoppingCart_callback` |
-| **Nonce** | да |
-| **JS-модуль** | `modules/product.js` |
-| **Принимает** | `type='get'`, `productID`, `amountProduct` |
-| **Возвращает** | число (итоговая цена) ИЛИ строку `'none'` |
+| **File** | `includes/interface/shoppingCart/cart-ajax.php` |
+| **Function** | `as_wholesalePrice_shoppingCart_callback` |
+| **Nonce** | yes |
+| **JS module** | `modules/product.js` |
+| **Accepts** | `type='get'`, `productID`, `amountProduct` |
+| **Returns** | number (final price) OR the string `'none'` |
 
 ### `submitCart_shoppingCart`
 
-| Параметр | Значение |
+| Parameter | Value |
 |----------|----------|
-| **Файл** | `includes/interface/shoppingCart/shoppingCart.php` |
-| **Функция** | `submitCart_shoppingCart_callback` |
-| **Nonce** | да |
-| **JS-модуль** | `modules/cart.js` |
-| **Принимает** | `FormData`: `typeForm`, `required`, `productsCart`, поля формы, `fileCart[]` |
-| **Возвращает** | JSON: `{ type: 'success'\|'error', typeForm, message }` |
+| **File** | `includes/interface/shoppingCart/checkout.php` |
+| **Function** | `as_submitCart_shoppingCart_callback` |
+| **Nonce** | yes |
+| **JS module** | `modules/cart.js` |
+| **Accepts** | `FormData`: `typeForm` (`quick`/`person`/`legalPerson`), `productsCart`, form fields, `fileCart[]` (up to 3 files of 5 MB). The browser still sends `required`, but the server **ignores** it: required fields come from `as_get_required_fields()` |
+| **Returns** | JSON: `{ type: 'success'\|'error', typeForm, message }` |
 
 ### `getAjaxSearchResult`
 
-| Параметр | Значение |
+| Parameter | Value |
 |----------|----------|
-| **Файл** | `includes/interface/search/searchAjax.php` |
-| **Функция** | `getAjaxSearchResult_callback` |
-| **Nonce** | да |
-| **JS-модуль** | `modules/search.js` |
-| **Принимает** | `dataAjax` (JSON-строка), `searchStr` |
-| **Возвращает** | HTML блоков результатов |
+| **File** | `includes/interface/search/searchAjax.php` |
+| **Function** | `as_getAjaxSearchResult_callback` |
+| **Nonce** | yes |
+| **JS module** | `modules/search.js` |
+| **Accepts** | `dataAjax` (JSON string), `searchStr` |
+| **Returns** | HTML of the result blocks (query normalized by the store language rules, `searchLanguage.php`) |
 
 ### `sortingCatalog`
 
-| Параметр | Значение |
+| Parameter | Value |
 |----------|----------|
-| **Файл** | `includes/interface/catalog/sort.php` |
-| **Функция** | `sortingCatalog_callback` |
-| **Nonce** | да |
-| **JS-модуль** | `modules/sort.js` |
-| **Принимает** | `typeSort` (`date`/`name`/`price`), `howSorting` (`ASC`/`DESC`), `catId`, `pageNum` |
-| **Возвращает** | HTML списка товаров |
+| **File** | `includes/interface/catalog/sort.php` |
+| **Function** | `as_sortingCatalog_callback` |
+| **Nonce** | yes |
+| **JS module** | `modules/sort.js` |
+| **Accepts** | `typeSort` (`date`/`name`/`price`), `howSorting` (`ASC`/`DESC`), `catId`, `pageNum` |
+| **Returns** | HTML of the product list |
 
 ### `cabinetEditEmailPassword`
 
-| Параметр | Значение |
+| Parameter | Value |
 |----------|----------|
-| **Файл** | `includes/interface/cabinet/myCabinet.php` |
-| **Функция** | `cabinetEditEmailPassword_callback` |
-| **Nonce** | да |
-| **JS-модуль** | `modules/cabinet.js` |
-| **Принимает** | `userID`, `email`, `oldEmail`, `pass`, `newPass`, `newPassConfirm` |
-| **Возвращает** | JSON: `{ edited: {}, errors: {}, newNonce? }` |
+| **File** | `includes/interface/cabinet/myCabinet.php` |
+| **Function** | `as_cabinetEditEmailPassword_callback` |
+| **Nonce** | yes |
+| **JS module** | `modules/cabinet.js` |
+| **Accepts** | `userID`, `email`, `oldEmail`, `pass`, `newPass`, `newPassConfirm` — passwords are checked for string type and only unslashed with `wp_unslash()`, never sanitized; `<`, `>`, `%xx`, quotes, backslashes and repeated spaces are preserved. A new password needs at least 6 UTF-8 characters; an empty new password means no change |
+| **Returns** | JSON: `{ edited: { newEmail?, newPass? }, errors: { email?, pass?, newPass?, newPassConfirm? }, newNonce? }` — all `edited` / `errors` values are translated message strings. Foreign `userID` → `wp_die()` with "Insufficient permissions" (plain text, not JSON) |
 
 ### `cabinetAccountSave`
 
-| Параметр | Значение |
+| Parameter | Value |
 |----------|----------|
-| **Файл** | `includes/interface/cabinet/myCabinet.php` |
-| **Функция** | `cabinetAccountSave_callback` |
-| **Nonce** | да |
-| **JS-модуль** | `modules/cabinet.js` |
-| **Принимает** | `userID`, `forBack` (JSON-строка с полями) |
-| **Возвращает** | текст («Информация успешно сохранена» или ошибка) |
+| **File** | `includes/interface/cabinet/myCabinet.php` |
+| **Function** | `as_cabinetAccountSave_callback` |
+| **Nonce** | yes |
+| **JS module** | `modules/cabinet.js` |
+| **Accepts** | `userID`, `forBack` (JSON string with the fields) |
+| **Returns** | text (translated success or error message) |
 
 ### `ordersFiltersStatus`
 
-| Параметр | Значение |
+| Parameter | Value |
 |----------|----------|
-| **Файл** | `includes/interface/cabinet/userOrders/ordersAjax.php` |
-| **Функция** | `ordersFiltersStatus_callback` |
-| **Nonce** | нет (в `config.skipNonceActions`) |
-| **JS-модуль** | `modules/orders.js` |
-| **Принимает** | `userID`, `status` (строка ID через запятую) |
-| **Возвращает** | HTML таблицы заказов |
+| **File** | `includes/interface/cabinet/userOrders/ordersAjax.php` |
+| **Function** | `as_ordersFiltersStatus_callback` |
+| **Nonce** | yes (since 1.1.0) |
+| **JS module** | `modules/orders.js` |
+| **Accepts** | `userID`, `status` (comma-separated ID string) |
+| **Returns** | HTML of the orders table |
 
 ### `addCookieHistory_history`
 
-| Параметр | Значение |
+| Parameter | Value |
 |----------|----------|
-| **Файл** | `includes/interface/history.php` |
-| **Функция** | `addCookieHistory_history_callback` |
-| **Nonce** | да |
-| **JS-модуль** | `modules/history.js` |
-| **Принимает** | `productID` |
-| **Возвращает** | пусто (сохраняет в куку `AS_History`) |
+| **File** | `includes/interface/history.php` |
+| **Function** | `as_addCookieHistory_history_callback` |
+| **Nonce** | yes |
+| **JS module** | `modules/history.js` |
+| **Accepts** | `productID` |
+| **Returns** | empty (saves to the `AS_History` cookie) |
 
 ---
 
-## Админка
+## Admin
 
 ### `update_characteristics`
 
-| Параметр | Значение |
+| Parameter | Value |
 |----------|----------|
-| **Файл** | `includes/admin/fieldsProduct.php` |
-| **Функция** | `updateCharacteristicsFunction` |
+| **File** | `includes/admin/fieldsProduct.php` |
+| **Function** | `as_updateCharacteristicsFunction` |
 | **Nonce** | `argon_shop_order_nonce` |
-| **JS** | inline в `updateCharacteristicsAjax` |
-| **Принимает** | `activeCategoryId`, `characteristicsTextField`, `characteristicsCheckboxField` |
-| **Возвращает** | HTML метабокса характеристик |
-| **Права** | `manage_options` |
+| **JS** | inline in `as_updateCharacteristicsAjax` |
+| **Accepts** | `activeCategoryId`, `characteristicsTextField`, `characteristicsCheckboxField` |
+| **Returns** | HTML of the characteristics meta box |
+| **Capability** | `manage_options` |
 
 ### `as_searchSuitableProduct_order`
 
-| Параметр | Значение |
+| Parameter | Value |
 |----------|----------|
-| **Файл** | `includes/admin/order/orderAjax.php` |
-| **Функция** | `as_search_suitable_product_order_callback` |
+| **File** | `includes/admin/order/orderAjax.php` |
+| **Function** | `as_search_suitable_product_order_callback` |
 | **Nonce** | `argon_shop_order_nonce` |
 | **JS** | `window.searchSuitableProduct` + `admin/modules/orders.js` |
-| **Принимает** | `searchStr`, `addedProduct` (массив ID) |
-| **Возвращает** | HTML результатов поиска |
-| **Права** | ⚠️ нет проверки — TODO |
+| **Accepts** | `searchStr`, `addedProduct` (array of IDs) |
+| **Returns** | HTML of the search results |
+| **Capability** | `manage_options` |
 
 ### `as_addProduct_order`
 
-| Параметр | Значение |
+| Parameter | Value |
 |----------|----------|
-| **Файл** | `includes/admin/order/orderAjax.php` |
-| **Функция** | `as_add_product_order_callback` |
+| **File** | `includes/admin/order/orderAjax.php` |
+| **Function** | `as_add_product_order_callback` |
 | **Nonce** | `argon_shop_order_nonce` |
 | **JS** | `window.addProduct` |
-| **Принимает** | `productID`, `postID` (ID заказа) |
-| **Возвращает** | HTML таблицы товара |
-| **Права** | `manage_options` |
+| **Accepts** | `productID`, `postID` (order ID) |
+| **Returns** | HTML of the product row |
+| **Capability** | `manage_options` |
 
 ### `as_addFields_order`
 
-| Параметр | Значение |
+| Parameter | Value |
 |----------|----------|
-| **Файл** | `includes/admin/order/orderAjax.php` |
-| **Функция** | `as_add_fields_order_callback` |
+| **File** | `includes/admin/order/orderAjax.php` |
+| **Function** | `as_add_fields_order_callback` |
 | **Nonce** | `argon_shop_order_nonce` |
 | **JS** | `window.addFields` |
-| **Принимает** | `type` (`person`/`legalPerson`), `fieldsInStock` |
-| **Возвращает** | HTML полей |
-| **Права** | ⚠️ нет проверки — TODO |
+| **Accepts** | `type` (`person`/`legalPerson`), `fieldsInStock` |
+| **Returns** | HTML of the fields |
+| **Capability** | `manage_options` |
 
 ### `as_admin_recount_order`
 
-| Параметр | Значение |
+| Parameter | Value |
 |----------|----------|
-| **Файл** | `includes/admin/order/orderAjax.php` |
-| **Функция** | `as_admin_recount_order_callback` |
+| **File** | `includes/admin/order/orderAjax.php` |
+| **Function** | `as_admin_recount_order_callback` |
 | **Nonce** | `argon_shop_order_nonce` |
 | **JS** | `window.recountOrderPrices` (`admin/modules/orders.js`) |
-| **Принимает** | `postID`, `orderProducts[ID] = amount` |
-| **Возвращает** | JSON: `{ actualPrices, weights, totalPrice, totalWeight }` |
-| **Права** | `manage_options` |
+| **Accepts** | `postID`, `orderProducts[ID] = amount` |
+| **Returns** | JSON: `{ actualPrices, weights, totalPrice, totalWeight }` |
+| **Capability** | `manage_options` |
 
 ---
 
-## Соглашения
+## Conventions
 
-1. Все AJAX-обработчики фронтенда регистрируются **дважды**:
+1. Every front-end AJAX handler is registered **twice**:
    ```php
    add_action('wp_ajax_<action>', 'callback');
    add_action('wp_ajax_nopriv_<action>', 'callback');
    ```
 
-2. Все AJAX-обработчики админки — **только** `wp_ajax_<action>`.
+2. Every admin AJAX handler uses **only** `wp_ajax_<action>`.
 
-3. Ответ — JSON через `wp_json_encode`. **Никакого `echo` до этого.**
+3. Response — `echo wp_json_encode( $data )` for JSON, `echo` of escaped HTML/text for HTML responses (search, sorting, admin rows). The project does not use `wp_send_json()`. **No other output before the response.**
 
-4. Завершение — `wp_die()`. Без него WordPress допишет `0` в конец ответа.
+4. Finish with `wp_die()`. Without it WordPress appends `0` to the response.
 
-5. Проверка nonce — **первой строкой**:
+5. Nonce check — **first line**:
    ```php
    check_ajax_referer('argon_shop_nonce', 'nonce');
    ```
 
-6. Проверка прав — **сразу после nonce**:
+6. Capability check — **right after the nonce**, and it must stop the request:
    ```php
-   current_user_can('manage_options');
-   // или
-   $userID === get_current_user_id();
+   if ( ! current_user_can( 'manage_options' ) ) {
+       wp_die( __( 'Insufficient permissions', 'argon-shop' ) );
+   }
+   // or, for the customer account
+   if ( 0 === $userID || $userID !== get_current_user_id() ) {
+       wp_die( __( 'Insufficient permissions', 'argon-shop' ) );
+   }
    ```
 
 

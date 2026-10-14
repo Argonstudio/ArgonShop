@@ -1,70 +1,70 @@
 /**
- * ArgonShop — модуль страницы товара.
+ * ArgonShop — product page module.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Управляет интерактивными элементами страницы товара:
+ * Manages the interactive elements of the product page:
  *
- *   1. Изменение количества товара (поле + кнопки +/-).
- *   2. Пересчёт оптовой цены при изменении количества.
- *   3. Кнопка «В корзину» — добавить товар без перехода.
- *   4. Кнопка «Купить» — добавить товар и открыть корзину.
- *   5. Добавление товара в историю просмотров (см. history.js).
- *
- * ============================================================
- * DOM-ЭЛЕМЕНТЫ
- * ============================================================
- *
- * #amountProduct           — поле количества.
- * .plusProduct-Page        — кнопка увеличения количества.
- * .minusProduct-Page       — кнопка уменьшения количества.
- *
- * #addShoppingCart         — кнопка «В корзину» (data-productid).
- * #productPageCartBuy      — кнопка «Купить» (data-productid).
- *
- * #howManyProducts         — блок «добавлено N единиц товара».
- * #howManyProducts span    — число единиц товара в корзине.
- * #addProductError         — блок ошибки добавления.
- *
- * .totalPrice              — контейнер итоговой суммы.
- * .totalPrice span         — итоговая сумма за выбранное количество.
- * #basePrice               — цена за единицу (без оптовой скидки).
+ *   1. Changing the product quantity (field + +/- buttons).
+ *   2. Recalculating the wholesale price when the quantity changes.
+ *   3. "Add to cart" button — adds the product without navigating away.
+ *   4. "Buy" button — adds the product and opens the cart.
+ *   5. Adding the product to the view history (see history.js).
  *
  * ============================================================
- * AJAX-ДЕЙСТВИЕ
+ * DOM ELEMENTS
+ * ============================================================
+ *
+ * #amountProduct           — quantity field.
+ * .plusProduct-Page        — increase quantity button.
+ * .minusProduct-Page       — decrease quantity button.
+ *
+ * #addShoppingCart         — "Add to cart" button (data-productid).
+ * #productPageCartBuy      — "Buy" button (data-productid).
+ *
+ * #howManyProducts         — "N items added" block.
+ * #howManyProducts span    — number of product units in the cart.
+ * #addProductError         — add-to-cart error block.
+ *
+ * .totalPrice              — total amount container.
+ * .totalPrice span         — total amount for the selected quantity.
+ * #basePrice               — unit price (without wholesale discount).
+ *
+ * ============================================================
+ * AJAX ACTION
  * ============================================================
  *
  * wholesalePrice_shoppingCart (type=get)
- *   Принимает: productID, amountProduct.
- *   Возвращает: число (итоговая цена) или строку "none".
+ *   Accepts: productID, amountProduct.
+ *   Returns: a number (total price) or the string "none".
  *
  * ============================================================
- * ИСПОЛЬЗОВАНИЕ
+ * USAGE
  * ============================================================
  *
  *     import { arsProduct } from './modules/product.js';
  *     arsProduct.init();
  *
- * Модуль безопасен для вызова на любой странице: если на странице
- * нет #addShoppingCart, ничего не выполняется.
+ * The module is safe to call on any page: if the page has
+ * no #addShoppingCart, nothing is executed.
  */
 
 'use strict';
 
 import { arsApi }              from '../core/api.js';
+import { t }            from '../core/config.js';
 import { qs, delegate }        from '../../shared/dom.js';
 import { parseNumber }         from '../../shared/format.js';
 import { addProductToCart }    from './add-to-cart.js';
 import { arsHistory }          from './history.js';
 
 /**
- * Модуль страницы товара.
+ * Product page module.
  */
 class ArsProduct {
 
@@ -72,7 +72,7 @@ class ArsProduct {
     #initialized = false;
 
     /**
-     * Инициализация. Идемпотентна.
+     * Initialization. Idempotent.
      *
      * @return {void}
      */
@@ -82,8 +82,8 @@ class ArsProduct {
             return;
         }
 
-        // На странице товара всегда есть поле количества.
-        // Если его нет — мы не на странице товара, выходим.
+        // The product page always has a quantity field.
+        // If it is missing, this is not a product page — exit.
         if ( ! qs( '#amountProduct' ) ) {
             return;
         }
@@ -100,11 +100,11 @@ class ArsProduct {
     }
 
     // ============================================================
-    // ОБРАБОТЧИКИ СОБЫТИЙ
+    // EVENT HANDLERS
     // ============================================================
 
     /**
-     * Изменение количества через поле ввода.
+     * Changing the quantity via the input field.
      *
      * @return {void}
      */
@@ -130,7 +130,7 @@ class ArsProduct {
     }
 
     /**
-     * Кнопки +/-.
+     * +/- buttons.
      *
      * @return {void}
      */
@@ -166,7 +166,7 @@ class ArsProduct {
     }
 
     /**
-     * Кнопка «В корзину».
+     * "Add to cart" button.
      *
      * @return {void}
      */
@@ -180,13 +180,13 @@ class ArsProduct {
 
             await addProductToCart( productId, amount, {
                 onSuccess: ( data ) => this.#showAdded( productId, data ),
-                onError:   () => this.#showAddError( 'Ошибка при выполнении запроса' ),
+                onError:   () => this.#showAddError( t( 'requestError' ) ),
             });
         });
     }
 
     /**
-     * Кнопка «Купить».
+     * "Buy" button.
      *
      * @return {void}
      */
@@ -200,20 +200,20 @@ class ArsProduct {
 
             await addProductToCart( productId, amount, {
                 onSuccess: () => this.#goToCart(),
-                onError:   () => this.#showAddError( 'Ошибка при выполнении запроса' ),
+                onError:   () => this.#showAddError( t( 'requestError' ) ),
             });
         });
     }
 
     // ============================================================
-    // ОПТОВАЯ ЦЕНА
+    // WHOLESALE PRICE
     // ============================================================
 
     /**
-     * Запрашивает у сервера актуальную цену за выбранное количество.
+     * Requests the current price for the selected quantity from the server.
      *
-     * Если скидок нет, сервер возвращает "none" — тогда сумма
-     * считается локально как basePrice × amount.
+     * If there are no discounts, the server returns "none" — then the total
+     * is calculated locally as basePrice × amount.
      *
      * @return {Promise<void>}
      */
@@ -253,7 +253,7 @@ class ArsProduct {
 
             if ( response === 'none' || response === '' ) {
 
-                // Скидок нет — считаем локально
+                // No discounts — calculate locally
                 const basePriceSpan = qs( '#basePrice' );
                 const basePrice = parseNumber( basePriceSpan ? basePriceSpan.textContent : 0 );
 
@@ -271,16 +271,16 @@ class ArsProduct {
             totalPriceBlock.style.display = 'block';
 
         } catch {
-            totalPriceSpan.textContent = 'Ошибка на сервере';
+            totalPriceSpan.textContent = t( 'serverError' );
         }
     }
 
     // ============================================================
-    // ВСПОМОГАТЕЛЬНЫЕ
+    // HELPERS
     // ============================================================
 
     /**
-     * Добавляет товар в историю просмотров.
+     * Adds the product to the view history.
      *
      * @return {void}
      */
@@ -300,10 +300,10 @@ class ArsProduct {
     }
 
     /**
-     * Показывает блок «добавлено N единиц товара».
+     * Shows the "N items added" block.
      *
-     * @param  {string} productId — ID товара
-     * @param  {Object} data      — ответ сервера
+     * @param  {string} productId — product ID
+     * @param  {Object} data      — server response
      * @return {void}
      */
     #showAdded( productId, data ) {
@@ -324,9 +324,9 @@ class ArsProduct {
     }
 
     /**
-     * Показывает блок ошибки добавления.
+     * Shows the add-to-cart error block.
      *
-     * @param  {string} message — текст ошибки
+     * @param  {string} message — error text
      * @return {void}
      */
     #showAddError( message ) {
@@ -342,7 +342,7 @@ class ArsProduct {
     }
 
     /**
-     * Переход на страницу корзины.
+     * Navigates to the cart page.
      *
      * @return {void}
      */
@@ -359,7 +359,7 @@ class ArsProduct {
 }
 
 /**
- * Готовый синглтон модуля страницы товара.
+ * Ready-made singleton of the product page module.
  *
  * @type {ArsProduct}
  */

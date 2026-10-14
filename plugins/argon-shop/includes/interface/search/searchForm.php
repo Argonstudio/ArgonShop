@@ -1,110 +1,109 @@
 <?php
 /**
- * Форма поиска по сайту
+ * Site search form
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * 1. Форма поиска в шапке сайта
+ * WHERE TO TEST:
+ * 1. Search form in the site header
  * 
- * ЧТО ДЕЛАЕТ:
- * 1. Выводит форму поиска с настройками
- * 2. Поддерживает AJAX-поиск
- * 3. Выводит скрытые поля для типа постов и таксономий
+ * WHAT IT DOES:
+ * 1. Outputs the search form with its settings
+ * 2. Supports AJAX search
+ * 3. Outputs hidden fields for post types and taxonomies
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 /**
- * ФУНКЦИЯ: Вывод формы поиска
+ * FUNCTION: Output the search form
  * 
- * ГДЕ ИСПОЛЬЗУЕТСЯ: В шаблонах темы для вывода формы поиска
+ * WHERE IT IS USED: In theme templates to output the search form
  * 
- * ПОДДЕРЖИВАЕТ:
- * 1. Обычный поиск (отправка GET на /?s=запрос)
- * 2. AJAX-поиск (результаты без перезагрузки страницы)
- * 3. Поиск по нескольким типам записей (товары, статьи, страницы)
- * 4. Фильтрацию по таксономиям (каталог, рубрики)
- * 5. Несколько блоков результатов (акции, новости, блог)
+ * SUPPORTS:
+ * 1. Regular search (GET submission to /?s=query)
+ * 2. AJAX search (results without reloading the page)
+ * 3. Search across several post types (products, articles, pages)
+ * 4. Filtering by taxonomies (catalog, categories)
+ * 5. Several result blocks (promotions, news, blog)
  * 
- * ВАЖНО: Поиск по записям и рубрикам записей работает "из коробки",
- *        без дополнительных доработок плагина. Если в системе нет
- *        товаров или таксономии catalog — соответствующие блоки
- *        в результатах просто не появятся (без ошибок).
+ * IMPORTANT: Search over posts and post categories works "out of the box",
+ *        without extra plugin changes. If there are no
+ *        products or no catalog taxonomy — the corresponding blocks
+ *        simply do not appear in the results (without errors).
  * 
- * СТРУКТУРА ПАРАМЕТРОВ:
+ * PARAMETER STRUCTURE:
  * 
  * @param array $searchParameters {
- *     Массив параметров формы поиска.
+ *     Array of search form parameters.
  * 
- *     @type array  $post_type      Массив типов записей для поиска.
- *                                  Для записей и рубрик: array('post').
- *                                  Для товаров: array('product').
- *                                  Можно комбинировать: array('product', 'post').
- *                                  По умолчанию: все типы.
+ *     @type array  $post_type      Array of post types to search.
+ *                                  For posts and categories: array('post').
+ *                                  For products: array('product').
+ *                                  Can be combined: array('product', 'post').
+ *                                  Default: all types.
  * 
- *     @type array  $taxonomy       Массив таксономий для фильтрации.
- *                                  Для рубрик записей: array('category' => 'all')
- *                                  или array('category' => array(36, 37)).
- *                                  Для каталога: array('catalog' => 'all').
- *                                  По умолчанию: все таксономии.
+ *     @type array  $taxonomy       Array of taxonomies to filter by.
+ *                                  For post categories: array('category' => 'all')
+ *                                  or array('category' => array(36, 37)).
+ *                                  For the catalog: array('catalog' => 'all').
+ *                                  Default: all taxonomies.
  * 
- *     @type string $classForm      CSS-класс для <form>.
- *                                  По умолчанию: 'asSearchForm'.
+ *     @type string $classForm      CSS class for <form>.
+ *                                  Default: 'asSearchForm'.
  * 
- *     @type string $classInput     CSS-класс для <input type="text">.
- *                                  По умолчанию: 'asInputSearchForm'.
+ *     @type string $classInput     CSS class for <input type="text">.
+ *                                  Default: 'asInputSearchForm'.
  * 
- *     @type string $classSubmit    CSS-класс для <input type="submit">.
- *                                  По умолчанию: 'asSubmitSearchForm'.
+ *     @type string $classSubmit    CSS class for <input type="submit">.
+ *                                  Default: 'asSubmitSearchForm'.
  * 
- *     @type string $valueSubmit    Текст кнопки поиска.
- *                                  По умолчанию: 'Поиск'.
+ *     @type string $valueSubmit    Search button text.
+ *                                  Default: 'Search' (translated).
  * 
  *     @type array  $ajax {
- *         Настройки AJAX-поиска. Если отсутствует — обычный поиск.
+ *         AJAX search settings. If missing — regular search.
  * 
- *         @type string       $classBlockResult CSS-класс контейнера результатов.
- *         @type string       $positionResult   Позиция контейнера: 'top' или 'bottom'.
- *                                              По умолчанию: 'bottom'.
+ *         @type string       $classBlockResult CSS class of the results container.
+ *         @type string       $positionResult   Container position: 'top' or 'bottom'.
+ *                                              Default: 'bottom'.
  * 
- *         @type bool         $productResult    Искать ли товары.
- *                                              Если товаров нет в системе — блок не появится.
- *                                              По умолчанию: не передаётся.
+ *         @type bool         $productResult    Whether to search products.
+ *                                              If there are no products — the block does not appear.
+ *                                              Default: not passed.
  * 
- *         @type bool         $catalogResult    Искать ли категории каталога.
- *                                              Если таксономии catalog нет — блок не появится.
- *                                              По умолчанию: не передаётся.
+ *         @type bool         $catalogResult    Whether to search catalog categories.
+ *                                              If there is no catalog taxonomy — the block does not appear.
+ *                                              Default: not passed.
  * 
  *         @type array|bool   $postResult {
- *             Массив дополнительных блоков поиска записей.
- *             Работает независимо от productResult и catalogResult.
+ *             Array of additional post search blocks.
+ *             Works independently of productResult and catalogResult.
  * 
  *             @type array $item {
- *                 @type string $name     Заголовок блока (например, "Акции и статьи").
- *                 @type string $class    CSS-класс блока.
- *                 @type array  $category Массив ID рубрик записей для поиска.
+ *                 @type string $name     Block title (for example, "Promotions and articles").
+ *                 @type string $class    Block CSS class.
+ *                 @type array  $category Array of post category IDs to search.
  *             }
  *         }
  *     }
  * }
  * 
- * ПРИМЕРЫ ВЫЗОВА:
+ * CALL EXAMPLES:
  * 
- * 1. Простой поиск (без AJAX):
+ * 1. Simple search (without AJAX):
  * 
  *     as_search( array(
  *         'post_type'   => array( 'post' ),
  *         'taxonomy'    => array( 'category' => 'all' ),
- *         'valueSubmit' => 'Найти',
+ *         'valueSubmit' => 'Find',
  *     ) );
  * 
- * 2. AJAX-поиск по записям и рубрикам (работает без доработок):
+ * 2. AJAX search over posts and categories (works without changes):
  * 
  *     as_search( array(
  *         'post_type' => array( 'post' ),
@@ -114,12 +113,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  *             'positionResult'   => 'bottom',
  *             'postResult'       => array(
  *                 array(
- *                     'name'     => 'Статьи',
+ *                     'name'     => 'Articles',
  *                     'class'    => 'resultEntry',
  *                     'category' => array( 36, 37 ),
  *                 ),
  *                 array(
- *                     'name'     => 'Новости',
+ *                     'name'     => 'News',
  *                     'class'    => 'resultEntry',
  *                     'category' => array( 1 ),
  *                 ),
@@ -127,7 +126,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *         ),
  *     ) );
  * 
- * 3. Полноценный AJAX-поиск (товары + записи, требует наличия catalog):
+ * 3. Full AJAX search (products + posts, requires catalog):
  * 
  *     as_search( array(
  *         'post_type' => array( 'product', 'post' ),
@@ -139,7 +138,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *             'catalogResult'    => true,
  *             'postResult'       => array(
  *                 array(
- *                     'name'     => 'Акции и статьи',
+ *                     'name'     => 'Promotions and articles',
  *                     'class'    => 'resultEntry',
  *                     'category' => array( 36, 37 ),
  *                 ),
@@ -147,9 +146,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  *         ),
  *     ) );
  * 
- * ВОЗВРАЩАЕТ: Ничего. Выводит HTML формы поиска.
+ * RETURNS: Nothing. Outputs the search form HTML.
  * 
- * @see as_ajaxBlock() — вывод контейнера для AJAX-результатов
+ * @see as_ajaxBlock() — output of the AJAX results container
  */
 function as_search( $searchParameters ) {
     
@@ -173,11 +172,11 @@ function as_search( $searchParameters ) {
         $classButtonForm .= ' ' . esc_attr( $searchParameters['classSubmit'] );
     }
     
-    // Значение кнопки
+    // Button value
     if ( isset( $searchParameters['valueSubmit'] ) ) {
         $valueSubmit = $searchParameters['valueSubmit'];
     } else {
-        $valueSubmit = 'Поиск';
+        $valueSubmit = __( 'Search', 'argon-shop' );
     }
     
     $valueSubmit_esc = esc_attr( $valueSubmit );
@@ -188,7 +187,7 @@ function as_search( $searchParameters ) {
     $dataAjax = array();
     $ajaxPositionResult = 'bottom';
     
-    // Формируем параметры AJAX
+    // Build the AJAX parameters
     if ( isset( $searchParameters['ajax'] ) ) {
         
         if ( ! empty( $searchParameters['ajax']['productResult'] ) ) {
@@ -203,7 +202,7 @@ function as_search( $searchParameters ) {
             $dataAjax['postResult'] = $searchParameters['ajax']['postResult'];
         }
         
-        // Замена кавычек для корректного вывода в HTML
+        // Replace quotes for correct HTML output
         $dataAjax = str_replace( "'", '"', json_encode( $dataAjax ) );
         
         if ( ! empty( $searchParameters['ajax']['positionResult'] ) ) {
@@ -211,14 +210,14 @@ function as_search( $searchParameters ) {
         }
     }
     
-    // Вывод блока результатов (сверху)
+    // Output the results block (top)
     if ( isset( $searchParameters['ajax'] ) && $ajaxPositionResult === 'top' ) {
         
         $classBlockResult = isset( $searchParameters['ajax']['classBlockResult'] ) ? $searchParameters['ajax']['classBlockResult'] : '';
         as_ajaxBlock( $classBlockResult );
     }
     
-    // Атрибут data-blockresult
+    // data-blockresult attribute
     $linkResultBlock = '';
     
     if ( isset( $searchParameters['ajax']['classBlockResult'] ) && $searchParameters['ajax']['classBlockResult'] ) {
@@ -229,13 +228,13 @@ function as_search( $searchParameters ) {
     
     <form role="search" method="get" class="<?php echo $classForm_esc; ?>" action="<?php echo esc_url( home_url( '/' ) ); ?>">
         <div>
-            <input type="text" <?php echo $linkResultBlock; ?> <?php echo ( $dataAjax ) ? "data-ajax='" . esc_attr( $dataAjax ) . "'" : ""; ?> class="<?php echo $classInputForm_esc; ?>" placeholder="Поиск" value="<?php echo esc_attr( get_search_query() ); ?>" name="s" autocomplete="off" />
+            <input type="text" <?php echo $linkResultBlock; ?> <?php echo ( $dataAjax ) ? "data-ajax='" . esc_attr( $dataAjax ) . "'" : ""; ?> class="<?php echo $classInputForm_esc; ?>" placeholder="<?php esc_attr_e( 'Search', 'argon-shop' ); ?>" value="<?php echo esc_attr( get_search_query() ); ?>" name="s" autocomplete="off" />
             
             <?php 
             
             if ( ! empty( $searchParameters['post_type'] ) ) {
                 
-                // Скрытые поля для типа постов
+                // Hidden fields for post types
                 if ( is_array( $searchParameters['post_type'] ) ) {
                     
                     foreach ( $searchParameters['post_type'] as $key ) {
@@ -251,7 +250,7 @@ function as_search( $searchParameters ) {
                     }
                 }
                 
-                // Скрытые поля для таксономий
+                // Hidden fields for taxonomies
                 if ( ! empty( $searchParameters['taxonomy'] ) && is_array( $searchParameters['taxonomy'] ) ) {
                     
                     foreach ( $searchParameters['taxonomy'] as $key => $value ) {
@@ -279,7 +278,7 @@ function as_search( $searchParameters ) {
     
     <?php
     
-    // Вывод блока результатов (снизу)
+    // Output the results block (bottom)
     if ( isset( $searchParameters['ajax'] ) && $ajaxPositionResult === 'bottom' ) {
         
         $classBlockResult = isset( $searchParameters['ajax']['classBlockResult'] ) ? $searchParameters['ajax']['classBlockResult'] : '';
@@ -288,9 +287,9 @@ function as_search( $searchParameters ) {
 }
 
 /**
- * ФУНКЦИЯ: Вывод контейнера для AJAX-результатов поиска
+ * FUNCTION: Output the AJAX results container
  * 
- * @param string $class — дополнительный CSS-класс
+ * @param string $class — additional CSS class
  */
 function as_ajaxBlock( $class ) {
     

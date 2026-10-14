@@ -1,47 +1,46 @@
 <?php
 /**
- * Сохранение данных заказа
+ * Saving order data
  * 
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * WordPress Админка → Заказы → Редактирование заказа → Кнопка "Обновить"
- * URL: /wp-admin/post.php?post=ID_ЗАКАЗА&action=edit
+ * WHERE TO TEST:
+ * WordPress Admin → Orders → Edit order → "Update" button
+ * URL: /wp-admin/post.php?post=ORDER_ID&action=edit
  * 
- * ЧТО ДЕЛАЕТ:
- * 1. Сохраняет товары заказа (количество, цены с учётом скидок)
- * 2. Сохраняет данные покупателя (поля формы)
- * 3. Сохраняет способ доставки и оплаты
- * 4. Обновляет статус заказа
- * 5. Обновляет заголовок заказа (номер, количество, сумма)
+ * WHAT IT DOES:
+ * 1. Saves the order products (quantity, prices including discounts)
+ * 2. Saves the buyer data (form fields)
+ * 3. Saves the delivery and payment method
+ * 4. Updates the order status
+ * 5. Updates the order title (number, quantity, total)
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-function save_data_order( $post_id ) {
+function as_save_data_order( $post_id ) {
     
-    // Проверяем nonce — защита от CSRF-атак
+    // Check the nonce — protection against CSRF attacks
     if ( ! isset( $_POST['detailOrders_protect_name'] ) 
         || ! wp_verify_nonce( $_POST['detailOrders_protect_name'], 'detailOrders_protect_action' ) ) {
         return $post_id;
     }
     
-    // Проверяем, является ли запрос автосохранением
+    // Check whether the request is an autosave
     if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
         return $post_id;
     }
     
-    // Проверяем права пользователя
+    // Check the user's capabilities
     if ( ! current_user_can( 'edit_post', $post_id ) ) {
         return $post_id;
     }
     
-    // Проверяем тип записи
+    // Check the post type
     $post = get_post( $post_id );
     
     if ( ! $post || $post->post_type !== 'shoporder' ) {
@@ -49,7 +48,7 @@ function save_data_order( $post_id ) {
     }
     
     // ============================================
-    // СОХРАНЕНИЕ ТОВАРОВ ЗАКАЗА
+    // SAVING ORDER PRODUCTS
     // ============================================
     
     $orderProducts = array();
@@ -60,14 +59,14 @@ function save_data_order( $post_id ) {
         
         foreach ( $postProduct as $key => $value ) {
             
-            // Валидация ID товара
+            // Product ID validation
             $key = absint( $key );
             
             if ( 0 === $key ) {
                 continue;
             }
             
-            // Валидация количества
+            // Quantity validation
             $value = floatval( $value );
             
             if ( $value <= 0 ) {
@@ -84,17 +83,17 @@ function save_data_order( $post_id ) {
             
             $orderProducts[ $key ] = array(
                 'amountProduct' => $value,
-                'price'         => floatval( get_post_meta( $key, '_price', true ) ),
+                'price'         => as_get_product_price( $key ),
                 'name'          => $title,
                 'link'          => get_post_permalink( $key ),
             );
         }
     }
     
-    // Применение оптовых скидок
-    if ( check_saleSteps() && ! empty( $orderProducts ) ) {
+    // Apply wholesale discounts
+    if ( as_check_saleSteps() && ! empty( $orderProducts ) ) {
         
-        $discountPriceProducts = getActualPriceAllProducts( $orderProducts );
+        $discountPriceProducts = as_getActualPriceAllProducts( $orderProducts );
         
         if ( is_array( $discountPriceProducts ) ) {
             
@@ -109,12 +108,18 @@ function save_data_order( $post_id ) {
         }
     }
     
-    // Получаем номер заказа и сумму
+    // Get the order number and total
     $numberPost = get_post_meta( $post_id, '_number', true );
-    $amount = getDataCart( $orderProducts );
+    $amount = as_getDataCart( $orderProducts );
     
-    // Обновляем заголовок заказа
-    $post_title = 'Заказ №' . $numberPost . ' Товаров в заказе: ' . $amount['productAmountCart'] . ', на сумму: ' . $amount['totalPrice'];
+    // Update the order title
+    $post_title = sprintf(
+        /* translators: 1: order number, 2: number of items, 3: order total. */
+        __( 'Order #%1$s. Items in order: %2$s, total: %3$s', 'argon-shop' ),
+        $numberPost,
+        $amount['productAmountCart'],
+        $amount['totalPrice']
+    );
     
     $post_data = array(
         'ID'         => $post_id,
@@ -123,23 +128,23 @@ function save_data_order( $post_id ) {
     
     if ( ! wp_is_post_revision( $post_id ) ) {
         
-        // Удаляем хук, чтобы избежать бесконечного цикла
-        remove_action( 'save_post', 'save_data_order' );
+        // Remove the hook to avoid an infinite loop
+        remove_action( 'save_post', 'as_save_data_order' );
         
-        // Обновляем пост
+        // Update the post
         wp_update_post( $post_data );
         
-        // Возвращаем хук
-        add_action( 'save_post', 'save_data_order' );
+        // Restore the hook
+        add_action( 'save_post', 'as_save_data_order' );
     }
     
-    // Сохраняем мета-поля товаров
+    // Save the product meta fields
     update_post_meta( $post_id, '_productAmountCart', $amount['productAmountCart'] );
     update_post_meta( $post_id, '_totalPrice', $amount['totalPrice'] );
     update_post_meta( $post_id, '_productsCart', $orderProducts );
     
     // ============================================
-    // СОХРАНЕНИЕ ДАННЫХ ПОКУПАТЕЛЯ
+    // SAVING BUYER DATA
     // ============================================
     
     $userInfo = array();
@@ -151,14 +156,14 @@ function save_data_order( $post_id ) {
         
         foreach ( $infoValue as $key => $value ) {
             
-            // Валидация ключа
+            // Key validation
             $key = sanitize_text_field( wp_unslash( $key ) );
             
             if ( empty( $key ) ) {
                 continue;
             }
             
-            // Валидация значений
+            // Value validation
             $name = isset( $infoName[ $key ] ) ? sanitize_text_field( wp_unslash( $infoName[ $key ] ) ) : '';
             $value = sanitize_textarea_field( wp_unslash( $value ) );
             
@@ -172,22 +177,22 @@ function save_data_order( $post_id ) {
     update_post_meta( $post_id, '_fieldsCart', $userInfo );
     
     // ============================================
-    // СОХРАНЕНИЕ ДОСТАВКИ, ОПЛАТЫ И СТАТУСА
+    // SAVING DELIVERY, PAYMENT AND STATUS
     // ============================================
     
-    // Доставка
+    // Delivery
     if ( isset( $_POST['shipping'] ) ) {
         $typeShipping = sanitize_text_field( wp_unslash( $_POST['shipping'] ) );
         update_post_meta( $post_id, '_shipping', $typeShipping );
     }
     
-    // Оплата
+    // Payment
     if ( isset( $_POST['payment'] ) ) {
         $typePayment = sanitize_text_field( wp_unslash( $_POST['payment'] ) );
         update_post_meta( $post_id, '_payment', $typePayment );
     }
     
-    // Статус заказа
+    // Order status
     if ( isset( $_POST['status'] ) ) {
         $statusID = absint( $_POST['status'] );
         
@@ -201,4 +206,4 @@ function save_data_order( $post_id ) {
     return $post_id;
 }
 
-add_action( 'save_post', 'save_data_order' );
+add_action( 'save_post', 'as_save_data_order' );

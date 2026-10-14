@@ -1,68 +1,67 @@
 /**
- * ArgonShop — функциональные стили интерфейса.
+ * ArgonShop — functional interface styles.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Этот файл содержит МИНИМАЛЬНЫЙ набор CSS, необходимый для
- * корректной работы JavaScript-модулей плагина. Здесь нет
- * оформления — только функциональные состояния элементов.
+ * This file contains the MINIMAL set of CSS required for
+ * the plugin's JavaScript modules to work correctly. There is no
+ * styling here — only functional element states.
  *
- * Всё оформление (цвета, размеры, шрифты, отступы, сетка,
- * расположение элементов) полностью находится в теме и может
- * быть заменено на любой другой дизайн.
- *
- * ============================================================
- * ПРИНЦИП РАЗДЕЛЕНИЯ
- * ============================================================
- *
- * CSS магазина в теме.
- * JS магазина в плагине.
- * Функциональный CSS (этот файл) — в плагине.
- *
- * «Функциональным» считается CSS, который:
- *   1. Управляется JavaScript-модулями плагина.
- *   2. Определяет начальное состояние элементов, которые JS
- *      показывает или скрывает в процессе работы.
- *   3. Не относится к визуальному оформлению и не может быть
- *      заменён в теме без слома поведения интерфейса.
+ * All styling (colors, sizes, fonts, spacing, grid,
+ * element positioning) lives entirely in the theme and can
+ * be replaced with any other design.
  *
  * ============================================================
- * ЧТО НЕ НУЖНО ДОБАВЛЯТЬ В ЭТОТ ФАЙЛ
+ * SEPARATION PRINCIPLE
  * ============================================================
  *
- * - Цвета, размеры, шрифты, отступы, тени.
- * - Медиазапросы для адаптива.
- * - Сетки и flexbox-раскладки.
- * - Стили hover, focus, active.
- * - Псевдоэлементы декоративного назначения.
+ * Store CSS lives in the theme.
+ * Store JS lives in the plugin.
+ * Functional CSS (this file) lives in the plugin.
  *
- * Всё это — в теме.
- *
- * ============================================================
- * ВАЖНО ДЛЯ ТЕМЫ
- * ============================================================
- *
- * Ошибки магазина (.shoppingCartError, .submitError и др.)
- * скрыты по умолчанию и показываются JavaScript-модулями при
- * сбоях AJAX-запросов. Тема обязана определить для них
- * визуальные стили (рамка, цвет, отступы), иначе пользователь
- * увидит только текст без подсветки.
+ * CSS is considered "functional" if it:
+ *   1. Is controlled by the plugin's JavaScript modules.
+ *   2. Defines the initial state of elements that JS
+ *      shows or hides while running.
+ *   3. Is not related to visual styling and cannot be
+ *      replaced in the theme without breaking the interface behaviour.
  *
  * ============================================================
- * JS-КОНТРАКТ
+ * WHAT NOT TO ADD TO THIS FILE
  * ============================================================
  *
- * Если тема переверстывает корзину, ЛК или другой блок
- * магазина, она должна сохранить классы и атрибуты, указанные
- * в шапке соответствующего JS-модуля (блок «DOM-ЭЛЕМЕНТЫ»).
+ * - Colors, sizes, fonts, spacing, shadows.
+ * - Responsive media queries.
+ * - Grids and flexbox layouts.
+ * - hover, focus, active styles.
+ * - Decorative pseudo-elements.
  *
- * Полный список селекторов приведён в шапках файлов:
+ * All of that belongs in the theme.
+ *
+ * ============================================================
+ * IMPORTANT FOR THE THEME
+ * ============================================================
+ *
+ * Store errors (.shoppingCartError, .submitError, etc.)
+ * are hidden by default and shown by the JavaScript modules when
+ * AJAX requests fail. The theme must define visual styles
+ * for them (border, color, spacing), otherwise the user
+ * will see only text without highlighting.
+ *
+ * ============================================================
+ * JS CONTRACT
+ * ============================================================
+ *
+ * If the theme rebuilds the markup of the cart, account or another
+ * store block, it must keep the classes and attributes listed
+ * in the header of the corresponding JS module (the "DOM ELEMENTS" block).
+ *
+ * The full list of selectors is in the file headers:
  *
  *   assets/interface/js/modules/cart.js
  *   assets/interface/js/modules/product.js
@@ -81,17 +80,17 @@
  */
 
 /* ============================================================
-   БЛОКИ-ТАБЫ
+   TAB BLOCKS
    ============================================================
  *
- * Контейнеры, переключаемые через панели (модуль control-panels.js).
- * По умолчанию все скрыты. JS показывает только активный блок.
+ * Containers switched by panels (the control-panels.js module).
+ * All are hidden by default. JS shows only the active block.
  *
- * Если тема использует собственные селекторы и переопределяет
- * display через медиазапросы с !important (например, показывая
- * дочерние категории каталога на десктопе независимо от табов),
- * это по-прежнему работает: !important в CSS темы имеет приоритет
- * над inline-стилем, который ставит JS.
+ * If the theme uses its own selectors and overrides
+ * display via media queries with !important (for example, showing
+ * catalog child categories on desktop regardless of the tabs),
+ * this still works: !important in the theme CSS takes priority
+ * over the inline style set by JS.
  */
 
 .blockItemPage {
@@ -99,11 +98,11 @@
 }
 
 /* ============================================================
-   РЕГИСТРАЦИЯ В КОРЗИНЕ
+   REGISTRATION IN THE CART
    ============================================================
  *
- * Блок с полем логина скрыт по умолчанию и показывается
- * при отметке чекбокса «Зарегистрировать вас?» (модуль cart.js).
+ * The login field block is hidden by default and shown
+ * when the "Register an account?" checkbox is checked (the cart.js module).
  */
 
 .cartLogin {
@@ -111,13 +110,13 @@
 }
 
 /* ============================================================
-   СООБЩЕНИЯ ОБ ОШИБКАХ
+   ERROR MESSAGES
    ============================================================
  *
- * Показываются JavaScript-модулями при сбоях AJAX-запросов или
- * ошибках валидации. До срабатывания JS должны быть невидимы.
+ * Shown by the JavaScript modules when AJAX requests fail or
+ * validation errors occur. They must be invisible until JS runs.
  *
- * Визуальные стили (рамка, цвет, отступы) — в теме.
+ * Visual styles (border, color, spacing) are in the theme.
  */
 
 .shoppingCartError,
@@ -130,11 +129,11 @@
 }
 
 /* ============================================================
-   РЕЗУЛЬТАТЫ AJAX-ПОИСКА
+   AJAX SEARCH RESULTS
    ============================================================
  *
- * Выпадающий блок с результатами поиска (модуль search.js).
- * Показывается при вводе текста длиной 2+ символа.
+ * Dropdown block with search results (the search.js module).
+ * Shown when 2+ characters are typed.
  */
 
 .searchAjaxResult {
@@ -142,11 +141,11 @@
 }
 
 /* ============================================================
-   КНОПКА «СМОТРЕТЬ ВСЕ» В БЛОКЕ ПОПУЛЯРНЫХ ЗАПРОСОВ
+   "SHOW ALL" BUTTON IN THE POPULAR QUERIES BLOCK
    ============================================================
  *
- * Показывается модулем request.js только если содержимое
- * блока обрезано по высоте.
+ * Shown by the request.js module only if the content
+ * of the block is cut off by height.
  */
 
 .view-allCards-request {
@@ -154,11 +153,11 @@
 }
 
 /* ============================================================
-   ПОЛЯ ЮРИДИЧЕСКОГО ЛИЦА В ЛК
+   LEGAL ENTITY FIELDS IN THE ACCOUNT
    ============================================================
  *
- * Таблица с полями юрлица скрыта и показывается только при
- * отметке чекбокса «Юрлицо» (модуль cabinet.js).
+ * The table with legal entity fields is hidden and shown only when
+ * the "Legal entity" checkbox is checked (the cabinet.js module).
  */
 
 #accountLegalBlock {
@@ -166,18 +165,18 @@
 }
 
 /* ============================================================
-   ФУНКЦИОНАЛЬНЫЕ КЛАССЫ-СОСТОЯНИЯ
+   FUNCTIONAL STATE CLASSES
    ============================================================
  *
- * Классы, которые JavaScript добавляет или снимает с элементов
- * во время работы.
+ * Classes that JavaScript adds to or removes from elements
+ * while running.
  */
 
 /**
- * Развёрнутое состояние блока популярных запросов (модуль request.js).
+ * Expanded state of the popular queries block (the request.js module).
  *
- * При клике по кнопке «Смотреть все» блок .block-cards-request
- * получает класс .is-expanded, ограничение max-height снимается.
+ * When the "Show all" button is clicked, the .block-cards-request block
+ * gets the .is-expanded class and the max-height limit is removed.
  */
 .block-cards-request.is-expanded {
     max-height: none;

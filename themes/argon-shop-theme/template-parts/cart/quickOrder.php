@@ -1,75 +1,74 @@
 <?php
 /**
- * Форма быстрого оформления заказа (шаблон части)
+ * Quick checkout form (template part)
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ИСПОЛЬЗУЕТСЯ:
- * Подключается через get_template_part( 'template-parts/cart/quickOrder' )
- * из шаблона shoppingCartPage.php (страница корзины).
+ * WHERE IT IS USED:
+ * Included via get_template_part( 'template-parts/cart/quickOrder' )
+ * from the shoppingCartPage.php template (cart page).
  * 
- * ЧТО ВЫВОДИТ:
- * Краткую форму оформления заказа — минимум полей для быстрого
- * оформления. Используется как форма по умолчанию для неавторизованных
- * пользователей.
- * 
- * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
- * ============================================================
- * 
- * ФУНКЦИИ ПЛАГИНА:
- * 
- * show_user_fields( $user_ID, $type, $wrap, $class50, $class100, $classTitle, $classInput, $required )
- *   Файл: includes/api/getSetting.php
- *   Выводит поля формы из настроек магазина (settingShop).
- *   Для типа "quick" — минимальный набор полей быстрого заказа.
- *   Параметр $required — массив обязательных полей.
+ * WHAT IT OUTPUTS:
+ * A short checkout form — the minimum of fields for a quick
+ * order. Used as the default form for unauthorized
+ * users.
  * 
  * ============================================================
- * ДИНАМИЧЕСКИЕ ПОЛЯ ФОРМЫ
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  * 
- * Часть полей формы задаётся администратором в настройках магазина:
+ * PLUGIN FUNCTIONS:
  * 
- * WordPress Админка → Настройки → Магазин → Данные пользователя
- * 
- * Формат строки для каждого поля:
- *   ID[Имя, Placeholder, class]
- * 
- * Где:
- * - ID          — атрибут name в HTML
- * - Имя         — заголовок поля
- * - Placeholder — подсказка внутри поля
- * - class       — 50 или 100 (ширина поля)
- * 
- * Пример полей для быстрого заказа:
- *   telefonUser[Телефон,+7 (922) xxx-xx-xx,100]
- *   addressUser[Адрес,Московская область/запятая/ ДНП Янтарь,100]
- * 
- * Разделитель — запятая. Для запятой внутри текста используется
- * метка "/запятая/".
+ * as_show_user_fields( $user_ID, $type, $wrap, $class50, $class100, $classTitle, $classInput, $required )
+ *   File: includes/api/getSetting.php
+ *   Outputs the form fields from the store settings (settingShop).
+ *   For the "quick" type — the minimal set of quick order fields.
+ *   The $required parameter is an array of required fields.
  * 
  * ============================================================
- * ОБРАБОТКА ПОЛЕЙ В ПЛАГИНЕ
+ * DYNAMIC FORM FIELDS
  * ============================================================
  * 
- * Все поля из настроек автоматически собираются в AJAX-обработчике
- * submitCart_shoppingCart_callback() через get_valueFieldsCart()
- * с типом формы "quick".
+ * Some form fields are defined by the administrator in the store settings:
  * 
- * Фиксированные поля, обрабатываемые плагином отдельно:
- *   - messageUser   — комментарий * 
+ * WordPress Admin → Settings → Store → User data
+ * 
+ * Line format for each field:
+ *   ID[Name, Placeholder, class]
+ * 
+ * Where:
+ * - ID          — the HTML name attribute
+ * - Name        — field label
+ * - Placeholder — hint inside the field
+ * - class       — 50 or 100 (field width)
+ * 
+ * Example fields for a quick order:
+ *   telefonUser[Phone,+1 (555) xxx-xxxx,100]
+ *   addressUser[Address,New York/comma/ 5th Avenue,100]
+ * 
+ * The separator is a comma. For a comma inside the text use
+ * the "/comma/" marker.
  * 
  * ============================================================
- * ПЕРЕМЕННЫЕ ИЗ ШАБЛОНА КОРЗИНЫ
+ * FIELD HANDLING IN THE PLUGIN
  * ============================================================
  * 
- * $user_ID — ID текущего пользователя (get_current_user_id())
+ * All fields from the settings are collected automatically in the AJAX handler
+ * as_submitCart_shoppingCart_callback() via as_get_valueFieldsCart()
+ * with the "quick" form type.
+ * 
+ * Fixed fields handled by the plugin separately:
+ *   - messageUser   — comment *
+ * 
+ * ============================================================
+ * VARIABLES FROM THE CART TEMPLATE
+ * ============================================================
+ * 
+ * $user_ID — current user ID (get_current_user_id())
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -79,24 +78,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 
     <?php 
     
-    $required = array( 'telefonUser', 'addressUser' );
+    // The list of required fields comes from the plugin (the same one the server checks)
+    $required = function_exists( 'as_get_required_fields' ) ? as_get_required_fields( 'quick' ) : array( 'telefonUser', 'addressUser' );
     
-    // Функция плагина Argon Shop (includes/api/getSetting.php)
-    if ( function_exists( 'show_user_fields' ) ) {
-        show_user_fields( $user_ID, 'quick', 'div', 'cartFields50', 'cartFields100', 'cartFieldsTitle', 'cartFieldInput', $required );
+    // Argon Shop plugin function (includes/api/getSetting.php)
+    if ( function_exists( 'as_show_user_fields' ) ) {
+        as_show_user_fields( $user_ID, 'quick', 'div', 'cartFields50', 'cartFields100', 'cartFieldsTitle', 'cartFieldInput', $required );
     }
     
     ?>
     
     <div class="cartFields100">
         
-        <div class="cartFieldsTitle">Комментарий:</div>
-        <textarea name="messageUser" placeholder="Ваш комментарий"></textarea>
+        <div class="cartFieldsTitle"><?php esc_html_e( 'Comment:', 'argon-shop-theme' ); ?></div>
+        <textarea name="messageUser" placeholder="<?php esc_attr_e( 'Your comment', 'argon-shop-theme' ); ?>"></textarea>
         
     </div>
     
 				
-    <input value="ОТПРАВИТЬ ЗАКАЗ" type="submit" class="submitCart" disabled>
+    <input value="<?php esc_attr_e( 'PLACE ORDER', 'argon-shop-theme' ); ?>" type="submit" class="submitCart" disabled>
     <div class="submitError"><span></span></div>
                     
 </form>

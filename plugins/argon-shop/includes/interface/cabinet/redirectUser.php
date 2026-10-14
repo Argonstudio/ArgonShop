@@ -1,55 +1,54 @@
 <?php
 /**
- * Перенаправление пользователей и управление доступом
+ * User redirects and access control
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * 1. Вход в систему → перенаправление в кабинет
- * 2. Выход из системы → перенаправление на главную
- * 3. Заход в кабинет без авторизации → редирект на login
+ * WHERE TO TEST:
+ * 1. Log in → redirect to the account
+ * 2. Log out → redirect to the home page
+ * 3. Opening the account without logging in → redirect to login
  * 
- * ЧТО ДЕЛАЕТ:
- * 1. Перенаправляет пользователей после входа
- * 2. Перенаправляет после выхода
- * 3. Скрывает админ-бар для не-администраторов
- * 4. Защищает страницу кабинета от гостей
+ * WHAT IT DOES:
+ * 1. Redirects users after login
+ * 2. Redirects after logout
+ * 3. Hides the admin bar for non-administrators
+ * 4. Protects the account page from guests
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 /**
- * ФУНКЦИЯ: Перенаправление пользователя после входа
+ * FUNCTION: Redirect the user after login
  * 
- * @param string  $redirect_to — URL для перенаправления
- * @param string  $request     — запрошенный URL
- * @param WP_User $user        — объект пользователя
+ * @param string  $redirect_to — redirect URL
+ * @param string  $request     — requested URL
+ * @param WP_User $user        — user object
  * 
- * @return string URL для перенаправления
+ * @return string Redirect URL
  */
-function my_login_redirect( $redirect_to, $request, $user ) {
+function as_my_login_redirect( $redirect_to, $request, $user ) {
     
-    // Проверяем, есть ли у пользователя роли
+    // Check whether the user has roles
     if ( isset( $user->roles ) && is_array( $user->roles ) ) {
         
-        // Администратор — стандартный редирект
+        // Administrator — default redirect
         if ( in_array( 'administrator', $user->roles, true ) ) {
             return $redirect_to;
         }
         
-        // Остальные — в личный кабинет
-        $cabinet_url = get_cabinetPageURL();
+        // Everyone else — to the account
+        $cabinet_url = as_get_cabinetPageURL();
         
         if ( $cabinet_url ) {
             return $cabinet_url;
         }
         
-        // Если страница кабинета не настроена — на главную
+        // If the account page is not configured — to the home page
         return home_url();
     }
     
@@ -57,14 +56,14 @@ function my_login_redirect( $redirect_to, $request, $user ) {
 }
 
 /**
- * ФУНКЦИЯ: Переадресация на главную после выхода
+ * FUNCTION: Redirect to the home page after logout
  * 
- * @param string $logout_url — URL выхода
- * @param string $redirect   — текущий редирект
+ * @param string $logout_url — logout URL
+ * @param string $redirect   — current redirect
  * 
- * @return string URL выхода с редиректом
+ * @return string Logout URL with the redirect
  */
-function redirect_after_logout( $logout_url, $redirect ) {
+function as_redirect_after_logout( $logout_url, $redirect ) {
     
     if ( empty( $redirect ) ) {
         $logout_url = add_query_arg( 'redirect_to', urlencode( home_url() ), $logout_url );
@@ -74,25 +73,25 @@ function redirect_after_logout( $logout_url, $redirect ) {
 }
 
 /**
- * ФУНКЦИЯ: Скрытие админ-бара для не-администраторов
+ * FUNCTION: Hide the admin bar for non-administrators
  * 
- * @param bool $content — текущее состояние админ-бара
+ * @param bool $content — current admin bar state
  * 
  * @return bool
  */
-function my_function_admin_bar( $content ) {
+function as_my_function_admin_bar( $content ) {
     return current_user_can( 'administrator' ) ? $content : false;
 }
 
-add_filter( 'show_admin_bar', 'my_function_admin_bar' );
-add_filter( 'logout_url', 'redirect_after_logout', 10, 2 );
-add_filter( 'login_redirect', 'my_login_redirect', 10, 3 );
+add_filter( 'show_admin_bar', 'as_my_function_admin_bar' );
+add_filter( 'logout_url', 'as_redirect_after_logout', 10, 2 );
+add_filter( 'login_redirect', 'as_my_login_redirect', 10, 3 );
 
 /**
- * ФУНКЦИЯ: Защита страницы кабинета от гостей
+ * FUNCTION: Protect the account page from guests
  * 
- * ГДЕ: При заходе на страницу кабинета без авторизации
- * ЧТО ДЕЛАЕТ: Перенаправляет гостя на страницу входа
+ * WHERE: When the account page is opened without logging in
+ * WHAT IT DOES: Redirects the guest to the login page
  */
 add_action( 'template_redirect', function() {
     
@@ -100,9 +99,9 @@ add_action( 'template_redirect', function() {
         return;
     }
     
-    $cabinet_id = get_cabinetPageID();
+    $cabinet_id = as_get_cabinetPageID();
     
-    // Если страница кабинета не настроена — выходим
+    // If the account page is not configured — exit
     if ( ! $cabinet_id ) {
         return;
     }

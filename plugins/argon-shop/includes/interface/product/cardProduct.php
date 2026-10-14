@@ -1,78 +1,77 @@
 <?php
 /**
- * Кнопки добавления товара в корзину (карточка товара)
+ * Add-to-cart buttons (product card)
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * Карточка товара в каталоге, в блоке "Хиты продаж" и тд
+ * WHERE TO TEST:
+ * Product card in the catalog, in the "Best sellers" block, etc.
  * 
- * ЧТО ДЕЛАЕТ:
- * Выводит кнопки "В корзину", "Купить" или ссылку на корзину
- * в зависимости от того, добавлен ли товар
+ * WHAT IT DOES:
+ * Outputs the "Add to cart" and "Buy" buttons or a link to the cart
+ * depending on whether the product has been added
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 /**
- * ФУНКЦИЯ: Вывод кнопок добавления товара
+ * FUNCTION: Output the add-to-cart buttons
  * 
- * @param int        $productID            — ID товара
- * @param bool|mixed $cardInBascet         — показывать кнопку "В корзину"
- * @param bool|mixed $cardBuy              — показывать кнопку "Купить"
- * @param array      $productsShoppingCart — товары в корзине
+ * @param int        $productID            — product ID
+ * @param bool|mixed $cardInBascet         — show the "Add to cart" button
+ * @param bool|mixed $cardBuy              — show the "Buy" button
+ * @param array      $productsShoppingCart — products in the cart
  */
-function button_card_product( $productID, $cardInBascet, $cardBuy, $productsShoppingCart ) {
+function as_button_card_product( $productID, $cardInBascet, $cardBuy, $productsShoppingCart ) {
     
     $productID = absint( $productID );
     $productID_esc = esc_attr( $productID );
     
-    // Проверяем, что корзина — массив
+    // Make sure the cart is an array
     if ( ! is_array( $productsShoppingCart ) ) {
         $productsShoppingCart = array();
     }
     
-    // Товар уже в корзине?
+    // Is the product already in the cart?
     $in_cart = isset( $productsShoppingCart[ $productID ] ) && $productsShoppingCart[ $productID ];
     
-    // URL корзины
-    $cart_url = esc_url( get_cartPageURL() );
+    // Cart URL
+    $cart_url = esc_url( as_get_cartPageURL() );
     
     ?>
     
-    <!-- Кнопки добавления -->
+    <!-- Add buttons -->
     <div class="block-cardProductBascet" style="<?php if ( $in_cart ) { ?> display:none <?php } ?>">
         
         <?php if ( $cardInBascet !== false ) { ?>
         
-            <input type="button" data-productid="<?php echo $productID_esc; ?>" class="card-inBascet" value="В корзину">
+            <input type="button" data-productid="<?php echo $productID_esc; ?>" class="card-inBascet" value="<?php esc_attr_e( 'Add to cart', 'argon-shop' ); ?>">
         
         <?php } ?>
         
         <?php if ( $cardBuy !== false ) { ?>
         
-            <input type="button" data-productid="<?php echo $productID_esc; ?>" class="card-buy" value="Купить">
+            <input type="button" data-productid="<?php echo $productID_esc; ?>" class="card-buy" value="<?php esc_attr_e( 'Buy', 'argon-shop' ); ?>">
         
         <?php } ?> 
         
     </div>
     
-    <!-- Блок товар в корзине -->
+    <!-- Product-in-cart block -->
     <div class="card-alreadyAdded" style="<?php if ( ! $in_cart ) { ?> display:none <?php } ?>">
         
         <?php 
         
-        $cardalreadyAddedValue = 'Товар добавлен в корзину';
+        $cardalreadyAddedValue = __( 'Product added to cart', 'argon-shop' );
         
         $queried_object_id = get_queried_object_id();
         
-        if ( $queried_object_id && get_cartPageID() === $queried_object_id ) {
-            $cardalreadyAddedValue = 'Обновить корзину';
+        if ( $queried_object_id && as_get_cartPageID() === $queried_object_id ) {
+            $cardalreadyAddedValue = __( 'Update cart', 'argon-shop' );
         }
         
         $cardalreadyAddedValue_esc = esc_attr( $cardalreadyAddedValue );
@@ -83,7 +82,7 @@ function button_card_product( $productID, $cardInBascet, $cardBuy, $productsShop
         
     </div>
     
-    <!-- Блок для ошибок -->                                             
+    <!-- Error block -->
     <div class="card-addProductError"></div>
     
     <?php

@@ -1,45 +1,44 @@
 <?php
 /**
- * Шапка сайта
+ * Site header
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
  * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  *  
- * Функции плагина, используемые в этом файле:
+ * Plugin functions used in this file:
  * 
  * 1. as_infocart()
  *    ─────────────────────────────────────────────
- *    ОТКУДА: includes/interface/shoppingCart/infoCart.php
+ *    SOURCE: includes/interface/shoppingCart/infoCart.php
  *    
- *    ЧТО ДЕЛАЕТ:
- *    - Читает куки корзины через getCookie("productsShoppingCart")
- *    - Считает число и сумму товаров через getDataCart()
- *    - Выводит блок .viewBlock-shoppingCart с числом и ценой
- *    - Не показывается на странице корзины (проверка get_cartPageID())
+ *    WHAT IT DOES:
+ *    - Reads the cart cookies via as_getCookie("productsShoppingCart")
+ *    - Counts the number and total of products via as_getDataCart()
+ *    - Outputs the .viewBlock-shoppingCart block with the count and price
+ *    - Is not shown on the cart page (as_get_cartPageID() check)
  *    
- *    ИСПОЛЬЗУЕТСЯ В: шапке, чтобы показать иконку корзины с суммой
+ *    USED IN: the header, to show the cart icon with the total
  * 
  * 2. as_search( $searchParameters )
  *    ─────────────────────────────────────────────
- *    ОТКУДА: includes/interface/search/searchForm.php
+ *    SOURCE: includes/interface/search/searchForm.php
  *    
- *    ЧТО ДЕЛАЕТ:
- *    - Выводит форму поиска с настройками
- *    - Подключает AJAX-обработчик getAjaxSearchResult
- *      (из searchAjax.php)
- *    - Поддерживает поиск по товарам, категориям и записям
+ *    WHAT IT DOES:
+ *    - Outputs the search form with its settings
+ *    - Wires the getAjaxSearchResult AJAX handler
+ *      (from searchAjax.php)
+ *    - Supports searching products, categories and posts
  *    
- *    ИСПОЛЬЗУЕТСЯ В: шапке, для поиска товаров
+ *    USED IN: the header, for product search
 
  * ============================================================
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -62,7 +61,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     
     <?php
     
-    // Проверяем, является ли текущая страница результатами поиска
+    // Check whether the current page is the search results page
     $pageSearch = false;
     
     if ( isset( $_GET['s'] ) && is_string( $_GET['s'] ) ) {
@@ -92,23 +91,26 @@ if ( ! defined( 'ABSPATH' ) ) {
         
             <div class="block-rightElementsTopContent" style="<?php echo ( ! $pageSearch ) ? 'margin-right:51px' : ''; ?>">
         
-                <a href="/lichnyj-kabinet/"><input type="button" class="myCabinetButton" value="Мой кабинет"></a>
+                
+				<a href="<?php echo esc_url( as_get_cabinetPageURL() ); ?>">
+					<input type="button" class="myCabinetButton" value="<?php esc_attr_e( 'My account', 'argon-shop-theme' ); ?>">
+				</a>
                 
                 <?php 
                 // ============================================
-                // ВЫЗОВ ФУНКЦИИ ПЛАГИНА: as_infocart()
+                // PLUGIN FUNCTION CALL: as_infocart()
                 // ============================================
                 // 
-                // Файл: includes/interface/shoppingCart/infoCart.php
+                // File: includes/interface/shoppingCart/infoCart.php
                 // 
-                // Функция выводит блок с числом и суммой товаров в корзине.
-                // Внутри использует:
-                //   - getCookie("productsShoppingCart") — из getData.php
-                //   - getDataCart() — из getData.php
+                // The function outputs a block with the number and total of products in the cart.
+                // Internally it uses:
+                //   - as_getCookie("productsShoppingCart") — from getData.php
+                //   - as_getDataCart() — from getData.php
                 // 
-                // Блок НЕ выводится на странице корзины.
+                // The block is NOT output on the cart page.
                 // 
-                // ДОБАВЛЕНО ПЛАГИНОМ: в argon-shop.php через require_once
+                // ADDED BY THE PLUGIN: in argon-shop.php via require_once
                 
                 as_infocart(); 
                 ?>
@@ -122,79 +124,79 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <?php 
                     /**
                      * ============================================
-                     * ВЫЗОВ ФУНКЦИИ ПЛАГИНА: as_search()
+                     * PLUGIN FUNCTION CALL: as_search()
                      * ============================================
                      * 
-                     * Файл: includes/interface/search/searchForm.php
+                     * File: includes/interface/search/searchForm.php
                      * 
-                     * ФУНКЦИЯ: Вывод формы поиска
+                     * FUNCTION: Outputs the search form
                      * 
-                     * ПОДДЕРЖИВАЕТ:
-                     * 1. Обычный поиск (отправка GET на /?s=запрос)
-                     * 2. AJAX-поиск (результаты без перезагрузки страницы)
-                     * 3. Поиск по нескольким типам записей (товары, статьи, страницы)
-                     * 4. Фильтрацию по таксономиям (каталог, рубрики)
-                     * 5. Несколько блоков результатов (акции, новости, блог)
+                     * SUPPORTS:
+                     * 1. Regular search (GET request to /?s=query)
+                     * 2. AJAX search (results without a page reload)
+                     * 3. Search across several post types (products, articles, pages)
+                     * 4. Filtering by taxonomies (catalog, categories)
+                     * 5. Several result blocks (promotions, news, blog)
                      * 
-                     * ВАЖНО: Поиск по записям и рубрикам записей работает "из коробки",
-                     *        без дополнительных доработок плагина. Если в системе нет
-                     *        товаров или таксономии catalog — соответствующие блоки
-                     *        в результатах просто не появятся (без ошибок).
+                     * IMPORTANT: Searching posts and post categories works "out of the box",
+                     *        without extra changes to the plugin. If the system has no
+                     *        products or catalog taxonomy, the corresponding blocks
+                     *        simply do not appear in the results (no errors).
                      * 
-                     * AJAX-ОБРАБОТЧИК:
-                     * Форма отправляет запрос на action=getAjaxSearchResult
-                     * (см. includes/interface/search/searchAjax.php)
+                     * AJAX HANDLER:
+                     * The form sends the request to action=getAjaxSearchResult
+                     * (see includes/interface/search/searchAjax.php)
                      * 
-                     * СТРУКТУРА ПАРАМЕТРОВ:                     * 
+                     * PARAMETER STRUCTURE:                     *
                      * 
                      * @param array $searchParameters {
-                     *     Массив параметров формы поиска.
+                     *     Array of search form parameters.
                      * 
-                     *     @type array  $post_type      Массив типов записей для поиска.
-                     *                                  Для товаров: array('product').
-                     *                                  Пока что тестировался только с array('product') , может поддерживать другие типы записей.   
+                     *     @type array  $post_type      Array of post types to search.
+                     *                                  For products: array('product').
+                     *                                  So far tested only with array('product'); other post types may be supported.
                      * 
                      * 
-                     *     @type array  $taxonomy       Массив таксономий для фильтрации.
-                     *                                  Для каталога: array('catalog' => 'all').
+                     *     @type array  $taxonomy       Array of taxonomies for filtering.
+                     *                                  For the catalog: array('catalog' => 'all').
                      * 
-                     *                                  Таксономия "catalog" зашита в AJAX-обработчике (searchAjax.php) жёстко. Прочее не тестировалось и сделано на перспективу.
+                     *                                  The "catalog" taxonomy is hardcoded in the AJAX handler (searchAjax.php). Everything else is untested and made for the future.
                      * 
-                     *     @type string $classForm      CSS-класс для <form>.
-                     *                                  По умолчанию: 'asSearchForm'.
+                     *     @type string $classForm      CSS class for <form>.
+                     *                                  Default: 'asSearchForm'.
                      * 
-                     *     @type string $classInput     CSS-класс для <input type="text">.
-                     *                                  По умолчанию: 'asInputSearchForm'.
+                     *     @type string $classInput     CSS class for <input type="text">.
+                     *                                  Default: 'asInputSearchForm'.
                      * 
-                     *     @type string $classSubmit    CSS-класс для <input type="submit">.
-                     *                                  По умолчанию: 'asSubmitSearchForm'.
+                     *     @type string $classSubmit    CSS class for <input type="submit">.
+                     *                                  Default: 'asSubmitSearchForm'.
                      * 
-                     *     @type string $valueSubmit    Текст кнопки поиска.
-                     *                                  По умолчанию: 'Поиск'.
+                     *     @type string $valueSubmit    Search button text.
+                     *                                  Default: 'Search' (translated).
                      * 
                      *     @type array  $ajax {
-                     *         Настройки AJAX-поиска. Если отсутствует — обычный поиск.
+                     *         AJAX search settings. If missing — regular search.
                      * 
-                     *         @type string       $classBlockResult CSS-класс контейнера результатов.
-                     *         @type string       $positionResult   Позиция контейнера: 'top' или 'bottom'.
-                     *                                              По умолчанию: 'bottom'.
+                     *         @type string       $classBlockResult CSS class of the results container.
+                     *         @type string       $positionResult   Container position: 'top' or 'bottom'.
+                     *                                              Default: 'bottom'.
                      * 
-                     *         @type bool         $productResult    Искать ли товары.
-                     *                                              Если товаров нет в системе — блок не появится.
-                     *                                              По умолчанию: не передаётся.
+                     *         @type bool         $productResult    Whether to search products.
+                     *                                              If the system has no products, the block does not appear.
+                     *                                              Default: not passed.
                      * 
-                     *         @type bool         $catalogResult    Искать ли категории каталога.
-                     *                                              Если таксономии catalog нет — блок не появится.
-                     *                                              По умолчанию: не передаётся.
+                     *         @type bool         $catalogResult    Whether to search catalog categories.
+                     *                                              If there is no catalog taxonomy, the block does not appear.
+                     *                                              Default: not passed.
                      * 
                      *         @type array|bool   $postResult {
-                     *             Массив дополнительных блоков поиска записей.
-                     *             Работает независимо от productResult и catalogResult.
+                     *             Array of additional post search blocks.
+                     *             Works independently of productResult and catalogResult.
                      * 
                      *             @type array $item {
-                     *                 @type string $name     Заголовок блока (например, "Акции и статьи").
-                     *                 @type string $class    CSS-класс блока.
-                     *                 @type array  $category Массив ID рубрик записей для поиска.
+                     *                 @type string $name     Block title (for example, "Promotions and articles").
+                     *                 @type string $class    Block CSS class.
+                     *                 @type array  $category Array of post category IDs to search.
                      *             }
                      *         }
                      *     }
@@ -218,12 +220,12 @@ if ( ! defined( 'ABSPATH' ) ) {
                             'catalogResult'    => true,
                             'postResult'       => array(
                                 array(
-                                    'name'     => 'Акции и статьи',
+                                    'name'     => __( 'Promotions and articles', 'argon-shop-theme' ),
                                     'class'    => 'resultEntry',
                                     'category' => array( 36, 37 ),
                                 ),
                                 array(
-                                    'name'     => 'Новости',
+                                    'name'     => __( 'News', 'argon-shop-theme' ),
                                     'class'    => 'resultEntry',
                                     'category' => array( 1 ),
                                 ),
@@ -231,7 +233,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                         ),
                     );
                     
-                    // Вызов функции плагина Argon Shop
+                    // Argon Shop plugin function call
                     as_search( $searchParameters );
                     ?>
                     
@@ -253,36 +255,36 @@ if ( ! defined( 'ABSPATH' ) ) {
             
             <div class="block-address">
                 
-                <p class="address"><span class="map_icon"></span><a href="/adres-na-karte-moskva/" class="maps_link" data-modal-ajax="/adres-na-karte-moskva/">Москва, ул. Ленина, дом 1 </a></p>
+                <p class="address"><span class="map_icon"></span><a href="/adres-na-karte-moskva/" class="maps_link" data-modal-ajax="/adres-na-karte-moskva/"><?php esc_html_e( 'City Hall, New York, NY', 'argon-shop-theme' ); ?> </a></p>
                 
-                <p class="work_time">ПН-ПТ: с 9:00 до 18:00</br>СБ: с 10:00 до 15:00</p>
+                <p class="work_time"><?php esc_html_e( 'Mon–Fri: 9:00 to 18:00', 'argon-shop-theme' ); ?></br><?php esc_html_e( 'Sat: 10:00 to 15:00', 'argon-shop-theme' ); ?></p>
                 
             </div>
             
             <div class="block-communication">
-                <a href="tel:89999999999" class="phone"><span class="phone_icon"></span> +7 (999) 999-99-99 </a>
+                <a href="tel:12125550199" class="phone"><span class="phone_icon"></span> +1 (212) 555-0199 </a>
                     
                 <a href="#feedback"
                    id="linkFeedback"
                    data-modal-inline="#feedback">
-                    ОБРАТНАЯ СВЯЗЬ
+                    <?php esc_html_e( 'FEEDBACK', 'argon-shop-theme' ); ?>
                 </a>
                 
                 <?php 
                 
                 // ============================================
-                // ПЕРЕКЛЮЧАТЕЛЬ ГОРОДА (Москва / Истра)
+                // CITY SWITCHER (Moscow / Istra)
                 // ============================================
                 // 
-                // При переходе на сайт Истры передаются:
-                // - data-promocategory — слаг рубрики акций (ID 35)
-                // - data-promoarchive  — слаг страницы архива акций (ID 642)
+                // When switching to the Istra site, the following is passed:
+                // - data-promocategory — slug of the promotions category (ID 35)
+                // - data-promoarchive  — slug of the promotions archive page (ID 642)
                 // 
-                // Эти данные используются JS-скриптом для подмены ссылок
-                // на страницы акций при переключении города.
+                // This data is used by a JS script to replace the links
+                // to the promotions pages when the city is switched.
                 // 
-                // PHP 8.5: $istra_dataSitySelect инициализируется пустой строкой,
-                // иначе при отсутствии условий будет Warning "Undefined variable"
+                // PHP 8.5: $istra_dataSitySelect is initialized with an empty string,
+                // otherwise a "Undefined variable" warning is raised when no condition matches
                 
                 $istra_dataSitySelect = '';
                 
@@ -304,14 +306,14 @@ if ( ! defined( 'ABSPATH' ) ) {
                 ?>
                 
                 <select class="sitySelect">
-                    <option selected="" value="/">Москва</option>
-                    <!--<option <?//php echo $istra_dataSitySelect; ?> value="http://istra.voitkoze.beget.tech">Истра</option>-->
+                    <option selected="" value="/"><?php esc_html_e( 'New York', 'argon-shop-theme' ); ?></option>
+                    <!--<option <?//php echo $istra_dataSitySelect; ?> value="http://istra.site.com">Istra</option>-->
                 </select>
                 
             </div>
             
             <div style="display: none;" id="feedback">
-                <?php echo do_shortcode( '[contact-form-7 id="7" title="Обратная связь"]' ); ?>
+                <?php echo do_shortcode( '[contact-form-7 id="7" title="Feedback"]' ); ?>
             </div>
             
         </div>

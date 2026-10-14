@@ -1,72 +1,68 @@
 <?php
 /**
- * Блок характеристик товара (шаблон части)
+ * Product characteristics block (template part)
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ИСПОЛЬЗУЕТСЯ:
- * Подключается через get_template_part( 'template-parts/productPage/characteristics' )
- * из шаблона single-product.php (страница товара).
+ * WHERE IT IS USED:
+ * Included via get_template_part( 'template-parts/productPage/characteristics' )
+ * from the single-product.php template (product page).
  * 
- * ЧТО ВЫВОДИТ:
- * Таблицу с характеристиками товара:
- * 1. Вес товара (мета-поле _weight)
- * 2. Текстовые характеристики (мета-поле _characteristics_text_field)
- * 3. Характеристики-чекбоксы (мета-поле _characteristics_checkbox_field)
+ * WHAT IT OUTPUTS:
+ * A table with the product characteristics:
+ * 1. Product weight (_weight meta field)
+ * 2. Text characteristics (_characteristics_text_field meta field)
+ * 3. Checkbox characteristics (_characteristics_checkbox_field meta field)
  * 
- * Если характеристик нет — выводит "Характеристик нет".
+ * If there are no characteristics, it outputs "No characteristics" (translated).
  * 
  * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  * 
- * МЕТА-ПОЛЯ ТОВАРА (создаются в fieldsProduct.php):
+ * PRODUCT META FIELDS (created in fieldsProduct.php):
  * 
  * _weight
- *   Вес товара (число, строка с запятой или точкой).
- *   Редактируется в метабоксе "Основные параметры".
+ *   Product weight (a number, a string with a comma or a dot).
+ *   Edited in the "Main parameters" meta box.
  * 
  * _characteristics_text_field
- *   Ассоциативный массив:
- *     [ term_id => 'значение' ]
- *   Создаётся в метабоксе "Характеристики" для характеристик
- *   без дочерних элементов (текстовый ввод).
+ *   Associative array:
+ *     [ term_id => 'value' ]
+ *   Created in the "Characteristics" meta box for characteristics
+ *   without children (text input).
  * 
  * _characteristics_checkbox_field
- *   Двухуровневый ассоциативный массив:
+ *   Two-level associative array:
  *     [ parent_term_id => [ child_term_id => 'on' ] ]
- *   Создаётся в метабоксе "Характеристики" для характеристик
- *   с дочерними элементами (варианты выбора).
+ *   Created in the "Characteristics" meta box for characteristics
+ *   with children (choice options).
  * 
- * ТАКСОНОМИЯ:
+ * TAXONOMY:
  * 
  * characteristics
- *   Иерархическая таксономия характеристик. Верхний уровень —
- *   заголовки (например, "Цвет"), дочерние — варианты
- *   (например, "Красный", "Синий").
+ *   Hierarchical taxonomy of characteristics. The top level is
+ *   headings (for example, "Color"), the children are options
+ *   (for example, "Red", "Blue").
  * 
- *   Поле term->description используется для всплывающего описания
- *   характеристики (открывается через Fancybox по клику).
+ *   The term->description field is used for the characteristic's
+ *   popup description (opened by a click).
  * 
  * ============================================================
- * ВНЕШНИЕ ЗАВИСИМОСТИ
+ * EXTERNAL DEPENDENCIES
  * ============================================================
- * 
- * - Fancybox — для показа всплывающего описания характеристики
- *   Атрибуты: data-fancybox data-src="#descr{term_id}"
- * 
- * - Метабокс "Характеристики" в fieldsProduct.php —
- *   источник данных для этой таблицы.
+ *  * 
+ * - The "Characteristics" meta box in fieldsProduct.php —
+ *   the data source for this table.
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Получение мета-полей товара
+// Get the product meta fields
 $weight = get_post_meta( get_the_ID(), '_weight', true );
 
 $characteristicsText     = get_post_meta( get_the_ID(), '_characteristics_text_field', true );
@@ -81,10 +77,10 @@ if ( $characteristicsText || $characteristicsCheckbox ) {
         <tr>
             
             <td class="detailed-fields-key"> 
-                <div class="fieldsName"><span>ВЕС</span></div>
+                <div class="fieldsName"><span><?php esc_html_e( 'WEIGHT', 'argon-shop-theme' ); ?></span></div>
             </td>
             
-            <td class="detailed-fields-value"> <?php echo esc_html( $weight ); ?> кг </td>
+            <td class="detailed-fields-value"> <?php echo esc_html( $weight ); ?> <?php esc_html_e( 'kg', 'argon-shop-theme' ); ?> </td>
                                 
         </tr>
         <?php } ?>
@@ -92,13 +88,13 @@ if ( $characteristicsText || $characteristicsCheckbox ) {
         <?php 
         
         // ============================================
-        // ТЕКСТОВЫЕ ХАРАКТЕРИСТИКИ
+        // TEXT CHARACTERISTICS
         // ============================================
         // 
-        // _characteristics_text_field: [ term_id => 'значение' ]
-        // Для каждой характеристики ищется термин в таксономии
-        // characteristics. Если у термина есть описание — оно
-        // выводится в Fancybox-блок.
+        // _characteristics_text_field: [ term_id => 'value' ]
+        // For each characteristic a term is looked up in the
+        // characteristics taxonomy. If the term has a description, it
+        // is output into the popup block.
         
         if ( is_array( $characteristicsText ) ) {
             
@@ -117,21 +113,13 @@ if ( $characteristicsText || $characteristicsCheckbox ) {
                 }
                 
                 $productDescr = isset( $term->description ) ? $term->description : '';
-                $fancybox     = 'data-fancybox data-src="#descr' . absint( $term->term_id ) . '"';
                 
                 ?>
                 
                 <tr>
                     
-                    <td class="detailed-fields-key<?php echo $productDescr ? ' detailed-fields-keyDescr' : ''; ?>"> 
-                        <div <?php echo $productDescr ? $fancybox : ''; ?> class="fieldsName"><span><?php echo esc_html( $term->name ); ?></span></div>
-                        
-                        <?php if ( $productDescr ) { ?>
-                            
-                            <div id="descr<?php echo absint( $term->term_id ); ?>" class="fieldDescription"><?php echo $productDescr; ?></div>
-                            
-                        <?php } ?>
-                        
+                    <td class="detailed-fields-key"> 
+                        <div class="fieldsName"><span><?php echo esc_html( $term->name ); ?></span></div>
                     </td>
                     
                     <td class="detailed-fields-value"> <?php echo esc_html( $value ); ?> </td>
@@ -143,11 +131,11 @@ if ( $characteristicsText || $characteristicsCheckbox ) {
         }
         
         // ============================================
-        // ХАРАКТЕРИСТИКИ-ЧЕКБОКСЫ
+        // CHECKBOX CHARACTERISTICS
         // ============================================
         // 
         // _characteristics_checkbox_field: [ parent_id => [ child_id => 'on' ] ]
-        // Выводятся как список выбранных вариантов через запятую.
+        // Output as a comma-separated list of the selected options.
         
         if ( isset( $characteristicsCheckbox ) && $characteristicsCheckbox ) {
             
@@ -170,30 +158,22 @@ if ( $characteristicsText || $characteristicsCheckbox ) {
                 }
                 
                 $productDescr = isset( $term->description ) ? $term->description : '';
-                $fancybox     = 'data-fancybox data-src="#descr' . absint( $term->term_id ) . '"';
                 
                 ?>
                 
                 <tr>
                     
-                    <td class="detailed-fields-key<?php echo $productDescr ? ' detailed-fields-keyDescr' : ''; ?>"> 
-                        <div <?php echo $productDescr ? $fancybox : ''; ?> class="fieldsName"><span><?php echo esc_html( $term->name ); ?></span></div>
-                        
-                        <?php if ( $productDescr ) { ?>
-                            
-                            <div id="descr<?php echo absint( $term->term_id ); ?>" class="fieldDescription"><?php echo $productDescr; ?></div>
-                            
-                        <?php } ?>
-                        
+                    <td class="detailed-fields-key"> 
+                        <div class="fieldsName"><span><?php echo esc_html( $term->name ); ?></span></div>
                     </td>
                     
                     <td class="detailed-fields-value"> 
                     
                         <?php 
                         
-                        // Собираем названия выбранных вариантов в массив,
-                        // затем выводим через запятую. Это позволяет избежать
-                        // проблемы с next() и мутацией указателя массива.
+                        // Collect the names of the selected options into an array,
+                        // then output them comma-separated. This avoids
+                        // problems with next() and mutating the array pointer.
                         
                         $selected_names = array();
                         
@@ -233,7 +213,7 @@ if ( $characteristicsText || $characteristicsCheckbox ) {
 } else {
     ?>
     
-    <p>Характеристик нет</p>
+    <p><?php esc_html_e( 'No characteristics', 'argon-shop-theme' ); ?></p>
     
     <?php
 }

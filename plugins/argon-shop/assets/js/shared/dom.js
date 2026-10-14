@@ -1,82 +1,81 @@
 /**
- * ArgonShop — утилиты для работы с DOM.
+ * ArgonShop — DOM utilities.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Небольшой набор хелперов над нативным DOM API. Заменяет
- * повседневные операции jQuery (querySelector, on, delegate)
- * без попыток имитировать jQuery-объект — имена честные и
- * однозначные, поведение предсказуемое.
+ * A small set of helpers over the native DOM API. Replaces
+ * everyday jQuery operations (querySelector, on, delegate)
+ * without trying to imitate a jQuery object — the names are honest and
+ * unambiguous, the behaviour is predictable.
  *
- * ВАЖНО: в коде НЕ используются псевдонимы $ и $$ — они
- * визуально и семантически путаются с jQuery. Вместо них —
+ * IMPORTANT: the code does NOT use the $ and $$ aliases — they
+ * are visually and semantically confused with jQuery. Instead —
  * qs / qsa (querySelector / querySelectorAll).
  *
  * ============================================================
- * ЭКСПОРТ
+ * EXPORTS
  * ============================================================
  *
- * qs( selector, context )         — querySelector, один элемент или null
- * qsa( selector, context )        — querySelectorAll, всегда массив
- * on( target, event, handler )    — addEventListener, возвращает функцию отписки
+ * qs( selector, context )         — querySelector, one element or null
+ * qsa( selector, context )        — querySelectorAll, always an array
+ * on( target, event, handler )    — addEventListener, returns an unsubscribe function
  * delegate( target, event, selector, handler )
- *                                 — делегированный обработчик,
- *                                   возвращает функцию отписки
+ *                                 — delegated handler,
+ *                                   returns an unsubscribe function
  *
  * ============================================================
- * ОТПИСКА ОТ СОБЫТИЙ
+ * UNSUBSCRIBING FROM EVENTS
  * ============================================================
  *
- * Функции on() и delegate() возвращают функцию, вызов которой
- * снимает обработчик. Это полезно, если компонент создаётся
- * и уничтожается динамически — иначе обработчики будут висеть
- * на контейнере и удерживать ссылки в памяти.
+ * The on() and delegate() functions return a function that
+ * removes the handler when called. This is useful if a component is created
+ * and destroyed dynamically — otherwise the handlers will stay
+ * on the container and hold references in memory.
  *
  *     const off = on( window, 'resize', handler );
- *     // ... позже
+ *     // ... later
  *     off();
  *
- * Если отписка не нужна — возвращаемое значение можно просто
- * игнорировать.
+ * If unsubscribing is not needed — the return value can simply
+ * be ignored.
  *
  * ============================================================
- * ПРИМЕРЫ
+ * EXAMPLES
  * ============================================================
  *
  *     import { qs, qsa, on, delegate } from '../core/dom.js';
  *
- *     // Один элемент
+ *     // One element
  *     const cart = qs( '#shoppingCart' );
  *
- *     // Массив всех элементов
+ *     // Array of all elements
  *     qsa( '.shoppingCartAmountProduct' ).forEach( input => { ... } );
  *
- *     // Делегированный обработчик клика по кнопке удаления
+ *     // Delegated click handler for the remove button
  *     delegate( document, 'click', '.deleteProduct', ( e, btn ) => {
  *         const id = btn.dataset.productid;
  *     });
  *
- *     // Обычный обработчик
+ *     // Regular handler
  *     on( window, 'resize', () => { ... } );
  */
 
 'use strict';
 
 /**
- * querySelector — короткая обёртка.
+ * querySelector — a short wrapper.
  *
- * Возвращает первый найденный элемент или null. Если контекст
- * поиска не передан или равен null — возвращает null, не бросая
- * исключение.
+ * Returns the first found element or null. If the search
+ * context is not passed or is null — returns null without throwing
+ * an exception.
  *
- * @param  {string}           selector             — CSS-селектор
- * @param  {Element|Document} [context=document]   — контекст поиска
+ * @param  {string}           selector             — CSS selector
+ * @param  {Element|Document} [context=document]   — search context
  * @return {Element|null}
  */
 export const qs = ( selector, context = document ) => {
@@ -89,15 +88,15 @@ export const qs = ( selector, context = document ) => {
 };
 
 /**
- * querySelectorAll — короткая обёртка.
+ * querySelectorAll — a short wrapper.
  *
- * Всегда возвращает настоящий массив (не NodeList), чтобы
- * работали методы .forEach(), .map(), .filter() и т.д.
- * Если контекст поиска не передан или равен null — возвращает
- * пустой массив.
+ * Always returns a real array (not a NodeList), so that
+ * .forEach(), .map(), .filter() etc. work.
+ * If the search context is not passed or is null — returns
+ * an empty array.
  *
- * @param  {string}           selector             — CSS-селектор
- * @param  {Element|Document} [context=document]   — контекст поиска
+ * @param  {string}           selector             — CSS selector
+ * @param  {Element|Document} [context=document]   — search context
  * @return {Element[]}
  */
 export const qsa = ( selector, context = document ) => {
@@ -110,17 +109,17 @@ export const qsa = ( selector, context = document ) => {
 };
 
 /**
- * Навешивает обычный обработчик события.
+ * Attaches a regular event handler.
  *
- * Отличие от нативного addEventListener:
- *   - если target не передан — тихо игнорируем (не бросаем ошибку);
- *   - возвращает функцию, вызов которой снимает обработчик.
+ * Difference from the native addEventListener:
+ *   - if target is not passed — silently ignore it (do not throw);
+ *   - returns a function that removes the handler when called.
  *
- * @param  {EventTarget}     target              — элемент, окно или document
- * @param  {string}          event               — имя события ('click', 'input', ...)
- * @param  {Function}        handler             — обработчик
- * @param  {Object|boolean}  [options={}]        — опции addEventListener
- * @return {Function} Функция отписки (вызов снимает обработчик)
+ * @param  {EventTarget}     target              — element, window or document
+ * @param  {string}          event               — event name ('click', 'input', ...)
+ * @param  {Function}        handler             — handler
+ * @param  {Object|boolean}  [options={}]        — addEventListener options
+ * @return {Function} Unsubscribe function (calling it removes the handler)
  */
 export const on = ( target, event, handler, options = {} ) => {
 
@@ -136,21 +135,21 @@ export const on = ( target, event, handler, options = {} ) => {
 };
 
 /**
- * Делегированный обработчик события.
+ * Delegated event handler.
  *
- * Позволяет навесить один обработчик на контейнер и реагировать
- * на события от динамически добавляемых элементов. Внутри
- * обработчика `this` — найденный элемент, совпавший с селектором.
+ * Lets you attach one handler to a container and react
+ * to events from dynamically added elements. Inside
+ * the handler `this` is the found element matching the selector.
  *
- * Возвращает функцию отписки. Внутренняя обёртка запоминается
- * в замыкании, поэтому removeEventListener вызывается именно
- * для того обработчика, который был добавлен.
+ * Returns an unsubscribe function. The inner wrapper is kept
+ * in a closure, so removeEventListener is called exactly
+ * for the handler that was added.
  *
- * @param  {EventTarget} target    — контейнер, на который вешается обработчик
- * @param  {string}      event     — имя события
- * @param  {string}      selector  — CSS-селектор для делегирования
- * @param  {Function}    handler   — обработчик ( event, element )
- * @return {Function} Функция отписки
+ * @param  {EventTarget} target    — container the handler is attached to
+ * @param  {string}      event     — event name
+ * @param  {string}      selector  — CSS selector for delegation
+ * @param  {Function}    handler   — handler ( event, element )
+ * @return {Function} Unsubscribe function
  */
 export const delegate = ( target, event, selector, handler ) => {
 
@@ -160,11 +159,11 @@ export const delegate = ( target, event, selector, handler ) => {
 
     const wrapper = ( event ) => {
 
-        // Ищем ближайший элемент, совпадающий с селектором
+        // Find the closest element matching the selector
         const element = event.target.closest( selector );
 
-        // Проверяем, что элемент действительно внутри target,
-        // а не «пролетел» через границы (например, из другого виджета)
+        // Make sure the element is really inside target
+        // and did not "fly" across boundaries (for example, from another widget)
         if ( element && target.contains( element ) ) {
             handler.call( element, event, element );
         }

@@ -1,40 +1,39 @@
 <?php
 /**
- * Получение отсортированного списка товаров каталога
+ * Getting a sorted list of catalog products
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * Каталог на сайте → страница категории → сортировка товаров
- * URL: /catalog/категория/
+ * WHERE TO TEST:
+ * Catalog on the site → category page → product sorting
+ * URL: /catalog/category/
  * 
- * ЧТО ДЕЛАЕТ:
- * Возвращает объект WP_Query с товарами, отсортированными по дате, имени или цене
+ * WHAT IT DOES:
+ * Returns a WP_Query object with products sorted by date, name or price
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 /**
- * ФУНКЦИЯ: Получение отсортированного списка товаров
+ * FUNCTION: Get a sorted list of products
  * 
- * @param string $typeSort   — тип сортировки: 'date', 'name', 'price'
- * @param string $howSorting — направление: 'ASC' или 'DESC'
- * @param int    $catId      — ID категории каталога
- * @param int    $pageNum    — номер страницы пагинации
+ * @param string $typeSort   — sort type: 'date', 'name', 'price'
+ * @param string $howSorting — direction: 'ASC' or 'DESC'
+ * @param int    $catId      — catalog category ID
+ * @param int    $pageNum    — pagination page number
  * 
- * @return WP_Query Объект с результатами
+ * @return WP_Query Object with the results
  */
-function get_sort_products( $typeSort, $howSorting, $catId, $pageNum ) {
+function as_get_sort_products( $typeSort, $howSorting, $catId, $pageNum ) {
     
     $post_type = 'product';
     $taxonomy = 'catalog';
     
-    // Валидация
+    // Validation
     $catId = absint( $catId );
     $pageNum = absint( $pageNum );
     
@@ -42,7 +41,7 @@ function get_sort_products( $typeSort, $howSorting, $catId, $pageNum ) {
         $pageNum = 1;
     }
     
-    // Валидация направления сортировки
+    // Sort direction validation
     $howSorting = strtoupper( $howSorting );
     
     if ( ! in_array( $howSorting, array( 'ASC', 'DESC' ), true ) ) {
@@ -64,12 +63,12 @@ function get_sort_products( $typeSort, $howSorting, $catId, $pageNum ) {
         'order'          => $howSorting,
     );
     
-    // Валидация типа сортировки
+    // Sort type validation
     switch($typeSort){
 	    
 	    case "date":
-	        // Сортировка по дате + ID как вторичный критерий.
-	        // Фиксирует порядок товаров с одинаковой датой добавления.
+	        // Sort by date + ID as a secondary criterion.
+	        // Keeps the order of products added at the same time stable.
 	        $arg["orderby"] = array(
 	            'date' => $howSorting,
 	            'ID'   => 'DESC',
@@ -77,7 +76,7 @@ function get_sort_products( $typeSort, $howSorting, $catId, $pageNum ) {
 	        break;
 	        
 	    case "name":
-	        // Сортировка по названию + ID как вторичный критерий.
+	        // Sort by name + ID as a secondary criterion.
 	        $arg["orderby"] = array(
 	            'title' => $howSorting,
 	            'ID'   => 'DESC',
@@ -85,7 +84,7 @@ function get_sort_products( $typeSort, $howSorting, $catId, $pageNum ) {
 	        break;
 	        
 	    case "price":
-	        // Сортировка по цене. Направление приходит из общего 'order'.
+	        // Sort by price. The direction comes from the shared 'order'.
 	        $arg["orderby"]  = "meta_value_num";
 	        $arg['meta_key'] = '_price';
 	        break;

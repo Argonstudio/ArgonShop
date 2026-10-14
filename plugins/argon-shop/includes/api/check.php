@@ -1,13 +1,13 @@
 <?php
 
-//Проверяем принадлежность поста к категории указанной таксономии и её дочерним терминам
-//Вызовы в цикле post_in_term([37,1], "category") можно делать не указывая ID поста
+// Checks whether a post belongs to a term of the given taxonomy or to its child terms
+// Inside the loop as_post_in_term([37,1], "category") can be called without a post ID
 
-//Первым параметром можно передавать один термин 
-//    post_in_term(37, "category", $queried_object->ID) 
-//    или несколько post_in_term([37,1], "category", $queried_object->ID)
+// The first parameter can be a single term
+//    as_post_in_term(37, "category", $queried_object->ID) 
+//    or several: as_post_in_term([37,1], "category", $queried_object->ID)
 
-function post_in_term( $cats, $tax, $post ){
+function as_post_in_term( $cats, $tax, $post ){
     //$_post = null
 	foreach ( (array) $cats as $cat ) {
 	    

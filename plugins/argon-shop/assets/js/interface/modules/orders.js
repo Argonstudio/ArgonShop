@@ -1,46 +1,44 @@
 /**
- * ArgonShop — фильтр заказов в личном кабинете.
+ * ArgonShop — order filter in the customer account.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Обрабатывает изменение выпадающего списка статусов в разделе
- * заказов личного кабинета. При выборе нового статуса отправляется
- * AJAX-запрос, а сервер возвращает HTML с отфильтрованной таблицей
- * заказов. Результат подставляется в блок без перезагрузки страницы.
+ * Handles changes of the status dropdown in the orders section
+ * of the customer account. When a new status is selected, an
+ * AJAX request is sent and the server returns HTML with the filtered
+ * orders table. The result is inserted into the block without a page reload.
  *
  * ============================================================
- * DOM-ЭЛЕМЕНТЫ
+ * DOM ELEMENTS
  * ============================================================
  *
  * .as-orderCabinet-filterStatus
- *   Селект фильтра. Содержит:
- *     data-userid — ID пользователя.
- *   Значение (value) — ID статусов через запятую ("1,2,3")
- *   либо пустая строка, если нужно показать все.
+ *   Filter select. Contains:
+ *     data-userid — user ID.
+ *   Value — comma-separated status IDs ("1,2,3")
+ *   or an empty string to show all orders.
  *
  * .as-ordersCabinet-block
- *   Контейнер, в который выводится HTML-таблица заказов.
+ *   Container that receives the orders HTML table.
  *
  * ============================================================
- * AJAX-ДЕЙСТВИЕ
+ * AJAX ACTION
  * ============================================================
  *
  * ordersFiltersStatus
- *   Принимает: userID, status.
- *   Возвращает HTML-таблицу заказов.
+ *   Accepts: userID, status.
+ *   Returns the orders HTML table.
  *
- *   Nonce к этому действию не добавляется — оно указано в
- *   config.skipNonceActions. Это сделано осознанно: смена email
- *   в ЛК инвалидирует nonce, а фильтр должен продолжать работать.
+ *   The nonce is added automatically, as for all other actions
+ *   (config.skipNonceActions is empty).
  *
  * ============================================================
- * ИСПОЛЬЗОВАНИЕ
+ * USAGE
  * ============================================================
  *
  *     import { arsOrders } from './modules/orders.js';
@@ -50,10 +48,11 @@
 'use strict';
 
 import { arsApi }      from '../core/api.js';
+import { t }            from '../core/config.js';
 import { qs, on }      from '../../shared/dom.js';
 
 /**
- * Модуль фильтра заказов в ЛК.
+ * Account order filter module.
  */
 class ArsOrders {
 
@@ -61,7 +60,7 @@ class ArsOrders {
     #initialized = false;
 
     /**
-     * Инициализация. Безопасна для повторного вызова.
+     * Initialization. Safe to call repeatedly.
      *
      * @return {void}
      */
@@ -83,9 +82,9 @@ class ArsOrders {
     }
 
     /**
-     * Отправляет запрос фильтрации и обновляет таблицу заказов.
+     * Sends the filter request and updates the orders table.
      *
-     * @param  {HTMLSelectElement} select — селект фильтра
+     * @param  {HTMLSelectElement} select — filter select
      * @return {Promise<void>}
      */
     async #applyFilter( select ) {
@@ -108,13 +107,13 @@ class ArsOrders {
             blockResult.innerHTML = html;
 
         } catch {
-            blockResult.innerHTML = 'Ошибка на сервере';
+            blockResult.innerHTML = t( 'serverError' );
         }
     }
 }
 
 /**
- * Готовый синглтон модуля фильтра заказов.
+ * Ready-made singleton of the order filter module.
  *
  * @type {ArsOrders}
  */

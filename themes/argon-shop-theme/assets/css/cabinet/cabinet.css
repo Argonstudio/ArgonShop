@@ -2,7 +2,7 @@
     border: 1px solid #ea6d8e;
 }
 
-/* таблицы(поля с данными пользователя)*/
+/* tables (fields with user data) */
 
 #block_cabinetAccount table{
     width: 80%;
@@ -47,15 +47,15 @@
 }
 
 
-/* Специфические стили для кнопки в состоянии DISABLED */
+/* Specific styles for the button in the DISABLED state */
 #block_cabinetAccount .block-accountSave #accountSaveButton:disabled,
 #block_cabinetAccount .block-accountSave #accountSaveButton[disabled] {
-    background-color: #cccccc !important; /* Серый цвет вместо цветного */
-    color: #888888 !important;            /* Блеклый цвет текста */
-    opacity: 0.6;                         /* Полупрозрачность */
-    cursor: not-allowed !important;       /* Курсор запрета (красный перечеркнутый круг) */
-    box-shadow: none !important;          /* Убираем тени */
-    transform: none !important;           /* Отменяем любые эффекты смещения */
+    background-color: #cccccc !important; /* Gray instead of a color */
+    color: #888888 !important;            /* Faded text color */
+    opacity: 0.6;                         /* Semi-transparency */
+    cursor: not-allowed !important;       /* "Not allowed" cursor (red crossed circle) */
+    box-shadow: none !important;          /* Remove shadows */
+    transform: none !important;           /* Cancel any shift effects */
 }
 
 #block_cabinetAccount .block-accountSave .accountResult{

@@ -1,39 +1,38 @@
 /**
- * ArgonShop — утилиты форматирования чисел.
+ * ArgonShop — number formatting utilities.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Единое место для форматирования числовых значений, которые
- * выводятся в интерфейс: цена, вес, количество товара.
+ * A single place for formatting numeric values that
+ * are shown in the interface: price, weight, product quantity.
  *
- * В старом коде на jQuery каждая функция делала это по-своему:
- * где-то через Number.isInteger(), где-то через parseFloat(),
- * где-то через .toFixed(2) без проверок. Это приводило к тому,
- * что одно и то же число выводилось как "500", "500.00" или
- * "500,00" в зависимости от места.
+ * In the old jQuery code each function did it its own way:
+ * somewhere via Number.isInteger(), somewhere via parseFloat(),
+ * somewhere via .toFixed(2) without checks. As a result
+ * the same number was shown as "500", "500.00" or
+ * "500,00" depending on the place.
  *
- * Здесь одна точка правды:
- *   - целые числа печатаются без дробной части ("500")
- *   - дробные — с двумя знаками после точки ("500.25")
- *   - пустые и некорректные значения превращаются в 0
- *
- * ============================================================
- * ЭКСПОРТ
- * ============================================================
- *
- * formatPrice( value )  — форматирование цены
- * formatWeight( value ) — форматирование веса
- * formatAmount( value ) — форматирование количества
- * parseNumber( value )  — безопасное преобразование строки в число
+ * Here is a single source of truth:
+ *   - integers are printed without a fractional part ("500")
+ *   - fractions — with two digits after the point ("500.25")
+ *   - empty and invalid values become 0
  *
  * ============================================================
- * ПРИМЕРЫ
+ * EXPORTS
+ * ============================================================
+ *
+ * formatPrice( value )  — price formatting
+ * formatWeight( value ) — weight formatting
+ * formatAmount( value ) — quantity formatting
+ * parseNumber( value )  — safe string-to-number conversion
+ *
+ * ============================================================
+ * EXAMPLES
  * ============================================================
  *
  *     import { formatPrice, parseNumber } from '../core/format.js';
@@ -52,65 +51,77 @@
 'use strict';
 
 /**
- * Безопасно преобразует значение в число.
- *
- * Понимает:
- *   - числа (500, 500.25)
- *   - строки с точкой ("500.25")
- *   - строки с запятой ("500,25")
- *   - строки с пробелами ("5 000,50")
- *   - null, undefined, NaN, пустые строки → 0
- *
- * @param  {number|string|null|undefined} value — исходное значение
- * @return {number} Число; 0, если преобразование невозможно
+ * Parse a complete human-entered number; malformed/non-finite values return 0.
+ * A single separator is decimal; repeated separators must group three digits.
+ * With both separators, the last is decimal. Scientific notation is supported.
+ * Keep this contract in sync with as_to_float() and tests/number-cases.json.
+ * @since 1.1.0 Strict whole-number parsing shared with as_to_float().
  */
 export const parseNumber = ( value ) => {
-
-    if ( value === null || value === undefined ) {
-        return 0;
-    }
-
     if ( typeof value === 'number' ) {
         return Number.isFinite( value ) ? value : 0;
     }
-
-    // Убираем пробелы (в том числе неразрывные) и заменяем запятую на точку
-    const normalized = String( value )
-        .replace( /\s+/g, '' )
-        .replace( ',', '.' );
-
-    const parsed = parseFloat( normalized );
-
-    return Number.isFinite( parsed ) ? parsed : 0;
+    if ( typeof value !== 'string' ) {
+        return 0;
+    }
+    const text = value.replace( /[\u0009-\u000D\u0020\u00A0\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000\uFEFF]+/g, '' );
+    const parts = /^([+-]?)([0-9.,]+)([eE][+-]?[0-9]+)?$/.exec( text );
+    if ( ! parts || parts[0] !== text ) {
+        return 0;
+    }
+    let mantissa = parts[2];
+    const commas = ( mantissa.match( /,/g ) || [] ).length;
+    const dots = ( mantissa.match( /\./g ) || [] ).length;
+    if ( commas && dots ) {
+        const decimal = mantissa.lastIndexOf( ',' ) > mantissa.lastIndexOf( '.' ) ? ',' : '.';
+        const group = decimal === ',' ? '.' : ',';
+        const pos = mantissa.lastIndexOf( decimal );
+        const integer = mantissa.slice( 0, pos );
+        const fraction = mantissa.slice( pos + 1 );
+        const grouped = group === ',' ? /^[0-9]{1,3}(?:,[0-9]{3})+$/ : /^[0-9]{1,3}(?:\.[0-9]{3})+$/;
+        if ( ! grouped.test( integer ) || ! /^[0-9]*$/.test( fraction ) ) {
+            return 0;
+        }
+        mantissa = integer.split( group ).join( '' ) + '.' + fraction;
+    } else if ( commas > 1 || dots > 1 ) {
+        const group = commas > 1 ? ',' : '.';
+        const grouped = group === ',' ? /^[0-9]{1,3}(?:,[0-9]{3})+$/ : /^[0-9]{1,3}(?:\.[0-9]{3})+$/;
+        if ( ! grouped.test( mantissa ) ) {
+            return 0;
+        }
+        mantissa = mantissa.split( group ).join( '' );
+    } else {
+        mantissa = mantissa.replace( ',', '.' );
+    }
+    const normalized = parts[1] + mantissa + ( parts[3] || '' );
+    if ( ! /^[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?$/.test( normalized ) ) {
+        return 0;
+    }
+    const number = Number( normalized );
+    return Number.isFinite( number ) ? number : 0;
 };
 
 /**
- * Форматирует цену для вывода в интерфейс.
+ * Formats a price for the interface.
  *
- * Целые числа печатаются без десятичной части, дробные — с двумя
- * знаками после точки.
- *
- * @param  {number|string|null|undefined} value — значение цены
- * @return {string} Готовая строка для вставки в DOM
+ * @param  {number|string|null|undefined} value — price value
+ * @return {string} Ready string for inserting into the DOM
  */
 export const formatPrice = ( value ) => {
-
     const num = parseNumber( value );
 
-    return Number.isInteger( num )
-        ? String( num )
-        : num.toFixed( 2 );
+    return String( Number( num.toFixed( 2 ) ) );
 };
 
 /**
- * Форматирует вес для вывода в интерфейс.
+ * Formats a weight for the interface.
  *
- * Логика идентична formatPrice, но вынесена отдельно, чтобы
- * при необходимости (например, добавить единицу измерения)
- * можно было менять поведение независимо.
+ * The logic is identical to formatPrice but kept separate so that
+ * the behaviour can be changed independently if needed
+ * (for example, to add a unit of measure).
  *
- * @param  {number|string|null|undefined} value — значение веса
- * @return {string} Готовая строка для вставки в DOM
+ * @param  {number|string|null|undefined} value — weight value
+ * @return {string} Ready string for inserting into the DOM
  */
 export const formatWeight = ( value ) => {
 
@@ -122,12 +133,12 @@ export const formatWeight = ( value ) => {
 };
 
 /**
- * Форматирует количество товара для вывода в интерфейс.
+ * Formats a product quantity for the interface.
  *
- * Количество всегда целое, поэтому используется Math.round.
+ * The quantity is always an integer, so Math.round is used.
  *
- * @param  {number|string|null|undefined} value — значение количества
- * @return {string} Готовая строка для вставки в DOM
+ * @param  {number|string|null|undefined} value — quantity value
+ * @return {string} Ready string for inserting into the DOM
  */
 export const formatAmount = ( value ) => {
 

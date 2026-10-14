@@ -1,51 +1,50 @@
 <?php
 /**
- * Виджет корзины — отображение количества и стоимости товаров
+ * Cart widget — shows the number and cost of products
  * 
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * На всех страницах сайта (кроме страницы корзины) — виджет корзины в шапке или сайдбаре.
+ * WHERE TO TEST:
+ * On every page of the site (except the cart page) — the cart widget in the header or sidebar.
  * 
- * ЧТО ДЕЛАЕТ:
- * 1. Получает данные корзины из кук
- * 2. Выводит количество товаров и общую стоимость
- * 3. Ссылается на страницу корзины
+ * WHAT IT DOES:
+ * 1. Gets the cart data from the cookie
+ * 2. Outputs the number of products and the total cost
+ * 3. Links to the cart page
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 /**
- * ФУНКЦИЯ: Вывод виджета корзины
+ * FUNCTION: Output the cart widget
  * 
- * ГДЕ ВЫЗЫВАЕТСЯ: В шаблоне темы (например, в header.php)
- * КАК ВЫЗВАТЬ: as_infocart();
+ * CALLED FROM: A theme template (for example, header.php)
+ * HOW TO CALL: as_infocart();
  */
 function as_infocart() {
     
-    // Получаем ID страницы, товара или категории которую смотрим
-    // Вернёт 0, если для просматриваемой страницы не предусмотрен ID
+    // Get the ID of the page, product or category being viewed
+    // Returns 0 if the viewed page has no ID
     $pageID = get_queried_object_id();
     
-    // Не показываем виджет на странице корзины
-    if ( $pageID !== get_cartPageID() ) {
+    // Do not show the widget on the cart page
+    if ( $pageID !== as_get_cartPageID() ) {
         
-        $productsShoppingCart = getCookie( 'productsShoppingCart' );
+        $productsShoppingCart = as_getCookie( 'productsShoppingCart' );
         
-        // Проверяем, что куки содержат массив
+        // Make sure the cookie contains an array
         if ( ! is_array( $productsShoppingCart ) ) {
             $productsShoppingCart = array();
         }
         
-        $dataCart = getDataCart( $productsShoppingCart );
+        $dataCart = as_getDataCart( $productsShoppingCart );
         
-        // Экранирование URL корзины
-        $cart_url = esc_url( get_cartPageURL() );
+        // Escape the cart URL
+        $cart_url = esc_url( as_get_cartPageURL() );
         
         ?>
         <a href="<?php echo $cart_url; ?>">
@@ -53,14 +52,14 @@ function as_infocart() {
         
         if ( $dataCart ) {
             
-            // Экранирование данных
+            // Data escaping
             $product_amount = isset( $dataCart['productAmountCart'] ) ? esc_html( $dataCart['productAmountCart'] ) : '0';
             $total_price = isset( $dataCart['totalPrice'] ) ? esc_html( $dataCart['totalPrice'] ) : '0';
             
             ?>
             <div class="viewBlock-shoppingCart">
                 <div class="viewBlock-amountProducts"><span class="viewBlock-productsStock"><?php echo $product_amount; ?></span></div>
-                <div class="viewBlock-priceProducts"><span><?php echo $total_price; ?></span> Р </div>
+                <div class="viewBlock-priceProducts"><?php echo as_price_html( '<span>' . $total_price . '</span>' ); ?> </div>
             </div>
             <?php
             
@@ -68,7 +67,7 @@ function as_infocart() {
             ?>
             <div class="viewBlock-shoppingCart">
                 <div class="viewBlock-amountProducts"><span></span></div>
-                <div class="viewBlock-priceProducts" style="display:none"><span></span> Р </div>
+                <div class="viewBlock-priceProducts" style="display:none"><?php echo as_price_html( '<span></span>' ); ?> </div>
             </div>
             <?php
         }

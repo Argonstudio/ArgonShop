@@ -1,12 +1,12 @@
 <?php 
 	/*
-	Template name: Карта AJAX
+	Template name: Map (AJAX)
 	*/
 
 ?>
 
 <iframe 
-  src="https://www.google.com/maps?q=%D0%A6%D0%B0%D1%80%D1%8C-%D0%BF%D1%83%D1%88%D0%BA%D0%B0%2C%20%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0&output=embed"
+  src="https://www.google.com/maps?q=New%20York%20City%20Hall%2C%20New%20York%2C%20NY%2010007&hl=en&output=embed"
   width="100%" 
   height="450" 
   frameborder="0" 
@@ -14,5 +14,5 @@
   allowfullscreen 
   loading="lazy" 
   referrerpolicy="no-referrer-when-downgrade"
-  title="Царь-пушка на Google Maps">
+  title="<?php esc_attr_e( 'New York City Hall on Google Maps', 'argon-shop-theme' ); ?>">
 </iframe>

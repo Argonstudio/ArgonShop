@@ -1,18 +1,17 @@
 <?php
 /**
- * История просмотров товаров (AJAX)
+ * Product view history (AJAX)
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * Страница товара → просмотр товара → блок "Вы смотрели"
+ * WHERE TO TEST:
+ * Product page → view a product → "You viewed" block
  * 
- * ЧТО ДЕЛАЕТ:
- * 1. Сохраняет ID просмотренного товара в куки AS_History
- * 2. Убирает дубликаты
- * 3. Новые товары добавляет в начало списка
+ * WHAT IT DOES:
+ * 1. Saves the ID of the viewed product in the AS_History cookie
+ * 2. Removes duplicates
+ * 3. Adds new products to the beginning of the list
  * 
  */
 
@@ -20,45 +19,45 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Регистрация AJAX-обработчиков
-add_action( 'wp_ajax_addCookieHistory_history', 'addCookieHistory_history_callback' );
-add_action( 'wp_ajax_nopriv_addCookieHistory_history', 'addCookieHistory_history_callback' );
+// AJAX handler registration
+add_action( 'wp_ajax_addCookieHistory_history', 'as_addCookieHistory_history_callback' );
+add_action( 'wp_ajax_nopriv_addCookieHistory_history', 'as_addCookieHistory_history_callback' );
 
 /**
- * ОБРАБОТЧИК: Добавление товара в историю просмотров
+ * HANDLER: Add a product to the view history
  * 
- * ГДЕ: Страница товара → при загрузке
- * ЧТО ДЕЛАЕТ:
- * 1. Получает ID товара из запроса
- * 2. Читает текущую историю из куки
- * 3. Удаляет дубликаты
- * 4. Добавляет ID в начало
- * 5. Сохраняет куки
+ * WHERE: Product page → on load
+ * WHAT IT DOES:
+ * 1. Gets the product ID from the request
+ * 2. Reads the current history from the cookie
+ * 3. Removes duplicates
+ * 4. Adds the ID to the beginning
+ * 5. Saves the cookie
  */
-function addCookieHistory_history_callback() {
+function as_addCookieHistory_history_callback() {
     
-    // Проверка nonce
+    // Nonce check
     check_ajax_referer( 'argon_shop_nonce', 'nonce' );
     
-    // Валидация productID
+    // productID validation
     $productID = isset( $_POST['productID'] ) ? absint( $_POST['productID'] ) : 0;
     
     if ( 0 === $productID ) {
         wp_die();
     }
     
-    // Проверяем, что товар существует
+    // Make sure the product exists
     if ( ! get_post( $productID ) ) {
         wp_die();
     }
     
     $ASHistory = array();
     
-    $cookie_data = getCookie( 'AS_History' );
+    $cookie_data = as_getCookie( 'AS_History' );
     
     if ( is_array( $cookie_data ) && ! empty( $cookie_data ) ) {
         
-        // Убираем дубликаты и валидируем
+        // Remove duplicates and validate
         $cleanHistory = array();
         
         foreach ( $cookie_data as $value ) {
@@ -75,23 +74,23 @@ function addCookieHistory_history_callback() {
         $ASHistory = $cleanHistory;
     }
     
-    // Добавляем новый товар в начало
+    // Add the new product to the beginning
     array_unshift( $ASHistory, $productID );
     
-    // Ограничиваем длину истории (защита от DoS)
+    // Limit the history length (DoS protection)
     if ( count( $ASHistory ) > 100 ) {
         $ASHistory = array_slice( $ASHistory, 0, 100 );
     }
     
     $ASHistory = wp_json_encode( $ASHistory );
     
-    // PHP 8.5: setcookie() с массивом опций
+    // PHP 8.5: setcookie() with an options array
     $cookie_options = array(
         'expires'  => time() + 1209600,
         'path'     => COOKIEPATH ? COOKIEPATH : '/',
         'domain'   => COOKIE_DOMAIN ? COOKIE_DOMAIN : '',
         'secure'   => is_ssl(),
-        'httponly' => false, // Должно быть false — читается из JS
+        'httponly' => false, // Must be false — it is read from JS
         'samesite' => 'Lax',
     );
     

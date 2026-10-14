@@ -1,46 +1,45 @@
 <?php
 /**
- * История просмотренных товаров
+ * Viewed products history
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * Страница товара → просмотр товара → блок "Вы смотрели"
- * Страница "История просмотров" (/history/)
+ * WHERE TO TEST:
+ * Product page → view a product → "You viewed" block
+ * "View history" page (/history/)
  * 
- * ЧТО ДЕЛАЕТ:
- * Возвращает список просмотренных товаров из кук AS_History
+ * WHAT IT DOES:
+ * Returns the list of viewed products from the AS_History cookie
  * 
  * PHP 8.5:
- * - добавлена передача 'paged' и 'posts_per_page' в WP_Query
- * - это нужно для корректной работы пагинации
- * - защита от пустого массива
+ * - 'paged' and 'posts_per_page' are now passed to WP_Query
+ * - this is needed for pagination to work correctly
+ * - protection against an empty array
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 /**
- * ФУНКЦИЯ: Получение просмотренных товаров
+ * FUNCTION: Get viewed products
  * 
- * @param int|string $count — сколько товаров вернуть (по умолчанию "all" — все)
+ * @param int|string $count — how many products to return (default "all")
  * 
- * @return WP_Query|false — Объект с товарами или false, если истории нет
+ * @return WP_Query|false — Object with products or false if there is no history
  */
-function get_history_products( $count = 'all' ) {
+function as_get_history_products( $count = 'all' ) {
     
     $post_type = 'product';
-    $history = getCookie( 'AS_History' );
+    $history = as_getCookie( 'AS_History' );
     
     if ( ! $history || ! is_array( $history ) ) {
         return false;
     }
     
-    // Очищаем массив от нечисловых значений
+    // Remove non-numeric values from the array
     $history = array_map( 'absint', $history );
     $history = array_filter( $history );
     $history = array_values( $history );
@@ -50,12 +49,12 @@ function get_history_products( $count = 'all' ) {
     }
     
     // ============================================
-    // ПАГИНАЦИЯ
+    // PAGINATION
     // ============================================
     // 
-    // PHP 8.5: получаем текущую страницу пагинации из глобального запроса.
-    // WordPress использует либо 'paged' (для архивов), либо 'page' 
-    // (для статических страниц с пагинацией).
+    // PHP 8.5: get the current pagination page from the global query.
+    // WordPress uses either 'paged' (for archives) or 'page'
+    // (for static pages with pagination).
     
     $paged = 1;
     
@@ -76,7 +75,7 @@ function get_history_products( $count = 'all' ) {
         }
     }
     
-    // Количество товаров на страницу
+    // Products per page
     if ( $count !== 'all' ) {
         
         $count = absint( $count );
@@ -85,7 +84,7 @@ function get_history_products( $count = 'all' ) {
             $history = array_slice( $history, 0, $count );
         }
         
-        // При ограничении — одна страница
+        // With a limit — a single page
         $posts_per_page = $count > 0 ? $count : 12;
         $paged = 1;
         
@@ -99,7 +98,7 @@ function get_history_products( $count = 'all' ) {
     }
     
     // ============================================
-    // ЗАПРОС
+    // QUERY
     // ============================================
     
     $arg = array(

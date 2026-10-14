@@ -1,49 +1,48 @@
 /**
- * ArgonShop — стили метабокса «Галерея» на странице товара.
+ * ArgonShop — styles of the "Gallery" meta box on the product page.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Оформляет метабокс галереи в админке WordPress:
- *   - сетку миниатюр;
- *   - кнопку удаления на каждой миниатюре;
- *   - кнопку «Добавить изображения»;
- *   - состояние перетаскивания (drag-and-drop через
- *     jQuery UI Sortable из ядра WordPress).
+ * Styles the gallery meta box in the WordPress admin:
+ *   - the thumbnail grid;
+ *   - the remove button on each thumbnail;
+ *   - the "Add images" button;
+ *   - the dragging state (drag-and-drop via
+ *     jQuery UI Sortable from WordPress core).
  *
- * Префикс классов — .ars-gallery-.
- *
- * ============================================================
- * РАСКЛАДКА И SORTABLE
- * ============================================================
- *
- * Миниатюры используют display: inline-table, а не flexbox
- * и не inline-block. Это принципиально: jQuery UI Sortable
- * изначально разрабатывался под table-модель и корректно
- * работает с inline-table. С flexbox swap не срабатывает,
- * с inline-block — «залипает» при перетаскивании.
- *
- * Параметры sortable в JS (tolerance: 'pointer',
- * containment: 'parent') рассчитаны именно на эту раскладку.
+ * Class prefix — .ars-gallery-.
  *
  * ============================================================
- * ЦВЕТА
+ * LAYOUT AND SORTABLE
  * ============================================================
  *
- * Стилистика стандартной админки WordPress:
- *   фон метабокса — #fff
- *   границы       — #c3c4c7 / #dcdcde
- *   акцент        — #2271b1 
- *   удаление      — #d63638 
+ * Thumbnails use display: inline-table, not flexbox
+ * and not inline-block. This matters: jQuery UI Sortable
+ * was originally designed for the table model and works
+ * correctly with inline-table. With flexbox the swap does not work,
+ * with inline-block it "sticks" while dragging.
+ *
+ * The sortable parameters in JS (tolerance: 'pointer',
+ * containment: 'parent') are designed for exactly this layout.
+ *
+ * ============================================================
+ * COLORS
+ * ============================================================
+ *
+ * The standard WordPress admin style:
+ *   meta box background — #fff
+ *   borders             — #c3c4c7 / #dcdcde
+ *   accent              — #2271b1
+ *   remove              — #d63638
  */
 
 /* ============================================================
-   КОНТЕЙНЕР
+   CONTAINER
    ============================================================ */
 
 .ars-gallery {
@@ -58,12 +57,12 @@
 }
 
 /* ============================================================
-   МИНИАТЮРЫ
+   THUMBNAILS
    ============================================================
  *
- * display: inline-table — как в оригинальном плагине
- * ACF Photo Gallery Field. Даёт корректное поведение
- * jQuery UI Sortable с tolerance: 'pointer'.
+ * display: inline-table — as in the original
+ * ACF Photo Gallery Field plugin. Gives correct behaviour of
+ * jQuery UI Sortable with tolerance: 'pointer'.
  */
 
 .ars-gallery-item {
@@ -97,12 +96,12 @@
 }
 
 /* ============================================================
-   КНОПКА УДАЛЕНИЯ
+   REMOVE BUTTON
    ============================================================
  *
- * Круглая иконка крестика в правом верхнем углу миниатюры.
- * Показывается всегда, чтобы пользователь сразу видел
- * возможность удаления.
+ * A round cross icon in the top right corner of the thumbnail.
+ * Always shown, so that the user immediately sees
+ * that removal is possible.
  */
 
 .ars-gallery-remove {
@@ -145,15 +144,15 @@
 }
 
 /* ============================================================
-   СОСТОЯНИЕ ПЕРЕТАСКИВАНИЯ
+   DRAGGING STATE
    ============================================================
  *
- * Плейсхолдер — отдельный класс без .ars-gallery-item.
- * Так было в плагине-образце: placeholder существует как
- * самостоятельный элемент со своим размером и не путается
- * с перетаскиваемыми миниатюрами.
+ * The placeholder is a separate class without .ars-gallery-item.
+ * This is how the reference plugin did it: the placeholder exists as
+ * a standalone element with its own size and is not confused
+ * with the thumbnails being dragged.
  *
- * Размер меньше миниатюры — точка вставки явно видна.
+ * It is smaller than a thumbnail — the insertion point is clearly visible.
  */
 
 .ars-gallery-sortable-placeholder {
@@ -166,10 +165,10 @@
     box-sizing: border-box;
 }
 
-/* Перетаскиваемый helper — небольшая тень, чтобы визуально
- * «отрывался» от списка. Никаких pointer-events и
- * трансформаций: Sortable сам управляет позиционированием
- * helper'а, вмешательство даёт смещение относительно курсора. */
+/* The dragged helper — a small shadow so that it visually
+ * "lifts off" the list. No pointer-events and no
+ * transforms: Sortable positions the helper itself,
+ * interfering causes an offset relative to the cursor. */
 
 .ars-gallery-item.ui-sortable-helper {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -177,7 +176,7 @@
 }
 
 /* ============================================================
-   КНОПКА ДОБАВЛЕНИЯ
+   ADD BUTTON
    ============================================================ */
 
 .ars-gallery-add {
@@ -185,7 +184,7 @@
 }
 
 /* ============================================================
-   ПОДСКАЗКА
+   HINT
    ============================================================ */
 
 .ars-gallery-hint {

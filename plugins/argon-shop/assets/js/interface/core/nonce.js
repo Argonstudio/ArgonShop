@@ -1,58 +1,57 @@
 /**
- * ArgonShop — глобальный перехватчик AJAX-ответов для обновления nonce.
+ * ArgonShop — global AJAX response interceptor for updating the nonce.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * WordPress-сессии и nonce инвалидируются в двух ситуациях:
+ * WordPress sessions and nonces are invalidated in two situations:
  *
- * 1. wp_set_password() — при смене пароля в личном кабинете
- *    все активные сессии пользователя сбрасываются, и старый
- *    nonce становится недействительным.
+ * 1. wp_set_password() — when the password is changed in the account,
+ *    all active user sessions are reset and the old
+ *    nonce becomes invalid.
  *
- * 2. wp_signon() — при регистрации пользователя из формы заказа
- *    сессия тоже пересоздаётся.
+ * 2. wp_signon() — when a user registers from the order form,
+ *    the session is recreated as well.
  *
- * Если после этого пользователь продолжит работать на странице
- * (например, откроет корзину или поменяет фильтр заказов), его
- * AJAX-запросы будут отклонены сервером, потому что nonce устарел.
+ * If the user keeps working on the page after that
+ * (for example, opens the cart or changes the order filter), their
+ * AJAX requests will be rejected by the server because the nonce is stale.
  *
- * Решение: PHP-обработчики возвращают новый nonce в ответе
- * (поле newNonce). Перехватчик читает это поле и обновляет
- * nonce в config и в arsApi.
- *
- * ============================================================
- * КАК ЭТО РАБОТАЕТ
- * ============================================================
- *
- * Перехватывается XMLHttpRequest.prototype.send — это ловит все
- * AJAX-запросы страницы, в том числе сделанные через jQuery и
- * сторонние библиотеки. При каждом успешном ответе текст
- * пытается распарситься как JSON, и если в нём есть newNonce —
- * значение применяется.
- *
- * Этот перехват — глобальный, нужен один раз на страницу. Не
- * пытайтесь вызвать initNonceInterceptor() повторно.
- *
- * ВАЖНО: fetch() тоже покрывается, потому что при использовании
- * fetch поверх XMLHttpRequest (в браузерах без нативного fetch)
- * цепочка сохраняется. В современных браузерах fetch не идёт
- * через XHR, но все наши собственные запросы идут через
- * ArsApiClient, который сам проверяет newNonce в ответе.
+ * Solution: the PHP handlers return a new nonce in the response
+ * (the newNonce field). The interceptor reads this field and updates
+ * the nonce in config and in arsApi.
  *
  * ============================================================
- * ЭКСПОРТ
+ * HOW IT WORKS
  * ============================================================
  *
- * initNonceInterceptor() — включает перехватчик (вызывается один раз)
+ * XMLHttpRequest.prototype.send is intercepted — this catches all
+ * AJAX requests of the page, including those made via jQuery and
+ * third-party libraries. On every successful response the text
+ * is parsed as JSON, and if it contains newNonce —
+ * the value is applied.
+ *
+ * This interception is global and needed once per page. Do not
+ * try to call initNonceInterceptor() again.
+ *
+ * IMPORTANT: fetch() is covered too, because when fetch is used
+ * on top of XMLHttpRequest (in browsers without native fetch)
+ * the chain is kept. In modern browsers fetch does not go
+ * through XHR, but all our own requests go through
+ * ArsApiClient, which checks newNonce in the response itself.
  *
  * ============================================================
- * ПРИМЕР
+ * EXPORTS
+ * ============================================================
+ *
+ * initNonceInterceptor() — enables the interceptor (called once)
+ *
+ * ============================================================
+ * EXAMPLE
  * ============================================================
  *
  *     import { initNonceInterceptor } from './core/nonce.js';
@@ -65,14 +64,14 @@
 import { config } from './config.js';
 
 /**
- * Обновляет nonce в config и во всех местах, где он закэширован.
+ * Updates the nonce in config and everywhere it is cached.
  *
- * Функция сознательно не импортирует arsApi из api.js, чтобы
- * избежать циклической зависимости (api.js тоже может обновлять
- * nonce через свой метод setNonce). Поэтому здесь меняется только
- * config, а ArsApiClient читает nonce из config при каждом запросе.
+ * The function deliberately does not import arsApi from api.js to
+ * avoid a circular dependency (api.js can also update the
+ * nonce via its setNonce method). So only config is changed here,
+ * and ArsApiClient reads the nonce from config on every request.
  *
- * @param {string} newNonce — новое значение nonce от сервера
+ * @param {string} newNonce — new nonce value from the server
  * @return {void}
  */
 const applyNonce = ( newNonce ) => {
@@ -87,21 +86,21 @@ const applyNonce = ( newNonce ) => {
 
     config.nonce = newNonce;
 
-    // Событие для тех, кому нужно знать об обновлении
-    // (например, модуль ЛК может показать уведомление).
+    // An event for those who need to know about the update
+    // (for example, the account module may show a notice).
     window.dispatchEvent( new CustomEvent( 'ars:nonce-updated', {
         detail: { nonce: newNonce },
     }));
 };
 
 /**
- * Пытается извлечь newNonce из текста ответа.
+ * Tries to extract newNonce from the response text.
  *
- * Ответ может быть:
- *   - JSON-объектом с полем newNonce
- *   - обычным текстом (тогда newNonce искать негде)
+ * The response can be:
+ *   - a JSON object with the newNonce field
+ *   - plain text (then there is nowhere to look for newNonce)
  *
- * @param {string} responseText — сырой текст ответа
+ * @param {string} responseText — raw response text
  * @return {void}
  */
 const tryExtractNonce = ( responseText ) => {
@@ -110,8 +109,8 @@ const tryExtractNonce = ( responseText ) => {
         return;
     }
 
-    // Быстрая проверка: искать "newNonce" в тексте — дешевле, чем
-    // пытаться парсить JSON на каждом ответе (а их бывает много).
+    // Quick check: searching for "newNonce" in the text is cheaper than
+    // trying to parse JSON on every response (and there can be many).
     if ( responseText.indexOf( 'newNonce' ) === -1 ) {
         return;
     }
@@ -125,14 +124,14 @@ const tryExtractNonce = ( responseText ) => {
         }
 
     }catch(e) {
-        // Не JSON — ничего не делаем
+        // Not JSON — do nothing
     }
 };
 
 /**
- * Устанавливает перехватчик на XMLHttpRequest.
+ * Installs the interceptor on XMLHttpRequest.
  *
- * Идемпотентна: повторный вызов ничего не делает.
+ * Idempotent: a repeated call does nothing.
  *
  * @return {void}
  */
@@ -142,7 +141,7 @@ export const initNonceInterceptor = () => {
         return;
     }
 
-    // Защита от двойной инициализации
+    // Protection against double initialization
     if ( XMLHttpRequest.prototype.__arsNoncePatched ) {
         return;
     }
@@ -153,8 +152,8 @@ export const initNonceInterceptor = () => {
 
         this.addEventListener( 'load', () => {
 
-            // Читаем только успешные ответы (2xx) и редиректы
-            // с телом — остальные неинтересны
+            // Read only successful responses (2xx) and redirects
+            // with a body — the rest are not interesting
             if ( this.status < 200 || this.status >= 400 ) {
                 return;
             }
@@ -169,13 +168,13 @@ export const initNonceInterceptor = () => {
 };
 
 /**
- * Экспорт applyNonce для случаев, когда модуль получает nonce
- * не из XHR-перехвата, а из собственного fetch-ответа.
+ * Exports applyNonce for cases when a module gets the nonce
+ * not from the XHR interception but from its own fetch response.
  *
- * Пример: ArsApiClient.postJson() сам парсит JSON и может
- * вызвать applyNonce напрямую, не дожидаясь перехватчика.
+ * Example: ArsApiClient.postJson() parses the JSON itself and can
+ * call applyNonce directly without waiting for the interceptor.
  *
- * @param {string} newNonce — новое значение nonce
+ * @param {string} newNonce — new nonce value
  * @return {void}
  */
 export { applyNonce };

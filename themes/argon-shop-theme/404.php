@@ -1,36 +1,35 @@
 <?php
 /**
- * Шаблон страницы 404 (не найдено)
+ * 404 page template (not found)
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * Любой несуществующий URL
- * Пример: /net-takoj-stranitsy/
+ * WHERE TO TEST:
+ * Any non-existent URL
+ * Example: /no-such-page/
  * 
- * ЧТО ВЫВОДИТ:
- * 1. Хлебные крошки (через kama_breadcrumbs из плагина Argon Shop)
- * 2. Сообщение об ошибке 404
- * 3. Список возможных причин
- * 4. Ссылку на главную
+ * WHAT IT OUTPUTS:
+ * 1. Breadcrumbs (via kama_breadcrumbs from the Argon Shop plugin)
+ * 2. The 404 error message
+ * 3. A list of possible causes
+ * 4. A link to the home page
  * 
  * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  * 
- * В этом шаблоне используется функция плагина:
+ * This template uses the following plugin function:
  * 
- * - kama_breadcrumbs() → хлебные крошки (includes/interface/breadcrumbs.php)
+ * - as_kama_breadcrumbs() → breadcrumbs (includes/interface/breadcrumbs.php)
  * 
- * На странице 404 kama_breadcrumbs() выводит:
- * "Главная » Ошибка 404"
- * (см. строку '_404' => 'Ошибка 404' в локализации класса Kama_Breadcrumbs)
+ * On the 404 page as_kama_breadcrumbs() outputs:
+ * "Home » Error 404"
+ * (see the '_404' string in the Kama_Breadcrumbs class localization)
  * 
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -46,36 +45,36 @@ get_header(); ?>
             
             <?php 
             // ============================================
-            // ХЛЕБНЫЕ КРОШКИ
+            // BREADCRUMBS
             // ============================================
             // 
-            // Функция плагина Argon Shop (includes/interface/breadcrumbs.php)
-            // На странице 404 выведет: "Главная » Ошибка 404"
+            // Argon Shop plugin function (includes/interface/breadcrumbs.php)
+            // On the 404 page it outputs: "Home » Error 404"
             
-            if ( function_exists( 'kama_breadcrumbs' ) ) {
-                kama_breadcrumbs( '<span class="b"> » </span>' );
+            if ( function_exists( 'as_kama_breadcrumbs' ) ) {
+                AS_Kama_Breadcrumbs( '<span class="b"> » </span>' );
             }
             ?>
             
             <div class="page">
-                <h1 class="title">Данная страница не существует!</h1>
+                <h1 class="title"><?php esc_html_e( 'This page does not exist!', 'argon-shop-theme' ); ?></h1>
                 <article class="top_line">
                     <div class="text">
                         
-                        <p>К сожалению, запрашиваемой Вами страницы не существует на сайте.</p>
+                        <p><?php esc_html_e( 'Unfortunately, the page you requested does not exist on this site.', 'argon-shop-theme' ); ?></p>
                         
-                        <p>Возможно, это случилось по одной из этих причин:</p>
+                        <p><?php esc_html_e( 'This may have happened for one of these reasons:', 'argon-shop-theme' ); ?></p>
                         
                         <ul>
                             
-                            <li>Вы ошиблись при наборе адреса страницы (URL)</li>
-                            <li>перешли по «битой» (неработающей, неправильной) ссылке</li>
-                            <li>запрашиваемой страницы никогда не было на сайте или она была удалена</li>
+                            <li><?php esc_html_e( 'you mistyped the page address (URL)', 'argon-shop-theme' ); ?></li>
+                            <li><?php esc_html_e( 'you followed a broken (non-working or incorrect) link', 'argon-shop-theme' ); ?></li>
+                            <li><?php esc_html_e( 'the requested page never existed on the site or has been deleted', 'argon-shop-theme' ); ?></li>
                             
                         </ul>
                         
                         
-                        <p><a href="<?php echo esc_url( home_url( '/' ) ); ?>">« на главную страницу</a></p>
+                        <p><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( '« to the home page', 'argon-shop-theme' ); ?></a></p>
                     </div>
                 </article>
 

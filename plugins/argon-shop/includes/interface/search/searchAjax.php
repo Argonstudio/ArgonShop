@@ -1,60 +1,59 @@
 <?php
 /**
- * AJAX-поиск по сайту
+ * AJAX site search
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * 1. Поле поиска в шапке сайта → ввод текста → выпадающие результаты
- * 2. Страница поиска → строка поиска
- * 3. В панели администратора
+ * WHERE TO TEST:
+ * 1. Search field in the site header → typing text → dropdown results
+ * 2. Search page → search bar
+ * 3. In the admin panel
  * 
- * ЧТО ДЕЛАЕТ:
- * 1. Ищет товары по названию и артикулу
- * 2. Ищет категории каталога
- * 3. Ищет записи (акции, статьи, новости)
- * 4. Исправляет раскладку клавиатуры (ghjlern → продукт)
+ * WHAT IT DOES:
+ * 1. Searches products by name and SKU
+ * 2. Searches catalog categories
+ * 3. Searches posts (promotions, articles, news)
+ * 4. Fixes the keyboard layout depending on the site language (see searchLanguage.php)
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 /**
- * Регистрация AJAX-обработчиков
- * wp_ajax_ — для авторизованных
- * wp_ajax_nopriv_ — для гостей
+ * AJAX handler registration
+ * wp_ajax_ — for logged-in users
+ * wp_ajax_nopriv_ — for guests
  */
-add_action( 'wp_ajax_getAjaxSearchResult', 'getAjaxSearchResult_callback' );
-add_action( 'wp_ajax_nopriv_getAjaxSearchResult', 'getAjaxSearchResult_callback' );
+add_action( 'wp_ajax_getAjaxSearchResult', 'as_getAjaxSearchResult_callback' );
+add_action( 'wp_ajax_nopriv_getAjaxSearchResult', 'as_getAjaxSearchResult_callback' );
 
 /**
- * ОБРАБОТЧИК: Поиск по сайту
+ * HANDLER: Site search
  * 
- * ГДЕ ТЕСТИРОВАТЬ: Поле поиска → ввод текста
- * ЧТО ДЕЛАЕТ:
- * 1. Получает текст поиска
- * 2. Вызывает queryManagerSearchResult() для поиска
- * 3. Если результатов нет — исправляет раскладку клавиатуры
- * 4. Выводит HTML с результатами
+ * WHERE TO TEST: Search field → typing text
+ * WHAT IT DOES:
+ * 1. Gets the search text
+ * 2. Calls as_queryManagerSearchResult() to search
+ * 3. If there are no results — fixes the keyboard layout
+ * 4. Outputs the results HTML
  */
-function getAjaxSearchResult_callback() {
+function as_getAjaxSearchResult_callback() {
     
-    // Проверка nonce
+    // Nonce check
     check_ajax_referer( 'argon_shop_nonce', 'nonce' );
     
-    // Проверка наличия данных
+    // Check that the data is present
     if ( ! isset( $_POST['searchStr'] ) ) {
-        wp_die( 'Недостаточно данных' );
+        wp_die( __( 'Not enough data', 'argon-shop' ) );
     }
     
-    // Очистка текста поиска
+    // Clean the search text
     $searchStr = sanitize_text_field( wp_unslash( $_POST['searchStr'] ) );
     
-    // Получение параметров поиска
+    // Get the search parameters
     $searchParameters = '';
     
     if ( isset( $_POST['dataAjax'] ) ) {
@@ -62,26 +61,29 @@ function getAjaxSearchResult_callback() {
         $searchParameters = json_decode( $searchParameters );
     }
     
-    // Если параметры корректны — выполняем поиск
+    // If the parameters are valid — run the search
     if ( gettype( $searchParameters ) === 'object' ) {
         
-        $searchResult = queryManagerSearchResult( $searchStr, $searchParameters );
+        $searchResult = as_queryManagerSearchResult( $searchStr, $searchParameters );
         
-        // Если пусто и текст не число — пробуем исправить раскладку
+        // If empty and the text is not a number — try to fix the keyboard layout
         if ( empty( $searchResult ) && ! ctype_digit( $searchStr ) ) {
             
-            $searchStrFix = fixKeyboardlayout( $searchStr );
-            
-            if ( $searchStrFix != $searchStr ) {
-                $searchResult = queryManagerSearchResult( $searchStrFix, $searchParameters );
+            foreach ( as_search_layout_variants( $searchStr ) as $searchStrFix ) {
+                
+                $searchResult = as_queryManagerSearchResult( $searchStrFix, $searchParameters );
+                
+                if ( ! empty( $searchResult ) ) {
+                    break;
+                }
             }
         }
         
-        // Вывод результатов
+        // Output the results
         if ( ! empty( $searchResult ) ) {
-            showResult( $searchResult );
+            as_showResult( $searchResult );
         } else {
-            echo 'Нет подходящих результатов';
+            echo __( 'No matching results', 'argon-shop' );
         }
     }
     
@@ -89,71 +91,71 @@ function getAjaxSearchResult_callback() {
 }
 
 /*
- ** Получение подходящих категорий и товаров из базы данных
+ ** Getting matching categories and products from the database
 */
 
 /**
- * ФУНКЦИЯ: Управляющая функция поиска
+ * FUNCTION: Search manager function
  * 
- * ГДЕ ВЫЗЫВАЕТСЯ: getAjaxSearchResult_callback()
- * ЧТО ДЕЛАЕТ:
- * 1. Очищает параметры поиска
- * 2. Ищет товары (если включено)
- * 3. Ищет категории каталога (если включено)
- * 4. Ищет записи (акции, статьи, новости)
+ * CALLED FROM: as_getAjaxSearchResult_callback()
+ * WHAT IT DOES:
+ * 1. Cleans the search parameters
+ * 2. Searches products (if enabled)
+ * 3. Searches catalog categories (if enabled)
+ * 4. Searches posts (promotions, articles, news)
  * 
- * @param string $searchStr       — текст поиска
- * @param object $searchParameters — параметры поиска (что искать)
+ * @param string $searchStr       — search text
+ * @param object $searchParameters — search parameters (what to search)
  * 
- * @return array Массив результатов по типам: product, catalog, post
+ * @return array Array of results by type: product, catalog, post
  */
-function queryManagerSearchResult( $searchStr, $searchParameters ) {
+function as_queryManagerSearchResult( $searchStr, $searchParameters ) {
     
     $searchResult = array();
     
-    // Очистка параметров
-    $searchParameters = cleanParameters( $searchParameters );
+    // Clean the parameters
+    $searchParameters = as_cleanParameters( $searchParameters );
     
-    // Поиск товаров
+    // Product search
     if ( empty( $searchParameters->productResult ) || ( $searchParameters->productResult ?? false ) === true ) {
         
-        $searchResultProduct = queryAllocatorSearchResult( 'product', 10, $searchStr );
+        $searchResultProduct = as_queryAllocatorSearchResult( 'product', 10, $searchStr );
         
         if ( $searchResultProduct ) {
             
             $searchResult['product'] = array(
-                'nameBlock'  => 'Подходящие товары',
-                'listResult' => prepProduct( $searchResultProduct ),
+                'nameBlock'  => __( 'Matching products', 'argon-shop' ),
+                'listResult' => as_prepProduct( $searchResultProduct ),
             );
         }
     }
     
-    // Поиск категорий каталога
+    // Catalog category search
     if ( empty( $searchParameters->catalogResult ) || ( $searchParameters->catalogResult ?? false ) === true ) {
         
-        $searchResultCatalog = queryAllocatorSearchResult( 'category', 10, $searchStr );
+        $searchResultCatalog = as_queryAllocatorSearchResult( 'category', 10, $searchStr );
         
         if ( $searchResultCatalog ) {
             
             $searchResult['catalog'] = array(
-                'nameBlock'  => 'Категории',
-                'listResult' => prepCatalog( $searchResultCatalog ),
+                'nameBlock'  => __( 'Categories', 'argon-shop' ),
+                'listResult' => as_prepCatalog( $searchResultCatalog ),
             );
         }
     }
     
-    // Поиск записей (акции, статьи, новости)
+    // Post search (promotions, articles, news)
     if ( ! empty( $searchParameters->postResult ) ) {
         
         foreach ( $searchParameters->postResult as $key => $value ) {
             
-            $searchResultPost = queryAllocatorSearchResult( 'post', 10, $searchStr, $value );
+            $searchResultPost = as_queryAllocatorSearchResult( 'post', 10, $searchStr, $value );
             
             if ( $searchResultPost ) {
                 
                 $postListResult = array(
                     'nameBlock'  => $value->name,
-                    'listResult' => prepPost( $searchResultPost ),
+                    'listResult' => as_prepPost( $searchResultPost ),
                 );
                 
                 if ( $value->class ) {
@@ -169,34 +171,34 @@ function queryManagerSearchResult( $searchStr, $searchParameters ) {
 }
 
 /**
- * ФУНКЦИЯ: Распределитель запросов
+ * FUNCTION: Query dispatcher
  * 
- * ГДЕ ВЫЗЫВАЕТСЯ: queryManagerSearchResult()
- * ЧТО ДЕЛАЕТ: Направляет запрос к нужной функции поиска
+ * CALLED FROM: as_queryManagerSearchResult()
+ * WHAT IT DOES: Routes the query to the right search function
  * 
- * @param string $type       — 'product', 'post' или 'category'
- * @param int    $quantity   — количество результатов
- * @param string $searchStr  — текст поиска
- * @param object $parameters — дополнительные параметры
+ * @param string $type       — 'product', 'post' or 'category'
+ * @param int    $quantity   — number of results
+ * @param string $searchStr  — search text
+ * @param object $parameters — additional parameters
  * 
- * @return array Результат поиска
+ * @return array Search result
  */
-function queryAllocatorSearchResult( $type = null, $quantity = null, $searchStr = null, $parameters = null ) {
+function as_queryAllocatorSearchResult( $type = null, $quantity = null, $searchStr = null, $parameters = null ) {
     
     $searchResult = null;
     
     switch ( $type ) {
         
         case 'product':
-            $searchResult = queryProductSearchResult( $searchStr, $quantity );
+            $searchResult = as_queryProductSearchResult( $searchStr, $quantity );
             break;
             
         case 'post':
-            $searchResult = queryPostSearchResult( $searchStr, $quantity, $parameters );
+            $searchResult = as_queryPostSearchResult( $searchStr, $quantity, $parameters );
             break;
             
         case 'category':
-            $searchResult = queryTaxonomySearchResult( $searchStr, $quantity );
+            $searchResult = as_queryTaxonomySearchResult( $searchStr, $quantity );
             break;
     }
     
@@ -204,21 +206,21 @@ function queryAllocatorSearchResult( $type = null, $quantity = null, $searchStr 
 }
 
 /*
- ** Запросы в базе данных
+ ** Database queries
 */
 
 /**
- * ФУНКЦИЯ: Поиск по таксономии (категории каталога)
+ * FUNCTION: Taxonomy search (catalog categories)
  * 
- * ГДЕ ВЫЗЫВАЕТСЯ: queryAllocatorSearchResult()
- * ЧТО ДЕЛАЕТ: Ищет термины таксономии catalog по названию
+ * CALLED FROM: as_queryAllocatorSearchResult()
+ * WHAT IT DOES: Searches catalog taxonomy terms by name
  * 
- * @param string $searchStr — текст поиска
- * @param int    $quantity  — максимальное количество результатов
+ * @param string $searchStr — search text
+ * @param int    $quantity  — maximum number of results
  * 
- * @return array Список терминов id=>name
+ * @return array List of terms id=>name
  */
-function queryTaxonomySearchResult( $searchStr, $quantity ) {
+function as_queryTaxonomySearchResult( $searchStr, $quantity ) {
     
     $argumentSearch = array(
         'taxonomy'     => 'catalog',
@@ -230,7 +232,7 @@ function queryTaxonomySearchResult( $searchStr, $quantity ) {
     
     $querySearchTerms = get_terms( $argumentSearch );
     
-    // Проверка на ошибку WP_Error
+    // WP_Error check
     if ( is_wp_error( $querySearchTerms ) ) {
         return array();
     }
@@ -239,20 +241,20 @@ function queryTaxonomySearchResult( $searchStr, $quantity ) {
 }
 
 /**
- * ФУНКЦИЯ: Поиск по записям (статьи, акции)
+ * FUNCTION: Post search (articles, promotions)
  * 
- * ГДЕ ВЫЗЫВАЕТСЯ: queryAllocatorSearchResult()
- * ЧТО ДЕЛАЕТ: Ищет записи типа post в указанных категориях
+ * CALLED FROM: as_queryAllocatorSearchResult()
+ * WHAT IT DOES: Searches posts of type post in the given categories
  * 
- * @param string $searchStr  — текст поиска
- * @param int    $quantity   — количество результатов
- * @param object $parameters — параметры (категории для поиска)
+ * @param string $searchStr  — search text
+ * @param int    $quantity   — number of results
+ * @param object $parameters — parameters (categories to search)
  * 
- * @return array Массив ID найденных записей
+ * @return array Array of found post IDs
  */
-function queryPostSearchResult( $searchStr, $quantity, $parameters ) {
+function as_queryPostSearchResult( $searchStr, $quantity, $parameters ) {
     
-    // Получаем категории для поиска
+    // Get the categories to search
     $categories = array();
     
     if ( isset( $parameters->category ) && is_array( $parameters->category ) ) {
@@ -280,21 +282,21 @@ function queryPostSearchResult( $searchStr, $quantity, $parameters ) {
 }
 
 /**
- * ФУНКЦИЯ: Поиск по товарам
+ * FUNCTION: Product search
  * 
- * Использует ту же логику, что и GET-поиск (searchGetFilters.php):
- * - Многословный AND-поиск по title, excerpt, content, артикулу
- * - Система очков по релевантности
+ * Uses the same logic as the GET search (searchGetFilters.php):
+ * - Multi-word AND search over title, excerpt, content, SKU
+ * - Relevance score system
  * 
- * Дополнительно подключает фильтры searchGetFilters.php на время
- * запроса, чтобы AJAX и GET давали одинаковый результат.
+ * Additionally attaches the searchGetFilters.php filters for the duration
+ * of the query, so that AJAX and GET return the same result.
  * 
- * @param string $searchStr — текст поиска
- * @param int    $quantity  — количество результатов
+ * @param string $searchStr — search text
+ * @param int    $quantity  — number of results
  * 
- * @return array Массив объектов WP_Post
+ * @return array Array of WP_Post objects
  */
-function queryProductSearchResult( $searchStr, $quantity ) {
+function as_queryProductSearchResult( $searchStr, $quantity ) {
     
     $quantity = absint( $quantity );
     
@@ -302,10 +304,10 @@ function queryProductSearchResult( $searchStr, $quantity ) {
         return array();
     }
     
-    // Подключаем фильтры из searchGetFilters.php.
-    // Они активируются только если функция search_is_custom_search() 
-    // вернёт true. Для AJAX-запроса она вернёт false (нет is_main_query),
-    // поэтому используем отдельные фильтры-обёртки с флагом _argon_search.
+    // Attach the filters from searchGetFilters.php.
+    // They are active only if as_search_is_custom_search()
+    // returns true. For an AJAX request it returns false (no is_main_query),
+    // so separate wrapper filters with the _argon_search flag are used.
     
     add_filter( 'posts_search',  'argon_search_ajax_where', 10, 2 );
     add_filter( 'posts_join',    'argon_search_ajax_join', 10, 2 );
@@ -333,60 +335,37 @@ function queryProductSearchResult( $searchStr, $quantity ) {
 }
 
 // ============================================
-// ФИЛЬТРЫ ДЛЯ AJAX-ПОИСКА ТОВАРОВ
+// AJAX PRODUCT SEARCH FILTERS
 // ============================================
 // 
-// Дублируют логику searchGetFilters.php, но применяются только к
-// запросам с флагом _argon_search (AJAX-поиск). Основной поиск 
-// WordPress на /?s= не затрагивается.
+// They duplicate the searchGetFilters.php logic but apply only to
+// queries with the _argon_search flag (AJAX search). The main WordPress
+// search on /?s= is not affected.
 
 /**
- * Проверка, нужно ли применять AJAX-фильтры
+ * Check whether the AJAX filters should be applied
  */
 function argon_search_ajax_needed( $query ) {
     return (bool) $query->get( '_argon_search' );
 }
 
 /**
- * ФИЛЬТР: WHERE — многословный AND-поиск
+ * FILTER: WHERE — multi-word AND search
  */
 function argon_search_ajax_where( $search, $query ) {
-    
-    global $wpdb;
     
     if ( ! argon_search_ajax_needed( $query ) ) {
         return $search;
     }
     
-    $s     = $query->get( 's' );
-    $words = function_exists( 'search_get_words' ) ? search_get_words( $s ) : array();
+    // The SQL is built by as_search_where_sql() (searchLanguage.php)
+    $where = as_search_where_sql( $query->get( 's' ) );
     
-    if ( empty( $words ) ) {
-        return $search;
-    }
-    
-    $where_parts = array();
-    
-    foreach ( $words as $word ) {
-        
-        $like     = '%' . $wpdb->esc_like( $word ) . '%';
-        $like_esc = esc_sql( $like );
-        
-        $where_parts[] = "( {$wpdb->posts}.post_title LIKE '{$like_esc}' 
-                          OR {$wpdb->posts}.post_excerpt LIKE '{$like_esc}' 
-                          OR {$wpdb->posts}.post_content LIKE '{$like_esc}' 
-                          OR as_article_meta.meta_value LIKE '{$like_esc}' )";
-    }
-    
-    if ( empty( $where_parts ) ) {
-        return $search;
-    }
-    
-    return ' AND (' . implode( ' AND ', $where_parts ) . ') ';
+    return '' === $where ? $search : $where;
 }
 
 /**
- * ФИЛЬТР: JOIN на postmeta для артикула
+ * FILTER: JOIN on postmeta for the SKU
  */
 function argon_search_ajax_join( $join, $query ) {
     
@@ -404,7 +383,7 @@ function argon_search_ajax_join( $join, $query ) {
 }
 
 /**
- * ФИЛЬТР: DISTINCT — защита от дублирования
+ * FILTER: DISTINCT — protection against duplicates
  */
 function argon_search_ajax_distinct( $distinct, $query ) {
     
@@ -416,7 +395,7 @@ function argon_search_ajax_distinct( $distinct, $query ) {
 }
 
 /**
- * ФИЛЬТР: ORDER BY — сортировка по очкам релевантности
+ * FILTER: ORDER BY — sorting by relevance score
  */
 function argon_search_ajax_orderby( $orderby, $query ) {
     
@@ -427,34 +406,34 @@ function argon_search_ajax_orderby( $orderby, $query ) {
     }
     
     $s     = $query->get( 's' );
-    $words = function_exists( 'search_get_words' ) ? search_get_words( $s ) : array();
+    $words = function_exists( 'as_search_get_words' ) ? as_search_get_words( $s ) : array();
     
     if ( empty( $words ) ) {
         return $orderby;
     }
     
-    // Полная фраза
+    // Full phrase
     $full_trim  = trim( $s );
-    $full_exact = esc_sql( $full_trim );
-    $full_start = esc_sql( $wpdb->esc_like( $full_trim ) . '%' );
+    $full_exact = $full_trim;
+    $full_start = $wpdb->esc_like( $full_trim ) . '%';
     
     $score_parts = array();
     
-    $score_parts[] = "CASE WHEN {$wpdb->posts}.post_title = '{$full_exact}' THEN 1000 ELSE 0 END";
-    $score_parts[] = "CASE WHEN as_article_meta.meta_value = '{$full_exact}' THEN 800 ELSE 0 END";
-    $score_parts[] = "CASE WHEN {$wpdb->posts}.post_title LIKE '{$full_start}' THEN 500 ELSE 0 END";
-    $score_parts[] = "CASE WHEN as_article_meta.meta_value LIKE '{$full_start}' THEN 400 ELSE 0 END";
+    $score_parts[] = $wpdb->prepare( "CASE WHEN {$wpdb->posts}.post_title = %s THEN 1000 ELSE 0 END", $full_exact );
+    $score_parts[] = $wpdb->prepare( "CASE WHEN as_article_meta.meta_value = %s THEN 800 ELSE 0 END", $full_exact );
+    $score_parts[] = $wpdb->prepare( "CASE WHEN {$wpdb->posts}.post_title LIKE %s THEN 500 ELSE 0 END", $full_start );
+    $score_parts[] = $wpdb->prepare( "CASE WHEN as_article_meta.meta_value LIKE %s THEN 400 ELSE 0 END", $full_start );
     
     foreach ( $words as $word ) {
         
-        $word_start       = esc_sql( $wpdb->esc_like( $word ) . '%' );
-        $word_like        = esc_sql( '%' . $wpdb->esc_like( $word ) . '%' );
-        $word_after_space = esc_sql( '% ' . $wpdb->esc_like( $word ) . '%' );
+        $word_start       = $wpdb->esc_like( $word ) . '%';
+        $word_like        = '%' . $wpdb->esc_like( $word ) . '%';
+        $word_after_space = '% ' . $wpdb->esc_like( $word ) . '%';
         
-        $score_parts[] = "CASE WHEN {$wpdb->posts}.post_title LIKE '{$word_start}' THEN 50 ELSE 0 END";
-        $score_parts[] = "CASE WHEN {$wpdb->posts}.post_title LIKE '{$word_after_space}' THEN 30 ELSE 0 END";
-        $score_parts[] = "CASE WHEN {$wpdb->posts}.post_title LIKE '{$word_like}' THEN 10 ELSE 0 END";
-        $score_parts[] = "CASE WHEN as_article_meta.meta_value LIKE '{$word_like}' THEN 5 ELSE 0 END";
+        $score_parts[] = $wpdb->prepare( "CASE WHEN {$wpdb->posts}.post_title LIKE %s THEN 50 ELSE 0 END", $word_start );
+        $score_parts[] = $wpdb->prepare( "CASE WHEN {$wpdb->posts}.post_title LIKE %s THEN 30 ELSE 0 END", $word_after_space );
+        $score_parts[] = $wpdb->prepare( "CASE WHEN {$wpdb->posts}.post_title LIKE %s THEN 10 ELSE 0 END", $word_like );
+        $score_parts[] = $wpdb->prepare( "CASE WHEN as_article_meta.meta_value LIKE %s THEN 5 ELSE 0 END", $word_like );
     }
     
     $score_sql = '( ' . implode( ' + ', $score_parts ) . ' )';
@@ -463,20 +442,20 @@ function argon_search_ajax_orderby( $orderby, $query ) {
 }
 
 /*
- ** Создаем массивы с информацией для вывода(url/title)
+ ** Building arrays with output information (url/title)
 */
 
 /**
- * ФУНКЦИЯ: Подготовка данных категорий для вывода
+ * FUNCTION: Prepare category data for output
  * 
- * ГДЕ ВЫЗЫВАЕТСЯ: queryManagerSearchResult()
- * ЧТО ДЕЛАЕТ: Преобразует термины в массив с title и url
+ * CALLED FROM: as_queryManagerSearchResult()
+ * WHAT IT DOES: Converts terms to an array with title and url
  * 
- * @param array $searchResultCatalog — термины таксономии
+ * @param array $searchResultCatalog — taxonomy terms
  * 
- * @return array Массив с post_title и post_url
+ * @return array Array with post_title and post_url
  */
-function prepCatalog( $searchResultCatalog ) {
+function as_prepCatalog( $searchResultCatalog ) {
     
     $prepCatalog = array();
     
@@ -494,16 +473,16 @@ function prepCatalog( $searchResultCatalog ) {
 }
 
 /**
- * ФУНКЦИЯ: Подготовка данных записей для вывода
+ * FUNCTION: Prepare post data for output
  * 
- * ГДЕ ВЫЗЫВАЕТСЯ: queryManagerSearchResult()
- * ЧТО ДЕЛАЕТ: Преобразует ID записей в массив с title и url
+ * CALLED FROM: as_queryManagerSearchResult()
+ * WHAT IT DOES: Converts post IDs to an array with title and url
  * 
- * @param array $searchResultPost — массив ID записей
+ * @param array $searchResultPost — array of post IDs
  * 
- * @return array Массив с post_title и post_url
+ * @return array Array with post_title and post_url
  */
-function prepPost( $searchResultPost ) {
+function as_prepPost( $searchResultPost ) {
     
     $prepPost = array();
     
@@ -521,18 +500,18 @@ function prepPost( $searchResultPost ) {
 }
 
 /**
- * ФУНКЦИЯ: Подготовка данных товаров для вывода
+ * FUNCTION: Prepare product data for output
  * 
- * ГДЕ ВЫЗЫВАЕТСЯ: queryManagerSearchResult()
- * ЧТО ДЕЛАЕТ:
- * 1. Получает название и URL товара
- * 2. Получает категорию товара (если есть)
+ * CALLED FROM: as_queryManagerSearchResult()
+ * WHAT IT DOES:
+ * 1. Gets the product name and URL
+ * 2. Gets the product category (if any)
  * 
- * @param array $searchResultProduct — массив объектов WP_Post
+ * @param array $searchResultProduct — array of WP_Post objects
  * 
- * @return array Массив с post_title, post_url, category_name, category_url
+ * @return array Array with post_title, post_url, category_name, category_url
  */
-function prepProduct( $searchResultProduct ) {
+function as_prepProduct( $searchResultProduct ) {
     
     $prepProduct = array();
     
@@ -545,7 +524,7 @@ function prepProduct( $searchResultProduct ) {
             'post_url'   => esc_url( get_permalink( $product_id ) ),
         );
         
-        // Получаем категорию товара
+        // Get the product category
         $categoryProduct = get_the_terms( $product_id, 'catalog' );
         
         if ( ! empty( $categoryProduct ) && ! is_wp_error( $categoryProduct ) ) {
@@ -559,45 +538,45 @@ function prepProduct( $searchResultProduct ) {
 }
 
 /*
- ** Создаем html вид результата
+ ** Building the HTML view of the result
 */
 
 /**
- * ФУНКЦИЯ: Вывод результатов поиска
+ * FUNCTION: Output the search results
  * 
- * ГДЕ ВЫЗЫВАЕТСЯ: getAjaxSearchResult_callback()
- * ЧТО ДЕЛАЕТ: Перебирает все типы результатов и вызывает generateResultHTML()
+ * CALLED FROM: as_getAjaxSearchResult_callback()
+ * WHAT IT DOES: Iterates over all result types and calls as_generateResultHTML()
  * 
- * @param array $searchResult — результаты поиска
+ * @param array $searchResult — search results
  */
-function showResult( $searchResult ) {
+function as_showResult( $searchResult ) {
     
     foreach ( $searchResult as $keyEntirelyResult => $valueEntirelyResult ) {
         
-        // Для записей (несколько блоков)
+        // For posts (several blocks)
         if ( $keyEntirelyResult === 'post' ) {
             
             foreach ( $valueEntirelyResult as $keyOneTypeResults => $valueOneTypeResults ) {
-                generateResultHTML( $keyEntirelyResult, $valueOneTypeResults );
+                as_generateResultHTML( $keyEntirelyResult, $valueOneTypeResults );
             }
             
         } else {
-            // Для товаров и категорий (один блок)
-            generateResultHTML( $keyEntirelyResult, $valueEntirelyResult );
+            // For products and categories (a single block)
+            as_generateResultHTML( $keyEntirelyResult, $valueEntirelyResult );
         }
     }
 }
 
 /**
- * ФУНКЦИЯ: Генерация HTML для одного блока результатов
+ * FUNCTION: Generate the HTML of one result block
  * 
- * ГДЕ ВЫЗЫВАЕТСЯ: showResult()
- * ЧТО ДЕЛАЕТ: Выводит заголовок блока и список найденных элементов
+ * CALLED FROM: as_showResult()
+ * WHAT IT DOES: Outputs the block title and the list of found items
  * 
- * @param string $type                — тип результата
- * @param array  $valueEntirelyResult — данные блока (nameBlock, listResult, classBlock)
+ * @param string $type                — result type
+ * @param array  $valueEntirelyResult — block data (nameBlock, listResult, classBlock)
  */
-function generateResultHTML( $type, $valueEntirelyResult ) {
+function as_generateResultHTML( $type, $valueEntirelyResult ) {
     
     $classBlockOneTypeResult = 'blockOneTypeResult';
     
@@ -653,21 +632,21 @@ function generateResultHTML( $type, $valueEntirelyResult ) {
 }
 
 /*
- ** Вспомогательные функции
+ ** Helper functions
 */
 
 /**
- * ФУНКЦИЯ: Объединение массивов результатов
+ * FUNCTION: Merge result arrays
  * 
- * ГДЕ ВЫЗЫВАЕТСЯ: queryProductSearchResult()
- * ЧТО ДЕЛАЕТ: Объединяет несколько массивов с приоритетом первых
+ * CALLED FROM: as_queryProductSearchResult()
+ * WHAT IT DOES: Merges several arrays giving priority to the first ones
  * 
- * @param array $typesResultArray — массив массивов для объединения
- * @param int   $quantity         — итоговое количество элементов
+ * @param array $typesResultArray — array of arrays to merge
+ * @param int   $quantity         — resulting number of items
  * 
- * @return array Объединённый массив
+ * @return array Merged array
  */
-function merge_search_result( $typesResultArray, $quantity ) {
+function as_merge_search_result( $typesResultArray, $quantity ) {
     
     $quantityResults = (int) $quantity;
     $searchStrResult = array();
@@ -676,7 +655,7 @@ function merge_search_result( $typesResultArray, $quantity ) {
         
         if ( isset( $value ) && is_array( $value ) ) {
             
-            $searchStrResult = array_partial_merge( $quantityResults, $searchStrResult, $value );
+            $searchStrResult = as_array_partial_merge( $quantityResults, $searchStrResult, $value );
             $quantityResults -= count( $value );
         }
     }
@@ -685,30 +664,30 @@ function merge_search_result( $typesResultArray, $quantity ) {
 }
 
 /**
- * ФУНКЦИЯ: Очистка параметров поиска
+ * FUNCTION: Clean the search parameters
  * 
- * ГДЕ ВЫЗЫВАЕТСЯ: queryManagerSearchResult()
- * ЧТО ДЕЛАЕТ: Валидирует входящие параметры, оставляя только корректные
+ * CALLED FROM: as_queryManagerSearchResult()
+ * WHAT IT DOES: Validates the incoming parameters, keeping only valid ones
  * 
- * @param object $searchParameters — сырые параметры
+ * @param object $searchParameters — raw parameters
  * 
- * @return object Очищенные параметры
+ * @return object Cleaned parameters
  */
-function cleanParameters( $searchParameters ) {
+function as_cleanParameters( $searchParameters ) {
     
     $cleanSearchParameters = (object) array();
     
-    // Очистка параметра productResult (boolean)
+    // Clean the productResult parameter (boolean)
     if ( isset( $searchParameters->productResult ) && gettype( $searchParameters->productResult ) === 'boolean' ) {
         $cleanSearchParameters->productResult = $searchParameters->productResult;
     }
     
-    // Очистка параметра catalogResult (boolean)
+    // Clean the catalogResult parameter (boolean)
     if ( isset( $searchParameters->catalogResult ) && gettype( $searchParameters->catalogResult ) === 'boolean' ) {
         $cleanSearchParameters->catalogResult = $searchParameters->catalogResult;
     }
     
-    // Очистка параметра postResult (array)
+    // Clean the postResult parameter (array)
     if ( ! empty( $searchParameters->postResult ) && gettype( $searchParameters->postResult ) === 'array' ) {
         
         foreach ( $searchParameters->postResult as $key => $value ) {
@@ -750,31 +729,20 @@ function cleanParameters( $searchParameters ) {
 }
 
 /**
- * ФУНКЦИЯ: Исправление раскладки клавиатуры
- * 
- * ГДЕ ВЫЗЫВАЕТСЯ: getAjaxSearchResult_callback()
- * ЧТО ДЕЛАЕТ: Преобразует латинские буквы в русские (ghjlern → продукт)
- * 
- * @param string $searchStr — текст с неправильной раскладкой
- * 
- * @return string Исправленный текст
+ * FUNCTION: Keyboard layout fix (kept for compatibility with themes and older code)
+ *
+ * Returns the first variant from as_search_layout_variants() (searchLanguage.php),
+ * which depends on the site language: on a Russian site "ghjlern" becomes
+ * the Russian word for "product", on an English site Cyrillic input becomes QWERTY,
+ * on a French site — AZERTY.
+ *
+ * @param string $searchStr — text typed in the wrong layout
+ *
+ * @return string Fixed text (or the original if there is nothing to fix)
  */
-function fixKeyboardlayout( $searchStr ) {
+function as_fixKeyboardlayout( $searchStr ) {
     
-    $LangEn = array( "&","q","w","e","r","t","y","u","i","o","p","[","]",
-                   "a","s","d","f","g","h","j","k","l",";","'",
-                   "z","x","c","v","b","n","m",",",".","/",
-                   "Q","W","E","R","T","Y","U","I","O","P","[","]",
-                   "A","S","D","F","G","H","J","K","L",";","'",
-                   "Z","X","C","V","B","N","M",",","/" );
-    $LangRu = array( "?","й","ц","у","к","е","н","г","ш","щ","з","х","ъ",
-                   "ф","ы","в","а","п","р","о","л","д","ж","э",
-                   "я","ч","с","м","и","т","ь","б","ю",".",
-                   "Й","Ц","У","К","Е","Н","Г","Ш","Щ","З","Х","Ъ",
-                   "Ф","Ы","В","А","П","Р","О","Л","Д","Ж","Э",
-                   "Я","Ч","С","М","И","Т","Ь","Б","Ю","." );
+    $variants = as_search_layout_variants( $searchStr );
     
-    $searchStr = str_replace( $LangEn, $LangRu, $searchStr );
-    
-    return $searchStr;
+    return $variants ? $variants[0] : (string) $searchStr;
 }

@@ -1,48 +1,47 @@
 /**
- * ArgonShop — выбор города в шапке сайта.
+ * ArgonShop — city selection in the site header.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * При смене города в выпадающем списке выполняется переход на
- * соответствующую страницу текущего раздела другого города.
+ * When the city in the dropdown changes, the browser goes to
+ * the corresponding page of the current section of the other city.
  *
- * Правила перехода:
+ * Navigation rules:
  *
- *   1. Если пользователь на странице акций — переходим на страницу
- *      акций того же города.
+ *   1. If the user is on the promotions page — go to the
+ *      promotions page of the same city.
  *
- *   2. Если пользователь на странице архива акций — переходим
- *      на архив акций другого города.
+ *   2. If the user is on the promotions archive page — go
+ *      to the promotions archive of the other city.
  *
- *   3. Во всех остальных случаях — переходим на тот же URL
- *      пути, но в другом городе.
+ *   3. In all other cases — go to the same URL
+ *      path, but in the other city.
  *
  * ============================================================
- * DOM-ЭЛЕМЕНТЫ
+ * DOM ELEMENTS
  * ============================================================
  *
  * .sitySelect
- *   Селект выбора города. Значение (value) — базовый URL города.
+ *   City select. The value is the base URL of the city.
  *
- * Опции селекта могут иметь атрибуты:
- *   data-promocategory — путь к странице акций города.
- *   data-promoarchive  — путь к архиву акций города.
+ * The select options may have the attributes:
+ *   data-promocategory — path to the city's promotions page.
+ *   data-promoarchive  — path to the city's promotions archive.
  *
  * main
- *   Контейнер контента. Его id используется для определения
- *   текущей страницы:
- *     #block-contentPromo       — страница акций.
- *     #block-contentPromoPage   — отдельная акция.
- *     #block-contentPromoArchive — архив акций.
+ *   Content container. Its id is used to determine
+ *   the current page:
+ *     #block-contentPromo       — promotions page.
+ *     #block-contentPromoPage   — a single promotion.
+ *     #block-contentPromoArchive — promotions archive.
  *
  * ============================================================
- * ИСПОЛЬЗОВАНИЕ
+ * USAGE
  * ============================================================
  *
  *     import { arsHeader } from './modules/header.js';
@@ -55,7 +54,7 @@
 import { qs, on } from '../../shared/dom.js';
 
 /**
- * Модуль выбора города.
+ * City selection module.
  */
 class ArsHeader {
 
@@ -63,7 +62,7 @@ class ArsHeader {
     #initialized = false;
 
     /**
-     * Инициализация. Безопасна для повторного вызова.
+     * Initialization. Safe to call repeatedly.
      *
      * @return {void}
      */
@@ -85,9 +84,9 @@ class ArsHeader {
     }
 
     /**
-     * Обрабатывает смену города.
+     * Handles the city change.
      *
-     * @param  {HTMLSelectElement} select — селект городов
+     * @param  {HTMLSelectElement} select — city select
      * @return {void}
      */
     #handleChange( select ) {
@@ -102,7 +101,7 @@ class ArsHeader {
         const main = qs( 'main' );
         const mainId = main ? main.id : '';
 
-        // Страница акций или отдельная акция
+        // Promotions page or a single promotion
         if ( mainId === 'block-contentPromo' || mainId === 'block-contentPromoPage' ) {
 
             const promoCategory = selected.dataset.promocategory || '';
@@ -110,7 +109,7 @@ class ArsHeader {
             return;
         }
 
-        // Архив акций
+        // Promotions archive
         if ( mainId === 'block-contentPromoArchive' ) {
 
             const promoArchive = selected.dataset.promoarchive || '';
@@ -118,13 +117,13 @@ class ArsHeader {
             return;
         }
 
-        // Все остальные страницы — тот же путь на другом домене
+        // All other pages — the same path on another domain
         window.location.href = value + window.location.pathname;
     }
 }
 
 /**
- * Готовый синглтон модуля выбора города.
+ * Ready singleton of the city selection module.
  *
  * @type {ArsHeader}
  */

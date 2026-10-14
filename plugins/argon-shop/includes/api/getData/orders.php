@@ -1,41 +1,40 @@
 <?php
 /**
- * Работа с заказами пользователя
+ * Working with user orders
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ИСПОЛЬЗУЕТСЯ:
- * - includes/interface/cabinet/userOrders/ordersView.php — вывод заказов в ЛК
- * - includes/interface/cabinet/userOrders/ordersAjax.php — фильтр заказов
+ * WHERE IT IS USED:
+ * - includes/interface/cabinet/userOrders/ordersView.php — order output in the account
+ * - includes/interface/cabinet/userOrders/ordersAjax.php — order filter
  * 
- * ДАННЫЕ, ВОЗВРАЩАЕМЫЕ get_user_orders():
+ * DATA RETURNED BY as_get_user_orders():
  * 
- *   $orders['orders']        — массив WP_Post заказов
- *   $orders['orders_meta']   — мета-поля: [order_id => ['number', 'totalPrice', 'productsCart']]
- *   $orders['orders_status'] — статусы: [order_id => 'Название статуса']
+ *   $orders['orders']        — array of order WP_Post objects
+ *   $orders['orders_meta']   — meta fields: [order_id => ['number', 'totalPrice', 'productsCart']]
+ *   $orders['orders_status'] — statuses: [order_id => 'Status name']
  * 
- * Если заказов нет или данные некорректны — возвращается пустой массив.
+ * If there are no orders or the data is invalid — an empty array is returned.
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 /**
- * ФУНКЦИЯ: Получение статусов заказов
+ * FUNCTION: Get order statuses
  * 
- * Возвращает все статусы таксономии statusorders.
- * Если передан $statuses_orders_user — оставляет только те,
- * что есть в этом массиве (пересечение).
+ * Returns all statuses of the statusorders taxonomy.
+ * If $statuses_orders_user is passed — keeps only those
+ * that are in that array (intersection).
  * 
- * @param array $statuses_orders_user — статусы конкретного пользователя
+ * @param array $statuses_orders_user — statuses of a specific user
  * 
- * @return array Массив [term_id => name]
+ * @return array Array [term_id => name]
  */
-function get_used_statuses( $statuses_orders_user = array() ) {
+function as_get_used_statuses( $statuses_orders_user = array() ) {
     
     $argumentStatusAddTerms = array(
         'taxonomy'   => 'statusorders',
@@ -45,7 +44,7 @@ function get_used_statuses( $statuses_orders_user = array() ) {
     
     $statusTerms = get_terms( $argumentStatusAddTerms );
     
-    // Проверка на WP_Error
+    // WP_Error check
     if ( is_wp_error( $statusTerms ) || ! is_array( $statusTerms ) ) {
         return array();
     }
@@ -59,36 +58,36 @@ function get_used_statuses( $statuses_orders_user = array() ) {
 
 
 /**
- * ФУНКЦИЯ: Получение заказов пользователя
+ * FUNCTION: Get user orders
  * 
- * @param int   $user_ID — ID пользователя
- * @param array $filters — фильтры:
- *                         'orderStatus' => array|int — массив ID статусов или один ID
+ * @param int   $user_ID — user ID
+ * @param array $filters — filters:
+ *                         'orderStatus' => array|int — array of status IDs or a single ID
  * 
  * @return array {
- *     @type array $orders        — массив WP_Post
- *     @type array $orders_meta   — мета-данные заказов
- *     @type array $orders_status — статусы заказов
+ *     @type array $orders        — array of WP_Post
+ *     @type array $orders_meta   — order meta data
+ *     @type array $orders_status — order statuses
  * }
  * 
- * Или пустой массив, если заказов нет / данные некорректны.
+ * Or an empty array if there are no orders / the data is invalid.
  */
-function get_user_orders( $user_ID, $filters = array() ) {
+function as_get_user_orders( $user_ID, $filters = array() ) {
     
     // ============================================
-    // ВАЛИДАЦИЯ ВХОДНЫХ ПАРАМЕТРОВ
+    // INPUT VALIDATION
     // ============================================
     
     if ( ! is_int( $user_ID ) ) {
         return array();
     }
     
-    // $filters мог не прийти — приводим к массиву
+    // $filters may be missing — cast it to an array
     if ( ! is_array( $filters ) ) {
         $filters = array();
     }
     
-    // Валидация фильтра по статусам
+    // Status filter validation
     if ( ! empty( $filters['orderStatus'] ) ) {
         
         if ( is_array( $filters['orderStatus'] ) ) {
@@ -107,7 +106,7 @@ function get_user_orders( $user_ID, $filters = array() ) {
     }
     
     // ============================================
-    // ЗАПРОС ЗАКАЗОВ
+    // ORDER QUERY
     // ============================================
     
     $args = array(
@@ -116,7 +115,7 @@ function get_user_orders( $user_ID, $filters = array() ) {
         'author'         => $user_ID,
     );
     
-    // Фильтр по статусу
+    // Status filter
     if ( ! empty( $filters['orderStatus'] ) ) {
         
         $args['tax_query'] = array(
@@ -130,13 +129,13 @@ function get_user_orders( $user_ID, $filters = array() ) {
     
     $ordersWP = get_posts( $args );
     
-    // Если заказов нет — возвращаем пустой массив
+    // No orders — return an empty array
     if ( empty( $ordersWP ) ) {
         return array();
     }
     
     // ============================================
-    // СБОР МЕТА-ДАННЫХ И СТАТУСОВ
+    // COLLECTING META DATA AND STATUSES
     // ============================================
     
     $order_meta   = array();
@@ -154,17 +153,17 @@ function get_user_orders( $user_ID, $filters = array() ) {
             continue;
         }
         
-        // Мета-поля заказа
+        // Order meta fields
         $order_meta[ $order_id ] = array(
             'number'       => get_post_meta( $order_id, '_number', true ),
             'totalPrice'   => get_post_meta( $order_id, '_totalPrice', true ),
             'productsCart' => get_post_meta( $order_id, '_productAmountCart', true ),
         );
         
-        // Статус заказа
+        // Order status
         $currentStatus = get_the_terms( $order_id, 'statusorders' );
         
-        // Проверка: статус мог быть не установлен
+        // Check: the status may not be set
         if ( ! empty( $currentStatus ) && ! is_wp_error( $currentStatus ) && isset( $currentStatus[0]->name ) ) {
             $order_status[ $order_id ] = $currentStatus[0]->name;
         } else {
@@ -173,7 +172,7 @@ function get_user_orders( $user_ID, $filters = array() ) {
     }
     
     // ============================================
-    // ФОРМИРОВАНИЕ РЕЗУЛЬТАТА
+    // BUILDING THE RESULT
     // ============================================
     
     $orders = array(

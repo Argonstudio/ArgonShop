@@ -1,56 +1,55 @@
 <?php
 /**
- * Фильтры и сортировка результатов поиска (GET-часть)
+ * Search result filters and sorting (GET part)
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 2.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * Форма поиска → ввод запроса → страница /?s=запрос
- * URL: /?s=запрос&post_type[]=product&as_taxonomy[catalog]=all
+ * WHERE TO TEST:
+ * Search form → enter a query → the /?s=query page
+ * URL: /?s=query&post_type[]=product&as_taxonomy[catalog]=all
  * 
- * ЧТО ДЕЛАЕТ:
- * 1. Применяет фильтр по таксономиям из GET-параметров
- *    (as_taxonomy[catalog]=all → искать во всех категориях каталога)
+ * WHAT IT DOES:
+ * 1. Applies the taxonomy filter from the GET parameters
+ *    (as_taxonomy[catalog]=all → search in all catalog categories)
  * 
- * 2. Применяет кастомный поиск:
- *    - Разбивает запрос на слова (AND-логика)
- *    - Ищет в title, excerpt, content, а также в артикуле (_article)
+ * 2. Applies the custom search:
+ *    - Splits the query into words (AND logic; language rules — searchLanguage.php)
+ *    - Searches title, excerpt, content and also the SKU (_article)
  * 
- * 3. Сортирует по релевантности:
- *    - Точное совпадение заголовка / артикула — максимальный приоритет
- *    - Начало заголовка с запроса
- *    - Вхождение слова в заголовок
- *    - Вхождение слова в артикул
+ * 3. Sorts by relevance:
+ *    - Exact title / SKU match — top priority
+ *    - Title starting with the query
+ *    - Word occurring in the title
+ *    - Word occurring in the SKU
  * 
- * Связь с AJAX-поиском (searchAjax.php):
- * Использует ту же логику приоритетов, что и queryProductSearchResult().
- * Отличается системой очков вместо простого деления на группы.
+ * Relation to the AJAX search (searchAjax.php):
+ * Uses the same priority logic as as_queryProductSearchResult().
+ * Differs by using a score system instead of simple grouping.
  * 
- * JOIN на postmeta нужен для доступа к полю _article в WHERE и ORDER BY.
- * DISTINCT защищает от дублирования при JOIN.
+ * The JOIN on postmeta is needed to access the _article field in WHERE and ORDER BY.
+ * DISTINCT protects against duplicates caused by the JOIN.
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 /**
- * ФУНКЦИЯ: Проверка, применяется ли кастомный поиск к запросу
+ * FUNCTION: Check whether the custom search applies to the query
  *
- * Кастомный поиск применяется только:
- * - на фронтенде
- * - к главному запросу
- * - только в поиске (is_search)
- * - если в post_type участвуют товары (product)
+ * The custom search applies only:
+ * - on the frontend
+ * - to the main query
+ * - only in search (is_search)
+ * - if products (product) are among the post types
  *
- * @param WP_Query $query — объект запроса WordPress
+ * @param WP_Query $query — WordPress query object
  *
  * @return bool
  */
-function search_is_custom_search( $query ) {
+function as_search_is_custom_search( $query ) {
     
     if ( is_admin() || ! $query->is_main_query() ) {
         return false;
@@ -66,7 +65,7 @@ function search_is_custom_search( $query ) {
         return false;
     }
     
-    // Если post_type ограничен и это не product — не применяем
+    // If post_type is restricted and it is not product — do not apply
     $post_types = $query->get( 'post_type' );
     
     if ( ! empty( $post_types ) && $post_types !== 'any' ) {
@@ -82,42 +81,17 @@ function search_is_custom_search( $query ) {
 }
 
 /**
- * ФУНКЦИЯ: Разбивает поисковый запрос на слова
- *
- * Максимум 10 слов — защита от чрезмерно длинных запросов,
- * которые могут породить тяжёлый SQL.
- *
- * @param string $s — поисковый запрос
- *
- * @return array Массив слов
- */
-function search_get_words( $s ) {
-    
-    $s = trim( (string) $s );
-    
-    if ( $s === '' ) {
-        return array();
-    }
-    
-    $words = preg_split( '/\s+/', $s );
-    $words = array_filter( $words );
-    $words = array_slice( $words, 0, 10 );
-    
-    return array_values( $words );
-}
-
-/**
- * ФУНКЦИЯ: Исправление раскладки клавиатуры для GET-поиска
+ * FUNCTION: Keyboard layout fix for the GET search
  * 
- * Если по поисковому запросу ничего не найдено и запрос набран в
- * неправильной раскладке (например, "ghjlern" вместо "продукт") —
- * автоматически исправляет раскладку и подменяет параметр 's' в
- * основном запросе.
+ * If the query found nothing and it was typed in the wrong
+ * layout (for example, "ghjlern" typed on a Russian site, or "super" typed with a Russian layout on an English one) —
+ * automatically fixes the layout and replaces the 's' parameter in
+ * the main query.
  * 
- * Работает аналогично fixKeyboardlayout() в AJAX-поиске
- * (includes/interface/search/searchAjax.php).
+ * Works like the AJAX search; the variants come from as_search_layout_variants()
+ * (includes/interface/search/searchLanguage.php).
  * 
- * @param WP_Query $query — объект главного запроса WordPress
+ * @param WP_Query $query — main WordPress query object
  */
 function argon_search_fix_keyboard_layout( $query ) {
     
@@ -131,7 +105,7 @@ function argon_search_fix_keyboard_layout( $query ) {
         return;
     }
     
-    // Проверяем, есть ли результаты по оригинальному запросу
+    // Check whether the original query has results
     $test_query = new WP_Query( array(
         'post_type'      => 'any',
         'post_status'    => 'publish',
@@ -147,33 +121,32 @@ function argon_search_fix_keyboard_layout( $query ) {
     
     wp_reset_postdata();
     
-    // Функция fixKeyboardlayout() из searchAjax.php
-    if ( ! function_exists( 'fixKeyboardlayout' ) ) {
+    // Variants depend on the site language (searchLanguage.php)
+    if ( ! function_exists( 'as_search_layout_variants' ) ) {
         return;
     }
     
-    $fixed = fixKeyboardlayout( $s );
-    
-    if ( $fixed === $s || empty( $fixed ) ) {
-        return;
-    }
-    
-    // Проверяем, есть ли результаты по исправленному запросу
-    $test_query2 = new WP_Query( array(
-        'post_type'      => 'any',
-        'post_status'    => 'publish',
-        'posts_per_page' => 1,
-        's'              => $fixed,
-        'fields'         => 'ids',
-        'no_found_rows'  => true,
-    ) );
-    
-    if ( $test_query2->have_posts() ) {
-        // Подменяем s в основном запросе
-        $query->set( 's', $fixed );
+    foreach ( as_search_layout_variants( $s ) as $fixed ) {
         
-        // Сохраняем оригинальный запрос для отображения пользователю
-        $query->set( '_argon_original_s', $s );
+        // Check whether the fixed query has results
+        $test_query2 = new WP_Query( array(
+            'post_type'      => 'any',
+            'post_status'    => 'publish',
+            'posts_per_page' => 1,
+            's'              => $fixed,
+            'fields'         => 'ids',
+            'no_found_rows'  => true,
+        ) );
+        
+        if ( $test_query2->have_posts() ) {
+            // Replace s in the main query
+            $query->set( 's', $fixed );
+            
+            // Keep the original query to show it to the user
+            $query->set( '_argon_original_s', $s );
+            
+            break;
+        }
     }
     
     wp_reset_postdata();
@@ -182,19 +155,19 @@ function argon_search_fix_keyboard_layout( $query ) {
 add_action( 'pre_get_posts', 'argon_search_fix_keyboard_layout', 5 );
 
 // ============================================
-// ФИЛЬТР ПО ТАКСОНОМИЯМ (pre_get_posts)
+// TAXONOMY FILTER (pre_get_posts)
 // ============================================
 
 /**
- * ФУНКЦИЯ: Фильтр главного запроса по таксономиям из GET
+ * FUNCTION: Filter the main query by taxonomies from GET
  *
- * Читает as_taxonomy[] из URL и добавляет tax_query.
- * Значение "all" заменяется на список всех терминов таксономии.
- * Массив ID терминов передаётся из формы через serialize().
+ * Reads as_taxonomy[] from the URL and adds a tax_query.
+ * The "all" value is replaced with the list of all terms of the taxonomy.
+ * The array of term IDs is passed from the form via serialize().
  *
- * @param WP_Query $query — объект запроса WordPress
+ * @param WP_Query $query — WordPress query object
  */
-function search_filter_taxonomy( $query ) {
+function as_search_filter_taxonomy( $query ) {
     
     if ( is_admin() || ! $query->is_main_query() ) {
         return;
@@ -231,7 +204,7 @@ function search_filter_taxonomy( $query ) {
         
         $taxonomy_terms = array();
         
-        // "all" — берём все термины таксономии
+        // "all" — take all terms of the taxonomy
         if ( $value === 'all' ) {
             
             $args = array(
@@ -247,7 +220,7 @@ function search_filter_taxonomy( $query ) {
             }
             
         } else {
-            // Массив ID терминов передан через serialize()
+            // The array of term IDs is passed via serialize()
             $value = wp_unslash( $value );
             
             if ( strlen( $value ) > 10000 ) {
@@ -277,28 +250,28 @@ function search_filter_taxonomy( $query ) {
     $query->set( 'tax_query', $tax_query );
 }
 
-add_action( 'pre_get_posts', 'search_filter_taxonomy' );
+add_action( 'pre_get_posts', 'as_search_filter_taxonomy' );
 
 // ============================================
-// JOIN НА POSTMETA ДЛЯ АРТИКУЛА
+// JOIN ON POSTMETA FOR THE SKU
 // ============================================
 
 /**
- * ФУНКЦИЯ: JOIN на wp_postmeta для получения _article
+ * FUNCTION: JOIN on wp_postmeta to get _article
  *
- * Применяется только на кастомном поиске. Позволяет
- * использовать as_article_meta.meta_value в WHERE и ORDER BY.
+ * Applied only to the custom search. Makes it possible
+ * to use as_article_meta.meta_value in WHERE and ORDER BY.
  *
- * @param string   $join  — текущий JOIN
- * @param WP_Query $query — объект запроса
+ * @param string   $join  — current JOIN
+ * @param WP_Query $query — query object
  *
  * @return string
  */
-function search_join_article( $join, $query ) {
+function as_search_join_article( $join, $query ) {
     
     global $wpdb;
     
-    if ( ! search_is_custom_search( $query ) ) {
+    if ( ! as_search_is_custom_search( $query ) ) {
         return $join;
     }
     
@@ -309,166 +282,143 @@ function search_join_article( $join, $query ) {
     return $join;
 }
 
-add_filter( 'posts_join', 'search_join_article', 10, 2 );
+add_filter( 'posts_join', 'as_search_join_article', 10, 2 );
 
 // ============================================
-// DISTINCT — ЗАЩИТА ОТ ДУБЛИРОВАНИЯ
+// DISTINCT — PROTECTION AGAINST DUPLICATES
 // ============================================
 
 /**
- * ФУНКЦИЯ: DISTINCT для запроса
+ * FUNCTION: DISTINCT for the query
  *
- * При JOIN на postmeta один пост может дать несколько строк,
- * если у него несколько записей _article (теоретически).
- * DISTINCT гарантирует уникальность постов в результатах.
+ * With a JOIN on postmeta a single post can produce several rows
+ * if it has several _article records (theoretically).
+ * DISTINCT guarantees unique posts in the results.
  *
- * @param string   $distinct — текущее значение
- * @param WP_Query $query    — объект запроса
+ * @param string   $distinct — current value
+ * @param WP_Query $query    — query object
  *
  * @return string
  */
-function search_distinct( $distinct, $query ) {
+function as_search_distinct( $distinct, $query ) {
     
-    if ( ! search_is_custom_search( $query ) ) {
+    if ( ! as_search_is_custom_search( $query ) ) {
         return $distinct;
     }
     
     return 'DISTINCT';
 }
 
-add_filter( 'posts_distinct', 'search_distinct', 10, 2 );
+add_filter( 'posts_distinct', 'as_search_distinct', 10, 2 );
 
 // ============================================
-// WHERE — КАСТОМНЫЙ ПОИСК
+// WHERE — CUSTOM SEARCH
 // ============================================
 
 /**
- * ФУНКЦИЯ: Кастомный WHERE для поиска
+ * FUNCTION: Custom WHERE for search
  *
- * Заменяет стандартный WP-поиск на многословный:
- * - AND между словами
- * - OR внутри слова (title, excerpt, content, артикул)
+ * Replaces the default WP search with a multi-word one:
+ * - AND between words
+ * - OR inside a word (title, excerpt, content, SKU, spelling variants)
  *
- * Пример для запроса "гипсокартон влагостойкий":
- *   (title LIKE '%гипсокартон%' OR ... OR article LIKE '%гипсокартон%')
+ * Example for the query "moisture resistant drywall":
+ *   (title LIKE '%moisture%' OR ... OR article LIKE '%moisture%')
  *   AND
- *   (title LIKE '%влагостойкий%' OR ... OR article LIKE '%влагостойкий%')
+ *   (title LIKE '%drywall%' OR ... OR article LIKE '%drywall%')
  *
- * @param string   $search — текущий WHERE для поиска
- * @param WP_Query $query  — объект запроса
+ * @param string   $search — current search WHERE
+ * @param WP_Query $query  — query object
  *
  * @return string
  */
-function search_custom_where( $search, $query ) {
+function as_search_custom_where( $search, $query ) {
     
-    global $wpdb;
-    
-    if ( ! search_is_custom_search( $query ) ) {
+    if ( ! as_search_is_custom_search( $query ) ) {
         return $search;
     }
     
-    $s = $query->get( 's' );
-    $words = search_get_words( $s );
+    // The SQL is built by as_search_where_sql() (searchLanguage.php)
+    $where = as_search_where_sql( $query->get( 's' ) );
     
-    if ( empty( $words ) ) {
-        return $search;
-    }
-    
-    $where_parts = array();
-    
-    foreach ( $words as $word ) {
-        
-        $like = '%' . $wpdb->esc_like( $word ) . '%';
-        $like_esc = esc_sql( $like );
-        
-        $where_parts[] = "( {$wpdb->posts}.post_title LIKE '{$like_esc}' 
-                          OR {$wpdb->posts}.post_excerpt LIKE '{$like_esc}' 
-                          OR {$wpdb->posts}.post_content LIKE '{$like_esc}' 
-                          OR as_article_meta.meta_value LIKE '{$like_esc}' )";
-    }
-    
-    if ( empty( $where_parts ) ) {
-        return $search;
-    }
-    
-    return ' AND (' . implode( ' AND ', $where_parts ) . ') ';
+    return '' === $where ? $search : $where;
 }
 
-add_filter( 'posts_search', 'search_custom_where', 10, 2 );
+add_filter( 'posts_search', 'as_search_custom_where', 10, 2 );
 
 // ============================================
-// ORDER BY — СОРТИРОВКА ПО РЕЛЕВАНТНОСТИ
+// ORDER BY — SORTING BY RELEVANCE
 // ============================================
 
 /**
- * ФУНКЦИЯ: Сортировка результатов по релевантности
+ * FUNCTION: Sort results by relevance
  *
- * Формирует SQL-выражение с суммой очков для каждого поста.
- * Чем больше очков — тем выше пост в результатах.
+ * Builds an SQL expression with the sum of scores for each post.
+ * The more points, the higher the post in the results.
  *
- * Очки:
- *   1000 — точное совпадение title = полная фраза
- *    800 — точное совпадение артикула = полная фраза
- *    500 — title начинается с полной фразы
- *    400 — артикул начинается с полной фразы
- *     50 — слово запроса в начале title
- *     30 — слово запроса после пробела в title
- *     10 — слово запроса в title (в любом месте)
- *      5 — слово запроса в артикуле
+ * Points:
+ *   1000 — exact match title = full phrase
+ *    800 — exact match SKU = full phrase
+ *    500 — title starts with the full phrase
+ *    400 — SKU starts with the full phrase
+ *     50 — query word at the start of the title
+ *     30 — query word after a space in the title
+ *     10 — query word in the title (anywhere)
+ *      5 — query word in the SKU
  *
- * При равенстве очков — сортировка по дате DESC.
+ * With equal points — sort by date DESC.
  *
- * @param string   $orderby — текущий ORDER BY
- * @param WP_Query $query   — объект запроса
+ * @param string   $orderby — current ORDER BY
+ * @param WP_Query $query   — query object
  *
  * @return string
  */
-function search_custom_orderby( $orderby, $query ) {
+function as_search_custom_orderby( $orderby, $query ) {
     
     global $wpdb;
     
-    if ( ! search_is_custom_search( $query ) ) {
+    if ( ! as_search_is_custom_search( $query ) ) {
         return $orderby;
     }
     
     $s = $query->get( 's' );
-    $words = search_get_words( $s );
+    $words = as_search_get_words( $s );
     
     if ( empty( $words ) ) {
         return $orderby;
     }
     
-    // Полная фраза
+    // Full phrase
     $full_trim = trim( $s );
-    $full_exact = esc_sql( $full_trim );
-    $full_start = esc_sql( $wpdb->esc_like( $full_trim ) . '%' );
+    $full_exact = $full_trim;
+    $full_start = $wpdb->esc_like( $full_trim ) . '%';
     
     $score_parts = array();
     
-    // Приоритеты по полной фразе
-    $score_parts[] = "CASE WHEN {$wpdb->posts}.post_title = '{$full_exact}' THEN 1000 ELSE 0 END";
-    $score_parts[] = "CASE WHEN as_article_meta.meta_value = '{$full_exact}' THEN 800 ELSE 0 END";
-    $score_parts[] = "CASE WHEN {$wpdb->posts}.post_title LIKE '{$full_start}' THEN 500 ELSE 0 END";
-    $score_parts[] = "CASE WHEN as_article_meta.meta_value LIKE '{$full_start}' THEN 400 ELSE 0 END";
+    // Full phrase priorities
+    $score_parts[] = $wpdb->prepare( "CASE WHEN {$wpdb->posts}.post_title = %s THEN 1000 ELSE 0 END", $full_exact );
+    $score_parts[] = $wpdb->prepare( "CASE WHEN as_article_meta.meta_value = %s THEN 800 ELSE 0 END", $full_exact );
+    $score_parts[] = $wpdb->prepare( "CASE WHEN {$wpdb->posts}.post_title LIKE %s THEN 500 ELSE 0 END", $full_start );
+    $score_parts[] = $wpdb->prepare( "CASE WHEN as_article_meta.meta_value LIKE %s THEN 400 ELSE 0 END", $full_start );
     
-    // Приоритеты по каждому слову
+    // Per-word priorities
     foreach ( $words as $word ) {
         
-        $word_start = esc_sql( $wpdb->esc_like( $word ) . '%' );
-        $word_like  = esc_sql( '%' . $wpdb->esc_like( $word ) . '%' );
-        $word_after_space = esc_sql( '% ' . $wpdb->esc_like( $word ) . '%' );
+        $word_start       = $wpdb->esc_like( $word ) . '%';
+        $word_like        = '%' . $wpdb->esc_like( $word ) . '%';
+        $word_after_space = '% ' . $wpdb->esc_like( $word ) . '%';
         
-        // Слово в начале title
-        $score_parts[] = "CASE WHEN {$wpdb->posts}.post_title LIKE '{$word_start}' THEN 50 ELSE 0 END";
+        // Word at the start of the title
+        $score_parts[] = $wpdb->prepare( "CASE WHEN {$wpdb->posts}.post_title LIKE %s THEN 50 ELSE 0 END", $word_start );
         
-        // Слово после пробела в title
-        $score_parts[] = "CASE WHEN {$wpdb->posts}.post_title LIKE '{$word_after_space}' THEN 30 ELSE 0 END";
+        // Word after a space in the title
+        $score_parts[] = $wpdb->prepare( "CASE WHEN {$wpdb->posts}.post_title LIKE %s THEN 30 ELSE 0 END", $word_after_space );
         
-        // Слово в title (в любом месте)
-        $score_parts[] = "CASE WHEN {$wpdb->posts}.post_title LIKE '{$word_like}' THEN 10 ELSE 0 END";
+        // Word in the title (anywhere)
+        $score_parts[] = $wpdb->prepare( "CASE WHEN {$wpdb->posts}.post_title LIKE %s THEN 10 ELSE 0 END", $word_like );
         
-        // Слово в артикуле
-        $score_parts[] = "CASE WHEN as_article_meta.meta_value LIKE '{$word_like}' THEN 5 ELSE 0 END";
+        // Word in the SKU
+        $score_parts[] = $wpdb->prepare( "CASE WHEN as_article_meta.meta_value LIKE %s THEN 5 ELSE 0 END", $word_like );
     }
     
     $score_sql = '( ' . implode( ' + ', $score_parts ) . ' )';
@@ -476,4 +426,4 @@ function search_custom_orderby( $orderby, $query ) {
     return "{$score_sql} DESC, {$wpdb->posts}.post_date DESC, {$wpdb->posts}.ID DESC";
 }
 
-add_filter( 'posts_orderby', 'search_custom_orderby', 10, 2 );
+add_filter( 'posts_orderby', 'as_search_custom_orderby', 10, 2 );

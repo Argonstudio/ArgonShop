@@ -1,37 +1,36 @@
 <?php
 /**
- * ArgonShop — получение галереи изображений товара.
+ * ArgonShop — getting the product image gallery.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Читает список ID изображений из мета-поля товара и
- * преобразует их в массив объектов с готовыми URL, размерами
- * и подписями для использования в шаблонах темы и слайдерах.
+ * Reads the list of image IDs from the product meta field and
+ * turns it into an array of objects with ready URLs, sizes
+ * and captions for use in theme templates and sliders.
  *
  * ============================================================
- * ФОРМАТ ХРАНЕНИЯ
+ * STORAGE FORMAT
  * ============================================================
  *
- * Мета-поле: slider_imgs
- * Значение:  строка с ID изображений через запятую, например
+ * Meta field: slider_imgs
+ * Value:      a string of comma-separated image IDs, for example
  *            "12,15,18,22"
  *
- * Такой формат совместим со старым плагином ACF Photo Gallery,
- * который использовал то же имя поля и тот же формат. Это
- * позволяет обойтись без миграции данных: существующие галереи
- * читаются как есть, а новый метабокс пишет туда же.
+ * This format is compatible with the old ACF Photo Gallery plugin,
+ * which used the same field name and the same format. This
+ * avoids a data migration: existing galleries are read
+ * as is, and the new meta box writes to the same place.
  *
  * ============================================================
- * ИСПОЛЬЗОВАНИЕ
+ * USAGE
  * ============================================================
  *
- * Получить галерею товара с готовыми URL:
+ * Get a product gallery with ready URLs:
  *
  *     $gallery = as_get_product_gallery( $product_id );
  *
@@ -39,23 +38,23 @@
  *         echo '<img src="' . esc_url( $image['thumbnail_image_url'] ) . '">';
  *     }
  *
- * Получить только список ID:
+ * Get only the list of IDs:
  *
  *     $ids = as_get_product_gallery_ids( $product_id );
  *
  * ============================================================
- * ВОЗВРАЩАЕМЫЕ ПОЛЯ
+ * RETURNED FIELDS
  * ============================================================
  *
- * id                     — ID вложения в медиабиблиотеке
- * title                  — заголовок вложения
- * caption                — подпись вложения
- * alt                    — альтернативный текст
- * full_image_url         — URL полного размера
- * full_image_width       — ширина полного изображения
- * full_image_height      — высота полного изображения
- * thumbnail_image_url    — URL миниатюры
- * media_details          — массив [ width, height ]
+ * id                     — attachment ID in the media library
+ * title                  — attachment title
+ * caption                — attachment caption
+ * alt                    — alternative text
+ * full_image_url         — full-size URL
+ * full_image_width       — full image width
+ * full_image_height      — full image height
+ * thumbnail_image_url    — thumbnail URL
+ * media_details          — array [ width, height ]
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -63,14 +62,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Получает список ID изображений галереи товара.
+ * Gets the list of gallery image IDs of a product.
  *
- * Читает мета-поле slider_imgs и возвращает очищенный массив
- * целых чисел. Если поля нет или оно пустое — возвращает
- * пустой массив.
+ * Reads the slider_imgs meta field and returns a cleaned array
+ * of integers. If the field is missing or empty — returns
+ * an empty array.
  *
- * @param  int $product_id — ID товара
- * @return int[] Массив ID вложений
+ * @param  int $product_id — product ID
+ * @return int[] Array of attachment IDs
  */
 function as_get_product_gallery_ids( $product_id ) {
 
@@ -95,14 +94,14 @@ function as_get_product_gallery_ids( $product_id ) {
 }
 
 /**
- * Получает галерею изображений товара с готовыми данными для вывода.
+ * Gets the product image gallery with data ready for output.
  *
- * Возвращает массив объектов (ассоциативных массивов), каждый
- * из которых содержит всё, что нужно для отрисовки изображения
- * в шаблоне или слайдере.
+ * Returns an array of objects (associative arrays), each
+ * of which contains everything needed to render the image
+ * in a template or slider.
  *
- * @param  int $product_id — ID товара
- * @return array[] Массив изображений
+ * @param  int $product_id — product ID
+ * @return array[] Array of images
  */
 function as_get_product_gallery( $product_id ) {
 
@@ -118,7 +117,7 @@ function as_get_product_gallery( $product_id ) {
 
         $full = wp_get_attachment_image_src( $image_id, 'full' );
 
-        // Пропускаем вложения, которые больше не существуют
+        // Skip attachments that no longer exist
         if ( ! $full ) {
             continue;
         }

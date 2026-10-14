@@ -1,65 +1,66 @@
 /*
- * Plugin Name:       Argon Shop
- * Plugin URI:        https://github.com/Argonstudio/ArgonShop
- * Description:       Высокооптимизированный плагин интернет-магазина для WordPress с AJAX-поиском и кастомной шаблонизацией корзины и ЛК.
- * Version:           1.0.0
- * Requires at least: 6.0
- * Tested up to:      7.1
- * Requires PHP:      8.0
- * Author:            Иван Войтков (Ivan Voitkov)
- * Author URI:        https://argon-studio.ru
- * License:           GPL-3.0-or-later
- * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
- * Text Domain:       argon-shop
+Theme Name:        Argon Shop Theme
+Theme URI:         https://github.com/Argonstudio/ArgonShop
+Description:       Online store theme for the Argon Shop plugin: catalog, product cards, cart and customer account. Requires the active Argon Shop plugin.
+Version:           1.1.0
+Requires at least: 7.1
+Tested up to:      7.1
+Requires PHP:      8.3
+Author:            Ivan Voitkov
+Author URI:        https://argon-studio.ru
+License:           GPL-3.0-or-later
+License URI:       https://www.gnu.org/licenses/gpl-3.0.html
+Text Domain:       argon-shop-theme
+Domain Path:       /languages
 Tags: e-commerce, custom-menu, custom-logo, featured-images, translation-ready
 
-ArgonShopTheme — часть проекта ArgonShop.
+ArgonShopTheme is part of the ArgonShop project.
 
 ============================================================
-ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
+INTERACTION WITH THE ARGON SHOP PLUGIN
 ============================================================
 
-Тема и плагин образуют единое целое:
+The theme and the plugin form a single whole:
 
-  plugins/argon-shop/     — логика магазина
-  themes/argon-shop-theme/ — вёрстка и стили
+  plugins/argon-shop/     — store logic
+  themes/argon-shop-theme/ — markup and styles
 
-Тема подключает ES-модули плагина (main.js), вызывает функции
-плагина в шаблонах (kama_breadcrumbs, as_search, as_infocart,
-view_products_list и др.) и полагается на его хуки.
+The theme uses the plugin's ES modules (main.js), calls plugin
+functions in the templates (kama_breadcrumbs, as_search, as_infocart,
+view_products_list, etc.) and relies on its hooks.
 
-Плагин без темы не выводит ничего на фронтенде.
-Тема без плагина не работает — нет типов записей, таксономий
-и API-функций магазина.
+Without the theme the plugin outputs nothing on the frontend.
+Without the plugin the theme does not work — there are no post types, taxonomies
+or store API functions.
 
 ============================================================
-СТРУКТУРА СТИЛЕЙ
+STYLE STRUCTURE
 ============================================================
 
-Все стили темы разбиты по папкам и подключаются из
+All theme styles are split into folders and enqueued from
 functions.php (astheme_scripts):
 
   assets/css/
-    main.css                 — базовые стили
-    form.css                 — поля форм
-    controlPanels.css        — переключатели-табы
-    modal.css                — модальное окно темы
-    footer.css               — подвал
-    topBlock/                — фиксированная верхняя полоса
-    header/                  — основная шапка
-    sitebar/                 — сайдбар с каталогом
-    homePage/                — главная страница
-    product/                 — карточка и страница товара
-    catalog/                 — каталог
-    cart/                    — корзина
-    cabinet/                 — личный кабинет
-    rubrics/                 — рубрики, статьи, акции
-    search/                  — форма и результаты поиска
-    aboutCompany.css         — страница «О компании»
-    и другие файлы.
+    main.css                 — base styles
+    form.css                 — form fields
+    controlPanels.css        — tab switchers
+    modal.css                — theme modal window
+    footer.css               — footer
+    topBlock/                — fixed top bar
+    header/                  — main header
+    sitebar/                 — sidebar with the catalog
+    homePage/                — home page
+    product/                 — product card and page
+    catalog/                 — catalog
+    cart/                    — cart
+    cabinet/                 — customer account
+    rubrics/                 — categories, articles, promotions
+    search/                  — search form and results
+    aboutCompany.css         — "About the company" page
+    and other files.
 
-Этот файл (style.css) используется WordPress только для чтения
-метаданных темы. Реальные стили — в папках assets/css/.
+This file (style.css) is used by WordPress only to read
+the theme metadata. The actual styles are in the assets/css/ folders.
 
 ============================================================
 */

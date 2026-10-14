@@ -1,39 +1,38 @@
 /**
- * ArgonShopTheme — слайдер сертификатов на странице «О компании».
+ * ArgonShopTheme — certificate slider on the "About the company" page.
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Инициализирует всё, что относится к блоку «Дипломы и сертификаты»:
+ * Initializes everything related to the "Diplomas and certificates" block:
  *
- *   1. Swiper — слайдер сертификатов со стрелками и адаптивом.
- *   2. GLightbox — просмотр сертификата в полном размере
- *      по клику на изображение.
+ *   1. Swiper — certificate slider with arrows and responsive breakpoints.
+ *   2. GLightbox — full-size certificate view
+ *      on a click on the image.
  *
- * Разметка выводится в шаблоне aboutCompany.php.
- * Скрипт подключается условно — только на странице «О компании»
- * (см. functions.php, функция astheme_scripts).
+ * The markup is output in the aboutCompany.php template.
+ * The script is enqueued conditionally — only on the "About the company" page
+ * (see functions.php, the astheme_scripts function).
  *
  * ============================================================
- * ЗАВИСИМОСТИ
+ * DEPENDENCIES
  * ============================================================
  *
- * Глобальные объекты из плагина ArgonShop:
+ * Global objects from the ArgonShop plugin:
  *   Swiper     — assets/vendor/swiper/swiper-bundle.min.js
  *   GLightbox  — assets/vendor/glightbox/glightbox.min.js
  *
  * ============================================================
- * АДАПТИВ
+ * RESPONSIVE BREAKPOINTS
  * ============================================================
  *
- *   >= 780px  — 3 сертификата
- *   >= 550px  — 2 сертификата
- *   < 550px   — 1 сертификат
+ *   >= 780px  — 3 certificates
+ *   >= 550px  — 2 certificates
+ *   < 550px   — 1 certificate
  *
  * ============================================================
  */

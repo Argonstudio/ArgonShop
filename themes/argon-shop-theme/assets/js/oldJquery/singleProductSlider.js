@@ -1,4 +1,4 @@
-/* СЛАЙДЕР НА СТРАНИЦЕ ТОВАРА */
+/* PRODUCT PAGE SLIDER */
 
 /* fancybox + slick */
 

@@ -1,5 +1,5 @@
 /**
- * ШАПКА
+ * HEADER
  * =========================================== */
 
 #header{
@@ -27,7 +27,7 @@
     height: 75px;
 }
 
-/*Блок адрес */
+/* Address block */
 
 #header .header_top .block-address {
     float: left;
@@ -69,7 +69,7 @@
     margin: 7px 0 0 33px;
 }
 
-/* Блок связь */
+/* Contact block */
 
 #header .header_top .block-communication {
     width:289px;

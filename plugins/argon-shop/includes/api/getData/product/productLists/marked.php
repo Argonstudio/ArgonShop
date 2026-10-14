@@ -1,39 +1,38 @@
 <?php
 /**
- * Получение отмеченных товаров (хиты продаж, новинки)
+ * Getting marked products (best sellers, new products)
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * 1. Главная страница → блоки "Хиты продаж" и "Новинки"
- * 2. Страница категории → отмеченные товары категории
- * 3. Страница товара → отмеченные товары (без текущего)
+ * WHERE TO TEST:
+ * 1. Home page → "Best sellers" and "New products" blocks
+ * 2. Category page → marked products of the category
+ * 3. Product page → marked products (without the current one)
  * 
- * ЧТО ДЕЛАЕТ:
- * Возвращает товары с мета-полем _hit или _newProduct
+ * WHAT IT DOES:
+ * Returns products with the _hit or _newProduct meta field
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 /**
- * ФУНКЦИЯ: Получение отмеченных товаров
+ * FUNCTION: Get marked products
  * 
- * @param int    $count — количество товаров
- * @param string $type  — тип мета-поля: '_hit' или '_newProduct'
+ * @param int    $count — number of products
+ * @param string $type  — meta field type: '_hit' or '_newProduct'
  * 
- * @return WP_Query Объект с товарами
+ * @return WP_Query Object with products
  */
-function get_marked_products( $count, $type ) {
+function as_get_marked_products( $count, $type ) {
     
     $post_type = 'product';
     $taxonomy = 'catalog';
     
-    // Валидация
+    // Validation
     $count = absint( $count );
     
     if ( $count < 1 ) {
@@ -52,10 +51,10 @@ function get_marked_products( $count, $type ) {
                 'compare' => '!=',
             ),
         ),
-        'tax_query' => get_tax_query_marked_products( $post_type, $type, $taxonomy ),
+        'tax_query' => as_get_tax_query_marked_products( $post_type, $type, $taxonomy ),
     );
     
-    // На странице товара не выводим его карточку
+    // Do not show the current product's card on its own page
     if ( is_singular( $post_type ) ) {
         $current_id = get_the_ID();
         
@@ -64,10 +63,10 @@ function get_marked_products( $count, $type ) {
         }
     }
     
-    // На странице корзины исключаем уже добавленные товары
-    if ( get_cartPageID() === get_queried_object_id() ) {
+    // On the cart page, exclude products that are already added
+    if ( as_get_cartPageID() === get_queried_object_id() ) {
         
-        $productsShoppingCart = getCookie( 'productsShoppingCart' );
+        $productsShoppingCart = as_getCookie( 'productsShoppingCart' );
         
         if ( isset( $productsShoppingCart ) && is_array( $productsShoppingCart ) && ! empty( $productsShoppingCart ) ) {
             
@@ -93,19 +92,19 @@ function get_marked_products( $count, $type ) {
 }
 
 /**
- * ФУНКЦИЯ: Формирование tax_query для отмеченных товаров
+ * FUNCTION: Build the tax_query for marked products
  * 
- * @param string $post_type — тип записи
- * @param string $type      — тип мета-поля
- * @param string $taxonomy  — таксономия
+ * @param string $post_type — post type
+ * @param string $type      — meta field type
+ * @param string $taxonomy  — taxonomy
  * 
- * @return array|string Массив tax_query или пустая строка
+ * @return array|string tax_query array or an empty string
  */
-function get_tax_query_marked_products( $post_type, $type, $taxonomy ) {
+function as_get_tax_query_marked_products( $post_type, $type, $taxonomy ) {
     
     $tax_query = '';
     
-    $term_ids = get_terms_ids_marked_products( $post_type, $type, $taxonomy );
+    $term_ids = as_get_terms_ids_marked_products( $post_type, $type, $taxonomy );
     
     if ( ! empty( $term_ids ) ) {
         $tax_query = array(
@@ -121,15 +120,15 @@ function get_tax_query_marked_products( $post_type, $type, $taxonomy ) {
 }
 
 /**
- * ФУНКЦИЯ: Формирование списка ID терминов
+ * FUNCTION: Build the list of term IDs
  * 
- * @param string $post_type — тип записи
- * @param string $type      — тип мета-поля
- * @param string $taxonomy  — таксономия
+ * @param string $post_type — post type
+ * @param string $type      — meta field type
+ * @param string $taxonomy  — taxonomy
  * 
- * @return array|string Массив ID терминов или пустая строка
+ * @return array|string Array of term IDs or an empty string
  */
-function get_terms_ids_marked_products( $post_type, $type, $taxonomy ) {
+function as_get_terms_ids_marked_products( $post_type, $type, $taxonomy ) {
     
     if ( is_singular( $post_type ) ) {
         

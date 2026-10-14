@@ -1,69 +1,68 @@
 /**
- * ArgonShop — модуль личного кабинета.
+ * ArgonShop — account module.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Управляет интерактивными элементами личного кабинета:
+ * Controls the interactive elements of the account:
  *
- *   1. Активация поля email (кнопка «Изменить»).
- *   2. Отправка формы смены email и пароля.
- *   3. Сохранение данных аккаунта (физлицо и юрлицо).
- *   4. Переключение блока полей юрлица (чекбокс «Юрлицо»).
+ *   1. Enabling the email field (the "Change" button).
+ *   2. Submitting the email and password change form.
+ *   3. Saving account data (individual and legal entity).
+ *   4. Toggling the legal entity fields block (the "Legal entity" checkbox).
  *
  * ============================================================
- * DOM-ЭЛЕМЕНТЫ
+ * DOM ELEMENTS
  * ============================================================
  *
- * Вкладка «Настройки»:
- *   #editEmail                       — поле email (disabled по умолчанию).
- *   #editEmailActive                 — кнопка «Изменить» (разблокирует поле).
+ * "Settings" tab:
+ *   #editEmail                       — email field (disabled by default).
+ *   #editEmailActive                 — "Change" button (unlocks the field).
  *   #editOldPass, 
  *   #editNewPass, 
- *   #editNewPassConfirm              — поля паролей.
- *   #editEmailPasswordButton         — кнопка «Сохранить».
+ *   #editNewPassConfirm              — password fields.
+ *   #editEmailPasswordButton         — "Save" button.
  *
- *   .editEmailError span             — сообщение об ошибке email.
- *   .editPassError span              — сообщение об ошибке старого пароля.
- *   .editNewPassError span           — сообщение об ошибке нового пароля.
- *   .editNewPassConfirmError span    — сообщение о несовпадении паролей.
- *   .editResult span                 — результат сохранения.
+ *   .editEmailError span             — email error message.
+ *   .editPassError span              — old password error message.
+ *   .editNewPassError span           — new password error message.
+ *   .editNewPassConfirmError span    — password mismatch message.
+ *   .editResult span                 — save result.
  *
- * Вкладка «Аккаунт и адрес»:
- *   .accountCustomCheckbox           — стилизованный чекбокс «Юрлицо».
- *   #accountLegal                    — реальный скрытый чекбокс.
- *   #accountLegalBlock               — таблица полей юрлица.
- *   #accountSaveButton               — кнопка «Сохранить» (data-userid).
- *   .accountResult span              — результат сохранения.
+ * "Account and address" tab:
+ *   .accountCustomCheckbox           — styled "Legal entity" checkbox.
+ *   #accountLegal                    — the real hidden checkbox.
+ *   #accountLegalBlock               — legal entity fields table.
+ *   #accountSaveButton               — "Save" button (data-userid).
+ *   .accountResult span              — save result.
  *
- * Классы полей формы:
- *   .accountDetail                   — поля физлица.
- *   .accountLegalDetail              — поля юрлица.
+ * Form field classes:
+ *   .accountDetail                   — individual fields.
+ *   .accountLegalDetail              — legal entity fields.
  *
  * ============================================================
- * AJAX-ДЕЙСТВИЯ
+ * AJAX ACTIONS
  * ============================================================
  *
  * cabinetEditEmailPassword
- *   Принимает: userID, email, oldEmail, pass, newPass, newPassConfirm.
- *   Возвращает JSON:
+ *   Accepts: userID, email, oldEmail, pass, newPass, newPassConfirm.
+ *   Returns JSON:
  *     {
  *       edited:   { newEmail?: '...', newPass?: '...' },
  *       errors:   { email?: '...', pass?: '...', newPass?: '...' },
- *       newNonce: '...'   // если был вызван wp_set_password
+ *       newNonce: '...'   // if wp_set_password was called
  *     }
  *
  * cabinetAccountSave
- *   Принимает: userID, forBack (JSON-строка).
- *   Возвращает текст: сообщение об успехе или ошибке.
+ *   Accepts: userID, forBack (JSON string).
+ *   Returns text: a success or error message.
  *
  * ============================================================
- * ИСПОЛЬЗОВАНИЕ
+ * USAGE
  * ============================================================
  *
  *     import { arsCabinet } from './modules/cabinet.js';
@@ -73,19 +72,20 @@
 'use strict';
 
 import { arsApi }        from '../core/api.js';
+import { t }             from '../core/config.js';
 import { qs, qsa, on } from '../../shared/dom.js';
 
 /**
- * Паттерн допустимых имён полей формы.
- * Разрешены латинские и русские буквы, цифры и подчёркивание.
- * Случайные поля от расширений браузера отсеиваются.
+ * Pattern of allowed form field names.
+ * Latin and Cyrillic letters, digits and the underscore are allowed (keys of saved data).
+ * Random fields from browser extensions are filtered out.
  *
  * @type {RegExp}
  */
-const FIELD_NAME_PATTERN = /^[\wА-яё]+$/;
+const FIELD_NAME_PATTERN = /^[\w\u0410-\u044F\u0451]+$/;
 
 /**
- * Модуль личного кабинета.
+ * Account module.
  */
 class ArsCabinet {
 
@@ -93,7 +93,7 @@ class ArsCabinet {
     #initialized = false;
 
     /**
-     * Инициализация. Безопасна для повторного вызова.
+     * Initialization. Safe to call repeatedly.
      *
      * @return {void}
      */
@@ -103,8 +103,8 @@ class ArsCabinet {
             return;
         }
 
-        // Признак того, что мы в ЛК — наличие хотя бы одного
-        // из ключевых элементов.
+        // We are in the account if at least one
+        // of the key elements is present.
         if ( ! qs( '#editEmailPasswordButton' ) && ! qs( '#accountSaveButton' ) ) {
             return;
         }
@@ -118,11 +118,11 @@ class ArsCabinet {
     }
 
     // ============================================================
-    // АКТИВАЦИЯ EMAIL
+    // EMAIL ACTIVATION
     // ============================================================
 
     /**
-     * Кнопка «Изменить» разблокирует поле email.
+     * The "Change" button unlocks the email field.
      *
      * @return {void}
      */
@@ -148,11 +148,11 @@ class ArsCabinet {
     }
 
     // ============================================================
-    // СМЕНА EMAIL И ПАРОЛЯ
+    // EMAIL AND PASSWORD CHANGE
     // ============================================================
 
     /**
-     * Отправка формы смены email и пароля.
+     * Submitting the email and password change form.
      *
      * @return {void}
      */
@@ -196,31 +196,31 @@ class ArsCabinet {
                 this.#handleEmailPasswordResponse( data, email );
 
             } catch {
-                this.#setResultMessage( 'Ошибка на сервере' );
+                this.#setResultMessage( t( 'serverError' ) );
             }
         });
     }
 
     /**
-     * Обрабатывает ответ сервера на смену email/пароля.
+     * Handles the server response to the email/password change.
      *
-     * @param  {Object} response — ответ сервера
-     * @param  {string} email    — введённый email (для обновления data-oldemail)
+     * @param  {Object} response — server response
+     * @param  {string} email    — entered email (to update data-oldemail)
      * @return {void}
      */
         /**
-     * Обрабатывает ответ сервера на смену email/пароля.
+     * Handles the server response to the email/password change.
      *
-     * @param  {Object} response — ответ сервера
-     * @param  {string} email    — введённый email (для обновления data-oldemail)
+     * @param  {Object} response — server response
+     * @param  {string} email    — entered email (to update data-oldemail)
      * @return {void}
      */
     #handleEmailPasswordResponse( response, email ) {
 
-        // Полный сброс всех сообщений об ошибках
+        // Fully reset all error messages
         this.#clearAllErrors();
 
-        // Очищаем результат
+        // Clear the result
         const resultBlock = qs( '.editResult span' );
 
         if ( resultBlock ) {
@@ -229,13 +229,13 @@ class ArsCabinet {
 
         const hasErrors = response.errors && Object.keys( response.errors ).length > 0;
 
-        // Показываем ошибки, если они есть
+        // Show the errors, if any
         if ( hasErrors ) {
             this.#showErrors( response.errors );
             return;
         }
 
-        // Обрабатываем успешные изменения
+        // Handle successful changes
         if ( ! response.edited ) {
             return;
         }
@@ -243,15 +243,15 @@ class ArsCabinet {
         const edited = response.edited;
         const messages = [];
 
-        // Смена пароля
+        // Password change
         if ( edited.newPass ) {
 
             this.#clearPasswordFields();
 
             messages.push( edited.newPass );
 
-            // Сессия и nonce инвалидированы — надёжнее всего
-            // получить свежее состояние из нового запроса.
+            // The session and nonce are invalidated — the most reliable option
+            // is to get a fresh state from a new request.
             if ( resultBlock ) {
                 resultBlock.textContent = messages.join( ', ' );
             }
@@ -260,7 +260,7 @@ class ArsCabinet {
             return;
         }
 
-        // Смена email
+        // Email change
         if ( edited.newEmail ) {
 
             const emailInput = qs( '#editEmail' );
@@ -269,9 +269,9 @@ class ArsCabinet {
                 emailInput.dataset.oldemail = email;
             }
 
-            // После смены email очищаем поля паролей — иначе пароль
-            // остаётся в открытом виде в поле, а старые ошибки пароля
-            // продолжают висеть на экране.
+            // After the email change clear the password fields — otherwise the password
+            // stays in plain sight in the field, and old password errors
+            // keep hanging on the screen.
             this.#clearPasswordFields();
 
             messages.push( edited.newEmail );
@@ -283,10 +283,10 @@ class ArsCabinet {
     }
     
     /**
-     * Сбрасывает все сообщения об ошибках формы смены email/пароля.
+     * Resets all error messages of the email/password change form.
      *
-     * Снимает класс editErrorActive с контейнеров и очищает текст
-     * внутри их span-элементов.
+     * Removes the editErrorActive class from the containers and clears the text
+     * inside their span elements.
      *
      * @return {void}
      */
@@ -305,14 +305,14 @@ class ArsCabinet {
     }
 
     /**
-     * Полностью очищает поля паролей и связанные с ними сообщения
-     * об ошибках. Используется после успешной смены email или пароля.
+     * Fully clears the password fields and the related error
+     * messages. Used after a successful email or password change.
      *
      * @return {void}
      */
     #clearPasswordFields() {
 
-        // Очищаем значения полей
+        // Clear the field values
         const oldPassInput = qs( '#editOldPass' );
         const newPassInput = qs( '#editNewPass' );
         const confirmInput = qs( '#editNewPassConfirm' );
@@ -321,8 +321,8 @@ class ArsCabinet {
         if ( newPassInput ) newPassInput.value = '';
         if ( confirmInput ) confirmInput.value = '';
 
-        // Явно снимаем класс и очищаем текст для трёх блоков,
-        // связанных с паролями
+        // Explicitly remove the class and clear the text for the three blocks
+        // related to passwords
         [
             '.editPassError',
             '.editNewPassError',
@@ -346,9 +346,9 @@ class ArsCabinet {
     }
 
     /**
-     * Показывает ошибки формы смены email/пароля.
+     * Shows the errors of the email/password change form.
      *
-     * @param  {Object} errors — карта ошибок { email, pass, newPass, newPassConfirm }
+     * @param  {Object} errors — error map { email, pass, newPass, newPassConfirm }
      * @return {void}
      */
     #showErrors( errors ) {
@@ -378,9 +378,9 @@ class ArsCabinet {
     }
 
     /**
-     * Выводит сообщение в блок результата смены email/пароля.
+     * Prints a message into the email/password change result block.
      *
-     * @param  {string} message — текст сообщения
+     * @param  {string} message — message text
      * @return {void}
      */
     #setResultMessage( message ) {
@@ -393,11 +393,11 @@ class ArsCabinet {
     }
 
     // ============================================================
-    // СОХРАНЕНИЕ АККАУНТА
+    // SAVING THE ACCOUNT
     // ============================================================
 
     /**
-     * Сохранение данных аккаунта.
+     * Saving the account data.
      *
      * @return {void}
      */
@@ -437,15 +437,15 @@ class ArsCabinet {
                 this.#setAccountResult( text );
 
             } catch {
-                this.#setAccountResult( 'Ошибка: данные не сохранены' );
+                this.#setAccountResult( t( 'dataNotSaved' ) );
             }
         });
     }
 
     /**
-     * Собирает поля формы в объект { name: value }.
+     * Collects the form fields into an object { name: value }.
      *
-     * @param  {string} selector — CSS-селектор полей
+     * @param  {string} selector — CSS selector of the fields
      * @return {Object}
      */
     #collectFields( selector ) {
@@ -469,9 +469,9 @@ class ArsCabinet {
     }
 
     /**
-     * Выводит сообщение в блок результата сохранения аккаунта.
+     * Prints a message into the account save result block.
      *
-     * @param  {string} message — текст сообщения
+     * @param  {string} message — message text
      * @return {void}
      */
     #setAccountResult( message ) {
@@ -484,17 +484,17 @@ class ArsCabinet {
     }
 
     // ============================================================
-    // ЧЕКБОКС ЮРЛИЦА
+    // LEGAL ENTITY CHECKBOX
     // ============================================================
 
     /**
-     * Переключение блока полей юрлица.
+     * Toggling the legal entity fields block.
      *
-     * Логика:
-     *   - клик по .accountCustomCheckbox переключает #accountLegal
-     *     и показывает или скрывает #accountLegalBlock;
-     *   - при загрузке страницы блок показывается только если
-     *     чекбокс отмечен.
+     * Logic:
+     *   - a click on .accountCustomCheckbox toggles #accountLegal
+     *     and shows or hides #accountLegalBlock;
+     *   - on page load the block is shown only if
+     *     the checkbox is checked.
      *
      * @return {void}
      */
@@ -508,31 +508,31 @@ class ArsCabinet {
             return;
         }
 
-        // Исходное состояние при загрузке страницы
-        block.style.display = checkbox.checked ? 'block' : 'none';
+        // Initial state on page load
+        block.style.display = checkbox.checked ? 'table' : 'none';
 
         const toggle = () => {
 
             const nextState = ! checkbox.checked;
 
             checkbox.checked = nextState;
-            block.style.display = nextState ? 'block' : 'none';
+            block.style.display = nextState ? 'table' : 'none';
         };
 
-        // Клик по стилизованному чекбоксу
+        // Click on the styled checkbox
         if ( custom ) {
             on( custom, 'click', toggle );
         }
 
-        // Клик по реальному чекбоксу (на случай, если он виден)
+        // Click on the real checkbox (in case it is visible)
         on( checkbox, 'click', () => {
-            block.style.display = checkbox.checked ? 'block' : 'none';
+            block.style.display = checkbox.checked ? 'table' : 'none';
         });
     }
 }
 
 /**
- * Готовый синглтон модуля личного кабинета.
+ * Ready singleton of the account module.
  *
  * @type {ArsCabinet}
  */

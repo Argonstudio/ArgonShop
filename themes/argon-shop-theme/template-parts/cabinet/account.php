@@ -1,63 +1,62 @@
 <?php
 /**
- * Форма аккаунта пользователя в личном кабинете (шаблон части кабинета)
+ * User account form in the customer account (account template part)
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ИСПОЛЬЗУЕТСЯ:
- * Подключается через get_template_part( 'template-parts/cabinet/account' )
- * из шаблона myCabinetPage.php (страница личного кабинета).
+ * WHERE IT IS USED:
+ * Included via get_template_part( 'template-parts/cabinet/account' )
+ * from the myCabinetPage.php template (customer account page).
  * 
- * ЧТО ВЫВОДИТ:
- * 1. Таблицу полей аккаунта (данные физлица)
- * 2. Чекбокс "Юридическое лицо"
- * 3. Таблицу полей юрлица (скрыта, пока не отмечен чекбокс)
- * 4. Кнопку "Сохранить"
- * 5. Чекбокс согласия на обработку данных
+ * WHAT IT OUTPUTS:
+ * 1. The table of account fields (individual's data)
+ * 2. The "Legal entity" checkbox
+ * 3. The table of legal entity fields (hidden until the checkbox is checked)
+ * 4. The "Save" button
+ * 5. The consent to data processing checkbox
  * 
  * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  * 
- * ФУНКЦИИ ПЛАГИНА:
+ * PLUGIN FUNCTIONS:
  * 
- * show_user_fields( $user_ID, $type, $wrap, $class50, $class100, $classTitle, $classInput, $required )
- *   Файл: includes/api/getSetting.php
- *   Выводит поля формы из настроек магазина (settingShop).
- *   Для типа "person" — данные физлица.
- *   Для типа "legalPerson" — данные юрлица.
+ * as_show_user_fields( $user_ID, $type, $wrap, $class50, $class100, $classTitle, $classInput, $required )
+ *   File: includes/api/getSetting.php
+ *   Outputs the form fields from the store settings (settingShop).
+ *   For the "person" type — individual's data.
+ *   For the "legalPerson" type — legal entity data.
  * 
- * МЕТА-ПОЛЯ ПОЛЬЗОВАТЕЛЯ (get_user_meta):
+ * USER META FIELDS (get_user_meta):
  * 
  * accountData
- *   Структура:
+ *   Structure:
  *     [
  *         'accountDetail'      => ['nameUser' => '...', 'telefonUser' => '...', ...],
  *         'accountLegalDetail' => ['companyNameUser' => '...', 'innUser' => '...', ...],
  *     ]
- *   Заполняется при сохранении формы через AJAX cabinetAccountSave.
+ *   Filled when the form is saved via the cabinetAccountSave AJAX action.
  * 
- * AJAX-ОБРАБОТЧИК:
+ * AJAX HANDLER:
  * 
- * cabinetAccountSave_callback()
- *   Файл: includes/interface/cabinet/myCabinet.php
- *   Принимает данные формы через JS-функцию accountSave().
- *   Сохраняет в мета-поле accountData.
- *   Проверяет, что user_ID совпадает с текущим пользователем.
+ * as_cabinetAccountSave_callback()
+ *   File: includes/interface/cabinet/myCabinet.php
+ *   Receives the form data from the cabinet JS module.
+ *   Saves it to the accountData meta field.
+ *   Checks that user_ID matches the current user.
  * 
- * JS-ФУНКЦИЯ:
+ * JS MODULE:
  * 
- * accountSave() (из assets/cabinet/account/account.js)
- *   Собирает данные формы, добавляет action=cabinetAccountSave и nonce,
- *   отправляет на admin-ajax.php.
+ * assets/js/interface/modules/cabinet.js (plugin)
+ *   Collects the form data, adds action=cabinetAccountSave and the nonce,
+ *   and sends it to admin-ajax.php.
  * 
  * ============================================================
- * ПЕРЕМЕННЫЕ ИЗ ШАБЛОНА КАБИНЕТА
+ * VARIABLES FROM THE ACCOUNT TEMPLATE
  * ============================================================
  * 
- * $user_ID — ID текущего пользователя (get_current_user_id())
+ * $user_ID — current user ID (get_current_user_id())
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -65,7 +64,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Получение данных пользователя
+// Get the user data
 $userdata    = get_user_by( 'id', $user_ID );
 $accountData = get_user_meta( $user_ID, 'accountData', true );
 
@@ -73,7 +72,7 @@ if ( ! is_array( $accountData ) ) {
     $accountData = array();
 }
 
-// Проверка, отмечен ли чекбокс юрлица
+// Check whether the legal entity checkbox is checked
 $legal_checked = ! empty( $accountData['accountLegalDetail'] );
 
 ?>
@@ -83,10 +82,10 @@ $legal_checked = ! empty( $accountData['accountLegalDetail'] );
         <table>
             
             <?php 
-            // Функция плагина Argon Shop (includes/api/getSetting.php)
-            // Выводит поля для типа "person" (физлицо) в виде таблицы.
-            if ( function_exists( 'show_user_fields' ) ) {
-                show_user_fields( $user_ID, 'person', 'tr', 'block-userField50', 'block-userField100', 'userFieldTitle', 'userFieldInput' );
+            // Argon Shop plugin function (includes/api/getSetting.php)
+            // Outputs the fields of the "person" type (individual) as a table.
+            if ( function_exists( 'as_show_user_fields' ) ) {
+                as_show_user_fields( $user_ID, 'person', 'tr', 'block-userField50', 'block-userField100', 'userFieldTitle', 'userFieldInput' );
             }
             ?>
                   
@@ -98,7 +97,7 @@ $legal_checked = ! empty( $accountData['accountLegalDetail'] );
              
             <input type="checkbox" id="accountLegal" style="display:none" <?php echo $legal_checked ? 'checked' : ''; ?> >  
             <div class="accountCustomCheckbox"></div> 
-            <span>Юридическое лицо1</span> 
+            <span><?php esc_html_e( 'Legal entity', 'argon-shop-theme' ); ?></span> 
             
         </div>
         
@@ -106,10 +105,10 @@ $legal_checked = ! empty( $accountData['accountLegalDetail'] );
         <table id="accountLegalBlock">
             
             <?php 
-            // Функция плагина Argon Shop (includes/api/getSetting.php)
-            // Выводит поля для типа "legalPerson" (юрлицо) в виде таблицы.
-            if ( function_exists( 'show_user_fields' ) ) {
-                show_user_fields( $user_ID, 'legalPerson', 'tr', 'block-userField50', 'block-userField100', 'userFieldTitle', 'userFieldInput' );
+            // Argon Shop plugin function (includes/api/getSetting.php)
+            // Outputs the fields of the "legalPerson" type (legal entity) as a table.
+            if ( function_exists( 'as_show_user_fields' ) ) {
+                as_show_user_fields( $user_ID, 'legalPerson', 'tr', 'block-userField50', 'block-userField100', 'userFieldTitle', 'userFieldInput' );
             }
             ?>
             
@@ -117,7 +116,7 @@ $legal_checked = ! empty( $accountData['accountLegalDetail'] );
         
         <div class="block-accountSave">
             
-            <input type="button" data-userid="<?php echo esc_attr( $user_ID ); ?>" id="accountSaveButton" value="Сохранить" disabled>
+            <input type="button" data-userid="<?php echo esc_attr( $user_ID ); ?>" id="accountSaveButton" value="<?php esc_attr_e( 'Save', 'argon-shop-theme' ); ?>" disabled>
             <div class="accountResult"><span></span></div>
             
             <div class="checkboxCabinet">
@@ -126,7 +125,7 @@ $legal_checked = ! empty( $accountData['accountLegalDetail'] );
                             
                 <label for="agree_checkbox_account" style="cursor: pointer;">
                 
-                Устанавливая флажок, я выражаю своё согласие на обработку <a href="/konfidentsialnost-personalnoj-informatsii/" target="_blank">данных для демонстрационного стенда</a> (включая имя, фамилию, адрес, телефон, email, ИНН, КПП, юридический адрес) и технических файлов <strong>cookie</strong> в целях демонстрации и тестирования интерфейса сайта. Я понимаю, что данный сайт и все формы являются только симуляцией интернет-магазина, и не ввожу свои настоящие персональные данные. С условиями обработки ознакомлен(а).
+                <?php esc_html_e( 'By checking this box, I consent to the processing of', 'argon-shop-theme' ); ?> <a href="/konfidentsialnost-personalnoj-informatsii/" target="_blank"><?php esc_html_e( 'data for the demo stand', 'argon-shop-theme' ); ?></a> <?php esc_html_e( '(including first name, last name, address, phone, email, TIN, KPP, legal address) and technical files', 'argon-shop-theme' ); ?> <strong>cookie</strong> <?php esc_html_e( 'for the purpose of demonstrating and testing the site interface. I understand that this site and all forms are only a simulation of an online store, and I do not enter my real personal data. I have read the processing terms.', 'argon-shop-theme' ); ?>
                 
                                 
                 </label>

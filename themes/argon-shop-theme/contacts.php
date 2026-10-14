@@ -1,35 +1,34 @@
 <?php
 /**
- * Template Name: Контакты
+ * Template Name: Contacts
  * 
- * Шаблон страницы "Контакты"
+ * "Contacts" page template
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0 
+ * @author  Ivan Voitkov
  *  
- * ЧТО ВЫВОДИТ:
- * 1. Хлебные крошки
- * 2. Заголовок и контент страницы
- * 3. Карту адреса (template part 'addressMap')
- * 4. Форму обратной связи (Contact Form 7)
+ * WHAT IT OUTPUTS:
+ * 1. Breadcrumbs
+ * 2. Page title and content
+ * 3. Address map (template part 'addressMap')
+ * 4. Feedback form (Contact Form 7)
  * 
  * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  * 
- * В этом шаблоне используются функции плагина:
+ * This template uses the following plugin functions:
  * 
- * - kama_breadcrumbs() → хлебные крошки (includes/interface/breadcrumbs.php)
+ * - as_kama_breadcrumbs() → breadcrumbs (includes/interface/breadcrumbs.php)
  *  
- * ВНЕШНИЕ ЗАВИСИМОСТИ:
- * - Contact Form 7 — для формы обратной связи (шорткод [contact-form-7])
- * - Template part 'addressMap' — шаблон карты (файл addressMap.php в корне темы)
+ * EXTERNAL DEPENDENCIES:
+ * - Contact Form 7 — for the feedback form (the [contact-form-7] shortcode)
+ * - Template part 'addressMap' — map template (addressMap.php in the theme root)
  * 
  * ============================================================
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -44,28 +43,28 @@ get_header(); ?>
         <main class="block-content">
 
             <?php 
-            // Функция плагина Argon Shop (includes/interface/breadcrumbs.php)
-            if ( function_exists( 'kama_breadcrumbs' ) ) {
-                kama_breadcrumbs( '<span class="b"> » </span>' );
+            // Argon Shop plugin function (includes/interface/breadcrumbs.php)
+            if ( function_exists( 'as_kama_breadcrumbs' ) ) {
+                AS_Kama_Breadcrumbs( '<span class="b"> » </span>' );
             }
             ?>
 
             <?php 
-            // Стандартный цикл WordPress
+            // Standard WordPress loop
             while ( have_posts() ) : the_post(); 
             ?>
 
             <div class="page pageContacts">
 
-                <h1 class="title titleHistory">Контакты</h1>
+                <h1 class="title titleHistory"><?php esc_html_e( 'Contacts', 'argon-shop-theme' ); ?></h1>
                 
                 <div class="descr"><?php the_content(); ?></div><!-- .descr -->
                 
                 <div class="pageMap">
                     
                     <?php 
-                    // Template part 'addressMap' — шаблон карты
-                    // Файл должен быть: /themes/argon-shop-theme/addressMap.php
+                    // Template part 'addressMap' — map template
+                    // The file must be: /themes/argon-shop-theme/addressMap.php
                     get_template_part( 'addressMap' ); 
                     ?>
                     
@@ -73,11 +72,11 @@ get_header(); ?>
                 
                 <div class="pageContactForm">
                     
-                    <div class="h2 pageContactForm-title">Обратная связь</div>
+                    <div class="h2 pageContactForm-title"><?php esc_html_e( 'Feedback', 'argon-shop-theme' ); ?></div>
                     
                     <?php 
-                    // Форма обратной связи через Contact Form 7
-                    echo do_shortcode( '[contact-form-7 id="7" title="Обратная связь"]' ); 
+                    // Feedback form via Contact Form 7
+                    echo do_shortcode( '[contact-form-7 id="7" title="Feedback"]' );
                     ?>
                     
                 </div>

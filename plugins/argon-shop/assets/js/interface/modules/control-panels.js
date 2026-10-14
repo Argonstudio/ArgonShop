@@ -1,63 +1,62 @@
 /**
- * ArgonShop — панели управления (табы).
+ * ArgonShop — control panels (tabs).
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Управляет переключением блоков страницы через горизонтальные
- * панели-переключатели. Используется:
- *   - в личном кабинете (Аккаунт / Настройки / Заказы);
- *   - в корзине (Краткое оформление / Физлица / Юрлица);
- *   - на странице товара (Описание / Характеристики / Применение).
+ * Controls switching of page blocks via horizontal
+ * toggle panels. Used:
+ *   - in the account (Account / Settings / Orders);
+ *   - in the cart (Quick order / Individuals / Legal entities);
+ *   - on the product page (Description / Characteristics / Usage).
  *
- * Модуль поддерживает два режима:
+ * The module supports two modes:
  *
- *   switch       — переключение между блоками: активен только один
- *                  элемент, остальные скрыты.
+ *   switch       — switching between blocks: only one element
+ *                  is active, the others are hidden.
  *
- *   openingList  — сворачиваемый список: клик открывает или
- *                  закрывает связанный блок, несколько могут быть
- *                  открыты одновременно.
+ *   openingList  — collapsible list: a click opens or
+ *                  closes the linked block, several can be
+ *                  open at the same time.
  *
- * Дополнительно поддерживается мобильный набор элементов —
- * .mobileItemControlPanel с атрибутом data-mobileWidth. Если
- * ширина окна меньше указанной, используется мобильный набор.
+ * A mobile set of elements is also supported —
+ * .mobileItemControlPanel with the data-mobileWidth attribute. If
+ * the window is narrower than the given width, the mobile set is used.
  *
  * ============================================================
- * DOM-ЭЛЕМЕНТЫ
+ * DOM ELEMENTS
  * ============================================================
  *
  * .itemControlPanel, .mobileItemControlPanel
- *   Кликабельные панели-переключатели. Атрибуты:
- *     data-type — тип поведения: "switch" или "openingList".
- *     name      — имя блока; связывает панель с блоком
+ *   Clickable toggle panels. Attributes:
+ *     data-type — behaviour type: "switch" or "openingList".
+ *     name      — block name; links the panel to the block
  *                 #block_{name}.
  *
  * .blockItemPage[id="block_{name}"]
- *   Блок, который показывается или скрывается.
+ *   The block that is shown or hidden.
  *
  * .itemControlPanelActive
- *   Класс активной панели в режиме switch.
+ *   Class of the active panel in switch mode.
  *
  * ============================================================
- * ПРИМЕР РАЗМЕТКИ
+ * MARKUP EXAMPLE
  * ============================================================
  *
  *   <div class="itemControlPanel itemControlPanelActive"
- *        data-type="switch" name="account">Аккаунт</div>
+ *        data-type="switch" name="account">Account</div>
  *   <div class="itemControlPanel"
- *        data-type="switch" name="settings">Настройки</div>
+ *        data-type="switch" name="settings">Settings</div>
  *
  *   <div class="blockItemPage" id="block_account">...</div>
  *   <div class="blockItemPage" id="block_settings">...</div>
  *
  * ============================================================
- * ИСПОЛЬЗОВАНИЕ
+ * USAGE
  * ============================================================
  *
  *     import { arsControlPanels } from './modules/control-panels.js';
@@ -69,7 +68,7 @@
 import { qs, qsa, on } from '../../shared/dom.js';
 
 /**
- * Модуль панелей управления.
+ * Control panels module.
  */
 class ArsControlPanels {
 
@@ -77,23 +76,23 @@ class ArsControlPanels {
     #initialized = false;
 
     /**
-     * Активный селектор панелей (.itemControlPanel или
-     * .mobileItemControlPanel — зависит от ширины окна).
+     * Active panel selector (.itemControlPanel or
+     * .mobileItemControlPanel — depends on the window width).
      *
      * @type {string}
      */
     #activeSelector = '.itemControlPanel';
 
     /**
-     * Ширина окна, ниже которой используется мобильный набор панелей.
-     * 0 — мобильный набор не используется.
+     * Window width below which the mobile panel set is used.
+     * 0 — the mobile set is not used.
      *
      * @type {number}
      */
     #mobileWidth = 0;
 
     /**
-     * Инициализация. Безопасна для повторного вызова.
+     * Initialization. Safe to call repeatedly.
      *
      * @return {void}
      */
@@ -128,11 +127,11 @@ class ArsControlPanels {
     }
 
     // ============================================================
-    // ОБРАБОТЧИКИ
+    // HANDLERS
     // ============================================================
 
     /**
-     * Клики по панелям.
+     * Clicks on the panels.
      *
      * @return {void}
      */
@@ -146,7 +145,7 @@ class ArsControlPanels {
                 return;
             }
 
-            // Если это не активный набор панелей (мобильный vs десктопный) — игнорируем.
+            // If this is not the active panel set (mobile vs desktop) — ignore it.
             if ( ! panel.matches( this.#activeSelector ) ) {
                 return;
             }
@@ -156,9 +155,9 @@ class ArsControlPanels {
     }
 
     /**
-     * Обрабатывает клик по одной панели.
+     * Handles a click on one panel.
      *
-     * @param  {Element} panel — панель-переключатель
+     * @param  {Element} panel — toggle panel
      * @return {void}
      */
     #handlePanelClick( panel ) {
@@ -181,10 +180,10 @@ class ArsControlPanels {
     }
 
     /**
-     * Режим "switch": активирует одну панель, остальные деактивирует.
+     * "switch" mode: activates one panel and deactivates the others.
      *
-     * @param  {Element} panel — панель
-     * @param  {string}  name  — имя панели
+     * @param  {Element} panel — panel
+     * @param  {string}  name  — panel name
      * @return {void}
      */
     #handleSwitch( panel, name ) {
@@ -195,7 +194,7 @@ class ArsControlPanels {
 
         panel.classList.add( 'itemControlPanelActive' );
 
-        // Скрываем все блоки и показываем активный
+        // Hide all blocks and show the active one
         qsa( '.blockItemPage' ).forEach( block => {
             block.style.display = 'none';
         });
@@ -219,10 +218,10 @@ class ArsControlPanels {
     }
 
     /**
-     * Режим "openingList": клик открывает или закрывает связанный блок.
+     * "openingList" mode: a click opens or closes the linked block.
      *
-     * @param  {Element} panel — панель
-     * @param  {string}  name  — имя панели
+     * @param  {Element} panel — panel
+     * @param  {string}  name  — panel name
      * @return {void}
      */
     #handleOpeningList( panel, name ) {
@@ -245,23 +244,23 @@ class ArsControlPanels {
     }
 
     // ============================================================
-    // НАЧАЛЬНОЕ СОСТОЯНИЕ И РЕСАЙЗ
+    // INITIAL STATE AND RESIZE
     // ============================================================
 
     /**
-     * Применяет начальное состояние при загрузке страницы:
-     * в режиме switch показывается только активный блок.
+     * Applies the initial state on page load:
+     * in switch mode only the active block is shown.
      *
      * @return {void}
      */
     #applyInitialState() {
 
-        // Скрываем все блоки
+        // Hide all blocks
         qsa( '.blockItemPage' ).forEach( block => {
             block.style.display = 'none';
         });
 
-        // Показываем блоки, связанные с активными панелями
+        // Show the blocks linked to the active panels
         qsa( `${this.#activeSelector}.itemControlPanelActive` ).forEach( item => {
 
             const name = item.getAttribute( 'name' );
@@ -279,8 +278,8 @@ class ArsControlPanels {
     }
 
     /**
-     * Переключение между мобильным и десктопным набором панелей
-     * при изменении ширины окна.
+     * Switching between the mobile and desktop panel sets
+     * when the window width changes.
      *
      * @return {void}
      */
@@ -309,7 +308,7 @@ class ArsControlPanels {
 }
 
 /**
- * Готовый синглтон модуля панелей управления.
+ * Ready singleton of the control panels module.
  *
  * @type {ArsControlPanels}
  */

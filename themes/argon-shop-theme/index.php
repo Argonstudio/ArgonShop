@@ -1,11 +1,10 @@
 <?php 
 
 /**
- * Функции темы ArgonShopTheme
+ * Home page template of the ArgonShopTheme theme
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * @license GPL-3.0-or-later
  */
 
@@ -20,9 +19,9 @@ get_header(); ?>
         <main class="block-content">
            
            <?php
-            // Слайдер на главной странице.
-            // Выводится функцией плагина ArgonShop (Swiper).
-            // См. includes/interface/slider/sliderMain.php.
+            // Home page slider.
+            // Output by the ArgonShop plugin function (Swiper).
+            // See includes/interface/slider/sliderMain.php.
             if ( function_exists( 'as_slider_main' ) ) {
                 as_slider_main();
             }
@@ -30,39 +29,39 @@ get_header(); ?>
             
             <div class="block-advantages">
                 
-                <div class="homepage-block-title">Наши преимущества</div>
+                <div class="homepage-block-title"><?php esc_html_e( 'Our advantages', 'argon-shop-theme' ); ?></div>
                 
                 <div class="block-advantages-cards">
                 
                     <div class="card-advantage twentyYear">
                         
                         <div class="advantage-img"><span>+</span></div>
-                        <div class="advantage-title">20 лет</div>
-                        <div class="advantage-descr">на рынке стройматериалов</div>
+                        <div class="advantage-title"><?php esc_html_e( '20 years', 'argon-shop-theme' ); ?></div>
+                        <div class="advantage-descr"><?php esc_html_e( 'in the building materials market', 'argon-shop-theme' ); ?></div>
                         
                     </div>
                     
                     <div class="card-advantage assortment">
                         
                         <div class="advantage-img"><span>+</span></div>
-                        <div class="advantage-title">Ассортимент</div>
-                        <div class="advantage-descr">Более 60 тысяч наименований товаров</div>
+                        <div class="advantage-title"><?php esc_html_e( 'Product range', 'argon-shop-theme' ); ?></div>
+                        <div class="advantage-descr"><?php esc_html_e( 'More than 60 thousand products', 'argon-shop-theme' ); ?></div>
                         
                     </div>
                     
                     <div class="card-advantage trust">
                         
                         <div class="advantage-img"><span>+</span></div>
-                        <div class="advantage-title">Нам доверяют</div>
-                        <div class="advantage-descr">Более тысячи клиентов в месяц </div>
+                        <div class="advantage-title"><?php esc_html_e( 'Trusted by', 'argon-shop-theme' ); ?></div>
+                        <div class="advantage-descr"><?php esc_html_e( 'More than a thousand customers a month', 'argon-shop-theme' ); ?> </div>
                         
                     </div>
                     
                     <div class="card-advantage autopark">
                         
                         <div class="advantage-img"><span>+</span></div>
-                        <div class="advantage-title">Автопарк</div>
-                        <div class="advantage-descr">12 машин и манипуляторы, доставка по МО</div>
+                        <div class="advantage-title"><?php esc_html_e( 'Fleet', 'argon-shop-theme' ); ?></div>
+                        <div class="advantage-descr"><?php esc_html_e( '12 trucks and crane trucks, delivery across the Moscow region', 'argon-shop-theme' ); ?></div>
                         
                     </div>
                 
@@ -72,11 +71,11 @@ get_header(); ?>
             
             <div class="block-homePageCatalog">
                 
-                <div class="homepage-block-title">Каталог строительных материалов</div>
+                <div class="homepage-block-title"><?php esc_html_e( 'Building materials catalog', 'argon-shop-theme' ); ?></div>
                 
                 <?php 
                 
-                $catalog = get_catalog_terms();
+                $catalog = as_get_catalog_terms();
                 
                 if ( ! is_array( $catalog ) ) {
                     $catalog = array();
@@ -87,14 +86,14 @@ get_header(); ?>
                 
                 foreach ( $catalog as $key => $value ) {
                     
-                    // PHP 8.5: проверки вложенных ключей
+                    // PHP 8.5: checks of nested keys
                     if ( isset( $value['data']['firstLevelChild'] ) ) {
                         $catalogSecondLevelChild += absint( $value['data']['firstLevelChild'] );
                     }
                 }
                 
                 // ============================================
-                // БЛОК "АКЦИИ И СКИДКИ"
+                // "PROMOTIONS AND DISCOUNTS" BLOCK
                 // ============================================
                 
                 $promoDiscontArgs = array( 
@@ -119,8 +118,8 @@ get_header(); ?>
                 
                 $countPromoDiscont++;
                 
-                // Разбиваем каталог на 3 столбца + передаём число значений в блоке акции и скидки
-                $splitMenuQuery = splitMenu( $catalog, 3, $catalogFirstLevelChild, $catalogSecondLevelChild, 3, 5, $countPromoDiscont );
+                // Split the catalog into 3 columns + pass the number of values in the promotions block
+                $splitMenuQuery = as_splitMenu( $catalog, 3, $catalogFirstLevelChild, $catalogSecondLevelChild, 3, 5, $countPromoDiscont );
                 
                 if ( ! is_array( $splitMenuQuery ) || ! isset( $splitMenuQuery[0] ) || ! isset( $splitMenuQuery[1] ) ) {
                     $splitMenu = array();
@@ -138,7 +137,7 @@ get_header(); ?>
                     $splitMenuCountsList = array();
                 }
                 
-                // Находим наименьший столбец
+                // Find the shortest column
                 $leactList = null;
                 
                 if ( ! empty( $splitMenuCountsList ) ) {
@@ -151,19 +150,19 @@ get_header(); ?>
                 }
                 
                 // ============================================
-                // ДОБАВЛЯЕМ "АКЦИИ И СКИДКИ" В НАИМЕНЬШИЙ СТОЛБЕЦ
+                // ADD "PROMOTIONS AND DISCOUNTS" TO THE SHORTEST COLUMN
                 // ============================================
                 
                 if ( $leactList !== null && isset( $splitMenu[ $leactList ] ) ) {
                     
-                    // Убеждаемся, что $splitMenu[$leactList] — массив
+                    // Make sure $splitMenu[$leactList] is an array
                     if ( ! is_array( $splitMenu[ $leactList ] ) ) {
                         $splitMenu[ $leactList ] = array();
                     }
                     
                     $splitMenu[ $leactList ][36]['data'] = array(
                         'term_id' => 36,
-                        'name'    => 'Акции и скидки',
+                        'name'    => __( 'Promotions and discounts', 'argon-shop-theme' ),
                         'class'   => 'catalog-promoDiscontLink',
                     );
                     
@@ -191,13 +190,13 @@ get_header(); ?>
                 }
                 
                 // ============================================
-                // ВЫВОД СТОЛБЦОВ КАТАЛОГА
+                // CATALOG COLUMNS OUTPUT
                 // ============================================
                 
                 foreach ( $splitMenu as $subMenuID => $subMenuValue ) {
                     
                     if ( ! empty( $subMenuValue ) && is_array( $subMenuValue ) ) {
-                        view_menu_elements( $subMenuValue, 'homePageCatalogList', 2 );
+                        as_view_menu_elements( $subMenuValue, 'homePageCatalogList', 2 );
                     }
                 }
                 

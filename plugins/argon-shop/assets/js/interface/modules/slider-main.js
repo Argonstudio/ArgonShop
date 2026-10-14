@@ -1,38 +1,37 @@
 /**
- * ArgonShop — слайдер на главной странице.
+ * ArgonShop — home page slider.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Инициализирует Swiper на главной странице сайта. Заменяет
- * старый слайдер на Slick.
+ * Initializes Swiper on the site home page. Replaces
+ * the old Slick slider.
  *
- * HTML-разметка выводится PHP-функцией as_slider_main()
- * (см. includes/interface/slider/sliderMain.php).
+ * The HTML markup is printed by the PHP function as_slider_main()
+ * (see includes/interface/slider/sliderMain.php).
  *
  * ============================================================
- * DOM-ЭЛЕМЕНТЫ
+ * DOM ELEMENTS
  * ============================================================
  *
  * .as-slider-main
- *   Контейнер слайдера. Внутри — .swiper-wrapper со слайдами
- *   .swiper-slide, пагинация .swiper-pagination и стрелки
+ *   Slider container. Inside — .swiper-wrapper with
+ *   .swiper-slide slides, .swiper-pagination and arrows
  *   .swiper-button-prev / .swiper-button-next.
  *
  * ============================================================
- * ИСПОЛЬЗОВАНИЕ
+ * USAGE
  * ============================================================
  *
  *     import { arsSliderMain } from './modules/slider-main.js';
  *     arsSliderMain.init();
  *
- * Модуль безопасен для вызова на любой странице: если слайдера
- * нет, ничего не выполняется.
+ * The module is safe to call on any page: if there is no slider,
+ * nothing is executed.
  */
 
 'use strict';
@@ -40,7 +39,7 @@
 import { qs } from '../../shared/dom.js';
 
 /**
- * Модуль слайдера главной страницы.
+ * Home page slider module.
  */
 class ArsSliderMain {
 
@@ -48,14 +47,14 @@ class ArsSliderMain {
     #initialized = false;
 
     /**
-     * Экземпляр Swiper.
+     * Swiper instance.
      *
      * @type {Object|null}
      */
     #swiper = null;
 
     /**
-     * Инициализация. Безопасна для повторного вызова.
+     * Initialization. Safe to call repeatedly.
      *
      * @return {void}
      */
@@ -106,7 +105,7 @@ class ArsSliderMain {
     }
 
     /**
-     * Возвращает экземпляр Swiper для внешнего управления.
+     * Returns the Swiper instance for external control.
      *
      * @return {Object|null}
      */
@@ -116,7 +115,7 @@ class ArsSliderMain {
 }
 
 /**
- * Готовый синглтон модуля слайдера главной.
+ * Ready-made singleton of the home slider module.
  *
  * @type {ArsSliderMain}
  */

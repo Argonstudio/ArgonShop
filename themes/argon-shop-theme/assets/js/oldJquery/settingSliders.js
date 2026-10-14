@@ -3,7 +3,7 @@
 //})
 
 $("#slider_index .list").slick({
-    /* УПРАВЛЕНИЕ СЛАЙДЕРОМ НА ГЛАВНОЙ */
+    /* HOME PAGE SLIDER CONTROL */
     dots: true,
     autoplay: true,
     autoplaySpeed: 5000,

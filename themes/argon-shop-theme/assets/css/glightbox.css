@@ -1,30 +1,29 @@
 /**
- * ArgonShopTheme — стилизация GLightbox.
+ * ArgonShopTheme — GLightbox styling.
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Дополняет стандартные стили GLightbox:
+ * Complements the standard GLightbox styles:
  *
- *   1. Убирает двойные полосы прокрутки у inline-контента
- *      (форма обратной связи) — оставляет одну полосу у самого
- *      модального окна.
+ *   1. Removes double scrollbars of inline content
+ *      (feedback form) — keeps a single scrollbar on the
+ *      modal window itself.
  *
- *   2. Ограничивает высоту формы, чтобы она помещалась
- *      на экран без внутреннего скролла.
+ *   2. Limits the form height so that it fits
+ *      on the screen without an inner scroll.
  *
- *   3. Скрывает стрелки навигации, если в галерее только
- *      один элемент (карта).
+ *   3. Hides the navigation arrows if the gallery has only
+ *      one item (the map).
  *
- *   4. Стилизует модальное окно под тему сайта.
+ *   4. Styles the modal window to match the site theme.
  *
  * ============================================================
- * ПОДКЛЮЧЕНИЕ
+ * ENQUEUEING
  * ============================================================
  *
  * wp_enqueue_style(
@@ -36,12 +35,12 @@
  */
 
 /* ============================================================
-   БЛОКИРОВКА ПРОКРУТКИ СТРАНИЦЫ
+   PAGE SCROLL LOCK
    ============================================================
  *
- * Пока модальное окно открыто, страница за ним не должна
- * скроллиться. GLightbox добавляет класс .glightbox-open
- * на <body>, но если наша тема перебивает overflow — фиксируем.
+ * While the modal window is open, the page behind it must not
+ * scroll. GLightbox adds the .glightbox-open class
+ * to <body>, but if our theme overrides overflow — we enforce it.
  */
 
 body.glightbox-open {
@@ -49,16 +48,16 @@ body.glightbox-open {
 }
 
 /* ============================================================
-   INLINE-КОНТЕНТ (форма обратной связи)
+   INLINE CONTENT (feedback form)
    ============================================================
  *
- * Стандартные стили GLightbox ставят на .gslide-inline
- * max-height: calc(100vh - 40px) и overflow: auto. Это
- * создаёт первую полосу. Вторая появляется, если внутри
- * есть контейнер со своей прокруткой.
+ * The standard GLightbox styles set on .gslide-inline
+ * max-height: calc(100vh - 40px) and overflow: auto. This
+ * creates the first scrollbar. The second appears if there is
+ * a container with its own scroll inside.
  *
- * Убираем внутренний overflow у form-обёрток и оставляем
- * один скролл у .gslide-inline.
+ * Remove the inner overflow of the form wrappers and keep
+ * a single scroll on .gslide-inline.
  */
 
 .glightbox-container .gslide-inline {
@@ -71,7 +70,7 @@ body.glightbox-open {
     box-sizing: border-box;
 }
 
-/* Форма CF7 и её обёртки — не создают собственный скролл */
+/* The CF7 form and its wrappers do not create their own scroll */
 
 .glightbox-container .gslide-inline .wpcf7,
 .glightbox-container .gslide-inline form,
@@ -81,19 +80,19 @@ body.glightbox-open {
     height: auto !important;
 }
 
-/* Убираем лишние отступы CF7 внутри модалки */
+/* Remove extra CF7 margins inside the modal */
 
 .glightbox-container .gslide-inline .wpcf7 {
     margin: 0;
 }
 
 /* ============================================================
-   СКРЫТИЕ СТРЕЛОК ПРИ ОДНОМ ЭЛЕМЕНТЕ
+   HIDING THE ARROWS FOR A SINGLE ITEM
    ============================================================
  *
- * Если в галерее только один элемент (например, карта),
- * стрелки не нужны. GLightbox добавляет класс
- * .glightbox-button-hidden, но на всякий случай фиксируем.
+ * If the gallery has only one item (for example, the map),
+ * the arrows are not needed. GLightbox adds the
+ * .glightbox-button-hidden class, but we enforce it just in case.
  */
 
 .glightbox-container .gbtn.glightbox-button-hidden {
@@ -101,11 +100,11 @@ body.glightbox-open {
 }
 
 /* ============================================================
-   IFRAME (карта)
+   IFRAME (map)
    ============================================================
  *
- * Убираем лишние отступы вокруг iframe и задаём ему
- * аккуратный скруглённый контур.
+ * Remove extra margins around the iframe and give it
+ * a neat rounded outline.
  */
 
 .glightbox-container .gslide-iframe .gslide-media iframe {
@@ -114,11 +113,11 @@ body.glightbox-open {
 }
 
 /* ============================================================
-   КНОПКА ЗАКРЫТИЯ
+   CLOSE BUTTON
    ============================================================
  *
- * Стандартная кнопка GLightbox — в правом верхнем углу.
- * Увеличим кликабельную область и добавим контраст.
+ * The standard GLightbox button is in the top right corner.
+ * Enlarge the clickable area and add contrast.
  */
 
 .glightbox-container .gclose {

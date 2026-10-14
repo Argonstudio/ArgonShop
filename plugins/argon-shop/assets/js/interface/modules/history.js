@@ -1,31 +1,30 @@
 /**
- * ArgonShop — модуль истории просмотров.
+ * ArgonShop — view history module.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Добавляет ID просмотренного товара в историю. Полная версия
- * модуля (со списком просмотренных товаров) будет реализована
- * в одном из следующих шагов.
+ * Adds the ID of the viewed product to the history. The full version
+ * of the module (with the list of viewed products) will be implemented
+ * in one of the next steps.
  *
- * Сейчас реализован только метод add(), который вызывается со
- * страницы товара при её открытии.
+ * Currently only the add() method is implemented; it is called from
+ * the product page when it opens.
  *
  * ============================================================
- * AJAX-ДЕЙСТВИЕ
+ * AJAX ACTION
  * ============================================================
  *
  * addCookieHistory_history
- *   Принимает: productID.
- *   Сохраняет ID в куки через сервер.
+ *   Accepts: productID.
+ *   Saves the ID in a cookie via the server.
  *
  * ============================================================
- * ИСПОЛЬЗОВАНИЕ
+ * USAGE
  * ============================================================
  *
  *     import { arsHistory } from './modules/history.js';
@@ -37,17 +36,17 @@
 import { arsApi } from '../core/api.js';
 
 /**
- * Модуль истории просмотров.
+ * View history module.
  */
 class ArsHistory {
 
     /**
-     * Добавляет товар в историю просмотров.
+     * Adds a product to the view history.
      *
-     * Запрос идёт без ожидания ответа — ошибка при добавлении
-     * не критична и не должна ломать интерфейс.
+     * The request does not wait for a response — an error when adding
+     * is not critical and must not break the interface.
      *
-     * @param  {string|number} productId — ID товара
+     * @param  {string|number} productId — product ID
      * @return {void}
      */
     add( productId ) {
@@ -59,13 +58,13 @@ class ArsHistory {
         arsApi.post( 'addCookieHistory_history', {
             productID: productId,
         }).catch( () => {
-            // Ошибку игнорируем — история не критична
+            // Ignore the error — the history is not critical
         });
     }
 }
 
 /**
- * Готовый синглтон модуля истории просмотров.
+ * Ready singleton of the view history module.
  *
  * @type {ArsHistory}
  */

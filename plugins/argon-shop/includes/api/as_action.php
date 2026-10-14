@@ -14,9 +14,9 @@ function as_update_meta($post_id, $key, $value = 0){
     
 }
 
-//Выполняет частичное слияние массивов,
-//$quantity максимально число элементов которое можно присоединить к $summaryArray от $attachArray
-function array_partial_merge($quantity, $summaryArray, $attachArray){
+// Partially merges arrays:
+// $quantity is the maximum number of items from $attachArray that may be appended to $summaryArray
+function as_array_partial_merge($quantity, $summaryArray, $attachArray){
     
     if($quantity > 0){
         

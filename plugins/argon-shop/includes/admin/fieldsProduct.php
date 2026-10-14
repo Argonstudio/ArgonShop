@@ -1,55 +1,54 @@
 <?php
 /**
- * Дополнительные поля товара в админ-панели
+ * Additional product fields in the admin panel
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * WordPress Админка → Товары → Редактирование товара
- * URL: /wp-admin/post.php?post=ID_ТОВАРА&action=edit
+ * WHERE TO TEST:
+ * WordPress Admin → Products → Edit product
+ * URL: /wp-admin/post.php?post=PRODUCT_ID&action=edit
  * 
- * ЧТО ДЕЛАЕТ:
- * 1. Добавляет метабокс "Основные параметры" (цена, вес, артикул)
- * 2. Добавляет метабокс "Цена со скидкой" (оптовые цены)
- * 3. Добавляет метабокс "Характеристики" (текстовые и чекбоксы)
- * 4. Сохраняет все поля при обновлении товара
+ * WHAT IT DOES:
+ * 1. Adds the "Main parameters" meta box (price, weight, SKU)
+ * 2. Adds the "Discounted price" meta box (wholesale prices)
+ * 3. Adds the "Characteristics" meta box (text fields and checkboxes)
+ * 4. Saves all fields when the product is updated
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Удаляем стандартные метабоксы таксономий
-add_action( 'admin_menu', 'detailedfields_remove_meta_box' );
+// Remove the default taxonomy meta boxes
+add_action( 'admin_menu', 'as_detailedfields_remove_meta_box' );
 
-function detailedfields_remove_meta_box() {
+function as_detailedfields_remove_meta_box() {
     
     remove_meta_box( 'tagsdiv-wholesalePrice', 'product', 'normal' );
     remove_meta_box( 'tagsdiv-characteristics', 'product', 'normal' );
 }
 
-// Добавляем новые метабоксы
-add_action( 'add_meta_boxes', 'detailedfields_add_meta_box' );
+// Add the new meta boxes
+add_action( 'add_meta_boxes', 'as_detailedfields_add_meta_box' );
 
-function detailedfields_add_meta_box() {
+function as_detailedfields_add_meta_box() {
     
-    add_meta_box( 'mainParameters_meta_box', 'Основные параметры', 'mainParameters_metabox', 'product', 'normal', 'core' );
+    add_meta_box( 'mainParameters_meta_box', __( 'Main parameters', 'argon-shop' ), 'as_mainParameters_metabox', 'product', 'normal', 'core' );
     
-    if ( check_saleSteps() ) {
-        add_meta_box( 'wholesalePrice_meta_box', 'Цена со скидкой', 'wholesalePrice_metabox', 'product', 'normal', 'core' );
+    if ( as_check_saleSteps() ) {
+        add_meta_box( 'wholesalePrice_meta_box', __( 'Discounted price', 'argon-shop' ), 'as_wholesalePrice_metabox', 'product', 'normal', 'core' );
     }
     
-    add_meta_box( 'characteristics_meta_box', 'Характеристики', 'characteristics_metabox', 'product', 'normal', 'core' );
+    add_meta_box( 'characteristics_meta_box', __( 'Characteristics', 'argon-shop' ), 'as_characteristics_metabox', 'product', 'normal', 'core' );
 }
 
 /**
- * МЕТАБОКС: Основные параметры
- * ГДЕ: Страница товара → основной блок
+ * META BOX: Main parameters
+ * WHERE: Product page → main column
  */
-function mainParameters_metabox( $post ) {
+function as_mainParameters_metabox( $post ) {
     
     wp_nonce_field( basename( __FILE__ ), 'detailed_fields' );
     
@@ -59,7 +58,7 @@ function mainParameters_metabox( $post ) {
     $hitSales = get_post_meta( $post->ID, '_hit', true );
     $newProduct = get_post_meta( $post->ID, '_newProduct', true );
     
-    // Экранирование
+    // Escaping
     $price_esc = esc_attr( $price );
     $weight_esc = esc_attr( $weight );
     $article_esc = esc_attr( $article );
@@ -71,26 +70,26 @@ function mainParameters_metabox( $post ) {
     <ul class='advanced-fields'>
         
         <li class="advanced-field"> 
-            <div class="span-advanced-fields">Цена</div>
-            <input type="text" name="_price" placeholder="Цена товара" value="<?php echo $price_esc; ?>"> ₽/шт
+            <div class="span-advanced-fields"><?php esc_html_e( 'Price', 'argon-shop' ); ?></div>
+            <input type="text" name="_price" placeholder="<?php esc_attr_e( 'Product price', 'argon-shop' ); ?>" value="<?php echo $price_esc; ?>"> <?php echo esc_html( as_get_currency_per_piece() ); ?>
         </li>
         
         <li class="advanced-field"> 
-            <div class="span-advanced-fields">Вес</div>
-            <input type="text" name="_weight" placeholder="Вес товара" value="<?php echo $weight_esc; ?>"> кг
+            <div class="span-advanced-fields"><?php esc_html_e( 'Weight', 'argon-shop' ); ?></div>
+            <input type="text" name="_weight" placeholder="<?php esc_attr_e( 'Product weight', 'argon-shop' ); ?>" value="<?php echo $weight_esc; ?>"> <?php esc_html_e( 'kg', 'argon-shop' ); ?>
         </li>
         
         <li class="advanced-field"> 
-            <div class="span-advanced-fields">Артикул</div>
-            <input type="text" name="_article" placeholder="Артикул" value="<?php echo $article_esc; ?>">
+            <div class="span-advanced-fields"><?php esc_html_e( 'SKU', 'argon-shop' ); ?></div>
+            <input type="text" name="_article" placeholder="<?php esc_attr_e( 'SKU', 'argon-shop' ); ?>" value="<?php echo $article_esc; ?>">
         </li>
         
         <li class="advanced-field"> 
-            <input name="_hit" type="checkbox" <?php echo $checkedHit; ?>> <span class="span-advanced-fields">Хит продаж</span>
+            <input name="_hit" type="checkbox" <?php echo $checkedHit; ?>> <span class="span-advanced-fields"><?php esc_html_e( 'Bestseller', 'argon-shop' ); ?></span>
         </li>
         
         <li class="advanced-field">                  
-            <input name="_newProduct" type="checkbox" <?php echo $checkedNew; ?>> <span class="span-advanced-fields">Новинка</span>
+            <input name="_newProduct" type="checkbox" <?php echo $checkedNew; ?>> <span class="span-advanced-fields"><?php esc_html_e( 'New', 'argon-shop' ); ?></span>
         </li>
         
     </ul>
@@ -99,14 +98,14 @@ function mainParameters_metabox( $post ) {
 }
 
 /**
- * ФУНКЦИЯ: Получение родительских категорий товара
+ * FUNCTION: Get the parent categories of a product
  * 
- * @param WP_Post  $post              — объект товара
- * @param array    $activeCategoryId  — массив ID выбранных категорий
+ * @param WP_Post  $post              — product object
+ * @param array    $activeCategoryId  — array of selected category IDs
  * 
- * @return array Массив ID всех родительских категорий
+ * @return array Array of IDs of all parent categories
  */
-function get_product_parentterms( $post, $activeCategoryId ) {
+function as_get_product_parentterms( $post, $activeCategoryId ) {
     
     $product_parentterms = array();
     $product_terms = array();
@@ -168,12 +167,12 @@ function get_product_parentterms( $post, $activeCategoryId ) {
 }
 
 /**
- * МЕТАБОКС: Цена со скидкой (оптовые цены)
- * ГДЕ: Страница товара → основной блок
+ * META BOX: Discounted price (wholesale prices)
+ * WHERE: Product page → main column
  */
-function wholesalePrice_metabox( $post ) {
+function as_wholesalePrice_metabox( $post ) {
     
-    add_filter( 'get_terms_orderby', 'sort_terms_clause', 10, 3 );
+    add_filter( 'get_terms_orderby', 'as_sort_terms_clause', 10, 3 );
     
     $args = array(
         'taxonomy'   => 'wholesalePrice',
@@ -198,8 +197,8 @@ function wholesalePrice_metabox( $post ) {
             ?>
             
             <li class="advanced-field"> 
-                <div class="span-advanced-fields">от <?php echo $term_name; ?></div>
-                <input type="text" name="wholesalePrice[<?php echo $term_id; ?>]" placeholder="Цена по скидке" value="<?php echo $value; ?>">
+                <div class="span-advanced-fields"><?php esc_html_e( 'from', 'argon-shop' ); ?> <?php echo $term_name; ?></div>
+                <input type="text" name="wholesalePrice[<?php echo $term_id; ?>]" placeholder="<?php esc_attr_e( 'Price with discount', 'argon-shop' ); ?>" value="<?php echo $value; ?>">
             </li>
             
             <?php
@@ -208,24 +207,24 @@ function wholesalePrice_metabox( $post ) {
         echo '</ul>';
     }
     
-    remove_filter( 'get_terms_orderby', 'sort_terms_clause', 10 );
+    remove_filter( 'get_terms_orderby', 'as_sort_terms_clause', 10 );
 }
 
 /**
- * МЕТАБОКС: Характеристики
- * ГДЕ: Страница товара → основной блок
+ * META BOX: Characteristics
+ * WHERE: Product page → main column
  */
-function characteristics_metabox( $post, $taxonomy, $activeCategoryId = 0, $characteristicsTextField = 0, $characteristicsCheckboxField = 0 ) {
+function as_characteristics_metabox( $post, $taxonomy, $activeCategoryId = 0, $characteristicsTextField = 0, $characteristicsCheckboxField = 0 ) {
     
     $characteristics_in_stock = false;
     
     if ( $activeCategoryId !== 'no categories' ) {
         
-        $product_parentterms = get_product_parentterms( $post, $activeCategoryId );
+        $product_parentterms = as_get_product_parentterms( $post, $activeCategoryId );
         
     } else {
         
-        echo 'Нет подходящих характеристик</br>Выберите категорию в каталоге';
+        echo __( 'No matching characteristics</br>Select a catalog category', 'argon-shop' );
         return;
     }
     
@@ -253,7 +252,7 @@ function characteristics_metabox( $post, $taxonomy, $activeCategoryId = 0, $char
         $characterictics_price = array();
         $characterictics_list = array();
         
-        // Делим характеристики на два типа
+        // Split characteristics into two types
         foreach ( $terms as $term ) {
             
             if ( $term->parent == 0 ) {
@@ -270,9 +269,9 @@ function characteristics_metabox( $post, $taxonomy, $activeCategoryId = 0, $char
         }
         
         /**
-         * ФУНКЦИЯ: Получение выбранных категорий для характеристики
+         * FUNCTION: Get the selected categories for a characteristic
          */
-        function searchFieldsTerm( $term ) {
+        function as_searchFieldsTerm( $term ) {
             $filds_term = array();
             $filds = get_term_meta( $term->term_id, 'checkCategory', 1 );
             
@@ -286,10 +285,10 @@ function characteristics_metabox( $post, $taxonomy, $activeCategoryId = 0, $char
             return $filds_term;
         }
         
-        // Характеристики с вводом значения
+        // Characteristics with a value input
         foreach ( $characterictics_price as $term ) {
             
-            $filds_term = searchFieldsTerm( $term );
+            $filds_term = as_searchFieldsTerm( $term );
             
             if ( array_intersect( $product_parentterms, $filds_term ) ) {
                 
@@ -305,17 +304,17 @@ function characteristics_metabox( $post, $taxonomy, $activeCategoryId = 0, $char
                 
                 <li class="advanced-field"> 
                     <div class="span-advanced-fields"><?php echo $term_name; ?></div>
-                    <input type="text" name="characteristics_text_field[<?php echo $term_id; ?>]" placeholder="Значение" value="<?php echo $textFieldValue; ?>">
+                    <input type="text" name="characteristics_text_field[<?php echo $term_id; ?>]" placeholder="<?php esc_attr_e( 'Value', 'argon-shop' ); ?>" value="<?php echo $textFieldValue; ?>">
                 </li>
                 
                 <?php
             }
         }
         
-        // Характеристики с выбором (чекбоксы)
+        // Characteristics with a choice (checkboxes)
         foreach ( $characterictics_list as $term ) {
             
-            $filds_term = searchFieldsTerm( $term[0] );
+            $filds_term = as_searchFieldsTerm( $term[0] );
             
             if ( array_intersect( $product_parentterms, $filds_term ) ) {
                 
@@ -340,7 +339,7 @@ function characteristics_metabox( $post, $taxonomy, $activeCategoryId = 0, $char
                             continue;
                         }
                         
-                        $filds_term = searchFieldsTerm( $characterictics_term );
+                        $filds_term = as_searchFieldsTerm( $characterictics_term );
                         
                         if ( array_intersect( $product_parentterms, $filds_term ) ) {
                             
@@ -378,16 +377,16 @@ function characteristics_metabox( $post, $taxonomy, $activeCategoryId = 0, $char
         echo '</ul>';
         
         if ( $characteristics_in_stock == false ) {
-            echo 'Нет подходящих характеристик</br>Выберите категорию в каталоге';
+            echo __( 'No matching characteristics</br>Select a catalog category', 'argon-shop' );
         }
     }
 }
 
 /**
- * СОХРАНЕНИЕ: Всех полей товара
- * ГДЕ: Срабатывает при нажатии "Обновить" на странице товара
+ * SAVE: All product fields
+ * WHERE: Fires when "Update" is clicked on the product page
  */
-function save_detailed_fields( $post_id ) {
+function as_save_detailed_fields( $post_id ) {
     
     if ( ! isset( $_POST['detailed_fields'] )
         || ! wp_verify_nonce( $_POST['detailed_fields'], basename( __FILE__ ) ) ) {
@@ -408,7 +407,7 @@ function save_detailed_fields( $post_id ) {
         return $post_id;
     }
     
-    // Сохранение характеристик-чекбоксов
+    // Save checkbox characteristics
     if ( isset( $_POST['characteristics_checkbox_field'] ) && $_POST['characteristics_checkbox_field'] ) {
         
         $characteristicsCheckbox = array();
@@ -430,37 +429,37 @@ function save_detailed_fields( $post_id ) {
         delete_post_meta( $post_id, '_characteristics_checkbox_field' );
     }
     
-    // Сохранение оптовых цен
-    if ( check_saleSteps() ) {
+    // Save wholesale prices
+    if ( as_check_saleSteps() ) {
         
         if ( isset( $_POST['wholesalePrice'] ) && is_array( $_POST['wholesalePrice'] ) ) {
             
             $wholesalePrice = array_map( 'sanitize_text_field', $_POST['wholesalePrice'] );
-            $completeWholesalePrice = cheak_detailed_fields( $wholesalePrice );
+            $completeWholesalePrice = as_cheak_detailed_fields( $wholesalePrice );
             
             as_update_meta( $post_id, '_wholesalePrice', $completeWholesalePrice );
         }
     }
     
-    // Сохранение цены
+    // Save the price
     if ( isset( $_POST['_price'] ) ) {
         $price = sanitize_text_field( wp_unslash( $_POST['_price'] ) );
         as_update_meta( $post_id, '_price', $price );
     }
     
-    // Сохранение веса
+    // Save the weight
     if ( isset( $_POST['_weight'] ) ) {
         $weight = sanitize_text_field( wp_unslash( $_POST['_weight'] ) );
         as_update_meta( $post_id, '_weight', $weight );
     }
     
-    // Сохранение артикула
+    // Save the SKU
     if ( isset( $_POST['_article'] ) ) {
         $article = sanitize_text_field( wp_unslash( $_POST['_article'] ) );
         as_update_meta( $post_id, '_article', $article );
     }
     
-    // Сохранение "Хит продаж"
+    // Save "Best seller"
     if ( isset( $_POST['_hit'] ) ) {
         $hit = sanitize_text_field( wp_unslash( $_POST['_hit'] ) );
         as_update_meta( $post_id, '_hit', $hit );
@@ -468,7 +467,7 @@ function save_detailed_fields( $post_id ) {
         as_update_meta( $post_id, '_hit' );
     }
     
-    // Сохранение "Новинка"
+    // Save "New"
     if ( isset( $_POST['_newProduct'] ) ) {
         $newProduct = sanitize_text_field( wp_unslash( $_POST['_newProduct'] ) );
         as_update_meta( $post_id, '_newProduct', $newProduct );
@@ -476,11 +475,11 @@ function save_detailed_fields( $post_id ) {
         as_update_meta( $post_id, '_newProduct' );
     }
     
-    // Сохранение текстовых характеристик
+    // Save text characteristics
     if ( isset( $_POST['characteristics_text_field'] ) && is_array( $_POST['characteristics_text_field'] ) ) {
         
         $characteristicsTextField = array_map( 'sanitize_text_field', $_POST['characteristics_text_field'] );
-        $completeCharacteristicsTextField = cheak_detailed_fields( $characteristicsTextField );
+        $completeCharacteristicsTextField = as_cheak_detailed_fields( $characteristicsTextField );
         
         as_update_meta( $post_id, '_characteristics_text_field', $completeCharacteristicsTextField );
     }
@@ -488,12 +487,12 @@ function save_detailed_fields( $post_id ) {
     return $post_id;
 }
 
-add_action( 'save_post', 'save_detailed_fields' );
+add_action( 'save_post', 'as_save_detailed_fields' );
 
-// AJAX обновление характеристик
-add_action( 'admin_print_footer_scripts', 'updateCharacteristicsAjax', 99 );
+// AJAX update of characteristics
+add_action( 'admin_print_footer_scripts', 'as_updateCharacteristicsAjax', 99 );
 
-function updateCharacteristicsAjax() {
+function as_updateCharacteristicsAjax() {
     ?>
     <script>
         function updateCharacteristics( activeCategoryId, characteristicsTextField, characteristicsCheckboxField ) {
@@ -514,14 +513,14 @@ function updateCharacteristicsAjax() {
     <?php
 }
 
-add_action( 'wp_ajax_update_characteristics', 'updateCharacteristicsFunction' );
+add_action( 'wp_ajax_update_characteristics', 'as_updateCharacteristicsFunction' );
 
-function updateCharacteristicsFunction() {
+function as_updateCharacteristicsFunction() {
     
     check_ajax_referer( 'argon_shop_order_nonce', 'nonce' );
     
     if ( ! current_user_can( 'manage_options' ) ) {
-        wp_die( 'Недостаточно прав' );
+        wp_die( __( 'Insufficient permissions', 'argon-shop' ) );
     }
     
     $activeCategoryId = isset( $_POST['activeCategoryId'] ) ? array_map( 'absint', (array) $_POST['activeCategoryId'] ) : 0;
@@ -533,10 +532,10 @@ function updateCharacteristicsFunction() {
     $postIdUrl = preg_match( '/post=(\d+)/s', $url, $matches ) ? absint( $matches[1] ) : 0;
     
     if ( 0 === $postIdUrl ) {
-        wp_die( 'Неверный ID товара' );
+        wp_die( __( 'Invalid product ID', 'argon-shop' ) );
     }
     
-    characteristics_metabox( get_post( $postIdUrl ), '', $activeCategoryId, $characteristicsTextField, $characteristicsCheckboxField );
+    as_characteristics_metabox( get_post( $postIdUrl ), '', $activeCategoryId, $characteristicsTextField, $characteristicsCheckboxField );
     
     wp_die();
 }

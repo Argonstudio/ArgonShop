@@ -1,40 +1,39 @@
 <?php
 /**
- * Вывод заказов пользователя в личном кабинете
+ * Output of user orders in the account
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * Личный кабинет → блок "Мои заказы"
- * URL: /cabinet/
+ * WHERE TO TEST:
+ * Account → "My orders" block
+ * URL: /account/ (is changed in the control panel)
  * 
- * ЧТО ДЕЛАЕТ:
- * 1. Выводит таблицу с заказами пользователя
+ * WHAT IT DOES:
+ * 1. Outputs a table with the user's orders
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 /**
- * ФУНКЦИЯ: Вывод заказов пользователя с фильтром
+ * FUNCTION: Output user orders with a filter
  * 
- * @param int|null   $user_ID — ID пользователя
- * @param array|null $filters — фильтры для выборки заказов
+ * @param int|null   $user_ID — user ID
+ * @param array|null $filters — filters for selecting orders
  */
-function view_user_orders( $user_ID = null, $filters = null ) {
+function as_view_user_orders( $user_ID = null, $filters = null ) {
     
     $user_ID = absint( $user_ID );
     
-    $orders = get_user_orders( $user_ID, $filters );
+    $orders = as_get_user_orders( $user_ID, $filters );
     
     $usedStatuses = array();
     
     if ( ! empty( $orders['orders_status'] ) && is_array( $orders['orders_status'] ) ) {
-        $usedStatuses = get_used_statuses( $orders['orders_status'] );
+        $usedStatuses = as_get_used_statuses( $orders['orders_status'] );
     }
     
     if ( ! empty( $orders ) && ! empty( $usedStatuses ) && count( $usedStatuses ) > 1 ) {
@@ -44,11 +43,11 @@ function view_user_orders( $user_ID = null, $filters = null ) {
         ?>
         <div class="as-orderCabinet-blockFilter">
             
-            <span class="as-orderCabinet-filterTitle">статус обработки заказа:</span>
+            <span class="as-orderCabinet-filterTitle"><?php esc_html_e( 'order processing status:', 'argon-shop' ); ?></span>
 
             <select data-userid="<?php echo esc_attr( $user_ID ); ?>" class="as-orderCabinet-filterStatus">
                 
-                <option selected value="<?php echo esc_attr( $usedStatusesID ); ?>">все</option>
+                <option selected value="<?php echo esc_attr( $usedStatusesID ); ?>"><?php esc_html_e( 'all', 'argon-shop' ); ?></option>
                 
                 <?php foreach ( $usedStatuses as $key => $value ) { ?>
                 
@@ -65,20 +64,20 @@ function view_user_orders( $user_ID = null, $filters = null ) {
     
     echo '<div class="as-ordersCabinet-block">';
     
-    create_user_ordersTable( $orders );
+    as_create_user_ordersTable( $orders );
     
     echo '</div>';
 }
 
 /**
- * ФУНКЦИЯ: Создание HTML-таблицы заказов
+ * FUNCTION: Build the HTML table of orders
  * 
- * @param array $orders — массив с заказами и мета-данными
+ * @param array $orders — array with orders and meta data
  */
-function create_user_ordersTable( $orders ) {
+function as_create_user_ordersTable( $orders ) {
     
     if ( empty( $orders ) || ! is_array( $orders ) ) {
-        echo 'Вы ещё не оставляли заказов';
+        echo __( 'You have not placed any orders yet', 'argon-shop' );
         return;
     }
     
@@ -87,7 +86,7 @@ function create_user_ordersTable( $orders ) {
     $orders_status = isset( $orders['orders_status'] ) && is_array( $orders['orders_status'] ) ? $orders['orders_status'] : array();
     
     if ( empty( $ordersWP ) ) {
-        echo 'Вы ещё не оставляли заказов';
+        echo __( 'You have not placed any orders yet', 'argon-shop' );
         return;
     }
     
@@ -97,14 +96,14 @@ function create_user_ordersTable( $orders ) {
 
         <tr>
             <td class="as-orderCabinet-tdTitle">№</td>
-            <td class="as-orderCabinet-tdTitle as-orderCabinet-tdDate">Дата</td>
-            <td class="as-orderCabinet-tdTitle">Заказ</td>
+            <td class="as-orderCabinet-tdTitle as-orderCabinet-tdDate"><?php esc_html_e( 'Date', 'argon-shop' ); ?></td>
+            <td class="as-orderCabinet-tdTitle"><?php esc_html_e( 'Order', 'argon-shop' ); ?></td>
         </tr>
     
     <?php
     
     foreach ( $ordersWP as $key => $value ) {
-        view_user_order( $value, $orders_meta, $orders_status );
+        as_view_user_order( $value, $orders_meta, $orders_status );
     }
     
     ?> 
@@ -114,13 +113,13 @@ function create_user_ordersTable( $orders ) {
 }
 
 /**
- * ФУНКЦИЯ: Вывод одной строки заказа
+ * FUNCTION: Output a single order row
  * 
- * @param WP_Post $order         — объект заказа
- * @param array   $orders_meta   — мета-данные всех заказов
- * @param array   $orders_status — статусы всех заказов
+ * @param WP_Post $order         — order object
+ * @param array   $orders_meta   — meta data of all orders
+ * @param array   $orders_status — statuses of all orders
  */
-function view_user_order( $order, $orders_meta, $orders_status ) {
+function as_view_user_order( $order, $orders_meta, $orders_status ) {
     
     if ( ! $order || ! isset( $order->ID ) ) {
         return;
@@ -143,10 +142,10 @@ function view_user_order( $order, $orders_meta, $orders_status ) {
         <td class="as-orderCabinet-tdDate"><?php echo esc_html( $date_display ); ?></td>
         <td class="as-orderCabinet-tdDetailOrder">
             <ul>
-                <li><b>Статус заказа: </b><?php echo esc_html( $status ); ?></li>
-                <li class="as-orderCabinet-mobileDate">Дата: <?php echo esc_html( $date_display ); ?></li>
-                <li>Виды товара: <?php echo esc_html( $products_cart ); ?></li>
-                <li>Стоимость: <?php echo esc_html( $total_price ); ?> ₽</li>
+                <li><b><?php esc_html_e( 'Order status:', 'argon-shop' ); ?> </b><?php echo esc_html( $status ); ?></li>
+                <li class="as-orderCabinet-mobileDate"><?php esc_html_e( 'Date:', 'argon-shop' ); ?> <?php echo esc_html( $date_display ); ?></li>
+                <li><?php esc_html_e( 'Product types:', 'argon-shop' ); ?> <?php echo esc_html( $products_cart ); ?></li>
+                <li><?php esc_html_e( 'Cost:', 'argon-shop' ); ?> <?php echo as_price_html( esc_html( $total_price ) ); ?></li>
             </ul>
         </td>
     </tr>    

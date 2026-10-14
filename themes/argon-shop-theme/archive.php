@@ -1,45 +1,44 @@
 <?php
 /**
- * Шаблон архива рубрики (новости, статьи)
+ * Category archive template (news, articles)
  * 
- * Шаблон для вывода записей в рубриках, включая:
- * - Новости
- * - Статьи  
- * - Дочерние рубрики акций
+ * Template for displaying posts in categories, including:
+ * - News
+ * - Articles
+ * - Child promotion categories
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * Страницы рубрик: /category/novosti/, /category/stati/ и т.д.
+ * WHERE TO TEST:
+ * Category pages: /category/novosti/, /category/stati/, etc.
  * 
- * ЧТО ВЫВОДИТ:
- * 1. Хлебные крошки (через kama_breadcrumbs из плагина Argon Shop)
- * 2. Заголовок рубрики
- * 3. Блок дочерних категорий (если есть)
- * 4. Облако тегов (только для рубрики ID = 37)
- * 5. Список записей рубрики карточками
- * 6. Пагинацию
+ * WHAT IT OUTPUTS:
+ * 1. Breadcrumbs (via kama_breadcrumbs from the Argon Shop plugin)
+ * 2. Category title
+ * 3. Child categories block (if any)
+ * 4. Tag cloud (only for the category with ID = 37)
+ * 5. List of category posts as cards
+ * 6. Pagination
  * 
  * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  * 
- * В этом шаблоне используются функции плагина:
+ * This template uses the following plugin functions:
  * 
- * - kama_breadcrumbs() → хлебные крошки (includes/interface/breadcrumbs.php)
- * - kama_pagenavi()    → пагинация (includes/interface/pagenavi.php)
+ * - as_kama_breadcrumbs() → breadcrumbs (includes/interface/breadcrumbs.php)
+ * - as_kama_pagenavi()    → pagination (includes/interface/pagenavi.php)
  *  * 
- * ВНЕШНИЕ ЗАВИСИМОСТИ:
- * - ACF (Advanced Custom Fields) — для поля image_catalog у рубрик
- * - ID рубрики 37 — "Статьи" (рубрика, где показывается облако тегов)
+ * EXTERNAL DEPENDENCIES:
+ * - ACF (Advanced Custom Fields) — for the image_catalog field of categories
+ * - Category ID 37 — "Articles" (the category where the tag cloud is shown)
  * 
  * ============================================================
  *
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -47,7 +46,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 get_header();
 
 // ============================================
-// ПОЛУЧЕНИЕ ДАННЫХ О ТЕКУЩЕЙ РУБРИКЕ
+// GET DATA ABOUT THE CURRENT CATEGORY
 // ============================================
 // 
 
@@ -72,14 +71,14 @@ if ( $queried_object && is_object( $queried_object ) && isset( $queried_object->
             
             <?php 
             // ============================================
-            // ХЛЕБНЫЕ КРОШКИ
+            // BREADCRUMBS
             // ============================================
             // 
-            // Функция плагина Argon Shop (includes/interface/breadcrumbs.php)
-            // Автоматически строит цепочку: Главная » Родитель » Текущая рубрика
+            // Argon Shop plugin function (includes/interface/breadcrumbs.php)
+            // Automatically builds the chain: Home » Parent » Current category
             
-            if ( function_exists( 'kama_breadcrumbs' ) ) {
-                kama_breadcrumbs( ' » ' );
+            if ( function_exists( 'as_kama_breadcrumbs' ) ) {
+                AS_Kama_Breadcrumbs( ' » ' );
             }
             ?>
 
@@ -89,7 +88,7 @@ if ( $queried_object && is_object( $queried_object ) && isset( $queried_object->
             <?php 
             
             // ============================================
-            // ДОЧЕРНИЕ КАТЕГОРИИ
+            // CHILD CATEGORIES
             // ============================================
             
             $terms = get_terms( array(
@@ -104,7 +103,7 @@ if ( $queried_object && is_object( $queried_object ) && isset( $queried_object->
                 $i = 0;
                 ?>
                     
-                <div class="itemControlPanel" data-type="openingList" name="childRubric">Дочерние категории</div>
+                <div class="itemControlPanel" data-type="openingList" name="childRubric"><?php esc_html_e( 'Subcategories', 'argon-shop-theme' ); ?></div>
                     
                 <div class="blockItemPage block-cards-childRubric" id="block_childRubric">
                         
@@ -112,7 +111,7 @@ if ( $queried_object && is_object( $queried_object ) && isset( $queried_object->
                         
                         <?php 
                         // ============================================
-                        // ИЗОБРАЖЕНИЕ РУБРИКИ (поле ACF)
+                        // CATEGORY IMAGE (ACF field)
                         // ============================================
                         // 
                         
@@ -123,11 +122,11 @@ if ( $queried_object && is_object( $queried_object ) && isset( $queried_object->
                         if ( is_array( $image ) && isset( $image['url'] ) ) {
                             $image_url = $image['url'];
                         } elseif ( is_string( $image ) ) {
-                            // Если ACF вернул просто URL строкой
+                            // If ACF returned just a URL string
                             $image_url = $image;
                         }
                         
-                        // Ссылка на рубрику
+                        // Category link
                         $term_link = get_term_link( $term );
                         
                         if ( is_wp_error( $term_link ) ) {
@@ -158,7 +157,7 @@ if ( $queried_object && is_object( $queried_object ) && isset( $queried_object->
                 <?php 
                 
                 // ============================================
-                // ОБЛАКО ТЕГОВ (только для рубрики ID = 37)
+                // TAG CLOUD (only for the category with ID = 37)
                 // ============================================
                 
                 if ( $current_id === 37 ) {
@@ -183,7 +182,7 @@ if ( $queried_object && is_object( $queried_object ) && isset( $queried_object->
                         );
                         ?>
                         
-                        <div class="itemControlPanel itemControlPanel-tags" data-type="openingList" name="entryTags">Облако тегов</div>
+                        <div class="itemControlPanel itemControlPanel-tags" data-type="openingList" name="entryTags"><?php esc_html_e( 'Tag cloud', 'argon-shop-theme' ); ?></div>
                            
                         <div class="blockItemPage block-mobileEntryTags" id="block_entryTags">
                             
@@ -200,7 +199,7 @@ if ( $queried_object && is_object( $queried_object ) && isset( $queried_object->
             <div class="block-rubricEntrys">
                 
                 <?php 
-                // Стандартный цикл WordPress
+                // Standard WordPress loop
                 if ( have_posts() ) { 
                 
                     while ( have_posts() ) : the_post(); 
@@ -236,7 +235,7 @@ if ( $queried_object && is_object( $queried_object ) && isset( $queried_object->
                             </div>
                             
                             <div class="entryButtons">
-                                <a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title_attribute(); ?>">Читать далее</a>
+                                <a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title_attribute(); ?>"><?php esc_html_e( 'Read more', 'argon-shop-theme' ); ?></a>
                             </div>
                             
                         </div>
@@ -251,15 +250,15 @@ if ( $queried_object && is_object( $queried_object ) && isset( $queried_object->
                     
                 } else {
                     
-                    echo 'Материалов нет';
+                    echo __( 'No posts', 'argon-shop-theme' );
                 }
                 
                 ?>
                 
                 <?php 
-                // Функция плагина Argon Shop (includes/interface/pagenavi.php)
-                if ( function_exists( 'kama_pagenavi' ) ) {
-                    kama_pagenavi();
+                // Argon Shop plugin function (includes/interface/pagenavi.php)
+                if ( function_exists( 'as_kama_pagenavi' ) ) {
+                    as_kama_pagenavi();
                 }
                 ?>
                 

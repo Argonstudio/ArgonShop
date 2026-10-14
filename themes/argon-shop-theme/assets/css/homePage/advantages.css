@@ -116,7 +116,7 @@
     font-size:17px;
     color:#6c6c6c;
     text-align:center;
-    padding-top:18px;
+    padding: 18px 10px 0;
 }
 
 @media(max-width:1200px){

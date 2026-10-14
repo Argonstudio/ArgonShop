@@ -1,72 +1,71 @@
 /**
- * ArgonShop — точка входа для ES-модулей фронтенда.
+ * ArgonShop — entry point for the frontend ES modules.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Этот файл подключается в argon-shop.php как <script type="module">
- * и является единственной точкой входа для всего современного
- * JavaScript-кода плагина. Все остальные модули — это ES-модули,
- * которые импортируются отсюда.
+ * This file is enqueued in argon-shop.php as <script type="module">
+ * and is the only entry point for all the modern
+ * JavaScript code of the plugin. All other modules are ES modules
+ * imported from here.
  *
- * Модули в двух каталогах:
+ * Modules live in two folders:
  *
- *   core/     — базовые утилиты (config, dom, format, api, nonce)
- *   modules/  — функциональные модули (cart, product, search, ...)
+ *   core/     — base utilities (config, dom, format, api, nonce)
+ *   modules/  — feature modules (cart, product, search, ...)
  *
- * Каждый модуль экспортирует синглтон-объект с методом init().
- * Метод init() самостоятельно проверяет наличие своих элементов
- * на странице и не выполняет никаких действий, если их нет —
- * это позволяет безопасно вызывать init() всех модулей на всех
- * страницах без риска ошибок.
- *
- * ============================================================
- * ПОЧЕМУ НЕТ document.ready
- * ============================================================
- *
- * Скрипты с атрибутом type="module" выполняются браузером с
- * задержкой (deferred) — после того, как HTML полностью распарсен,
- * но до события DOMContentLoaded. К моменту выполнения кода
- * DOM уже готов, поэтому обёртка вида $(document).ready() или
- * document.addEventListener('DOMContentLoaded', ...) не нужна.
+ * Each module exports a singleton object with an init() method.
+ * The init() method checks for its own elements
+ * on the page and does nothing if they are missing —
+ * this makes it safe to call init() of all modules on all
+ * pages without the risk of errors.
  *
  * ============================================================
- * jQuery не используется
+ * WHY THERE IS NO document.ready
  * ============================================================
  *
- * Этот файл и все его модули НЕ используют jQuery. На странице
- * jQuery может оставаться подключённой (например, для Slick-
- * слайдеров или сторонних плагинов), но новый код ArgonShop
- * работает только с нативным DOM API.
+ * Scripts with the type="module" attribute are executed by the browser
+ * deferred — after the HTML is fully parsed
+ * but before the DOMContentLoaded event. By the time the code runs
+ * the DOM is ready, so a wrapper like $(document).ready() or
+ * document.addEventListener('DOMContentLoaded', ...) is not needed.
  *
  * ============================================================
- * ПОРЯДОК ИНИЦИАЛИЗАЦИИ
+ * jQuery is not used
  * ============================================================
  *
- * 1. initNonceInterceptor() — глобальный перехватчик AJAX-ответов.
- *    Включается ПЕРВЫМ, до любых запросов, чтобы успеть обновить
- *    nonce, если сервер вернёт новое значение.
- *
- * 2. Модули — вызываются в произвольном порядке, каждый сам решает,
- *    что ему делать на текущей странице.
+ * This file and all its modules do NOT use jQuery. jQuery may
+ * still be enqueued on the page (for example, for Slick
+ * sliders or third-party plugins), but the new ArgonShop code
+ * works only with the native DOM API.
  *
  * ============================================================
- * КАК ДОБАВИТЬ НОВЫЙ МОДУЛЬ
+ * INITIALIZATION ORDER
  * ============================================================
  *
- * 1. Создайте файл в modules/ (например, modules/new-feature.js).
- * 2. Экспортируйте из него синглтон с методом init():
+ * 1. initNonceInterceptor() — global AJAX response interceptor.
+ *    Enabled FIRST, before any requests, so that it can update
+ *    the nonce if the server returns a new value.
+ *
+ * 2. Modules — called in arbitrary order, each decides on its own
+ *    what to do on the current page.
+ *
+ * ============================================================
+ * HOW TO ADD A NEW MODULE
+ * ============================================================
+ *
+ * 1. Create a file in modules/ (for example, modules/new-feature.js).
+ * 2. Export a singleton with an init() method from it:
  *
  *        export const arsNewFeature = {
  *            init() { ... }
  *        };
  *
- * 3. Импортируйте его в этом файле и вызовите init() в initApp().
+ * 3. Import it in this file and call init() in initApp().
  *
  * ============================================================
  */
@@ -76,82 +75,82 @@
 import { initNonceInterceptor } from './core/nonce.js';
 
 // ============================================================
-// ИМПОРТЫ МОДУЛЕЙ
+// MODULE IMPORTS
 // ============================================================
 
-// Корзина — страница корзины
+// Cart — cart page
 import { arsCart } from './modules/cart.js';
 
 import { arsCartForm } from './modules/cart-form.js';
 
-// Страница товара
+// Product page
 import { arsProduct } from './modules/product.js';
 
-// Кнопки карточек товаров (В корзину / Купить)
+// Product card buttons (Add to cart / Buy)
 import { arsCardProduct } from './modules/card-product.js';
 
-// AJAX-поиск
+// AJAX search
 import { arsSearch } from './modules/search.js';
 
-// Сортировка каталога
+// Catalog sorting
 import { arsSort } from './modules/sort.js';
 
-// Личный кабинет — email, пароль, аккаунт
+// Account — email, password, account data
 import { arsCabinet } from './modules/cabinet.js';
 
-// Личный кабинет — фильтр заказов
+// Account — order filter
 import { arsOrders } from './modules/orders.js';
 
-// Чекбоксы согласия на обработку данных
+// Data processing consent checkboxes
 import { arsConsent } from './modules/consent.js';
 
-// Панели-переключатели (табы)
+// Toggle panels (tabs)
 import { arsControlPanels } from './modules/control-panels.js';
 
-// Мобильное меню сайта
+// Mobile site menu
 import { arsMobileMenu } from './modules/mobile-menu.js';
 
-// Меню каталога
+// Catalog menu
 import { arsMenuCatalog } from './modules/menu-catalog.js';
 
-// Выбор города в шапке
+// City selection in the header
 import { arsHeader } from './modules/header.js';
 
-// Контактная форма (CF7)
+// Contact form (CF7)
 import { arsContactForm } from './modules/contact-form.js';
 
-// Каталог — открытие мобильных блоков
+// Catalog — opening mobile blocks
 import { arsCatalogPage } from './modules/catalog-page.js';
 
-// Блок популярных запросов
+// Popular queries block
 import { arsRequest } from './modules/request.js';
 
-// Слайдер на главной (Swiper)
+// Home page slider (Swiper)
 import { arsSliderMain } from './modules/slider-main.js';
 
-// Слайдер изображений товара (Swiper + GLightbox)
+// Product image slider (Swiper + GLightbox)
 import { arsSliderProduct } from './modules/slider-product.js';
 
 // ============================================================
-// ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ
+// APPLICATION INITIALIZATION
 // ============================================================
 
 /**
- * Точка входа. Вызывается один раз при загрузке модуля.
+ * Entry point. Called once when the module loads.
  *
- * Порядок вызовов:
- *   1. Перехватчик nonce — до любых запросов.
- *   2. Инициализация модулей — каждый сам решает, что делать.
+ * Call order:
+ *   1. The nonce interceptor — before any requests.
+ *   2. Module initialization — each decides what to do.
  *
  * @return {void}
  */
 const initApp = () => {
 
-    // 1. Глобальный перехватчик AJAX-ответов для обновления nonce.
-    //    Должен быть включён до первого AJAX-запроса.
+    // 1. Global AJAX response interceptor for updating the nonce.
+    //    Must be enabled before the first AJAX request.
     initNonceInterceptor();
 
-    // 2. Модули. 
+    // 2. Modules.
     arsCart.init();
     arsCartForm.init();
     arsProduct.init();
@@ -174,9 +173,9 @@ const initApp = () => {
 
 
 // ============================================================
-// СТАРТ
+// START
 // ============================================================
 
-// Модуль подключён как <script type="module">, поэтому браузер
-// гарантирует выполнение после парсинга DOM.
+// The module is enqueued as <script type="module">, so the browser
+// guarantees execution after the DOM is parsed.
 initApp();

@@ -27,7 +27,7 @@
     margin-top: 43px;
 }
 
-/* Наши клиенты */
+/* Our clients */
 
 .block-ourClients .block-logoClients{
     display: table;
@@ -135,7 +135,7 @@
 }
 
 /* ============================================================
-   СЛАЙДЕР СЕРТИФИКАТОВ (Swiper)
+   CERTIFICATE SLIDER (Swiper)
    ============================================================
  */
 
@@ -184,7 +184,7 @@
     -webkit-user-drag: none;
 }
 
-/* Стрелки навигации */
+/* Navigation arrows */
 
 .as-slider-sertificates .swiper-button-prev,
 .as-slider-sertificates .swiper-button-next {
@@ -231,7 +231,7 @@
 }
 
 /* ============================================================
-   АДАПТИВ
+   RESPONSIVE
    ============================================================ */
 
 @media (max-width: 780px) {

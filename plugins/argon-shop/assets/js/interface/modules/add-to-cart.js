@@ -1,37 +1,36 @@
 /**
- * ArgonShop — добавление товара в корзину.
+ * ArgonShop — adding a product to the cart.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Общая логика добавления товара в корзину, используемая:
- *   - product.js     — кнопки «В корзину» и «Купить» на странице товара
- *   - card-product.js — те же кнопки в карточках товаров
+ * Shared add-to-cart logic used by:
+ *   - product.js      — the "Add to cart" and "Buy" buttons on the product page
+ *   - card-product.js — the same buttons in product cards
  *
- * Один AJAX-запрос, единая обработка результата и ошибок.
- * После успешного добавления обновляет виджет корзины в шапке
- * и возвращает обновлённое состояние через колбэки.
+ * One AJAX request, shared result and error handling.
+ * After a successful add it updates the cart widget in the header
+ * and returns the updated state via callbacks.
  *
  * ============================================================
- * AJAX-ДЕЙСТВИЕ
+ * AJAX ACTION
  * ============================================================
  *
  * addProducts_shoppingCart
- *   Принимает: productID, amountProduct.
- *   Возвращает JSON:
+ *   Accepts: productID, amountProduct.
+ *   Returns JSON:
  *     {
- *       amountProduct,      // сколько единиц этого товара в корзине
- *       productAmountCart,  // всего товаров в корзине
- *       totalPrice,         // сумма корзины
+ *       amountProduct,      // how many units of this product are in the cart
+ *       productAmountCart,  // total products in the cart
+ *       totalPrice,         // cart total
  *     }
  *
  * ============================================================
- * ИСПОЛЬЗОВАНИЕ
+ * USAGE
  * ============================================================
  *
  *     import { addProductToCart } from './modules/add-to-cart.js';
@@ -42,10 +41,10 @@
  *     });
  *
  * ============================================================
- * ЭКСПОРТ
+ * EXPORTS
  * ============================================================
  *
- * addProductToCart( productId, amount, options ) — добавить товар
+ * addProductToCart( productId, amount, options ) — add a product
  */
 
 'use strict';
@@ -54,18 +53,18 @@ import { arsApi }        from '../core/api.js';
 import { arsCartWidget } from './cart-widget.js';
 
 /**
- * Добавляет товар в корзину.
+ * Adds a product to the cart.
  *
- * При успешном ответе обновляет виджет корзины в шапке и вызывает
- * onSuccess с полными данными ответа. При ошибке вызывает onError
- * с объектом Error.
+ * On a successful response updates the cart widget in the header and calls
+ * onSuccess with the full response data. On error calls onError
+ * with an Error object.
  *
- * @param  {string|number} productId — ID товара
- * @param  {string|number} amount    — количество
- * @param  {Object}        [options] — колбэки
+ * @param  {string|number} productId — product ID
+ * @param  {string|number} amount    — quantity
+ * @param  {Object}        [options] — callbacks
  * @param  {Function}      [options.onSuccess] — ( data ) => void
  * @param  {Function}      [options.onError]   — ( error ) => void
- * @return {Promise<Object|null>} Данные ответа или null при ошибке
+ * @return {Promise<Object|null>} Response data or null on error
  */
 export const addProductToCart = async ( productId, amount, options = {} ) => {
 
@@ -78,7 +77,7 @@ export const addProductToCart = async ( productId, amount, options = {} ) => {
             amountProduct: amount,
         });
 
-        // Обновление виджета корзины в шапке
+        // Update the cart widget in the header
         arsCartWidget.update({
             productAmountCart: data.productAmountCart,
             totalPrice:        data.totalPrice,

@@ -1,69 +1,68 @@
 <?php
 /**
- * ArgonShop — метабокс «Галерея» на странице товара.
+ * ArgonShop — "Gallery" meta box on the product page.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Добавляет метабокс с галереей изображений товара. Заменяет
- * сторонний плагин ACF Photo Gallery Field, встроенный в
- * ArgonShop без зависимости от ACF.
+ * Adds a meta box with the product image gallery. Replaces
+ * the third-party ACF Photo Gallery Field plugin, built into
+ * ArgonShop without depending on ACF.
  *
  * ============================================================
- * ФОРМАТ ХРАНЕНИЯ
+ * STORAGE FORMAT
  * ============================================================
  *
- * Мета-поле: slider_imgs
- * Значение:  строка с ID изображений через запятую,
- *            например "12,15,18,22".
+ * Meta field: slider_imgs
+ * Value:      a string of comma-separated image IDs,
+ *            for example "12,15,18,22".
  *
- * Формат совместим со старым плагином ACF Photo Gallery —
- * данные из существующих галерей читаются без миграции.
+ * The format is compatible with the old ACF Photo Gallery plugin —
+ * data from existing galleries is read without migration.
  *
  * ============================================================
- * МЕХАНИКА СОХРАНЕНИЯ
+ * SAVING MECHANICS
  * ============================================================
  *
- * Каждое изображение в списке сопровождается скрытым input:
+ * Each image in the list comes with a hidden input:
  *
  *     <input type="hidden" name="slider_imgs[]" value="12">
  *
- * При сохранении поста WordPress передаёт массив ID в $_POST.
- * Обработчик save_post_gallery() собирает его, чистит и
- * сохраняет в мета-поле одной строкой.
+ * When the post is saved, WordPress passes the array of IDs in $_POST.
+ * The save_post_gallery() handler collects it, cleans it and
+ * saves it to the meta field as a single string.
  *
- * Порядок изображений в форме = порядок input'ов в DOM.
- * Пользователь меняет порядок через drag-and-drop
- * (jQuery UI Sortable из ядра WordPress), DOM перестраивается,
- * при сохранении порядок фиксируется.
+ * Image order in the form = order of the inputs in the DOM.
+ * The user changes the order with drag-and-drop
+ * (jQuery UI Sortable from WordPress core), the DOM is rebuilt,
+ * and the order is stored on save.
  *
  * ============================================================
- * ПОДКЛЮЧЕНИЕ
+ * LOADING
  * ============================================================
  *
- * Файл подключается в argon-shop.php через require_once.
- * Регистрация метабокса — хук add_meta_boxes.
- * Обработчик сохранения — хук save_post_product.
+ * The file is loaded in argon-shop.php via require_once.
+ * Meta box registration — the add_meta_boxes hook.
+ * Save handler — the save_post_product hook.
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 // ============================================================
-// РЕГИСТРАЦИЯ МЕТАБОКСА
+// META BOX REGISTRATION
 // ============================================================
 
 add_action( 'add_meta_boxes', 'ars_gallery_register_metabox' );
 
 /**
- * Регистрирует метабокс «Галерея» на странице товара.
+ * Registers the "Gallery" meta box on the product page.
  *
  * @return void
  */
@@ -71,7 +70,7 @@ function ars_gallery_register_metabox() {
 
     add_meta_box(
         'ars_gallery_metabox',
-        'Галерея',
+        __( 'Gallery', 'argon-shop' ),
         'ars_gallery_render_metabox',
         'product',
         'normal',
@@ -80,21 +79,21 @@ function ars_gallery_register_metabox() {
 }
 
 // ============================================================
-// ВЫВОД МЕТАБОКСА
+// META BOX OUTPUT
 // ============================================================
 
 /**
- * Выводит HTML метабокса галереи.
+ * Outputs the gallery meta box HTML.
  *
- * @param  WP_Post $post — объект редактируемого товара
+ * @param  WP_Post $post — product being edited
  * @return void
  */
 function ars_gallery_render_metabox( $post ) {
 
-    // Nonce для проверки при сохранении
+    // Nonce for the check on save
     wp_nonce_field( 'ars_gallery_save', 'ars_gallery_nonce' );
 
-    // Список ID изображений (совместим со старым форматом)
+    // List of image IDs (compatible with the old format)
     $ids = function_exists( 'as_get_product_gallery_ids' )
         ? as_get_product_gallery_ids( $post->ID )
         : array();
@@ -126,7 +125,7 @@ function ars_gallery_render_metabox( $post ) {
 
                     <button type="button"
                             class="ars-gallery-remove"
-                            title="Удалить изображение">
+                            title="<?php esc_attr_e( 'Remove image', 'argon-shop' ); ?>">
                         <span class="dashicons dashicons-dismiss"></span>
                     </button>
 
@@ -138,12 +137,11 @@ function ars_gallery_render_metabox( $post ) {
 
         <button type="button"
                 class="button button-primary button-large ars-gallery-add">
-            Добавить изображения
+            <?php esc_html_e( 'Add images', 'argon-shop' ); ?>
         </button>
 
         <p class="ars-gallery-hint">
-            Перетаскивайте изображения мышью, чтобы изменить порядок.
-            Первое изображение — главное, оно показывается первым.
+            <?php esc_html_e( 'Drag images with the mouse to change the order. The first image is the main one and is shown first.', 'argon-shop' ); ?>
         </p>
 
     </div>
@@ -152,47 +150,47 @@ function ars_gallery_render_metabox( $post ) {
 }
 
 // ============================================================
-// СОХРАНЕНИЕ
+// SAVING
 // ============================================================
 
 add_action( 'save_post_product', 'ars_gallery_save_metabox' );
 
 /**
- * Сохраняет список изображений галереи при сохранении товара.
+ * Saves the gallery image list when the product is saved.
  *
- * @param  int $post_id — ID товара
+ * @param  int $post_id — product ID
  * @return void
  */
 function ars_gallery_save_metabox( $post_id ) {
 
-    // Проверка nonce
+    // Nonce check
     if ( ! isset( $_POST['ars_gallery_nonce'] )
         || ! wp_verify_nonce( $_POST['ars_gallery_nonce'], 'ars_gallery_save' ) ) {
         return;
     }
 
-    // Пропускаем автосохранение
+    // Skip autosave
     if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
         return;
     }
 
-    // Пропускаем ревизии
+    // Skip revisions
     if ( wp_is_post_revision( $post_id ) ) {
         return;
     }
 
-    // Проверка прав
+    // Capability check
     if ( ! current_user_can( 'edit_post', $post_id ) ) {
         return;
     }
 
-    // Читаем массив ID из формы
+    // Read the array of IDs from the form
     if ( ! isset( $_POST['slider_imgs'] ) || ! is_array( $_POST['slider_imgs'] ) ) {
         delete_post_meta( $post_id, 'slider_imgs' );
         return;
     }
 
-    // Чистим: absint каждого элемента, убираем нули, дубликаты
+    // Clean: absint every item, drop zeros and duplicates
     $ids = array_map( 'absint', wp_unslash( $_POST['slider_imgs'] ) );
     $ids = array_filter( $ids );
     $ids = array_unique( $ids );
@@ -203,6 +201,6 @@ function ars_gallery_save_metabox( $post_id ) {
         return;
     }
 
-    // Сохраняем строкой через запятую — совместимо со старым форматом
+    // Save as a comma-separated string — compatible with the old format
     update_post_meta( $post_id, 'slider_imgs', implode( ',', $ids ) );
 }

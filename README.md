@@ -1,8 +1,10 @@
 # ArgonShop
 
-[ССЫЛКА НА РУССКУЮ ВЕРСИЮ ОПИСАНИЯ](README.ru.md)
+[РУССКАЯ ВЕРСИЯ](../../tree/ru) — Russian version: the `ru` branch (Russian README, AI documentation and code comments).
 
 WordPress e-commerce plugin.
+
+> 🤖 **Want to customize the plugin for your project with AI?** See [Recommended AI for Customizing the Plugin](#-recommended-ai-for-customizing-the-plugin).
 
 > [!IMPORTANT]
 > For any questions about the plugin, its operation, or installation, feel free to consult DeepSeek, [ChatGPT](https://chatgpt.com/s/t_6abe8276fabc8191a0389d716ed8ace2), or other AI assistants. The plugin includes a dedicated AI documentation set (AI.md, AI_ARCHITECTURE.md, and related files) specifically designed to provide AIs with accurate context. Note: since the site theme examples and comments are in Russian, using an AI assistant will make it much easier for English-speaking readers (and speakers of other languages) to navigate and work with the code.
@@ -23,8 +25,11 @@ WordPress e-commerce plugin.
 - [🔌 Plugin Structure](#plugin-argon-shop)
 - [🖼️ Theme Structure](#theme-argon-shop-theme)
 - [🔄 How It Works](#-how-it-works)
+- [🌐 Languages](#-languages)
+- [🧪 Tests](#-tests)
 - [📚 Third-Party Libraries](#-third-party-libraries)
 - [📄 License](#-license)
+- [🤖 Recommended AI for Customizing the Plugin](#-recommended-ai-for-customizing-the-plugin)
 
 ## ✨ Key Features and Advantages
 
@@ -138,15 +143,16 @@ And here is why this is the only correct approach for a commercial product:
 - Product catalog with hierarchical taxonomy and characteristics
 - Cookie-based cart (no DB writes until order placement)
 - Three checkout forms: quick order, individuals, legal entities
-- File attachments to orders (up to 3 files, up to 5 MB each)
+- File attachments to orders (up to 3 files, up to 5 MB each, 15 MB total; checked on the server, stored privately, deleted after emails are sent)
 - Wholesale discounts via price steps
 - User account: profile, email/password change, order history
 - Product view history
 - Bestsellers and new arrivals
 - Multi-region support (Moscow / Istra) — one engine, different sites
+- Store currency in Settings → Store: US dollar (default), euro, Russian ruble
 
 **AJAX and interface:**
-- AJAX search with automatic keyboard layout correction
+- AJAX search with language-aware rules for English, French and Russian: stop words, plurals, French elisions, wrong keyboard layout correction (QWERTY / AZERTY / ЙЦУКЕН)
 - AJAX catalog sorting
 - AJAX order filter in the user account
 - AJAX checkout with email sending
@@ -167,7 +173,7 @@ And here is why this is the only correct approach for a commercial product:
 
 | Layer | Technologies |
 |---|---|
-| **Server** | PHP 7.4+, WordPress 6.0+ |
+| **Server** | PHP 8.3+, WordPress 7.1+ |
 | **Storage** | Postmeta, termmeta, usermeta, cookies |
 | **Frontend** | Vanilla JS (ES modules), Fetch API, DOM API |
 | **Styles** | CSS3, Flexbox |
@@ -178,8 +184,8 @@ And here is why this is the only correct approach for a commercial product:
 
 ## ⚙️ Requirements
 
-- **WordPress:** 6.0 or newer (7+ recommended)
-- **PHP:** 7.4+ (8.5 recommended)
+- **WordPress:** 7.1 or newer
+- **PHP:** 8.3 or newer
 - **MySQL:** 5.7+ / MariaDB 10.3+
 - **Optional:**
   - **ACF (Advanced Custom Fields)** — for the fields `unit_product`, `application`, `second_title`, `second_desc`, `bottom_desc`, `image_catalog`, `catalog_type`, `our_advantages`, `our_clients`
@@ -218,6 +224,18 @@ Copy:
 
 Activate the plugin in admin, then activate the theme.
 
+### Protecting private order files (nginx)
+
+Order files are stored in a private folder that is closed on Apache
+by `.htaccess` + `index.php`. Nginx does not read `.htaccess`, so on
+nginx add to the server config:
+
+```nginx
+location ^~ /wp-content/uploads/argon-shop-private/ { deny all; }
+```
+
+Without this rule the files can be opened by a direct URL.
+
 ### Method 3. Installation via an AI assistant
 
 The project is prepared for deployment using any LLM assistant (DeepSeek, Claude, ChatGPT, Cursor, Codex). A file [`AI.md`](AI.md) is placed in the repository root — a compact description of the architecture, file map, and contracts that must not be violated. An assistant that reads it will understand the project faster than a human.
@@ -246,7 +264,7 @@ Task:
 3. Check that I don't forget about:
    - file permissions (644) and folders (755);
    - absence of extra files like .git;
-   - PHP support on hosting (7.4+ minimum).
+   - PHP support on hosting (8.3+ minimum).
 4. Help me activate the plugin and theme via admin.
 5. Install the recommended plugins: ACF, Contact Form 7.
 6. Open the home page, find and help fix errors if any.
@@ -287,9 +305,9 @@ Such a prompt works in a web chat, in IDE assistants, and in CLI agents.
 - The file states that jQuery on the frontend is taboo. The assistant won't start suggesting "rewrite with jQuery, it's faster".
 - There is a "Known limitations" section — the assistant knows where bugs may occur and isn't surprised.
 
-**If the assistant works in an IDE** (Cursor, VS Code + Copilot, Windsurf) — usually just opening the project folder is enough. The files `AI.md` and `AGENTS.md` are read automatically.
+**If the assistant works in an IDE** (Cursor, VS Code + Copilot, Windsurf) — opening the project folder is usually enough for tools that read `AGENTS.md` (Codex, Cursor); `AI.md` is not read automatically — for Claude Code, Aider and others see the table in `AGENTS.md`.
 
-**If multi-region is required**, the demo site uses the AA-DomainMirror plugin. For AI, an additional note explains how to configure it. However, regular Multisite is recommended.
+**If multi-region is required**, the demo site uses the AA-DomainMirror plugin. The plugin is not part of the repository; for AI, the note on historical compatibility with it, the functions that would have to be written for city selection in one admin (they do not exist in the code yet) and the Multisite option is in [docs/ai/AI_EXTENDING.md](docs/ai/AI_EXTENDING.md), section 11. However, regular Multisite is recommended — the AI is instructed to ask you about it first.
 
 ---
 
@@ -299,6 +317,12 @@ Such a prompt works in a web chat, in IDE assistants, and in CLI agents.
 ArgonShop/
 ├── LICENSE
 ├── README.md
+├── CHANGELOG.md
+├── AI.md, AGENTS.md, docs/ai/          Documentation for AI assistants
+├── CLAUDE.md, .claude/                 Claude Code: docs import, /check and /new-ajax commands, check hook
+├── POSITIONING.md                       When to choose ArgonShop and when not to
+├── tests/                               static-check.php (PHP only) and
+│                                        smoke-test.php (WP-CLI, test site only)
 ├── .gitignore
 ├── plugins/
 │   └── argon-shop/
@@ -316,6 +340,9 @@ plugins/argon-shop/
 ├── argon-shop.php                      Entry point, hook registration,
 │                                       module loading, JS localization
 ├── settingPage.php                     "Settings → Store" page
+├── languages/                          argon-shop.pot, ru_RU and fr_FR .po/.mo
+├── uninstall.php                       Cleanup on plugin deletion (products,
+│                                       orders and users are kept)
 │
 ├── includes/
 │   ├── createPostType.php              CPTs: product, shoporder, slider
@@ -324,6 +351,8 @@ plugins/argon-shop/
 │   ├── siteLine.php                    Replaces the as_homepage marker
 │   │                                   with the current domain
 │   │                                   (for multi-region)
+│   ├── install.php                     Activation, deactivation, migrations
+│   ├── legacy-functions.php            Wrappers for pre-1.1.0 function names
 │   │
 │   ├── admin/
 │   │   ├── additionalFilters.php       Order filter by status in admin
@@ -338,31 +367,31 @@ plugins/argon-shop/
 │   │       └── orderSave.php           Order saving on save_post
 │   │
 │   ├── api/
-│   │   ├── as_action.php               as_update_meta, array_partial_merge
-│   │   ├── check.php                   post_in_term
-│   │   ├── getSetting.php              Store settings, show_user_fields
+│   │   ├── as_action.php               as_update_meta, as_array_partial_merge
+│   │   ├── check.php                   as_post_in_term
+│   │   ├── getSetting.php              Store settings, as_show_user_fields, currency helpers
 │   │   │
 │   │   ├── getData/
-│   │   │   ├── getData.php             getDataCart, getActualPrice, getCookie,
-│   │   │   │                           getDiscount, getActualStepDiscont
-│   │   │   ├── orders.php              get_user_orders, get_used_statuses
-│   │   │   ├── catalog.php             get_catalog_terms, splitMenu,
-│   │   │   │                           view_menu_elements
+│   │   │   ├── getData.php             as_getDataCart, as_getActualPrice, as_getCookie,
+│   │   │   │                           as_getDiscount, as_getActualStepDiscont
+│   │   │   ├── orders.php              as_get_user_orders, as_get_used_statuses
+│   │   │   ├── catalog.php             as_get_catalog_terms, as_splitMenu,
+│   │   │   │                           as_view_menu_elements
 │   │   │   ├── gallery.php             as_get_product_gallery
 │   │   │   │
 │   │   │   ├── admin/
-│   │   │   │   └── get_characteristics.php   get_charact
+│   │   │   │   └── get_characteristics.php   as_get_charact
 │   │   │   │
 │   │   │   └── product/
 │   │   │       └── productLists/
-│   │   │           ├── marked.php      get_marked_products (hits, new)
-│   │   │           ├── catalog.php     get_sort_products
-│   │   │           └── history.php     get_history_products
+│   │   │           ├── marked.php      as_get_marked_products (hits, new)
+│   │   │           ├── catalog.php     as_get_sort_products
+│   │   │           └── history.php     as_get_history_products
 │   │   │
 │   │   └── view/
 │   │       ├── product/
 │   │       │   └── productsLists/
-│   │       │       └── productsLists.php   view_products_list
+│   │       │       └── productsLists.php   as_view_products_list
 │   │       └── catalog/
 │   │           └── catalogPage.php     as_sort, as_catalog
 │   │
@@ -377,11 +406,17 @@ plugins/argon-shop/
 │       │   └── sliderProduct.php       as_slider_product (Swiper + GLightbox)
 │       │
 │       ├── shoppingCart/
-│       │   ├── shoppingCart.php        AJAX: add/amount/delete/submitCart
+│       │   ├── shoppingCart.php        Module loader
+│       │   ├── cart-ajax.php           AJAX: add/amount/delete/deleteAll
+│       │   ├── checkout.php            AJAX submitCart: checkout orchestrator
+│       │   ├── checkout-fields.php     Form fields, required fields
+│       │   ├── checkout-files.php      Order file validation and storage
+│       │   ├── checkout-registration.php  Customer registration at checkout
+│       │   ├── checkout-emails.php     Order emails
 │       │   └── infoCart.php            as_infocart — cart widget in header
 │       │
 │       ├── product/
-│       │   └── cardProduct.php         button_card_product
+│       │   └── cardProduct.php         as_button_card_product
 │       │
 │       ├── catalog/
 │       │   └── sort.php                AJAX catalog sorting
@@ -390,13 +425,14 @@ plugins/argon-shop/
 │       │   ├── myCabinet.php           AJAX: email/password change, account save
 │       │   ├── redirectUser.php        Redirects after login/logout
 │       │   └── userOrders/
-│       │       ├── ordersView.php      view_user_orders
+│       │       ├── ordersView.php      as_view_user_orders
 │       │       └── ordersAjax.php      AJAX order filter
 │       │
 │       └── search/
 │           ├── searchForm.php          as_search — search form output
 │           ├── searchGetFilters.php    GET search filters (/ ?s=)
-│           └── searchAjax.php          AJAX search + fixKeyboardlayout
+│           ├── searchAjax.php          AJAX search + as_fixKeyboardlayout
+│           └── searchLanguage.php      Search rules for ru / en / fr
 │
 └── assets/
     │
@@ -420,7 +456,7 @@ plugins/argon-shop/
     │       ├── main.js                 Entry point, imports all modules
     │       │
     │       ├── core/
-    │       │   ├── config.js           url, nonce, cartUrl from wp_localize_script
+    │       │   ├── config.js           url, nonce, cartUrl, i18n strings + t() from wp_localize_script
     │       │   ├── api.js              Single fetch client
     │       │   └── nonce.js            XMLHttpRequest interceptor
     │       │
@@ -486,9 +522,9 @@ themes/argon-shop-theme/
 ├── single-aktsii-moskva.php            Promo (Moscow)
 │
 ├── category-aktsii-moskva.php          Promo category (Moscow)
-├── category-aktsii-istra.php           Promo category (Istra) — stub
+├── (category-aktsii-istra.php)         Promo category (Istra) — not created yet, see AI_EXTENDING.md §11
 ├── categoryArchive-aktsii-moskva.php   Promo archive (Moscow)
-├── categoryArchive-aktsii-istra.php    Promo archive (Istra)
+├── (categoryArchive-aktsii-istra.php)  Promo archive (Istra) — not created yet, see AI_EXTENDING.md §11
 │
 ├── shoppingCartPage.php                Template Name: shoppingCart
 ├── myCabinetPage.php                   Template Name: CabinetPage
@@ -590,11 +626,19 @@ themes/argon-shop-theme/
 
 - **Plugin** — all logic: post types, taxonomies, AJAX handlers, ES modules, queries, cookies, emails.
 - **Theme** — layout and styles: page templates, CSS, menu configuration.
-- **Touchpoints** — plugin functions called from templates (`kama_breadcrumbs`, `as_search`, `as_infocart`, `view_products_list`, `as_slider_product`, etc.), and ES modules from the plugin loaded as `main.js`.
+- **Touchpoints** — plugin functions called from templates (`as_kama_breadcrumbs`, `as_search`, `as_infocart`, `as_view_products_list`, `as_slider_product`, etc.), and ES modules from the plugin loaded as `main.js`.
 
 ### Store Data
 
 The cart and view history are stored in **cookies**, not in the DB. An order is created in the DB (CPT `shoporder`) only at the moment of checkout, which reduces MySQL load.
+
+Only product IDs and quantities are taken from the cookie: prices are always read from the DB, and unpublished or deleted products are dropped from the cart. Required checkout fields are checked on the server.
+
+### Extending
+
+The plugin provides hooks for integrations without editing its code: `argon_shop_product_price`, `argon_shop_cart`, `argon_shop_required_fields`, `argon_shop_shipping_methods`, `argon_shop_payment_methods`, `argon_shop_checkout_errors`, `argon_shop_order_post_data`, `argon_shop_order_created`, `argon_shop_checkout_response`, `argon_shop_email`, `argon_shop_allowed_file_types`, `argon_shop_file_limits`, `argon_shop_customer_registered`. Examples are in [docs/ai/AI_EXTENDING.md](docs/ai/AI_EXTENDING.md).
+
+Since 1.1.0 all plugin functions have the `as_` prefix. Old names from the public API keep working via `includes/legacy-functions.php`; the full list is in [docs/ai/AI_FUNCTION_NAMES.md](docs/ai/AI_FUNCTION_NAMES.md).
 
 ### Modern JavaScript
 
@@ -603,6 +647,36 @@ The frontend is fully based on ES modules: `main.js` is loaded as `<script type=
 ### Multi-Region Support
 
 The `as_homepage` marker in menu items is replaced with the current site's domain via the `wp_nav_menu_objects` filter. The menu works across all cities without editing links.
+
+---
+
+## 🌐 Languages
+
+The plugin and the theme are translation-ready by WordPress rules: English is the source language, **Russian** and **French** translations are included (`languages/` folders of the plugin and the theme). The language follows **Settings → General → Site Language**; any other language shows English. JavaScript messages (cart, file upload, account) are translated too. Search adapts to the site language (English, French or Russian rules). Code comments and developer documentation are in English. Site owners can override any string with their own files in `wp-content/languages/plugins/` and `wp-content/languages/themes/` or with Loco Translate / Poedit.
+
+**Currency** is set separately in **Settings → Store → Currency** (USD by default, EUR, RUB): it changes the symbol and its position in prices, emails and the admin, without converting amounts. A Russian-language store should select RUB.
+
+Store data entered in the admin (products, form field names in "Settings → Store") is not translated by these files — use a multilingual plugin (Polylang, WPML) for that.
+
+For developers and AI assistants: [docs/ai/AI_I18N.md](docs/ai/AI_I18N.md).
+
+---
+
+## 🧪 Tests
+
+`tests/static-check.php` needs only PHP (no WordPress, no database) and runs in seconds: syntax, untranslated texts, text domains, translation completeness, versions and English-only code comments.
+
+```bash
+php tests/static-check.php
+```
+
+`tests/smoke-test.php` checks the main scenarios on a real WordPress site: cart, price spoofing, required fields, file uploads, order creation, registration, account, search (including language rules), currency, translated JS strings, site and admin pages, and `debug.log`. Run it **only on a test site** via WP-CLI:
+
+```bash
+wp eval-file /path/to/ArgonShop/tests/smoke-test.php
+```
+
+Details — [tests/README.md](tests/README.md).
 
 ---
 
@@ -634,3 +708,25 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 ```
+
+---
+
+## 🤖 Recommended AI for Customizing the Plugin
+
+ArgonShop is designed to be adapted to your project with the help of AI assistants. If you have installed the plugin and want to customize it for your store, here are two proven approaches.
+
+### Option 1. Claude Opus 5.5 — "lazy" development with a minimum of errors
+
+The recommended choice is **Claude Opus 5.5**, preferably via [Notion.com](http://Notion.com). Upload the plugin archive or give it a link to the repository, describe the task in plain words — and the AI will study the code and the AI documentation (`AI.md` and `docs/ai/`), make the changes itself and return ready-made files. This is the fastest and most comfortable path with the fewest errors: you mostly formulate tasks and check the result.
+
+### Option 2. DeepSeek — free, but more manual work
+
+If the budget does not allow it, use **DeepSeek**:
+
+1. Give it a link to the repository or the required files and the AI documentation (`AI.md` and `docs/ai/`).
+2. Formulate the tasks as precise prompts.
+3. Read every returned file with code carefully.
+4. Insert the code into the project manually.
+5. Test every change manually.
+
+This is a longer path, and DeepSeek makes mistakes more often — but it is free (for now) and still very fast.

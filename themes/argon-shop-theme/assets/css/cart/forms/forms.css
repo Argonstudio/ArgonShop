@@ -1,4 +1,4 @@
-/*Формы отправки */
+/* Submission forms */
 
 .form-cart{
     margin-top:30px;
@@ -13,7 +13,7 @@
 
 }
 
-/* Поля форм */
+/* Form fields */
 
 
 .form-cart .cartFieldsTitle{
@@ -99,7 +99,7 @@
     
 }
 
-/* Прикрепление файла */
+/* File attachment */
 
 .labelAddFile {
     display: block;
@@ -188,7 +188,7 @@
 
 }
 
-/* Зарегистрировать вас? */
+/* Register you? */
 
 .cartRegistration .block-regQuestion{
     display: block;
@@ -210,7 +210,7 @@
     display:none;
 }
 
-/* Блок доставка/оплата */
+/* Delivery/payment block */
 
 .block-shippingPayment{
     display: table;
@@ -288,7 +288,7 @@
 
 }
 
-/* Кнопка отправки */
+/* Submit button */
 
 .form-cart input[type=submit] {
     border: 0;
@@ -317,21 +317,21 @@
     margin: 15px auto;
 }
 
-/* Стили при наведении на АКТИВНУЮ кнопку */
+/* Hover styles for the ACTIVE button */
 .submitCart:hover:not([disabled]) {
     background-color: #3d83c2; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Специфические стили для кнопки в состоянии DISABLED */
+/* Specific styles for the button in the DISABLED state */
 .submitCart:disabled,
 .submitCart[disabled] {
-    background-color: #cccccc !important; /* Серый цвет вместо цветного */
-    color: #888888 !important;            /* Блеклый цвет текста */
-    opacity: 0.6;                         /* Полупрозрачность */
-    cursor: not-allowed !important;       /* Курсор запрета (красный перечеркнутый круг) */
-    box-shadow: none !important;          /* Убираем тени */
-    transform: none !important;           /* Отменяем любые эффекты смещения */
+    background-color: #cccccc !important; /* Gray instead of a color */
+    color: #888888 !important;            /* Faded text color */
+    opacity: 0.6;                         /* Semi-transparency */
+    cursor: not-allowed !important;       /* "Not allowed" cursor (red crossed circle) */
+    box-shadow: none !important;          /* Remove shadows */
+    transform: none !important;           /* Cancel any shift effects */
 }
 
 @media(max-width:720px){

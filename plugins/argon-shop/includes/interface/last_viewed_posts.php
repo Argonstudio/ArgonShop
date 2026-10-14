@@ -13,7 +13,7 @@
  * 6. Replaced unsafe unserialize() without restrictions with safe
  *     version using allowed_classes => false + array validation
  * 7. Fixed typo: is_singular( product ) → is_singular( 'product' )
- * 8. Fixed call to zg_recently_viewed() — default parameters passed
+ * 8. Fixed call to as_zg_recently_viewed() — default parameters passed
  * 9. Removed extract() function — unsafe and outdated
  * 10. Removed debug output (echo, print_r) in production
  * 11. Added isset() checks for all $_POST, $_COOKIE, $meta_data
@@ -26,7 +26,7 @@
  * @author  Olaf Baumann (original author)
  * @author  Syed Balkhi (fork author)
  * @author  Ivan Voitkov (customization for ArgonShop)
- * @version 0.7.3-argon
+ * Based on: Last Viewed Posts 0.7.3 (Olaf Baumann). Version of this copy = plugin version.
  */
 
 /* Copyright 2007 Olaf Baumann  (http://zeitgrund.de)
@@ -64,23 +64,23 @@ $zg_recognize_pages = true; // Should pages to be recognized and listed? Default
 /* Do not edit after this line! */
 
 /**
- * ФУНКЦИЯ: Хук на каждом сгенерированном посте
+ * FUNCTION: Hook on every generated post
  * 
- * ГДЕ: Запускается через get_header на странице товара
- * ЧТО ДЕЛАЕТ:
- * 1. Увеличивает счётчик просмотров в куках (WP-LastViewedPosts1)
- * 2. Добавляет ID товара в список просмотренных (WP-LastViewedPosts)
+ * WHERE: Runs via get_header on the product page
+ * WHAT IT DOES:
+ * 1. Increments the view counter in the cookie (WP-LastViewedPosts1)
+ * 2. Adds the product ID to the list of viewed products (WP-LastViewedPosts)
  */
-function zg_lwp_header() {
+function as_zg_lwp_header() {
     
-    // PHP 8.5: is_singular( product ) — ошибка, должно быть 'product' (строкой)
+    // PHP 8.5: is_singular( product ) is an error, it must be 'product' (a string)
     if ( is_singular( 'product' ) ) {
         
         $lastViewedPosts = array();
         
-        if ( getCookie( 'WP-LastViewedPosts1' ) ) {
+        if ( as_getCookie( 'WP-LastViewedPosts1' ) ) {
             
-            $lastViewedPosts = getCookie( 'WP-LastViewedPosts1' );
+            $lastViewedPosts = as_getCookie( 'WP-LastViewedPosts1' );
             
             if ( ! is_array( $lastViewedPosts ) ) {
                 $lastViewedPosts = array();
@@ -104,27 +104,27 @@ function zg_lwp_header() {
             COOKIE_DOMAIN
         );
         
-        zg_lw_setcookie();
+        as_zg_lw_setcookie();
     }
 }
 
 /**
- * ФУНКЦИЯ: Сохранение просмотренного товара в куки
+ * FUNCTION: Save the viewed product in the cookie
  * 
- * ГДЕ: Автоматически вызывается из zg_lwp_header()
- * ЧТО ДЕЛАЕТ:
- * 1. Читает текущий список из куки WP-LastViewedPosts
- * 2. Добавляет новый ID в начало
- * 3. Ограничивает список заданным количеством
- * 4. Сохраняет обратно в куки
+ * WHERE: Called automatically from as_zg_lwp_header()
+ * WHAT IT DOES:
+ * 1. Reads the current list from the WP-LastViewedPosts cookie
+ * 2. Adds the new ID to the beginning
+ * 3. Limits the list to the configured number
+ * 4. Saves it back to the cookie
  * 
- * PHP 8.5: заменён устаревший preg_replace() с /e (удалён с PHP 7.0)
+ * PHP 8.5: replaced the deprecated preg_replace() with /e (removed in PHP 7.0)
  */
-function zg_lw_setcookie() {
+function as_zg_lw_setcookie() {
     
     global $wp_query;
     
-    // PHP 8.5: проверяем, что объект поста существует
+    // PHP 8.5: make sure the post object exists
     if ( ! isset( $wp_query->post->ID ) ) {
         return;
     }
@@ -135,21 +135,21 @@ function zg_lw_setcookie() {
         return;
     }
     
-    // Читаем куки и десериализуем безопасно
+    // Read the cookie and unserialize it safely
     $zg_cookiearray = array();
     
     if ( isset( $_COOKIE['WP-LastViewedPosts'] ) ) {
         
         $cookie_raw = stripslashes( $_COOKIE['WP-LastViewedPosts'] );
         
-        // PHP 8.5: заменён preg_replace(/e) на безопасную десериализацию
-        // Ограничение размера для защиты от DoS
+        // PHP 8.5: replaced preg_replace(/e) with safe unserialization
+        // Size limit for DoS protection
         if ( strlen( $cookie_raw ) <= 10000 ) {
             
             $unserialized = @unserialize( $cookie_raw, array( 'allowed_classes' => false ) );
             
             if ( is_array( $unserialized ) ) {
-                // Валидация — только целые числа
+                // Validation — integers only
                 $zg_cookiearray = array_map( 'absint', $unserialized );
                 $zg_cookiearray = array_filter( $zg_cookiearray );
                 $zg_cookiearray = array_values( $zg_cookiearray );
@@ -157,12 +157,12 @@ function zg_lw_setcookie() {
         }
     }
     
-    // Если массив пустой или повреждён — создаём новый
+    // If the array is empty or corrupted — create a new one
     if ( ! is_array( $zg_cookiearray ) || empty( $zg_cookiearray ) ) {
         $zg_cookiearray = array( $zg_post_ID );
     }
     
-    // Если товар уже в списке — удаляем его
+    // If the product is already in the list — remove it
     if ( in_array( $zg_post_ID, $zg_cookiearray, true ) ) {
         
         $zg_key = array_search( $zg_post_ID, $zg_cookiearray, true );
@@ -172,10 +172,10 @@ function zg_lw_setcookie() {
         }
     }
     
-    // Добавляем новый ID в начало
+    // Add the new ID to the beginning
     array_unshift( $zg_cookiearray, $zg_post_ID );
     
-    // Ограничиваем количество
+    // Limit the number
     global $zg_number_of_posts;
     
     $zg_number_of_posts = absint( $zg_number_of_posts );
@@ -188,7 +188,7 @@ function zg_lw_setcookie() {
         array_pop( $zg_cookiearray );
     }
     
-    // Определяем домен для куки
+    // Determine the cookie domain
     $zg_blog_url_array = parse_url( get_bloginfo( 'url' ) );
     
     if ( ! is_array( $zg_blog_url_array ) ) {
@@ -202,11 +202,11 @@ function zg_lw_setcookie() {
     $zg_path_url = isset( $zg_blog_url_array['path'] ) ? $zg_blog_url_array['path'] : '';
     $zg_path_url .= '/';
     
-    // Счётчик (для совместимости с Argon-доработкой ZBK)
+    // Counter (for compatibility with the Argon ZBK modification)
     $lastViewedPosts = array();
     
-    if ( getCookie( 'WP-LastViewedPosts1' ) ) {
-        $lastViewedPosts = getCookie( 'WP-LastViewedPosts1' );
+    if ( as_getCookie( 'WP-LastViewedPosts1' ) ) {
+        $lastViewedPosts = as_getCookie( 'WP-LastViewedPosts1' );
         
         if ( ! is_array( $lastViewedPosts ) ) {
             $lastViewedPosts = array();
@@ -215,7 +215,7 @@ function zg_lw_setcookie() {
     
     array_unshift( $lastViewedPosts, $zg_post_ID );
     
-    // PHP 8.5: setcookie() с 7 аргументами устарел, используем массив опций
+    // PHP 8.5: setcookie() with 7 arguments is deprecated, use an options array
     setcookie(
         'WP-LastViewedPosts',
         serialize( $zg_cookiearray ),
@@ -224,24 +224,24 @@ function zg_lw_setcookie() {
             'path'     => $zg_path_url,
             'domain'   => $zg_blog_url_dot,
             'secure'   => is_ssl(),
-            'httponly' => false, // Должно быть false — читается из JS
+            'httponly' => false, // Must be false — it is read from JS
             'samesite' => 'Lax',
         )
     );
 }
 
 /**
- * ФУНКЦИЯ: Вывод списка просмотренных товаров
+ * FUNCTION: Output the list of viewed products
  * 
- * ГДЕ: Вызывается в шаблоне темы или виджете
- * ЧТО ДЕЛАЕТ:
- * 1. Читает куку WP-LastViewedPosts
- * 2. Выводит карточки товаров в виде списка
+ * WHERE: Called in a theme template or widget
+ * WHAT IT DOES:
+ * 1. Reads the WP-LastViewedPosts cookie
+ * 2. Outputs product cards as a list
  * 
- * @param int  $rightAmount — максимальное количество товаров для вывода
- * @param bool $sidebarOn   — вывод в сайдбаре (другая сетка)
+ * @param int  $rightAmount — maximum number of products to output
+ * @param bool $sidebarOn   — output in the sidebar (different grid)
  */
-function zg_recently_viewed( $rightAmount = 15, $sidebarOn = true ) {
+function as_zg_recently_viewed( $rightAmount = 15, $sidebarOn = true ) {
     
     $rightAmount = absint( $rightAmount );
     
@@ -257,7 +257,7 @@ function zg_recently_viewed( $rightAmount = 15, $sidebarOn = true ) {
         
         $zg_post_IDs = array();
         
-        // PHP 8.5: безопасная десериализация вместо preg_replace(/e)
+        // PHP 8.5: safe unserialization instead of preg_replace(/e)
         if ( strlen( $cookie_raw ) <= 10000 ) {
             
             $unserialized = @unserialize( $cookie_raw, array( 'allowed_classes' => false ) );
@@ -285,7 +285,7 @@ function zg_recently_viewed( $rightAmount = 15, $sidebarOn = true ) {
                 continue;
             }
             
-            // Цена товара
+            // Product price
             $price = '?';
             
             $price_meta = get_post_meta( $value, '_price', true );
@@ -298,7 +298,7 @@ function zg_recently_viewed( $rightAmount = 15, $sidebarOn = true ) {
                 
                 $meta_data = get_post_meta( $value, 'product_custom_options', true );
                 
-                // PHP 8.5: проверяем, что это массив и ключ существует
+                // PHP 8.5: make sure it is an array and the key exists
                 if ( is_array( $meta_data ) && isset( $meta_data['price'] ) ) {
                     $price = $meta_data['price'];
                 }
@@ -317,17 +317,17 @@ function zg_recently_viewed( $rightAmount = 15, $sidebarOn = true ) {
                 <div class="image">
                     
                     <?php 
-                    // PHP 8.5: get_field может вернуть null/false
+                    // PHP 8.5: get_field may return null/false
                     if ( function_exists( 'get_field' ) && get_field( '_hit', $value ) ) { 
                         ?>
-                        <span class="goods-label goods-label-hit">хит</span>
+                        <span class="goods-label goods-label-hit"><?php esc_html_e( 'hit', 'argon-shop' ); ?></span>
                         <?php 
                     } 
                     ?>
                     
                     <a href="<?php echo esc_url( get_permalink( $value ) ); ?>">
                         <?php 
-                        // PHP 8.5: get_the_post_thumbnail возвращает строку или false
+                        // PHP 8.5: get_the_post_thumbnail returns a string or false
                         echo get_the_post_thumbnail( 
                             $value, 
                             'blog_thumb', 
@@ -341,11 +341,11 @@ function zg_recently_viewed( $rightAmount = 15, $sidebarOn = true ) {
                 <div class="name"><?php echo esc_html( get_the_title( $value ) ); ?></div>
                 
                 <div class="price">
-                    <span class="summ"><?php echo esc_html( $price ); ?> руб</span>
+                    <span class="summ"><?php echo as_price_html( esc_html( $price ) ); ?></span>
                 </div>
                 
                 <div class="link">
-                    <a href="<?php echo esc_url( get_permalink( $value ) ); ?>" rel="bookmark"> Подробнее </a>
+                    <a href="<?php echo esc_url( get_permalink( $value ) ); ?>" rel="bookmark"> <?php esc_html_e( 'Details', 'argon-shop' ); ?> </a>
                 </div>
                 
             </div> 
@@ -360,15 +360,15 @@ function zg_recently_viewed( $rightAmount = 15, $sidebarOn = true ) {
 }
 
 /**
- * ФУНКЦИЯ: Вывод виджета "Просмотренные товары"
+ * FUNCTION: Output the "Viewed products" widget
  * 
- * ГДЕ: Виджет в сайдбаре
+ * WHERE: Sidebar widget
  * 
- * PHP 8.5: убран extract(), добавлены проверки
+ * PHP 8.5: extract() removed, checks added
  */
-function zg_lwp_widget( $args ) {
+function as_zg_lwp_widget( $args ) {
     
-    // PHP 8.5: extract($args) небезопасен и устарел
+    // PHP 8.5: extract($args) is unsafe and deprecated
     $before_widget = isset( $args['before_widget'] ) ? $args['before_widget'] : '';
     $after_widget  = isset( $args['after_widget'] )  ? $args['after_widget']  : '';
     $before_title  = isset( $args['before_title'] )  ? $args['before_title']  : '';
@@ -387,18 +387,18 @@ function zg_lwp_widget( $args ) {
         
         echo $before_widget . $before_title . $title . $after_title;
         
-        zg_recently_viewed( 15, true );
+        as_zg_recently_viewed( 15, true );
         
         echo $after_widget;
     }
 }
 
 /**
- * ФУНКЦИЯ: Управление виджетом в админке
+ * FUNCTION: Widget management in the admin
  * 
- * ГДЕ: Страница виджетов в админке
+ * WHERE: Widgets page in the admin
  */
-function zg_lwp_widget_control() {
+function as_zg_lwp_widget_control() {
     
     $options = $newoptions = get_option( 'zg_lwp_widget' );
     
@@ -410,7 +410,7 @@ function zg_lwp_widget_control() {
         $newoptions = array();
     }
     
-    // PHP 8.5: проверяем isset перед доступом к $_POST
+    // PHP 8.5: check isset before accessing $_POST
     if ( isset( $_POST['lwp-submit'] ) ) {
         
         $title = isset( $_POST['lwp-title'] ) 
@@ -425,13 +425,13 @@ function zg_lwp_widget_control() {
         update_option( 'zg_lwp_widget', $options );
     }
     
-    // PHP 8.5: attribute_escape() удалён с WP 2.8
+    // PHP 8.5: attribute_escape() was removed in WP 2.8
     $title = isset( $options['title'] ) ? esc_attr( $options['title'] ) : '';
     
     ?>
     <p>
         <label for="lwp-title">
-            <?php esc_html_e( 'Title:' ); ?>
+            <?php esc_html_e( 'Title:', 'argon-shop' ); ?>
             <input type="text" style="width:250px" id="lwp-title" name="lwp-title" value="<?php echo $title; ?>" />
         </label>
     </p>
@@ -440,19 +440,19 @@ function zg_lwp_widget_control() {
 }
 
 /**
- * ФУНКЦИЯ: Инициализация виджета
+ * FUNCTION: Widget initialization
  * 
- * ГДЕ: Хук widgets_init
+ * WHERE: The widgets_init hook
  */
-function zg_lwp_init() {
+function as_zg_lwp_init() {
     
     if ( ! function_exists( 'register_sidebar_widget' ) ) {
         return;
     }
     
-    register_sidebar_widget( 'Last Viewed Posts', 'zg_lwp_widget' );
-    register_widget_control( 'Last Viewed Posts', 'zg_lwp_widget_control', 250, 100 );
+    register_sidebar_widget( 'Last Viewed Posts', 'as_zg_lwp_widget' );
+    register_widget_control( 'Last Viewed Posts', 'as_zg_lwp_widget_control', 250, 100 );
 }
 
-add_action( 'get_header', 'zg_lwp_header' );
-add_action( 'widgets_init', 'zg_lwp_init' );
+add_action( 'get_header', 'as_zg_lwp_header' );
+add_action( 'widgets_init', 'as_zg_lwp_init' );

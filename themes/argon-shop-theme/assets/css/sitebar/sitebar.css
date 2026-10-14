@@ -21,7 +21,7 @@
  } 
  
  /**
- * ССЫЛКИ В САЙТБАРЕ
+ * SIDEBAR LINKS
  * =========================================== */
  
  .block-linkSidebar{
@@ -37,7 +37,7 @@
         font-size: 14px;
         font-weight: 700;
         margin: 3px 0;
-        padding: 25px 0 0 65px;
+        padding: 17px 0 0 65px;
         position: relative;
         text-decoration: none;
         text-transform: uppercase;

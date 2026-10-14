@@ -1,35 +1,34 @@
 <?php
 /**
- * Template Name: История просмотров
+ * Template Name: View history
  * 
- * Шаблон страницы "История просмотров"
+ * "View history" page template
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *  * 
- * ЧТО ВЫВОДИТ:
- * 1. Хлебные крошки
- * 2. Заголовок и контент страницы
- * 3. Список просмотренных товаров (карточками)
- * 4. Пагинацию
+ * WHAT IT OUTPUTS:
+ * 1. Breadcrumbs
+ * 2. Page title and content
+ * 3. List of viewed products (as cards)
+ * 4. Pagination
  * 
  * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  * 
- * В этом шаблоне используются функции плагина:
+ * This template uses the following plugin functions:
  * 
- * - kama_breadcrumbs()       → хлебные крошки (breadcrumbs.php)
- * - kama_pagenavi()          → пагинация (pagenavi.php)
- * - getCookie()              → чтение куки корзины (getData.php)
- * - get_history_products()   → история просмотров (history.php)
- * - generate_product_card()  → карточка товара (productsLists.php)
+ * - as_kama_breadcrumbs()       → breadcrumbs (breadcrumbs.php)
+ * - as_kama_pagenavi()          → pagination (pagenavi.php)
+ * - as_getCookie()              → reading the cart cookie (getData.php)
+ * - as_get_history_products()   → view history (history.php)
+ * - generate_product_card()  → product card (productsLists.php)
  * 
  * ============================================================
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -44,14 +43,14 @@ get_header(); ?>
         <main class="block-content">
 
             <?php 
-            // Функция плагина Argon Shop (includes/interface/breadcrumbs.php)
-            if ( function_exists( 'kama_breadcrumbs' ) ) {
-                kama_breadcrumbs( '<span class="b"> » </span>' );
+            // Argon Shop plugin function (includes/interface/breadcrumbs.php)
+            if ( function_exists( 'as_kama_breadcrumbs' ) ) {
+                AS_Kama_Breadcrumbs( '<span class="b"> » </span>' );
             }
             ?>
 
             <?php 
-            // Стандартный цикл WordPress
+            // Standard WordPress loop
             while ( have_posts() ) : the_post(); 
             ?>
 
@@ -62,16 +61,16 @@ get_header(); ?>
                 
                 <?php 
                 
-                // Функция плагина Argon Shop (includes/api/getData/getData.php)
-                // Получаем товары из корзины (для проверки, добавлен ли товар)
-                $productsShoppingCart = function_exists( 'getCookie' ) 
-                    ? getCookie( 'productsShoppingCart' ) 
+                // Argon Shop plugin function (includes/api/getData/getData.php)
+                // Get the products in the cart (to check whether a product has been added)
+                $productsShoppingCart = function_exists( 'as_getCookie' ) 
+                    ? as_getCookie( 'productsShoppingCart' ) 
                     : false;
                 
-                // Функция плагина Argon Shop (includes/interface/history.php)
-                // Получаем список просмотренных товаров
-                $history_products = function_exists( 'get_history_products' ) 
-                    ? get_history_products() 
+                // Argon Shop plugin function (includes/interface/history.php)
+                // Get the list of viewed products
+                $history_products = function_exists( 'as_get_history_products' ) 
+                    ? as_get_history_products() 
                     : false;
                 
                 if ( $history_products instanceof WP_Query && $history_products->have_posts() ) : 
@@ -91,7 +90,7 @@ get_header(); ?>
                                     continue;
                                 }
                                 
-                                // Функция плагина Argon Shop
+                                // Argon Shop plugin function
                                 // (includes/api/view/product/productsLists/productsLists.php)
                                 if ( function_exists( 'generate_product_card' ) ) {
                                     generate_product_card( $post, $productsShoppingCart );
@@ -101,15 +100,15 @@ get_header(); ?>
                             ?>
                             
                             <?php 
-                            // Функция плагина Argon Shop (includes/interface/pagenavi.php)
-                            // ВНИМАНИЕ: kama_pagenavi() использует глобальный $wp_query,
-                            // а не $history_products. Пагинация работает некорректно,
-                            // если в истории больше товаров, чем на одной странице.
-                            // Для правильной работы нужно передать $history_products:
-                            // kama_pagenavi( '', '', true, array(), $history_products );
+                            // Argon Shop plugin function (includes/interface/pagenavi.php)
+                            // NOTE: as_kama_pagenavi() uses the global $wp_query,
+                            // not $history_products. Pagination works incorrectly
+                            // if the history has more products than fit on one page.
+                            // For correct behavior $history_products must be passed:
+                            // as_kama_pagenavi( '', '', true, array(), $history_products );
                             
-                            if ( function_exists( 'kama_pagenavi' ) ) {
-                                kama_pagenavi( '', '', true, array(), $history_products );
+                            if ( function_exists( 'as_kama_pagenavi' ) ) {
+                                as_kama_pagenavi( '', '', true, array(), $history_products );
                             }
                             ?>
                         </div>
@@ -119,8 +118,8 @@ get_header(); ?>
                 <?php endif; ?>
                 
                 <?php 
-                // PHP 8.5: сброс постов вынесен за пределы условия,
-                // чтобы гарантированно выполниться, даже если запрос пустой
+                // PHP 8.5: resetting the posts is moved outside the condition
+                // so that it always runs, even if the query is empty
                 wp_reset_postdata(); 
                 ?>
                 

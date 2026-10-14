@@ -1,47 +1,46 @@
 <?php
 /**
- * AJAX-сортировка каталога товаров
+ * AJAX sorting of the product catalog
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * Страница категории каталога → выбор сортировки (дата, имя, цена)
- * URL: /catalog/категория/
+ * WHERE TO TEST:
+ * Catalog category page → choose sorting (date, name, price)
+ * URL: /catalog/category/
  * 
- * ЧТО ДЕЛАЕТ:
- * 1. Сохраняет выбранный тип сортировки в куки
- * 2. Возвращает отсортированный список товаров
+ * WHAT IT DOES:
+ * 1. Saves the selected sort type in a cookie
+ * 2. Returns the sorted product list
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-add_action( 'wp_ajax_sortingCatalog', 'sortingCatalog_callback' );
-add_action( 'wp_ajax_nopriv_sortingCatalog', 'sortingCatalog_callback' );
+add_action( 'wp_ajax_sortingCatalog', 'as_sortingCatalog_callback' );
+add_action( 'wp_ajax_nopriv_sortingCatalog', 'as_sortingCatalog_callback' );
 
 /**
- * ОБРАБОТЧИК: Сортировка каталога
+ * HANDLER: Catalog sorting
  * 
- * ГДЕ: Страница категории → изменение сортировки
- * ЧТО ДЕЛАЕТ:
- * 1. Сохраняет выбранную сортировку в куки
- * 2. Возвращает отсортированные товары
+ * WHERE: Category page → sorting change
+ * WHAT IT DOES:
+ * 1. Saves the selected sorting in a cookie
+ * 2. Returns the sorted products
  */
-function sortingCatalog_callback() {
+function as_sortingCatalog_callback() {
     
-    // Проверка nonce
+    // Nonce check
     check_ajax_referer( 'argon_shop_nonce', 'nonce' );
     
-    // Валидация данных
+    // Data validation
     $typeSort = isset( $_POST['typeSort'] ) ? sanitize_text_field( wp_unslash( $_POST['typeSort'] ) ) : 'date';
     $howSorting = isset( $_POST['howSorting'] ) ? sanitize_text_field( wp_unslash( $_POST['howSorting'] ) ) : 'DESC';
     $catId = isset( $_POST['catId'] ) ? absint( $_POST['catId'] ) : 0;
     $pageNum = isset( $_POST['pageNum'] ) ? absint( $_POST['pageNum'] ) : 1;
     
-    // Проверка допустимых значений
+    // Allowed values check
     if ( ! in_array( $typeSort, array( 'date', 'name', 'price' ), true ) ) {
         $typeSort = 'date';
     }
@@ -56,7 +55,7 @@ function sortingCatalog_callback() {
         $pageNum = 1;
     }
     
-    // Сохраняем сортировку в куки
+    // Save the sorting in a cookie
     $cookieCatalogSort = array(
         'typeSort' => $typeSort,
         'howSort'  => $howSorting,
@@ -66,11 +65,11 @@ function sortingCatalog_callback() {
     
     setcookie( 'AS_CatalogSorting', $cookieCatalogSort, time() + 1209600, COOKIEPATH, COOKIE_DOMAIN );
     
-    // Получаем отсортированный список товаров
+    // Get the sorted product list
     // api/product/productList/catalog.php
-    $productsList = get_sort_products( $typeSort, $howSorting, $catId, $pageNum );
+    $productsList = as_get_sort_products( $typeSort, $howSorting, $catId, $pageNum );
     
-    view_products_list( $productsList );
+    as_view_products_list( $productsList );
     
     wp_die();
 }

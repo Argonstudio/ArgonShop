@@ -1,32 +1,31 @@
 <?php
 /**
- * Дополнительные фильтры для заказов в админ-панели
+ * Additional order filters in the admin panel
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * WordPress Админка → Заказы → Список заказов
+ * WHERE TO TEST:
+ * WordPress Admin → Orders → Order list
  * URL: /wp-admin/edit.php?post_type=shoporder
  * 
- * ЧТО ДЕЛАЕТ:
- * 1. Добавляет выпадающий список для фильтрации заказов по статусу
- * 2. Обрабатывает выбранный фильтр при запросе
+ * WHAT IT DOES:
+ * 1. Adds a dropdown for filtering orders by status
+ * 2. Applies the selected filter to the query
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 /**
- * ФУНКЦИЯ: Вывод выпадающего списка фильтра по статусам заказов
+ * FUNCTION: Output the order status filter dropdown
  * 
- * ГДЕ: Страница списка заказов → над таблицей
- * ЧТО ДЕЛАЕТ: Выводит select с таксономией statusorders
+ * WHERE: Order list page → above the table
+ * WHAT IT DOES: Outputs a select with the statusorders taxonomy
  */
-function restrict_posts_by_money() {
+function as_restrict_posts_by_money() {
     
     global $typenow;
     $post_type = 'shoporder';
@@ -43,7 +42,7 @@ function restrict_posts_by_money() {
             $info_taxonomy = get_taxonomy( $taxonomy );
             
             wp_dropdown_categories( array(
-                'show_option_all' => __( 'Все статусы' ),
+                'show_option_all' => __( 'All statuses', 'argon-shop' ),
                 'taxonomy'        => $taxonomy,
                 'name'            => $taxonomy,
                 'orderby'         => 'name',
@@ -55,17 +54,17 @@ function restrict_posts_by_money() {
     }
 }
 
-add_action( 'restrict_manage_posts', 'restrict_posts_by_money' );
+add_action( 'restrict_manage_posts', 'as_restrict_posts_by_money' );
 
 /**
- * ФУНКЦИЯ: Преобразование ID термина в slug для фильтрации
+ * FUNCTION: Convert the term ID to a slug for filtering
  * 
- * ГДЕ: Автоматически при запросе списка заказов
- * ЧТО ДЕЛАЕТ: Когда пользователь выбирает статус из выпадающего списка,
- *             WordPress передаёт ID термина. Эта функция преобразует
- *             ID в slug для корректной работы WP_Query.
+ * WHERE: Automatically when the order list is queried
+ * WHAT IT DOES: When the user picks a status from the dropdown,
+ *             WordPress passes the term ID. This function converts
+ *             the ID to a slug so that WP_Query works correctly.
  */
-function convert_id_to_term_in_query( $query ) {
+function as_convert_id_to_term_in_query( $query ) {
     
     global $pagenow;
     
@@ -79,11 +78,11 @@ function convert_id_to_term_in_query( $query ) {
         $term_id = absint( $q_vars[ $taxonomy ] );
         $term = get_term_by( 'id', $term_id, $taxonomy );
         
-        // Проверяем, что термин найден и не является ошибкой
+        // Make sure the term was found and is not an error
         if ( $term && ! is_wp_error( $term ) ) {
             $q_vars[ $taxonomy ] = $term->slug;
         }
     }
 }
 
-add_filter( 'parse_query', 'convert_id_to_term_in_query' );
+add_filter( 'parse_query', 'as_convert_id_to_term_in_query' );

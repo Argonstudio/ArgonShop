@@ -1,55 +1,54 @@
 <?php 
 /**
- * Шаблон страницы личного кабинета (CabinetPage)
+ * Customer account page template (CabinetPage)
  * 
- * Template Name: CabinetPage
+ * Template Name: Account page
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
  * 
- * ЧТО ВЫВОДИТ:
- * 1. Хлебные крошки (через kama_breadcrumbs из плагина Argon Shop)
- * 3. Три части: Аккаунт и адрес / Настройки / Заказы
+ * WHAT IT OUTPUTS:
+ * 1. Breadcrumbs (via kama_breadcrumbs from the Argon Shop plugin)
+ * 3. Three parts: Account and address / Settings / Orders
  * 
  * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  * 
- * Этот шаблон — обёртка для трёх частей личного кабинета.
- * Основная работа с данными пользователя ведётся внутри них.
+ * This template is a wrapper for the three parts of the customer account.
+ * The main work with the user data happens inside them.
  * 
- * ФУНКЦИИ ПЛАГИНА, ИСПОЛЬЗУЕМЫЕ В ШАБЛОНЕ:
+ * PLUGIN FUNCTIONS USED IN THE TEMPLATE:
  * 
- * 1. kama_breadcrumbs( ' » ' )
- *    Файл: includes/interface/breadcrumbs.php
- *    Выводит крошки: Главная » Личный кабинет
+ * 1. as_kama_breadcrumbs( ' » ' )
+ *    File: includes/interface/breadcrumbs.php
+ *    Outputs the breadcrumbs: Home » My account
  * 
- * 2. get_cabinetPageID()
- *    Файл: includes/api/getSetting.php
- *    Используется плагином redirectUser.php для защиты страницы
- *    от неавторизованных пользователей (см. below).
+ * 2. as_get_cabinetPageID()
+ *    File: includes/api/getSetting.php
+ *    Used by the plugin's redirectUser.php to protect the page
+ *    from unauthorized users (see below).
  * 
- * ПОДКЛЮЧАЕМЫЕ ШАБЛОНЫ ЧАСТЕЙ (get_template_part):
+ * INCLUDED TEMPLATE PARTS (get_template_part):
  * 
  * 1. template-parts/cabinet/account 
  * 2. template-parts/cabinet/setting 
  * 3. template-parts/cabinet/ordering
  * 
- * ЗАЩИТА СТРАНИЦЫ ОТ ГОСТЕЙ:
+ * PROTECTING THE PAGE FROM GUESTS:
  * 
- * Файл includes/interface/cabinet/redirectUser.php содержит хук
- * template_redirect, который проверяет:
+ * The includes/interface/cabinet/redirectUser.php file contains a
+ * template_redirect hook that checks:
  * 
- *   if ( ! is_user_logged_in() && is_page( get_cabinetPageID() ) ) {
+ *   if ( ! is_user_logged_in() && is_page( as_get_cabinetPageID() ) ) {
  *       wp_safe_redirect( wp_login_url() );
  *       exit;
  *   }
  * 
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -65,9 +64,9 @@ get_header();
         <main class="block-content">
           
             <?php 
-            // Функция плагина Argon Shop (includes/interface/breadcrumbs.php)
-            if ( function_exists( 'kama_breadcrumbs' ) ) {
-                kama_breadcrumbs( ' » ' );
+            // Argon Shop plugin function (includes/interface/breadcrumbs.php)
+            if ( function_exists( 'as_kama_breadcrumbs' ) ) {
+                AS_Kama_Breadcrumbs( ' » ' );
             }
             ?> 
 
@@ -79,13 +78,13 @@ get_header();
                 
                 <div class="pageControlPanel" id="cabinetControlPanel">
                     
-                    <div class="itemControlPanel itemControlPanelActive" data-type="switch" name="cabinetAccount">Аккаунт и адрес</div>
-                    <div class="itemControlPanel" data-type="switch" name="cabinetSetting">Настройки</div>
-                    <div class="itemControlPanel" data-type="switch" name="cabinetOrdering">Заказы</div>
+                    <div class="itemControlPanel itemControlPanelActive" data-type="switch" name="cabinetAccount"><?php esc_html_e( 'Account and address', 'argon-shop-theme' ); ?></div>
+                    <div class="itemControlPanel" data-type="switch" name="cabinetSetting"><?php esc_html_e( 'Settings', 'argon-shop-theme' ); ?></div>
+                    <div class="itemControlPanel" data-type="switch" name="cabinetOrdering"><?php esc_html_e( 'Orders', 'argon-shop-theme' ); ?></div>
                     
                 </div>
                 
-                <div class="mobileItemControlPanel" data-mobileWidth="720" data-type="openingList" name="cabinetAccount">Аккаунт и адрес</div>
+                <div class="mobileItemControlPanel" data-mobileWidth="720" data-type="openingList" name="cabinetAccount"><?php esc_html_e( 'Account and address', 'argon-shop-theme' ); ?></div>
                 
                 <div class="blockItemPage" id="block_cabinetAccount">
                     
@@ -93,7 +92,7 @@ get_header();
                     
                 </div>
                 
-                <div class="mobileItemControlPanel" data-mobileWidth="720" data-type="openingList" name="cabinetSetting">Настройки</div>
+                <div class="mobileItemControlPanel" data-mobileWidth="720" data-type="openingList" name="cabinetSetting"><?php esc_html_e( 'Settings', 'argon-shop-theme' ); ?></div>
                 
                 <div class="blockItemPage" id="block_cabinetSetting">
                     
@@ -101,7 +100,7 @@ get_header();
                     
                 </div>
                 
-                <div class="mobileItemControlPanel" data-mobileWidth="720" data-type="openingList" name="cabinetOrdering">Заказы</div>
+                <div class="mobileItemControlPanel" data-mobileWidth="720" data-type="openingList" name="cabinetOrdering"><?php esc_html_e( 'Orders', 'argon-shop-theme' ); ?></div>
                 
                 <div class="blockItemPage" id="block_cabinetOrdering">
                     

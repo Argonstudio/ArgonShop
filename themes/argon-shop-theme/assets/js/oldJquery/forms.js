@@ -1,8 +1,8 @@
-/* Архивная копия старого Jquery 2018 года
+/* Archived copy of the old 2018 jQuery code.
 
-При установке плагина файлы из папки oldJquery не нужны и их можно удалить, это только для Гитхаба
+The files in the oldJquery folder are not needed when installing the plugin and can be deleted; they are kept only for GitHub.
 
-Позднее я переписал все на чистый современный JS, сейчас он в плагине.В файлах же темы остался css и php шаблоны. */
+Later I rewrote everything in plain modern JS, which now lives in the plugin. Only the CSS and PHP templates remained in the theme files. */
 
 $(".block-regQuestion1").click(function(){
   
@@ -24,34 +24,34 @@ function toggleSubmitButton(type = 'basket') {
     
     if(type === 'basket'){
         
-        // Получаем состояние чекбокса (true/false)
+        // Get the checkbox state (true/false)
         const isChecked = document.getElementById('agree_checkbox').checked;
         
-        // Находим все кнопки с классом .submitCart на странице
+        // Find all buttons with the .submitCart class on the page
         const submitButtons = document.querySelectorAll('.submitCart');
         
-        // Перебираем каждую найденную кнопку в цикле
+        // Loop over every button found
         submitButtons.forEach(button => {
-            // Если галочка стоит — disabled выключается (false), если нет — включается (true)
+            // If the box is checked, disabled is turned off (false), otherwise on (true)
             button.disabled = !isChecked;
         });
         
     }else if(type === 'account'){
         
-        // Получаем состояние чекбокса (true/false)
+        // Get the checkbox state (true/false)
         const isChecked = document.getElementById('agree_checkbox_account').checked;
         
-        // Находим кнопку
+        // Find the button
         const submitButton = document.getElementById('accountSaveButton');
         
         submitButton.disabled = !isChecked;
         
     }else if(type === 'setting'){
         
-        // Получаем состояние чекбокса (true/false)
+        // Get the checkbox state (true/false)
         const isChecked = document.getElementById('agree_checkbox_setting').checked;
         
-        // Находим кнопку
+        // Find the button
         const submitButton = document.getElementById('editEmailPasswordButton');
         
         submitButton.disabled = !isChecked;

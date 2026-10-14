@@ -1,65 +1,64 @@
 /**
- * ArgonShop — метабокс «Галерея» на странице товара.
+ * ArgonShop — "Gallery" meta box on the product page.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Управляет интерактивными элементами метабокса галереи:
+ * Controls the interactive elements of the gallery meta box:
  *
- *   1. Добавление изображений через wp.media (медиабиблиотека
- *      WordPress). Поддерживает множественный выбор.
+ *   1. Adding images via wp.media (the WordPress media
+ *      library). Supports multiple selection.
  *
- *   2. Удаление изображения из галереи.
+ *   2. Removing an image from the gallery.
  *
- *   3. Сортировка изображений drag-and-drop через jQuery UI
- *      Sortable. Порядок миниатюр в DOM определяет порядок
- *      сохранения в базе.
- *
- * ============================================================
- * ЗАВИСИМОСТИ
- * ============================================================
- *
- * Файл использует:
- *
- *   - jQuery — глобальная зависимость WordPress.
- *     Нужна, потому что jQuery UI Sortable и wp.media работают
- *     через jQuery. Это интерфейс ядра cms, переписывать его на
- *     нативный JS смысла нет(основной код на нативном JS)
- *
- *   - jquery-ui-sortable — из ядра WordPress.
- *
- *   - wp.media — из ядра WordPress.
- *
- * Стилистически файл обёрнут в IIFE, чтобы не засорять
- * глобальную область админки. Никаких собственных утилит
- * не определяет — вся работа идёт через jQuery.
+ *   3. Drag-and-drop sorting of images via jQuery UI
+ *      Sortable. The order of thumbnails in the DOM defines the order
+ *      saved in the database.
  *
  * ============================================================
- * DOM-ЭЛЕМЕНТЫ
+ * DEPENDENCIES
  * ============================================================
  *
- * .ars-gallery                  — контейнер метабокса
- * .ars-gallery-list             — список миниатюр
- * .ars-gallery-item             — одна миниатюра
- * .ars-gallery-remove           — кнопка удаления
- * .ars-gallery-add              — кнопка «Добавить изображения»
+ * The file uses:
+ *
+ *   - jQuery — a global WordPress dependency.
+ *     Needed because jQuery UI Sortable and wp.media work
+ *     through jQuery. This is a CMS core interface, there is no point
+ *     in rewriting it in native JS (the main code is native JS)
+ *
+ *   - jquery-ui-sortable — from WordPress core.
+ *
+ *   - wp.media — from WordPress core.
+ *
+ * The file is wrapped in an IIFE so as not to pollute
+ * the global admin scope. It defines no utilities
+ * of its own — all work goes through jQuery.
  *
  * ============================================================
- * СОХРАНЕНИЕ
+ * DOM ELEMENTS
  * ============================================================
  *
- * Каждая миниатюра содержит скрытый input:
+ * .ars-gallery                  — meta box container
+ * .ars-gallery-list             — thumbnail list
+ * .ars-gallery-item             — a single thumbnail
+ * .ars-gallery-remove           — remove button
+ * .ars-gallery-add              — "Add images" button
+ *
+ * ============================================================
+ * SAVING
+ * ============================================================
+ *
+ * Each thumbnail contains a hidden input:
  *
  *     <input type="hidden" name="slider_imgs[]" value="12">
  *
- * Порядок input'ов в DOM = порядок изображений.
- * Сохранение выполняет PHP-обработчик на хуке save_post_product
- * (см. includes/admin/galleryMetabox.php).
+ * Order of the inputs in the DOM = order of the images.
+ * Saving is done by the PHP handler on the save_post_product hook
+ * (see includes/admin/galleryMetabox.php).
  *
  * ============================================================
  */
@@ -69,11 +68,33 @@
 ( function ( $ ) {
 
     /**
-     * Инициализирует все метабоксы галереи на странице.
+     * Interface texts. They come from PHP (wp_localize_script → arsGalleryI18n)
+     * and are translated with the plugin .po files; English is the fallback.
      *
-     * На одной странице может быть несколько метабоксов, если
-     * галерея используется не только в товаре. Но сейчас только
-     * один — поэтому работаем с первым.
+     * @type {{ selectImages: string, addToGallery: string, removeImage: string }}
+     */
+    const i18n = Object.assign( {
+        selectImages: 'Select images',
+        addToGallery: 'Add to gallery',
+        removeImage:  'Remove image',
+    }, window.arsGalleryI18n || {} );
+
+    /**
+     * Escapes a string for an HTML attribute.
+     *
+     * @param  {string} value
+     * @return {string}
+     */
+    const escAttr = ( value ) => String( value )
+        .replace( /&/g, '&amp;' ).replace( /"/g, '&quot;' )
+        .replace( /</g, '&lt;' ).replace( />/g, '&gt;' );
+
+    /**
+     * Initializes all gallery meta boxes on the page.
+     *
+     * There may be several meta boxes on a page if
+     * the gallery is used not only for products. But currently there is only
+     * one — so we work with the first one.
      *
      * @return {void}
      */
@@ -85,36 +106,36 @@
             return;
         }
 
-        // Инициализация sortable — параметры один в один как
-        // в оригинальном плагине ACF Photo Gallery Field.
+        // Sortable initialization — the parameters are exactly the same as
+        // in the original ACF Photo Gallery Field plugin.
         //
-        //   containment: 'parent' — helper не выходит за пределы
-        //     списка. Это критично для корректного swap по
+        //   containment: 'parent' — the helper does not leave the
+        //     list. This is critical for a correct swap with
         //     tolerance: 'pointer'.
         //
-        //   placeholder — отдельный класс без .ars-gallery-item.
+        //   placeholder — a separate class without .ars-gallery-item.
         //
-        //   disableSelection() — убирает выделение текста и
-        //     иконок при перетаскивании.
+        //   disableSelection() — removes text and icon selection
+        //     while dragging.
         $gallery.find( '.ars-gallery-list' ).sortable({
             containment: 'parent',
             placeholder: 'ars-gallery-sortable-placeholder',
             tolerance:   'pointer',
         }).disableSelection();
 
-        // Делегированные обработчики — работают и для новых миниатюр
+        // Delegated handlers — they also work for new thumbnails
         bindAddImages( $gallery );
         bindRemoveImage( $gallery );
     };
 
     /**
-     * Добавление изображений через медиабиблиотеку.
+     * Adding images via the media library.
      *
-     * Открывает wp.media с параметром multiple: true. После
-     * подтверждения выбора добавляет каждое изображение в
-     * список галереи.
+     * Opens wp.media with multiple: true. After the
+     * selection is confirmed, adds each image to the
+     * gallery list.
      *
-     * @param  {jQuery} $gallery — контейнер метабокса
+     * @param  {jQuery} $gallery — meta box container
      * @return {void}
      */
     const bindAddImages = ( $gallery ) => {
@@ -128,8 +149,8 @@
             }
 
             const frame = wp.media({
-                title:    'Выберите изображения',
-                button:   { text: 'Добавить в галерею' },
+                title:    i18n.selectImages,
+                button:   { text: i18n.addToGallery },
                 library:  { type: 'image' },
                 multiple: true,
             });
@@ -151,9 +172,9 @@
     };
 
     /**
-     * Удаление изображения из галереи.
+     * Removing an image from the gallery.
      *
-     * @param  {jQuery} $gallery — контейнер метабокса
+     * @param  {jQuery} $gallery — meta box container
      * @return {void}
      */
     const bindRemoveImage = ( $gallery ) => {
@@ -171,12 +192,12 @@
     };
 
     /**
-     * Добавляет одну миниатюру в список галереи.
+     * Adds one thumbnail to the gallery list.
      *
-     * Если изображение с таким ID уже есть — не добавляем повторно.
+     * If an image with this ID is already there — do not add it again.
      *
-     * @param  {jQuery} $gallery — контейнер метабокса
-     * @param  {Object} data     — данные вложения из wp.media
+     * @param  {jQuery} $gallery — meta box container
+     * @param  {Object} data     — attachment data from wp.media
      * @return {void}
      */
     const addImage = ( $gallery, data ) => {
@@ -191,7 +212,7 @@
             return;
         }
 
-        // Проверка на дубликат
+        // Duplicate check
         const exists = $gallery
             .find( '.ars-gallery-item[data-id="' + id + '"]' )
             .length > 0;
@@ -200,8 +221,8 @@
             return;
         }
 
-        // URL миниатюры. Используем sizes.thumbnail, если он есть,
-        // иначе — просто url вложения.
+        // Thumbnail URL. Use sizes.thumbnail if it exists,
+        // otherwise just the attachment url.
         let thumbUrl = data.url || '';
 
         if ( data.sizes && data.sizes.thumbnail && data.sizes.thumbnail.url ) {
@@ -214,22 +235,22 @@
             '<li class="ars-gallery-item" data-id="' + id + '">' +
                 '<input type="hidden" name="slider_imgs[]" value="' + id + '" />' +
                 '<img src="' + thumbUrl + '" alt="" />' +
-                '<button type="button" class="ars-gallery-remove" title="Удалить изображение">' +
+                '<button type="button" class="ars-gallery-remove" title="' + escAttr( i18n.removeImage ) + '">' +
                     '<span class="dashicons dashicons-dismiss"></span>' +
                 '</button>' +
             '</li>';
 
         $list.append( html );
 
-        // Обновляем состояние sortable, чтобы placeholder
-        // корректно работал с новыми элементами.
+        // Refresh the sortable state so that the placeholder
+        // works correctly with the new elements.
         if ( $list.hasClass( 'ui-sortable' ) ) {
             $list.sortable( 'refresh' );
         }
     };
 
     // ============================================================
-    // СТАРТ
+    // START
     // ============================================================
 
     $( document ).ready( () => {

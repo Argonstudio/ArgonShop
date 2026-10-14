@@ -1,77 +1,76 @@
 <?php
 /**
- * Форма заказа для физических лиц (шаблон части)
+ * Order form for individuals (template part)
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ИСПОЛЬЗУЕТСЯ:
- * Подключается через get_template_part( 'template-parts/cart/person' )
- * из шаблона shoppingCartPage.php (страница корзины).
- * 
- * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
- * ============================================================
- * 
- * ФУНКЦИИ ПЛАГИНА:
- * 
- * show_user_fields( $user_ID, $type, $wrap, $class50, $class100, $classTitle, $classInput, $required )
- *   Файл: includes/api/getSetting.php
- *   Выводит поля формы из настроек магазина (settingShop).
- *   Для типа "person" — данные физлица.
- *   Параметр $required — массив обязательных полей.
+ * WHERE IT IS USED:
+ * Included via get_template_part( 'template-parts/cart/person' )
+ * from the shoppingCartPage.php template (cart page).
  * 
  * ============================================================
- * ДИНАМИЧЕСКИЕ ПОЛЯ ФОРМЫ
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  * 
- * Часть полей формы задаётся администратором в настройках магазина:
+ * PLUGIN FUNCTIONS:
  * 
- * WordPress Админка → Настройки → Магазин → Данные пользователя
- * 
- * Формат строки для каждого поля:
- *   ID[Имя, Placeholder, class]
- * 
- * Где:
- * - ID          — атрибут name в HTML
- * - Имя         — заголовок поля
- * - Placeholder — подсказка внутри поля
- * - class       — 50 или 100 (ширина поля)
- * 
- * Пример полей для физических лиц:
- *   nameUser[Имя,Иван,50]
- *   lastnameUser[Фамилия,Александров,50]
- *   telefonUser[Телефон,+7 (922) xxx-xx-xx,50]
- *   addressUser[Адрес,Московская область/запятая/ ДНП Янтарь,100]
- * 
- * Разделитель — запятая. Для запятой внутри текста используется
- * метка "/запятая/".
+ * as_show_user_fields( $user_ID, $type, $wrap, $class50, $class100, $classTitle, $classInput, $required )
+ *   File: includes/api/getSetting.php
+ *   Outputs the form fields from the store settings (settingShop).
+ *   For the "person" type — individual's data.
+ *   The $required parameter is an array of required fields.
  * 
  * ============================================================
- * ОБРАБОТКА ПОЛЕЙ В ПЛАГИНЕ
+ * DYNAMIC FORM FIELDS
  * ============================================================
  * 
- * Все поля из настроек автоматически собираются в AJAX-обработчике
- * submitCart_shoppingCart_callback() через get_valueFieldsCart().
+ * Some form fields are defined by the administrator in the store settings:
  * 
- * Фиксированные поля, обрабатываемые плагином отдельно:
- *   - emailUser     — email покупателя
- *   - messageUser   — комментарий
- *   - cartReg       — галочка регистрации
- *   - loginUser     — логин
- *   - shipping      — способ доставки
- *   - payment       — способ оплаты
- *   - fileCart[]    — прикреплённые файлы
+ * WordPress Admin → Settings → Store → User data
+ * 
+ * Line format for each field:
+ *   ID[Name, Placeholder, class]
+ * 
+ * Where:
+ * - ID          — the HTML name attribute
+ * - Name        — field label
+ * - Placeholder — hint inside the field
+ * - class       — 50 or 100 (field width)
+ * 
+ * Example fields for individuals:
+ *   nameUser[Name,John,50]
+ *   lastnameUser[Last name,Smith,50]
+ *   telefonUser[Phone,+1 (555) xxx-xxxx,50]
+ *   addressUser[Address,New York/comma/ 5th Avenue,100]
+ * 
+ * The separator is a comma. For a comma inside the text use
+ * the "/comma/" marker.
  * 
  * ============================================================
- * ПЕРЕМЕННЫЕ ИЗ ШАБЛОНА КОРЗИНЫ
+ * FIELD HANDLING IN THE PLUGIN
  * ============================================================
  * 
- * $user_ID — ID текущего пользователя (get_current_user_id())
+ * All fields from the settings are collected automatically in the AJAX handler
+ * as_submitCart_shoppingCart_callback() via as_get_valueFieldsCart().
+ * 
+ * Fixed fields handled by the plugin separately:
+ *   - emailUser     — customer email
+ *   - messageUser   — comment
+ *   - cartReg       — registration checkbox
+ *   - loginUser     — login
+ *   - shipping      — delivery method
+ *   - payment       — payment method
+ *   - fileCart[]    — attached files
+ * 
+ * ============================================================
+ * VARIABLES FROM THE CART TEMPLATE
+ * ============================================================
+ * 
+ * $user_ID — current user ID (get_current_user_id())
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -91,11 +90,12 @@ $user_email = ( $userdata && isset( $userdata->user_email ) ) ? $userdata->user_
     
     <?php 
     
-    $required = array( 'nameUser', 'telefonUser' );
+    // The list of required fields comes from the plugin (the same one the server checks)
+    $required = function_exists( 'as_get_required_fields' ) ? as_get_required_fields( 'person' ) : array( 'nameUser', 'telefonUser' );
     
-    // Функция плагина Argon Shop (includes/api/getSetting.php)
-    if ( function_exists( 'show_user_fields' ) ) {
-        show_user_fields( $user_ID, 'person', 'div', 'cartFields50', 'cartFields100', 'cartFieldsTitle', 'cartFieldInput', $required );
+    // Argon Shop plugin function (includes/api/getSetting.php)
+    if ( function_exists( 'as_show_user_fields' ) ) {
+        as_show_user_fields( $user_ID, 'person', 'div', 'cartFields50', 'cartFields100', 'cartFieldsTitle', 'cartFieldInput', $required );
     }
     
     ?>
@@ -109,12 +109,12 @@ $user_email = ( $userdata && isset( $userdata->user_email ) ) ? $userdata->user_
     
     <div class="cartFields100">
         
-        <div class="cartFieldsTitle">Комментарий:</div>
-        <textarea name="messageUser" placeholder="Ваш комментарий"></textarea>
+        <div class="cartFieldsTitle"><?php esc_html_e( 'Comment:', 'argon-shop-theme' ); ?></div>
+        <textarea name="messageUser" placeholder="<?php esc_attr_e( 'Your comment', 'argon-shop-theme' ); ?>"></textarea>
         
     </div>
     
-    <label for="personFile" class="labelAddFile"><span id="foto">Прикрепить файлы</span></label>
+    <label for="personFile" class="labelAddFile"><span id="foto"><?php esc_html_e( 'Attach files', 'argon-shop-theme' ); ?></span></label>
     
     <div class="block-fileCartMessage">
         
@@ -123,9 +123,9 @@ $user_email = ( $userdata && isset( $userdata->user_email ) ) ? $userdata->user_
         
     </div>
             
-    <div class="infoFileCart">Допустимые форматы файлов: doc, docx, xls, xlsx, pdf, jpg, jpeg, png, bmp</div>
-    <div class="infoFileCart">Прикрепите до 3-х файлов, до 5 mb один файл </div>
-    <div class="infoFileCart">Зажмите ctrl для выбора нескольких файлов(windows)</div>
+    <div class="infoFileCart"><?php esc_html_e( 'Allowed file formats: doc, docx, xls, xlsx, pdf, jpg, jpeg, png, bmp', 'argon-shop-theme' ); ?></div>
+    <div class="infoFileCart"><?php esc_html_e( 'Attach up to 3 files, up to 5 MB each', 'argon-shop-theme' ); ?> </div>
+    <div class="infoFileCart"><?php esc_html_e( 'Hold Ctrl to select several files (Windows)', 'argon-shop-theme' ); ?></div>
             
             
     <input type="file" multiple="" data-sizeFile="5" data-amountFiles="3" name="fileCart[]" id="personFile" accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
@@ -135,13 +135,13 @@ $user_email = ( $userdata && isset( $userdata->user_email ) ) ? $userdata->user_
         <div class="block-regQuestion">
             
             <input type="checkbox" name="cartReg" class="cartReg"> 
-            <span>Зарегистрировать вас?</span>
+            <span><?php esc_html_e( 'Register an account?', 'argon-shop-theme' ); ?></span>
             
         </div>
         
         <div class="cartLogin">
         
-            <div class="cartFieldsTitle">Логин</div>
+            <div class="cartFieldsTitle"><?php esc_html_e( 'Username', 'argon-shop-theme' ); ?></div>
             <input type="text" class="cartFieldInput" name="loginUser">
             
         </div>
@@ -153,12 +153,12 @@ $user_email = ( $userdata && isset( $userdata->user_email ) ) ? $userdata->user_
     
         <div class="block-shippingMethod">
                             
-            <div class="shippingyMethodTitle">Способ доставки:</div>
+            <div class="shippingyMethodTitle"><?php esc_html_e( 'Shipping method:', 'argon-shop-theme' ); ?></div>
              
             <div class="block-shippingMethodTypes">  
             
-                <div class="shippingMethodType"><input type="radio" name="shipping" value="selfExport"> Самовывоз</div>
-                <div class="shippingMethodType"><input type="radio" name="shipping" value="shippingToAddress" checked> Доставка по адресу</div>
+                <div class="shippingMethodType"><input type="radio" name="shipping" value="selfExport"> <?php esc_html_e( 'Pickup', 'argon-shop-theme' ); ?></div>
+                <div class="shippingMethodType"><input type="radio" name="shipping" value="shippingToAddress" checked> <?php esc_html_e( 'Delivery to address', 'argon-shop-theme' ); ?></div>
             
             </div>
                             
@@ -166,11 +166,11 @@ $user_email = ( $userdata && isset( $userdata->user_email ) ) ? $userdata->user_
     
         <div class="block-paymentMethod">
                             
-            <div class="paymentMethodTitle">Способ оплаты:</div>
+            <div class="paymentMethodTitle"><?php esc_html_e( 'Payment method:', 'argon-shop-theme' ); ?></div>
             
             <div class="block-paymentMethodTypes">
                             
-                <div class="paymentMethodType"><input type="radio" name="payment" value="paimentUponReceipt" checked> Оплата при получении</div>
+                <div class="paymentMethodType"><input type="radio" name="payment" value="paimentUponReceipt" checked> <?php esc_html_e( 'Payment on delivery', 'argon-shop-theme' ); ?></div>
             
             </div>  
             
@@ -178,7 +178,7 @@ $user_email = ( $userdata && isset( $userdata->user_email ) ) ? $userdata->user_
     
     </div>
 	
-    <input value="ОТПРАВИТЬ ЗАКАЗ" type="submit" class="submitCart" disabled>
+    <input value="<?php esc_attr_e( 'PLACE ORDER', 'argon-shop-theme' ); ?>" type="submit" class="submitCart" disabled>
     <div class="submitError"><span></span></div>
                     
 </form>

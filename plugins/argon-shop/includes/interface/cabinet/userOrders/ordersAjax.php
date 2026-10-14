@@ -1,57 +1,58 @@
 <?php
 /**
- * AJAX-фильтр заказов в личном кабинете
+ * AJAX order filter in the account
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * Личный кабинет → вкладка "Заказы" → фильтр по статусу
- * URL: /lichnyj-kabinet/
+ * WHERE TO TEST:
+ * Account → "Orders" tab → status filter
+ * URL: /account/ (is changed in the control panel)
  * 
- * ЧТО ДЕЛАЕТ:
- * 1. Принимает userID и список статусов
- * 2. Проверяет права (пользователь видит только свои заказы)
- * 3. Возвращает HTML-таблицу отфильтрованных заказов
+ * WHAT IT DOES:
+ * 1. Accepts the userID and a list of statuses
+ * 2. Checks permissions (a user sees only their own orders)
+ * 3. Returns the HTML table of filtered orders
  * 
- * ЗАВИСИМОСТИ:
- * - get_user_orders()          — includes/interface/cabinet/userOrders/ordersView.php
- * - create_user_ordersTable()  — includes/interface/cabinet/userOrders/ordersView.php
+ * DEPENDENCIES:
+ * - as_get_user_orders()          — includes/interface/cabinet/userOrders/ordersView.php
+ * - as_create_user_ordersTable()  — includes/interface/cabinet/userOrders/ordersView.php
  * 
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Регистрация AJAX-обработчиков
-add_action( 'wp_ajax_ordersFiltersStatus', 'ordersFiltersStatus_callback' );
-add_action( 'wp_ajax_nopriv_ordersFiltersStatus', 'ordersFiltersStatus_callback' );
+// AJAX handler registration
+add_action( 'wp_ajax_ordersFiltersStatus', 'as_ordersFiltersStatus_callback' );
+add_action( 'wp_ajax_nopriv_ordersFiltersStatus', 'as_ordersFiltersStatus_callback' );
 
 /**
- * ОБРАБОТЧИК: Фильтрация заказов по статусу
+ * HANDLER: Filter orders by status
  * 
- * ГДЕ: Личный кабинет → изменение фильтра
- * ЧТО ДЕЛАЕТ:
- * 1. Проверяет, что пользователь запрашивает свои заказы
- * 2. Возвращает HTML-таблицу с отфильтрованными заказами
+ * WHERE: Account → filter change
+ * WHAT IT DOES:
+ * 1. Checks that the user requests their own orders
+ * 2. Returns the HTML table with the filtered orders
  */
-function ordersFiltersStatus_callback() {
+function as_ordersFiltersStatus_callback() {
     
-    // Валидация userID
+    check_ajax_referer( 'argon_shop_nonce', 'nonce' );
+    
+    // userID validation
     $userID = isset( $_POST['userID'] ) ? absint( $_POST['userID'] ) : 0;
     
-    // Проверка прав: пользователь видит только свои заказы.
-    // Исключение: администраторы могут смотреть любые заказы.
+    // Permission check: a user sees only their own orders.
+    // Exception: administrators can view any orders.
     $current_user_id = get_current_user_id();
     
     if ( $userID !== $current_user_id && ! current_user_can( 'manage_options' ) ) {
-        wp_die( 'Недостаточно прав' );
+        wp_die( __( 'Insufficient permissions', 'argon-shop' ) );
     }
     
-    // Валидация статусов
+    // Status validation
     $status_raw = isset( $_POST['status'] ) 
         ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) 
         : '';
@@ -62,7 +63,7 @@ function ordersFiltersStatus_callback() {
         $status[ $key ] = absint( $value );
     }
     
-    // Убираем нулевые значения
+    // Remove zero values
     $status = array_filter( $status );
     
     if ( $userID !== 0 ) {
@@ -70,16 +71,16 @@ function ordersFiltersStatus_callback() {
         $filters = array();
         $filters['orderStatus'] = $status;
         
-        $orders = get_user_orders( $userID, $filters );
+        $orders = as_get_user_orders( $userID, $filters );
         
         if ( ! empty( $orders ) ) {
-            create_user_ordersTable( $orders );
+            as_create_user_ordersTable( $orders );
         } else {
-            echo 'Нет подходящих постов';
+            echo __( 'No matching posts', 'argon-shop' );
         }
         
     } else {
-        echo 'Некорректные данные запроса';
+        echo __( 'Invalid request data', 'argon-shop' );
     }
     
     wp_die();

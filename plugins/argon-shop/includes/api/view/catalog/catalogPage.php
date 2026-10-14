@@ -2,15 +2,15 @@
 
 function as_sort($settingSort, $catID, $pageNum){
     
-    $typeSort = getCookie('AS_CatalogSorting');
+    $typeSort = as_getCookie('AS_CatalogSorting');
     
-    if(!$typeSort){
+    if(!is_array($typeSort) || !isset($typeSort['typeSort'], $typeSort['howSort'])){
         
         $typeSort = $settingSort["baseSort"];
         
     } ?>
     
-    <span class="sortParameters" data-page="<?=$pageNum ?>" data-cat-id="<?=$catID ?>">
+    <span class="sortParameters" data-page="<?php echo absint( $pageNum ); ?>" data-cat-id="<?php echo absint( $catID ); ?>">
 		
 		<?php 
 		    foreach($settingSort["typesSort"] as $key => $value){ 
@@ -34,7 +34,7 @@ function as_sort($settingSort, $catID, $pageNum){
 		        
 		?>
 		    
-		    <span class="<?=$class ?>" name="<?=$key ?>"><span><?=$value["name"] ?></span></span>
+		    <span class="<?php echo esc_attr( $class ); ?>" name="<?php echo esc_attr( $key ); ?>"><span><?php echo esc_html( $value["name"] ); ?></span></span>
 		    
 		<?php }	?>	
 					            
@@ -46,18 +46,18 @@ function as_sort($settingSort, $catID, $pageNum){
 
 function as_catalog($catalogSetting, $catID, $pageNum){
     
-    $typeSort = getCookie('AS_CatalogSorting');
+    $typeSort = as_getCookie('AS_CatalogSorting');
     
     if($typeSort){
 					            
-		$productsList = get_sort_products($typeSort['typeSort'], $typeSort['howSort'], $catID, $pageNum);
+		$productsList = as_get_sort_products($typeSort['typeSort'], $typeSort['howSort'], $catID, $pageNum);
 					            
 	}else{
 					            
-		$productsList = get_sort_products($catalogSetting["baseSort"]["typeSort"], $catalogSetting["baseSort"]["howSort"], $catID, $pageNum);
+		$productsList = as_get_sort_products($catalogSetting["baseSort"]["typeSort"], $catalogSetting["baseSort"]["howSort"], $catID, $pageNum);
 					            
 	}
 					        
-	view_products_list($productsList);
+	as_view_products_list($productsList);
     
 }

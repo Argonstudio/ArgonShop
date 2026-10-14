@@ -1,46 +1,45 @@
 <?php
 /**
- * Дополнительные поля таксономии "Характеристики"
+ * Additional fields of the "Characteristics" taxonomy
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * WordPress Админка → Характеристики → Добавить/Редактировать характеристику
+ * WHERE TO TEST:
+ * WordPress Admin → Characteristics → Add/Edit characteristic
  * URL: /wp-admin/term.php?taxonomy=characteristics
  * 
- * ИСПРАВЛЕНИЯ:
+ * FIXES:
  * PHP 8.5:
- * - проверки is_object() / is_a() для WP_Term
- * - явное приведение типов
- * - защита от null при обращении к свойствам
- * - строгие сравнения (===) в критичных местах
+ * - is_object() / is_a() checks for WP_Term
+ * - explicit type casting
+ * - protection against null when accessing properties
+ * - strict comparisons (===) in critical places
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Поля при добавлении элемента таксономии
-add_action( 'characteristics_add_form_fields', 'add_new_custom_fields' );
-// Поля при редактировании элемента таксономии
-add_action( 'characteristics_edit_form_fields', 'edit_new_custom_fields' );
+// Fields when adding a taxonomy term
+add_action( 'characteristics_add_form_fields', 'as_add_new_custom_fields' );
+// Fields when editing a taxonomy term
+add_action( 'characteristics_edit_form_fields', 'as_edit_new_custom_fields' );
 
-// Сохранение при добавлении элемента таксономии
-add_action( 'create_characteristics', 'save_custom_taxonomy_meta' );
-// Сохранение при редактировании элемента таксономии
-add_action( 'edited_characteristics', 'save_custom_taxonomy_meta' );
+// Save when adding a taxonomy term
+add_action( 'create_characteristics', 'as_save_custom_taxonomy_meta' );
+// Save when editing a taxonomy term
+add_action( 'edited_characteristics', 'as_save_custom_taxonomy_meta' );
 
 /**
- * ФУНКЦИЯ: Получение терминов каталога
+ * FUNCTION: Get catalog terms
  * 
- * @param int $parent — ID родительского термина (0 для корневых)
+ * @param int $parent — parent term ID (0 for top-level terms)
  * 
- * @return array Список терминов
+ * @return array List of terms
  */
-function get_terms_catalog( $parent ) {
+function as_get_terms_catalog( $parent ) {
     
     $parent = absint( $parent );
     
@@ -52,12 +51,12 @@ function get_terms_catalog( $parent ) {
     
     $terms = get_terms( $args );
     
-    // PHP 8.5: get_terms может вернуть WP_Error или массив
+    // PHP 8.5: get_terms may return WP_Error or an array
     if ( is_wp_error( $terms ) || ! is_array( $terms ) ) {
         return array();
     }
     
-    // Убираем всё, что не является терминами
+    // Drop everything that is not a term
     $terms = array_filter( $terms, function( $term ) {
         return is_object( $term ) && isset( $term->term_id );
     } );
@@ -66,14 +65,14 @@ function get_terms_catalog( $parent ) {
 }
 
 /**
- * ФУНКЦИЯ: Проверка, все ли категории отмечены
+ * FUNCTION: Check whether all categories are checked
  * 
- * @param array $terms         — список терминов
- * @param array $checkCategory — сохранённые ID
+ * @param array $terms         — list of terms
+ * @param array $checkCategory — saved IDs
  * 
- * @return bool true, если все отмечены
+ * @return bool true if all are checked
  */
-function are_all_categories_checked( $terms, $checkCategory ) {
+function as_are_all_categories_checked( $terms, $checkCategory ) {
     
     if ( ! is_array( $terms ) || empty( $terms ) ) {
         return true;
@@ -85,7 +84,7 @@ function are_all_categories_checked( $terms, $checkCategory ) {
     
     foreach ( $terms as $term ) {
         
-        // PHP 8.5: проверяем объект перед обращением к свойству
+        // PHP 8.5: check the object before accessing a property
         if ( ! is_object( $term ) || ! isset( $term->term_id ) ) {
             continue;
         }
@@ -96,15 +95,15 @@ function are_all_categories_checked( $terms, $checkCategory ) {
             continue;
         }
         
-        // Если конкретный ID не отмечен — уже не все
+        // If a specific ID is not checked — not all are checked
         if ( empty( $checkCategory[ $term_id ] ) ) {
             return false;
         }
         
-        // Рекурсивно проверяем дочерние
-        $childs = get_terms_catalog( $term_id );
+        // Recursively check the children
+        $childs = as_get_terms_catalog( $term_id );
         
-        if ( ! empty( $childs ) && ! are_all_categories_checked( $childs, $checkCategory ) ) {
+        if ( ! empty( $childs ) && ! as_are_all_categories_checked( $childs, $checkCategory ) ) {
             return false;
         }
     }
@@ -113,17 +112,17 @@ function are_all_categories_checked( $terms, $checkCategory ) {
 }
 
 /**
- * ФУНКЦИЯ: Рекурсивный вывод дерева категорий с чекбоксами
+ * FUNCTION: Recursive output of the category tree with checkboxes
  * 
- * @param array $terms         — список терминов
- * @param int   $level         — уровень вложенности
- * @param array $checkCategory — выбранные категории из базы
- * @param bool  $forceChecked  — если true, все чекбоксы отмечены принудительно
- * @param bool  $checkAll      — состояние чекбокса "Выбрать все"
+ * @param array $terms         — list of terms
+ * @param int   $level         — nesting level
+ * @param array $checkCategory — selected categories from the database
+ * @param bool  $forceChecked  — if true, all checkboxes are forcibly checked
+ * @param bool  $checkAll      — state of the "Select all" checkbox
  */
-function view_terms( $terms, $level, $checkCategory = array(), $forceChecked = false, $checkAll = false ) {
+function as_view_terms( $terms, $level, $checkCategory = array(), $forceChecked = false, $checkAll = false ) {
     
-    // PHP 8.5: нормализация типов
+    // PHP 8.5: type normalization
     $level = absint( $level );
     $forceChecked = (bool) $forceChecked;
     $checkAll = (bool) $checkAll;
@@ -143,13 +142,13 @@ function view_terms( $terms, $level, $checkCategory = array(), $forceChecked = f
         <?php if ( $level === 0 ) { ?>
             <li class="checkAllCategory">
                 <input name="checkCategory[all]" type="checkbox" <?php echo $checkAll ? 'checked' : ''; ?> />
-                <b>Выбрать все / Снять выбор</b>
+                <b><?php esc_html_e( 'Select all / Deselect', 'argon-shop' ); ?></b>
             </li>
         <?php } ?>
         
         <?php foreach ( $terms as $term ) { 
             
-            // PHP 8.5: проверяем объект перед обращением к свойствам
+            // PHP 8.5: check the object before accessing properties
             if ( ! is_object( $term ) || ! isset( $term->term_id ) ) {
                 continue;
             }
@@ -162,8 +161,8 @@ function view_terms( $terms, $level, $checkCategory = array(), $forceChecked = f
             
             $term_name = isset( $term->name ) ? esc_html( $term->name ) : '';
             
-            // Принудительная отметка (новая характеристика)
-            // Иначе — по конкретному ID из базы
+            // Forced check (new characteristic)
+            // Otherwise — by the specific ID from the database
             if ( $forceChecked ) {
                 $checked = 'checked';
             } else {
@@ -176,15 +175,15 @@ function view_terms( $terms, $level, $checkCategory = array(), $forceChecked = f
                 <?php echo $term_name; ?>
                 
                 <?php
-                // Получаем дочерние термины
-                $childs_term = get_terms_catalog( $term_id );
+                // Get the child terms
+                $childs_term = as_get_terms_catalog( $term_id );
                 
                 if ( ! empty( $childs_term ) ) {
                     ?>
                     <input type="button" class="showHideButton" value="">
                     <?php
-                    // Рекурсивно выводим дочерние
-                    view_terms( $childs_term, $level + 1, $checkCategory, $forceChecked, $checkAll );
+                    // Recursively output the children
+                    as_view_terms( $childs_term, $level + 1, $checkCategory, $forceChecked, $checkAll );
                 }
                 ?>
             </li>
@@ -197,17 +196,17 @@ function view_terms( $terms, $level, $checkCategory = array(), $forceChecked = f
 }
 
 /**
- * ФУНКЦИЯ: Поля при редактировании характеристики
+ * FUNCTION: Fields when editing a characteristic
  * 
- * Логика:
- * - Если мета отсутствует (новая характеристика) → все отмечены, "Выбрать все" включён
- * - Иначе → отображаем по базе, "Выбрать все" — динамически
+ * Logic:
+ * - If the meta is missing (new characteristic) → all checked, "Select all" on
+ * - Otherwise → shown from the database, "Select all" is computed dynamically
  * 
- * @param WP_Term $term — объект термина характеристики
+ * @param WP_Term $term — characteristic term object
  */
-function edit_new_custom_fields( $term ) {
+function as_edit_new_custom_fields( $term ) {
     
-    // PHP 8.5: проверяем, что передан объект термина
+    // PHP 8.5: make sure a term object was passed
     if ( ! is_object( $term ) || ! isset( $term->term_id ) ) {
         return;
     }
@@ -220,9 +219,9 @@ function edit_new_custom_fields( $term ) {
     
     $checkCategory = get_term_meta( $term_id, 'checkCategory', true );
     
-    // Определяем, новая ли это характеристика:
-    // мета ещё ни разу не сохранялась → get_term_meta() вернёт '' или false
-    // PHP 8.5: явная проверка всех вариантов
+    // Determine whether this is a new characteristic:
+    // the meta has never been saved → get_term_meta() returns '' or false
+    // PHP 8.5: explicit check of all variants
     $is_new = (
         $checkCategory === ''
         || $checkCategory === false
@@ -233,7 +232,7 @@ function edit_new_custom_fields( $term ) {
         $checkCategory = array();
     }
     
-    // PHP 8.5: убираем нечисловые ключи
+    // PHP 8.5: drop non-numeric keys
     $cleanCategory = array();
     
     foreach ( $checkCategory as $key => $value ) {
@@ -246,26 +245,26 @@ function edit_new_custom_fields( $term ) {
     
     $checkCategory = $cleanCategory;
     
-    $terms = get_terms_catalog( 0 );
+    $terms = as_get_terms_catalog( 0 );
     
-    // Определяем состояние чекбокса "Выбрать все"
+    // Determine the state of the "Select all" checkbox
     if ( $is_new ) {
-        // Новая характеристика — по умолчанию все выбраны
+        // New characteristic — everything is selected by default
         $force_checked = true;
         $check_all = true;
     } else {
-        // Сохранённая — считаем, все ли отмечены
+        // Saved one — check whether all are checked
         $force_checked = false;
-        $check_all = are_all_categories_checked( $terms, $checkCategory );
+        $check_all = as_are_all_categories_checked( $terms, $checkCategory );
     }
     
     ?>
     
     <tr class="form-field">
-        <th scope="row" valign="top"><label>Относится к категориям:</label></th>
+        <th scope="row" valign="top"><label><?php esc_html_e( 'Belongs to categories:', 'argon-shop' ); ?></label></th>
         <td>
             <?php
-            view_terms( $terms, 0, $checkCategory, $force_checked, $check_all );
+            as_view_terms( $terms, 0, $checkCategory, $force_checked, $check_all );
             ?>
         </td>
     </tr>
@@ -274,22 +273,22 @@ function edit_new_custom_fields( $term ) {
 }
 
 /**
- * ФУНКЦИЯ: Поля при добавлении новой характеристики
+ * FUNCTION: Fields when adding a new characteristic
  * 
- * Все чекбоксы отмечены принудительно, база не читается
+ * All checkboxes are forcibly checked, the database is not read
  * 
- * @param string $taxonomy_slug — слаг таксономии
+ * @param string $taxonomy_slug — taxonomy slug
  */
-function add_new_custom_fields( $taxonomy_slug ) {
+function as_add_new_custom_fields( $taxonomy_slug ) {
     
-    $terms = get_terms_catalog( 0 );
+    $terms = as_get_terms_catalog( 0 );
     ?>
     
     <div class="form-field">
-        <label>Относится к категориям:</label>
+        <label><?php esc_html_e( 'Belongs to categories:', 'argon-shop' ); ?></label>
         <?php
         // forceChecked = true, checkAll = true
-        view_terms( $terms, 0, array(), true, true );
+        as_view_terms( $terms, 0, array(), true, true );
         ?>
     </div>
     
@@ -297,16 +296,16 @@ function add_new_custom_fields( $taxonomy_slug ) {
 }
 
 /**
- * СОХРАНЕНИЕ: Выбранных категорий характеристики
+ * SAVE: Selected categories of a characteristic
  * 
- * Сохраняются только конкретные ID категорий.
- * Ключ "all" не сохраняется — он вычисляется при отображении.
+ * Only specific category IDs are saved.
+ * The "all" key is not saved — it is computed on display.
  * 
- * @param int $term_id — ID сохраняемой характеристики
+ * @param int $term_id — ID of the characteristic being saved
  * 
  * @return int|void
  */
-function save_custom_taxonomy_meta( $term_id ) {
+function as_save_custom_taxonomy_meta( $term_id ) {
     
     $term_id = absint( $term_id );
     
@@ -314,65 +313,65 @@ function save_custom_taxonomy_meta( $term_id ) {
         return;
     }
     
-    // Проверка прав
+    // Capability check
     if ( ! current_user_can( 'edit_term', $term_id ) ) {
         return;
     }
     
-    // PHP 8.5: проверка nonce для редактирования
+    // PHP 8.5: nonce check for editing
     $nonce_update = false;
     
     if ( isset( $_POST['_wpnonce'] ) && is_string( $_POST['_wpnonce'] ) ) {
         $nonce_update = wp_verify_nonce( $_POST['_wpnonce'], "update-tag_$term_id" );
     }
     
-    // PHP 8.5: проверка nonce для добавления
+    // PHP 8.5: nonce check for adding
     $nonce_add = false;
     
     if ( isset( $_POST['_wpnonce_add-tag'] ) && is_string( $_POST['_wpnonce_add-tag'] ) ) {
         $nonce_add = wp_verify_nonce( $_POST['_wpnonce_add-tag'], 'add-tag' );
     }
     
-    // Если ни один nonce не подошёл — выходим
+    // If no nonce matched — exit
     if ( ! $nonce_update && ! $nonce_add ) {
         return;
     }
     
-    // Если чекбоксы не переданы — сохраняем пустой массив
+    // If no checkboxes were sent — save an empty array
     if ( ! isset( $_POST['checkCategory'] ) || ! is_array( $_POST['checkCategory'] ) ) {
         update_term_meta( $term_id, 'checkCategory', array() );
         return $term_id;
     }
     
-    // Получаем и очищаем чекбоксы
+    // Get and clean the checkboxes
     $checkCategory = wp_unslash( $_POST['checkCategory'] );
     
     if ( ! is_array( $checkCategory ) ) {
         $checkCategory = array();
     }
     
-    // Валидация и сохранение
+    // Validate and save
     $cleanCheckCategory = array();
     
     foreach ( $checkCategory as $key => $val ) {
         
-        // Ключ "all" не сохраняем — это UI-элемент
+        // The "all" key is not saved — it is a UI element
         if ( $key === 'all' ) {
             continue;
         }
         
-        // Ключ должен быть числом (ID категории)
+        // The key must be a number (category ID)
         $key_clean = absint( $key );
         
         if ( $key_clean > 0 ) {
-            // Сохраняем только отмеченные категории
+            // Save only the checked categories
             if ( ! empty( $val ) ) {
                 $cleanCheckCategory[ $key_clean ] = 'on';
             }
         }
     }
     
-    // Сохраняем очищенный массив
+    // Save the cleaned array
     update_term_meta( $term_id, 'checkCategory', $cleanCheckCategory );
     
     return $term_id;

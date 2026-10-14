@@ -1,33 +1,32 @@
 <?php
 /**
- * Получение терминов каталога и формирование меню
+ * Getting catalog terms and building the menu
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * 1. Меню каталога на главной
- * 2. Выпадающее мега-меню
+ * WHERE TO TEST:
+ * 1. Catalog menu on the home page
+ * 2. Dropdown mega menu
  * 
- * ЧТО ДЕЛАЕТ:
- * 1. Получает термины каталога с учётом иерархии
- * 2. Формирует структуру меню с дочерними элементами
- * 3. Разбивает меню на столбцы
- * 4. Выводит HTML меню
+ * WHAT IT DOES:
+ * 1. Gets catalog terms respecting the hierarchy
+ * 2. Builds the menu structure with child items
+ * 3. Splits the menu into columns
+ * 4. Outputs the menu HTML
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 /**
- * ФУНКЦИЯ: Получение терминов каталога (для меню) с доп. данными
+ * FUNCTION: Get catalog terms (for the menu) with extra data
  * 
- * @return array Иерархический массив меню
+ * @return array Hierarchical menu array
  */
-function get_catalog_terms() {
+function as_get_catalog_terms() {
     
     $catalogArgs = array(
         'hierarchical' => 1,
@@ -47,7 +46,7 @@ function get_catalog_terms() {
         
         $term_id = absint( $value->term_id );
         
-        // Пропускаем элементы-запросы
+        // Skip query items
         if ( get_option( 'catalog_' . $term_id . '_catalog_type' ) === 'request' ) {
             continue;
         }
@@ -65,7 +64,7 @@ function get_catalog_terms() {
         );
     }
     
-    // Добавляем дочерние элементы к родителям
+    // Attach child items to their parents
     foreach ( $menuCatalog as $key => $value ) {
         
         if ( $value['data']['parent'] !== 0 ) {
@@ -79,7 +78,7 @@ function get_catalog_terms() {
         }
     }
     
-    // Рекурсивно переносим дочерние элементы
+    // Recursively move child items
     $settingLevelsMenu = function( &$element ) use ( &$settingLevelsMenu, &$menuCatalog ) {
         
         if ( ! isset( $element['children'] ) || ! is_array( $element['children'] ) ) {
@@ -115,11 +114,11 @@ function get_catalog_terms() {
 }
 
 /**
- * ФУНКЦИЯ: Получение терминов каталога (объекты WP_Term)
+ * FUNCTION: Get catalog terms (WP_Term objects)
  * 
- * @return array Иерархический массив меню
+ * @return array Hierarchical menu array
  */
-function get_catalog_termsWP() {
+function as_get_catalog_termsWP() {
     
     $catalogArgs = array(
         'hierarchical' => 1,
@@ -194,19 +193,19 @@ function get_catalog_termsWP() {
 }
 
 /**
- * ФУНКЦИЯ: Разбивка меню на столбцы
+ * FUNCTION: Split the menu into columns
  * 
- * @param array $menuElements             — элементы меню
- * @param int   $countResult              — на сколько столбцов разбить
- * @param int   $catalogFirstLevelChild   — количество заголовков
- * @param int   $catalogSecondLevelChild  — количество пунктов
- * @param int   $heightFirstRelativeSecond— соотношение высоты заголовка к пункту
- * @param int   $adjustment               — корректировка
- * @param int   $additionalElementLength  — длина доп. элемента
+ * @param array $menuElements             — menu items
+ * @param int   $countResult              — number of columns
+ * @param int   $catalogFirstLevelChild   — number of headings
+ * @param int   $catalogSecondLevelChild  — number of items
+ * @param int   $heightFirstRelativeSecond— heading-to-item height ratio
+ * @param int   $adjustment               — adjustment
+ * @param int   $additionalElementLength  — length of the extra item
  * 
- * @return array [результат, счётчики]
+ * @return array [result, counters]
  */
-function splitMenu( $menuElements, $countResult, $catalogFirstLevelChild, $catalogSecondLevelChild, $heightFirstRelativeSecond = 1, $adjustment = 5, $additionalElementLength = 0 ) {
+function as_splitMenu( $menuElements, $countResult, $catalogFirstLevelChild, $catalogSecondLevelChild, $heightFirstRelativeSecond = 1, $adjustment = 5, $additionalElementLength = 0 ) {
     
     $catalogFirstLevelChild = absint( $catalogFirstLevelChild );
     $catalogSecondLevelChild = absint( $catalogSecondLevelChild );
@@ -329,13 +328,13 @@ function splitMenu( $menuElements, $countResult, $catalogFirstLevelChild, $catal
 }
 
 /**
- * ФУНКЦИЯ: Рекурсивный вывод меню
+ * FUNCTION: Recursive menu output
  * 
- * @param array  $menuElements — элементы меню
- * @param string $classUL      — CSS-класс для <ul>
- * @param int    $howManylevels— сколько уровней выводить
+ * @param array  $menuElements — menu items
+ * @param string $classUL      — CSS class for <ul>
+ * @param int    $howManylevels— how many levels to output
  */
-function view_menu_elements( $menuElements, $classUL, $howManylevels ) {
+function as_view_menu_elements( $menuElements, $classUL, $howManylevels ) {
     
     $howManylevels = absint( $howManylevels );
     
@@ -388,7 +387,7 @@ function view_menu_elements( $menuElements, $classUL, $howManylevels ) {
         <?php
         
         if ( isset( $value['children'] ) && $value['children'] && $howManylevels > 1 ) {
-            view_menu_elements( $value['children'], '', $howManylevels - 1 );
+            as_view_menu_elements( $value['children'], '', $howManylevels - 1 );
         }
         
         echo '</li>';

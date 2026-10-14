@@ -1,39 +1,38 @@
 <?php
 /**
- * Шаблон одиночной записи рубрики "Акции и скидки" (Москва)
+ * Single post template of the "Promotions and discounts" category (Moscow)
  * 
- * Шаблон для вывода отдельной акции из рубрики category с slug "aktsii-moskva"
+ * Template for displaying a single promotion from the category with the slug "aktsii-moskva"
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * Страница отдельной акции
+ * WHERE TO TEST:
+ * A single promotion page
  * 
- * ЧТО ВЫВОДИТ:
- * 1. Хлебные крошки (ручная разметка с ссылкой на рубрику)
- * 2. Заголовок акции
- * 3. Изображение записи
- * 4. Контент акции
- * 5. Плашку "Акция в архиве" (если promo_active = 0)
+ * WHAT IT OUTPUTS:
+ * 1. Breadcrumbs (manual markup with a link to the category)
+ * 2. Promotion title
+ * 3. Post image
+ * 4. Promotion content
+ * 5. The "Promotion archived" badge (if promo_active = 0)
  * 
  * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  * 
- * В этом шаблоне функции плагина не вызываются напрямую.
+ * This template does not call plugin functions directly.
  * 
- * Хлебные крошки выводятся ручной разметкой (не через kama_breadcrumbs),
- * так как вторая ссылка должна вести на рубрику записи — плагин
- * не строит такую цепочку автоматически для одиночных записей.
+ * The breadcrumbs are output with manual markup (not via kama_breadcrumbs),
+ * because the second link must lead to the post's category — the plugin
+ * does not build such a chain automatically for single posts.
  * 
- * ВНЕШНИЕ ЗАВИСИМОСТИ:
- * - Мета-поле promo_active — определяет, активна ли акция (1) или в архиве (0)
- * - Рубрика акций — ID 36 (Акции и скидки)
+ * EXTERNAL DEPENDENCIES:
+ * - The promo_active meta field — defines whether the promotion is active (1) or archived (0)
+ * - Promotions category — ID 36 (Promotions and discounts)
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -53,10 +52,10 @@ get_header(); ?>
             <?php 
             
             // ============================================
-            // РУБРИКА ЗАПИСИ И ССЫЛКА НА НЕЁ
+            // POST CATEGORY AND ITS LINK
             // ============================================
             // 
-            // Используется для построения второй ссылки в хлебных крошках.
+            // Used to build the second link in the breadcrumbs.
             
             $categoryPost  = get_the_category();
             $categoryLink  = '';
@@ -74,11 +73,11 @@ get_header(); ?>
             
             ?>
             
-            <!-- Хлебные крошки (ручная разметка с ссылкой на рубрику) -->
+            <!-- Breadcrumbs (manual markup with a link to the category) -->
             <div class="kama_breadcrumbs" itemscope="" itemtype="http://schema.org/BreadcrumbList">
                 
                 <span itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem">
-                    <a href="<?php echo esc_url( get_home_url() ); ?>" itemprop="item"><span itemprop="name">Главная</span></a>
+                    <a href="<?php echo esc_url( get_home_url() ); ?>" itemprop="item"><span itemprop="name"><?php esc_html_e( 'Home', 'argon-shop-theme' ); ?></span></a>
                 </span>
                 
                 <span class="kb_sep"> » </span>
@@ -110,16 +109,16 @@ get_header(); ?>
                 <?php
                 
                 // ============================================
-                // ПЛАШКА "АКЦИЯ В АРХИВЕ"
+                // "PROMOTION ARCHIVED" BADGE
                 // ============================================
                 // 
-                // Если мета-поле promo_active пустое или 0 — акция в архиве.
+                // If the promo_active meta field is empty or 0, the promotion is archived.
                 
                 $promoMeta = get_post_meta( get_the_ID(), 'promo_active', true );
                 
                 if ( empty( $promoMeta ) ) { ?>
                     
-                    <div class="block-promoArchive">Акция в архиве</div>
+                    <div class="block-promoArchive"><?php esc_html_e( 'Promotion archived', 'argon-shop-theme' ); ?></div>
                     
                 <?php } ?>
                 

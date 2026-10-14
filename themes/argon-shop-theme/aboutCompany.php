@@ -1,46 +1,45 @@
 <?php
 /**
- * Template Name: О компании
+ * Template Name: About company
  * 
- * Шаблон страницы "О компании"
+ * "About the company" page template
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * Страница "О компании"
- * URL: /o-kompanii/ (или другая)
+ * WHERE TO TEST:
+ * The "About the company" page
+ * URL: /o-kompanii/ (or another one)
  * 
- * ЧТО ВЫВОДИТ:
- * 1. Хлебные крошки (через kama_breadcrumbs из плагина Argon Shop)
- * 2. Заголовок и контент страницы
- * 3. Блок "Наши преимущества" (4 статичные карточки)
- * 4. Текст "О преимуществах" (поле ACF our_advantages)
- * 5. Блок "Наши партнёры" (тип записи ourclients)
- * 6. Текст "О клиентах" (поле ACF our_clients)
- * 7. Блок "Дипломы и сертификаты" (тип записи sertificates)
+ * WHAT IT OUTPUTS:
+ * 1. Breadcrumbs (via kama_breadcrumbs from the Argon Shop plugin)
+ * 2. Page title and content
+ * 3. The "Our advantages" block (4 static cards)
+ * 4. The "About the advantages" text (ACF field our_advantages)
+ * 5. The "Our partners" block (post type ourclients)
+ * 6. The "About the clients" text (ACF field our_clients)
+ * 7. The "Diplomas and certificates" block (post type sertificates)
  * 
  * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  * 
- * В этом шаблоне используются функции плагина:
+ * This template uses the following plugin functions:
  * 
- * - kama_breadcrumbs() → хлебные крошки (includes/interface/breadcrumbs.php)
+ * - as_kama_breadcrumbs() → breadcrumbs (includes/interface/breadcrumbs.php)
  * 
- * ВНЕШНИЕ ЗАВИСИМОСТИ:
- * - ACF (Advanced Custom Fields) — поля our_advantages, our_clients
- * - Типы записей ourclients / sertificates (регистрируются в functions.php темы)
- * - Мета-поле client_link у постов ourclients
- * - Swiper (из плагина ArgonShop) — слайдер сертификатов
- * - GLightbox (из плагина ArgonShop) — просмотр сертификата в полном размере
+ * EXTERNAL DEPENDENCIES:
+ * - ACF (Advanced Custom Fields) — our_advantages, our_clients fields
+ * - Post types ourclients / sertificates (registered in the theme's functions.php)
+ * - The client_link meta field of ourclients posts
+ * - Swiper (from the ArgonShop plugin) — certificate slider
+ * - GLightbox (from the ArgonShop plugin) — full-size certificate view
  * 
  * ============================================================
  
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -56,19 +55,19 @@ get_header(); ?>
 
             <?php 
             // ============================================
-            // ХЛЕБНЫЕ КРОШКИ
+            // BREADCRUMBS
             // ============================================
             // 
-            // Функция плагина Argon Shop (includes/interface/breadcrumbs.php)
-            // Выводит: Главная » О компании
+            // Argon Shop plugin function (includes/interface/breadcrumbs.php)
+            // Outputs: Home » About the company
             
-            if ( function_exists( 'kama_breadcrumbs' ) ) {
-                kama_breadcrumbs( ' » ' );
+            if ( function_exists( 'as_kama_breadcrumbs' ) ) {
+                AS_Kama_Breadcrumbs( ' » ' );
             }
             ?>
 
             <?php 
-            // Стандартный цикл WordPress
+            // Standard WordPress loop
             while ( have_posts() ) : the_post(); 
             ?>
 
@@ -80,7 +79,7 @@ get_header(); ?>
                 
                 <?php 
                 // ============================================
-                // ТЕКСТ "О ПРЕИМУЩЕСТВАХ" (поле ACF)
+                // "ABOUT THE ADVANTAGES" TEXT (ACF field)
                 // ============================================
                 // 
                 
@@ -108,14 +107,14 @@ get_header(); ?>
                 
                 <div class="block-ourClients">
                 
-                    <div class="aboutCompany-block-title">Наши партнеры</div>
+                    <div class="aboutCompany-block-title"><?php esc_html_e( 'Our partners', 'argon-shop-theme' ); ?></div>
                     
                     <div class="block-logoClients">
                     
                         <?php
                         
                         // ============================================
-                        // НАШИ ПАРТНЁРЫ (тип записи ourclients)
+                        // OUR PARTNERS (post type ourclients)
                         // ============================================
                         
                         $arg = array(
@@ -167,7 +166,7 @@ get_header(); ?>
                 
                 <?php 
                 // ============================================
-                // ТЕКСТ "О КЛИЕНТАХ" (поле ACF)
+                // "ABOUT THE CLIENTS" TEXT (ACF field)
                 // ============================================
                 
                 $textOurClients = '';
@@ -193,19 +192,19 @@ get_header(); ?>
                 
                 <div class="block-sertificats">
 
-                    <div class="aboutCompany-block-title">Дипломы и сертификаты</div>
+                    <div class="aboutCompany-block-title"><?php esc_html_e( 'Diplomas and certificates', 'argon-shop-theme' ); ?></div>
 
                     <div class="block-sliderSertificats">
 
                         <?php
 
                         // ============================================
-                        // СЕРТИФИКАТЫ (тип записи sertificates)
+                        // CERTIFICATES (post type sertificates)
                         // ============================================
                         //
-                        // Разметка Swiper-слайдера. Инициализация —
-                        // в assets/js/slider-sertificates.js темы.
-                        // Просмотр в полном размере — GLightbox.
+                        // Swiper slider markup. Initialization —
+                        // in the theme's assets/js/slider-sertificates.js.
+                        // Full-size view — GLightbox.
 
                         $arg = array(
                             'post_status'    => 'publish',

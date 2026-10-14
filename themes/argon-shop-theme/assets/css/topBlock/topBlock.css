@@ -1,5 +1,5 @@
 /**
- * Фиксированный блок
+ * Fixed block
  * =========================================== */
 
 .admin-bar .top-block{
@@ -54,7 +54,7 @@
     
 }
 
-/* Кнопка Мой кабинет */
+/* "My account" button */
 
 .block-rightElementsTopContent .myCabinetButton{
     border: 1px solid #8bbfff;
@@ -93,11 +93,11 @@
 
 
 /**
- * Форма поиска >> см. search
+ * Search form >> see search
  * =========================================== */
     
 /**
- * Мобильная карта
+ * Mobile map
  * =========================================== */
  
 .openMobileMap{

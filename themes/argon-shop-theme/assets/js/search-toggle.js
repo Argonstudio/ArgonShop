@@ -1,36 +1,35 @@
 /**
- * ArgonShopTheme — раскрытие поиска в шапке.
+ * ArgonShopTheme — expanding the search in the header.
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Управляет только блоком .block-topSearch в шапке:
+ * Manages only the .block-topSearch block in the header:
  *
- *   1. Hover раскрывает — чистый CSS.
- *   2. Focus на поле поиска фиксирует блок в раскрытом
- *      состоянии (класс .is-open) — уход мыши его не схлопывает.
- *   3. Клик по иконке в свёрнутом состоянии раскрывает блок
- *      и ставит фокус в поле. Форму не отправляет.
- *   4. Клик вне .block-topSearch или Esc — снимает фиксацию,
- *      скрывает dropdown результатов, снимает фокус.
+ *   1. Hover expands it — pure CSS.
+ *   2. Focus on the search field locks the block in the expanded
+ *      state (the .is-open class) — moving the mouse away does not collapse it.
+ *   3. A click on the icon in the collapsed state expands the block
+ *      and focuses the field. It does not submit the form.
+ *   4. A click outside .block-topSearch or Esc removes the lock,
+ *      hides the results dropdown and removes the focus.
  *
- * AJAX-поиск (debounce, fetch, рендер) — в модуле search.js
- * плагина ArgonShop. Здесь про него знаем только то, что нужно
- * спрятать .searchAjaxResult при закрытии.
+ * AJAX search (debounce, fetch, rendering) lives in the search.js module
+ * of the ArgonShop plugin. Here we only need to know that
+ * .searchAjaxResult must be hidden on close.
  *
  * ============================================================
  * DOM
  * ============================================================
  *
- * .block-topSearch      — контейнер поиска в шапке
- * .topSearchSubmit      — иконка (submit)
- * .asInputSearchForm    — поле ввода
- * .searchAjaxResult     — dropdown результатов
+ * .block-topSearch      — search container in the header
+ * .topSearchSubmit      — icon (submit)
+ * .asInputSearchForm    — input field
+ * .searchAjaxResult     — results dropdown
  */
 
 'use strict';
@@ -44,11 +43,11 @@ document.addEventListener( 'DOMContentLoaded', () => {
     }
 
     // ============================================================
-    // ВСПОМОГАТЕЛЬНЫЕ
+    // HELPERS
     // ============================================================
 
     /**
-     * Снимает фиксацию со всех блоков поиска и прячет dropdown.
+     * Removes the lock from all search blocks and hides the dropdown.
      *
      * @return {void}
      */
@@ -65,7 +64,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
     };
 
     // ============================================================
-    // ФИКСАЦИЯ ПО ФОКУСУ
+    // LOCK ON FOCUS
     // ============================================================
 
     document.querySelectorAll( '.block-topSearch .asInputSearchForm' ).forEach( input => {
@@ -81,7 +80,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
     });
 
     // ============================================================
-    // КЛИК ПО ИКОНКЕ
+    // CLICK ON THE ICON
     // ============================================================
 
     document.addEventListener( 'click', event => {
@@ -98,12 +97,12 @@ document.addEventListener( 'DOMContentLoaded', () => {
             return;
         }
 
-        // Уже раскрыт — отдаём форму браузеру
+        // Already expanded — let the browser submit the form
         if ( root.classList.contains( 'is-open' ) ) {
             return;
         }
 
-        // Свёрнут — раскрываем, фокус в поле, форму не отправляем
+        // Collapsed — expand, focus the field, do not submit the form
         event.preventDefault();
 
         root.classList.add( 'is-open' );
@@ -116,7 +115,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
     });
 
     // ============================================================
-    // КЛИК ВНЕ И ESC
+    // CLICK OUTSIDE AND ESC
     // ============================================================
 
     document.addEventListener( 'mouseup', event => {

@@ -1,76 +1,75 @@
 <?php 
 /**
- * Шаблон страницы результатов поиска
+ * Search results page template
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * Страница результатов поиска после отправки формы
- * URL: /?s=запрос&post_type[]=product&as_taxonomy[catalog]=all
+ * WHERE TO TEST:
+ * The search results page after submitting the form
+ * URL: /?s=query&post_type[]=product&as_taxonomy[catalog]=all
  * 
- * ЧТО ВЫВОДИТ:
- * 1. Хлебные крошки (из плагина Argon Shop)
- * 2. Форму поиска (повторный ввод запроса)
- * 3. Результаты поиска карточками товаров
- * 4. Пагинацию
+ * WHAT IT OUTPUTS:
+ * 1. Breadcrumbs (from the Argon Shop plugin)
+ * 2. The search form (to search again)
+ * 3. Search results as product cards
+ * 4. Pagination
  * 
  * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  * 
- * В этом шаблоне используются функции плагина:
+ * This template uses the following plugin functions:
  * 
- * 1. kama_breadcrumbs()
- *    Файл: includes/interface/breadcrumbs.php
- *    Выводит крошки: "Главная » Результаты поиска по запросу - [запрос]"
- *    Если запрос пустой — "Главная » Поиск"
+ * 1. as_kama_breadcrumbs()
+ *    File: includes/interface/breadcrumbs.php
+ *    Outputs the breadcrumbs: "Home » Search results for - [query]"
+ *    If the query is empty — "Home » Search"
  * 
  * 2. as_search( $searchParameters )
- *    Файл: includes/interface/search/searchForm.php
- *    Выводит форму поиска с настройками. На этой странице форма
- *    дублируется для возможности повторного поиска.
+ *    File: includes/interface/search/searchForm.php
+ *    Outputs the search form with its settings. On this page the form
+ *    is duplicated so that the user can search again.
  *    
- *    AJAX-обработчик формы: action=getAjaxSearchResult
- *    (см. includes/interface/search/searchAjax.php)
+ *    AJAX form handler: action=getAjaxSearchResult
+ *    (see includes/interface/search/searchAjax.php)
  * 
- *    ВАЖНО: поиск работает "из коробки" для товаров и таксономии
- *    catalog. Поиск по записям (post) требует доработки
- *    searchAjax.php — параметр postResult в этой версии не 
- *    обрабатывается полностью.
+ *    IMPORTANT: search works "out of the box" for products and the
+ *    catalog taxonomy. Searching posts requires extending
+ *    searchAjax.php — the postResult parameter is not fully
+ *    handled in this version.
  * 
- * 3. getCookie( 'productsShoppingCart' )
- *    Файл: includes/api/getData/getData.php
- *    Читает куки корзины — нужно для передачи в generate_product_card(),
- *    чтобы показать кнопки "В корзину" / "Товар добавлен".
+ * 3. as_getCookie( 'productsShoppingCart' )
+ *    File: includes/api/getData/getData.php
+ *    Reads the cart cookies — needed to pass them to generate_product_card()
+ *    to show the "Add to cart" / "Product added" buttons.
  * 
  * 4. generate_product_card( $post, $cart )
- *    Файл: includes/api/view/product/productsLists/productsLists.php
- *    Выводит HTML-карточку товара в результатах поиска.
+ *    File: includes/api/view/product/productsLists/productsLists.php
+ *    Outputs the product HTML card in the search results.
  * 
- * 5. kama_pagenavi()
- *    Файл: includes/interface/pagenavi.php
- *    Выводит пагинацию.
+ * 5. as_kama_pagenavi()
+ *    File: includes/interface/pagenavi.php
+ *    Outputs the pagination.
  * 
- * ФИЛЬТРЫ ПОИСКА:
+ * SEARCH FILTERS:
  * 
- * Применение tax_query к результатам поиска выполняется в:
+ * The tax_query is applied to the search results in:
  * - includes/interface/search/searchGetFilters.php
  * 
- * Он читает $_GET['as_taxonomy'] и $_GET['post_type'] и добавляет
- * фильтр на главный запрос WordPress.
+ * It reads $_GET['as_taxonomy'] and $_GET['post_type'] and adds
+ * a filter to the main WordPress query.
  * 
  * ============================================================
  * PHP 8.5:
- * - защита ABSPATH
- * - защита от null при вызове функций плагина
- * - проверки function_exists() для всех функций плагина
- * - проверка WP_Query через have_posts()
- * - wp_reset_postdata() после цикла
+ * - ABSPATH protection
+ * - protection against null when calling plugin functions
+ * - function_exists() checks for all plugin functions
+ * - WP_Query check via have_posts()
+ * - wp_reset_postdata() after the loop
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -86,9 +85,9 @@ get_header();
         <main class="block-content">
        
        <?php 
-       // Функция плагина Argon Shop (includes/interface/breadcrumbs.php)
-       if ( function_exists( 'kama_breadcrumbs' ) ) {
-           kama_breadcrumbs( '<span class="b"> » </span>' );
+       // Argon Shop plugin function (includes/interface/breadcrumbs.php)
+       if ( function_exists( 'as_kama_breadcrumbs' ) ) {
+           AS_Kama_Breadcrumbs( '<span class="b"> » </span>' );
        }
        
        echo "<div class='block-pageSearch'>";
@@ -97,89 +96,89 @@ get_header();
             
             /**
             * ============================================
-            * ВЫЗОВ ФУНКЦИИ ПЛАГИНА: as_search()
+            * PLUGIN FUNCTION CALL: as_search()
             * ============================================
             * 
-            * Файл: includes/interface/search/searchForm.php
+            * File: includes/interface/search/searchForm.php
             * 
-            * ФУНКЦИЯ: Вывод формы поиска
+            * FUNCTION: Outputs the search form
             * 
-            * ПОДДЕРЖИВАЕТ:
-            * 1. Обычный поиск (отправка GET на /?s=запрос)
-            * 2. AJAX-поиск (результаты без перезагрузки страницы)
-            * 3. Поиск по нескольким типам записей (товары, статьи, страницы)
-            * 4. Фильтрацию по таксономиям (каталог, рубрики)
-            * 5. Несколько блоков результатов (акции, новости, блог)
+            * SUPPORTS:
+            * 1. Regular search (GET request to /?s=query)
+            * 2. AJAX search (results without a page reload)
+            * 3. Search across several post types (products, articles, pages)
+            * 4. Filtering by taxonomies (catalog, categories)
+            * 5. Several result blocks (promotions, news, blog)
             * 
-            * ВАЖНО: Поиск по записям и рубрикам записей работает "из коробки",
-            *        без дополнительных доработок плагина. Если в системе нет
-            *        товаров или таксономии catalog — соответствующие блоки
-            *        в результатах просто не появятся (без ошибок).
+            * IMPORTANT: Searching posts and post categories works "out of the box",
+            *        without extra changes to the plugin. If the system has no
+            *        products or catalog taxonomy, the corresponding blocks
+            *        simply do not appear in the results (no errors).
             * 
-            * AJAX-ОБРАБОТЧИК:
-            * Форма отправляет запрос на action=getAjaxSearchResult
-            * (см. includes/interface/search/searchAjax.php)
+            * AJAX HANDLER:
+            * The form sends the request to action=getAjaxSearchResult
+            * (see includes/interface/search/searchAjax.php)
             * 
-            * СТРУКТУРА ПАРАМЕТРОВ:                      
+            * PARAMETER STRUCTURE:
             * 
             * @param array $searchParameters {
-            *     Массив параметров формы поиска.
+            *     Array of search form parameters.
             * 
-            *     @type array  $post_type      Массив типов записей для поиска.
-            *                                  Для товаров: array('product').   
+            *     @type array  $post_type      Array of post types to search.
+            *                                  For products: array('product').
             * 
             * 
-            *     @type array  $taxonomy       Массив таксономий для фильтрации.
-            *                                  Для каталога: array('catalog' => 'all').
+            *     @type array  $taxonomy       Array of taxonomies for filtering.
+            *                                  For the catalog: array('catalog' => 'all').
             * 
-            *                                  Таксономия "catalog" хардкод в AJAX-обработчике (searchAjax.php). На перспективу сделано с возможностью менять.
-            *                                  Есть возможность указать только определенные категории каталога(по ID), вместо "all".   
+            *                                  The "catalog" taxonomy is hardcoded in the AJAX handler (searchAjax.php). Made changeable for the future.
+            *                                  You can specify only certain catalog categories (by ID) instead of "all".
             * 
-            *     @type string $classForm      CSS-класс для <form>.
-            *                                  По умолчанию: 'asSearchForm'.
+            *     @type string $classForm      CSS class for <form>.
+            *                                  Default: 'asSearchForm'.
             * 
-            *     @type string $classInput     CSS-класс для <input type="text">.
-            *                                  По умолчанию: 'asInputSearchForm'.
+            *     @type string $classInput     CSS class for <input type="text">.
+            *                                  Default: 'asInputSearchForm'.
             * 
-            *     @type string $classSubmit    CSS-класс для <input type="submit">.
-            *                                  По умолчанию: 'asSubmitSearchForm'.
+            *     @type string $classSubmit    CSS class for <input type="submit">.
+            *                                  Default: 'asSubmitSearchForm'.
             * 
-            *     @type string $valueSubmit    Текст кнопки поиска.
-            *                                  По умолчанию: 'Поиск'.
+            *     @type string $valueSubmit    Search button text.
+            *                                  Default: 'Search' (translated).
             * 
             *     @type array  $ajax {
-            *         Настройки AJAX-поиска. Если отсутствует — обычный поиск.
+            *         AJAX search settings. If missing — regular search.
             * 
-            *         @type string       $classBlockResult CSS-класс контейнера результатов.
-            *         @type string       $positionResult   Позиция контейнера: 'top' или 'bottom'.
-            *                                              По умолчанию: 'bottom'.
+            *         @type string       $classBlockResult CSS class of the results container.
+            *         @type string       $positionResult   Container position: 'top' or 'bottom'.
+            *                                              Default: 'bottom'.
             * 
-            *         @type bool         $productResult    Искать ли товары.
-            *                                              Если товаров нет в системе — блок не появится.
-            *                                              По умолчанию: не передаётся.
+            *         @type bool         $productResult    Whether to search products.
+            *                                              If the system has no products, the block does not appear.
+            *                                              Default: not passed.
             * 
-            *         @type bool         $catalogResult    Искать ли категории каталога.
-            *                                              Если таксономии catalog нет — блок не появится.
-            *                                              По умолчанию: не передаётся.
+            *         @type bool         $catalogResult    Whether to search catalog categories.
+            *                                              If there is no catalog taxonomy, the block does not appear.
+            *                                              Default: not passed.
             * 
             *         @type array|bool   $postResult {
-            *             Массив дополнительных блоков поиска записей.
-            *             Работает независимо от productResult и catalogResult.
+            *             Array of additional post search blocks.
+            *             Works independently of productResult and catalogResult.
             * 
             *             @type array $item {
-            *                 @type string $name     Заголовок блока (например, "Акции и статьи").
-            *                 @type string $class    CSS-класс блока.
-            *                 @type array  $category Массив ID рубрик записей для поиска.
+            *                 @type string $name     Block title (for example, "Promotions and articles").
+            *                 @type string $class    Block CSS class.
+            *                 @type array  $category Array of post category IDs to search.
             *             }
             *         }
             *     }
             * }
             */
             
-            // Поиск только по товарам
+            // Search products only
             'post_type'   => array( 'product' ),
             
-            // Фильтрация по таксономии каталога
+            // Filtering by the catalog taxonomy
             'taxonomy'    => array(
                 'catalog' => 'all',
             ),
@@ -189,7 +188,7 @@ get_header();
             'classSubmit' => 'pageSearchSubmit',
             'valueSubmit' => '',
             
-            // AJAX-поиск: результаты без перезагрузки страницы
+            // AJAX search: results without a page reload
             'ajax' => array(
                 'classBlockResult' => 'pageSearchBlockResult',
                 'positionResult'   => 'bottom',
@@ -197,7 +196,7 @@ get_header();
                 'catalogResult'    => true,
                 'postResult'       => array(
                     array(
-                        'name'     => 'Акции и статьи',
+                        'name'     => __( 'Promotions and articles', 'argon-shop-theme' ),
                         'class'    => 'resultEntry',
                         'category' => array( 36, 37 ),
                     ),
@@ -205,20 +204,20 @@ get_header();
             ),
         );
         
-        // Вызов функции плагина Argon Shop
+        // Argon Shop plugin function call
         if ( function_exists( 'as_search' ) ) {
             as_search( $searchParameters );
         }
        
        echo "</div>";
        
-       // Проверяем, был ли введён поисковый запрос
+       // Check whether a search query was entered
        $search_query = get_search_query();
        
        if ( $search_query ) {
            
-           // Функция плагина Argon Shop (includes/api/getData/getData.php)
-           $productsShoppingCart = function_exists( 'getCookie' ) ? getCookie( 'productsShoppingCart' ) : false;
+           // Argon Shop plugin function (includes/api/getData/getData.php)
+           $productsShoppingCart = function_exists( 'as_getCookie' ) ? as_getCookie( 'productsShoppingCart' ) : false;
            
        ?>
        
@@ -231,12 +230,12 @@ get_header();
                     
                         global $post;
                         
-                        // Пропускаем, если пост некорректный
+                        // Skip if the post is invalid
                         if ( ! $post instanceof WP_Post ) {
                             continue;
                         }
                         
-                        // Функция плагина Argon Shop
+                        // Argon Shop plugin function
                         // (includes/api/view/product/productsLists/productsLists.php)
                         if ( function_exists( 'generate_product_card' ) ) {
                             generate_product_card( $post, $productsShoppingCart );
@@ -250,9 +249,9 @@ get_header();
                 ?>
                 
                 <?php 
-                // Функция плагина Argon Shop (includes/interface/pagenavi.php)
-                if ( function_exists( 'kama_pagenavi' ) ) {
-                    kama_pagenavi();
+                // Argon Shop plugin function (includes/interface/pagenavi.php)
+                if ( function_exists( 'as_kama_pagenavi' ) ) {
+                    as_kama_pagenavi();
                 }
                 ?>	
             </div>
@@ -260,7 +259,7 @@ get_header();
        <?php
        
        } else {
-           echo 'Введите поисковой запрос';
+           echo __( 'Enter a search query', 'argon-shop-theme' );
        }
        
        ?>

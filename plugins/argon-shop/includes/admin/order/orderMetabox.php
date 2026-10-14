@@ -1,44 +1,43 @@
 <?php
 /**
- * Метабоксы заказа в админ-панели
+ * Order meta boxes in the admin panel
  * 
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * WordPress Админка → Заказы → Редактирование конкретного заказа
- * URL: /wp-admin/post.php?post=ID_ЗАКАЗА&action=edit
+ * WHERE TO TEST:
+ * WordPress Admin → Orders → Edit a specific order
+ * URL: /wp-admin/post.php?post=ORDER_ID&action=edit
  * 
- * Метабоксы:
- * 1. "Товары" — список товаров в заказе + добавление новых
- * 2. "Информация от заказчика" — данные покупателя, доставка, оплата
- * 3. "Статус заказа" — смена статуса (Новый, В обработке, Выполнен)
+ * Meta boxes:
+ * 1. "Products" — list of products in the order + adding new ones
+ * 2. "Customer information" — buyer data, delivery, payment
+ * 3. "Order status" — status change (New, Processing, Completed)
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Добавляем новые метабоксы таксономии
-add_action( 'add_meta_boxes', 'orders_add_meta_box' );
+// Add the new taxonomy meta boxes
+add_action( 'add_meta_boxes', 'as_orders_add_meta_box' );
 
-function orders_add_meta_box() {
+function as_orders_add_meta_box() {
     
-    add_meta_box( 'detailOrders_meta_box', 'Товары', 'detailOrders_metabox', 'shoporder', 'normal', 'core' );
-    add_meta_box( 'detailBuyer_meta_box', 'Информация от заказчика', 'detailBuyer_metabox', 'shoporder', 'normal', 'core' );
-    add_meta_box( 'statusOrders_meta_box', 'Статус заказа', 'statusOrders_metabox', 'shoporder', 'side', 'core' );
+    add_meta_box( 'detailOrders_meta_box', __( 'Products', 'argon-shop' ), 'as_detailOrders_metabox', 'shoporder', 'normal', 'core' );
+    add_meta_box( 'detailBuyer_meta_box', __( 'Customer information', 'argon-shop' ), 'as_detailBuyer_metabox', 'shoporder', 'normal', 'core' );
+    add_meta_box( 'statusOrders_meta_box', __( 'Order status', 'argon-shop' ), 'as_statusOrders_metabox', 'shoporder', 'side', 'core' );
 }
 
 /**
- * МЕТАБОКС: Статус заказа
+ * META BOX: Order status
  * 
- * ГДЕ ТЕСТИРОВАТЬ: Страница заказа → правая колонка → "Статус заказа"
- * ЧТО ДЕЛАЕТ: Выводит радио-кнопки для выбора статуса заказа
- *             (Новый / В обработке / Выполнен)
+ * WHERE TO TEST: Order page → right column → "Order status"
+ * WHAT IT DOES: Outputs radio buttons for choosing the order status
+ *             (New / Processing / Completed)
  */
-function statusOrders_metabox( $post ) {
+function as_statusOrders_metabox( $post ) {
     
     $argumentStatusAddTerms = array(
         'taxonomy'   => 'statusorders',
@@ -55,7 +54,7 @@ function statusOrders_metabox( $post ) {
         
         $checked = ( $key === $currentStatus ) ? "checked='checked'" : '';
         
-        // Экранирование вывода
+        // Output escaping
         $key_esc = esc_attr( $key );
         $value_esc = esc_html( $value );
         
@@ -64,16 +63,16 @@ function statusOrders_metabox( $post ) {
 }
 
 /**
- * МЕТАБОКС: Товары
+ * META BOX: Products
  * 
- * ГДЕ ТЕСТИРОВАТЬ: Страница заказа → основной блок "Товары"
- * ЧТО ДЕЛАЕТ: 
- * 1. Выводит список товаров, добавленных в заказ
- * 2. Поле для поиска и добавления новых товаров
- * 3. Кнопки "+" и "-" для изменения количества
- * 4. Кнопка удаления товара из заказа
+ * WHERE TO TEST: Order page → main "Products" block
+ * WHAT IT DOES:
+ * 1. Outputs the list of products added to the order
+ * 2. A field for searching and adding new products
+ * 3. "+" and "-" buttons for changing the quantity
+ * 4. A button for removing a product from the order
  */
-function detailOrders_metabox( $post ) {
+function as_detailOrders_metabox( $post ) {
     
     $productsCart = get_post_meta( $post->ID, '_productsCart', true );
     
@@ -90,7 +89,7 @@ function detailOrders_metabox( $post ) {
             $key = absint( $key );
             
             if ( $key > 0 ) {
-                createTableProduct( $key, $value );
+                as_createTableProduct( $key, $value );
             }
         }
     }
@@ -101,9 +100,9 @@ function detailOrders_metabox( $post ) {
     
     <div class="blockAddOrderProduct">
         
-        Добавить товар
+        <?php esc_html_e( 'Add product', 'argon-shop' ); ?>
         
-        <input type="text" class="valueAddOrder" placeholder="название или артикул товара">
+        <input type="text" class="valueAddOrder" placeholder="<?php esc_attr_e( 'product name or SKU', 'argon-shop' ); ?>">
         <div class="addOrderResult"></div>
         
     </div>
@@ -114,22 +113,22 @@ function detailOrders_metabox( $post ) {
 }
 
 /**
- * ФУНКЦИЯ: Создание HTML-таблицы товара в заказе
+ * FUNCTION: Build the HTML table of a product in the order
  * 
- * ГДЕ ТЕСТИРОВАТЬ: Автоматически вызывается в метабоксе "Товары"
- * ЧТО ДЕЛАЕТ: Выводит таблицу с информацией о товаре:
- *             - Название и ссылка
- *             - Цена за штуку
- *             - Количество (с кнопками + и -)
- *             - Вес (если есть)
- *             - Итоговая цена
+ * WHERE TO TEST: Called automatically in the "Products" meta box
+ * WHAT IT DOES: Outputs a table with product information:
+ *             - Name and link
+ *             - Price per piece
+ *             - Quantity (with + and - buttons)
+ *             - Weight (if any)
+ *             - Total price
  * 
- * @param int   $idProduct   — ID товара
- * @param array $dataProduct — данные из сохранённого заказа (опционально)
+ * @param int   $idProduct   — product ID
+ * @param array $dataProduct — data from the saved order (optional)
  */
-function createTableProduct( $idProduct, $dataProduct = '' ) {
+function as_createTableProduct( $idProduct, $dataProduct = '' ) {
     
-    // Валидация ID
+    // ID validation
     $idProduct = absint( $idProduct );
     
     if ( 0 === $idProduct ) {
@@ -159,7 +158,7 @@ function createTableProduct( $idProduct, $dataProduct = '' ) {
         $amountProduct = 1;
         $post_name = esc_html( $post_data->post_title );
         $post_link = esc_url( get_post_permalink( $idProduct ) );
-        $post_price = floatval( get_post_meta( $idProduct, '_price', true ) );
+        $post_price = as_get_product_price( $idProduct );
     }
     
     $post_weight = floatval( get_post_meta( $idProduct, '_weight', true ) );
@@ -179,14 +178,14 @@ function createTableProduct( $idProduct, $dataProduct = '' ) {
                 <table class="block-orderCharactProduct">
                     
                     <tr class="block-orderCharactProductTitle">
-                        <td>₽/шт</td>
-                        <td>Количество</td>
+                        <td><?php echo esc_html( as_get_currency_per_piece() ); ?></td>
+                        <td><?php esc_html_e( 'Quantity', 'argon-shop' ); ?></td>
                         
                         <?php if ( $post_weight ) { ?>
-                            <td>Вес</td>
+                            <td><?php esc_html_e( 'Weight', 'argon-shop' ); ?></td>
                         <?php } ?>
                         
-                        <td>Цена</td>
+                        <td><?php esc_html_e( 'Price', 'argon-shop' ); ?></td>
                     </tr>
                     
                     <tr class="block-orderCharactProductContent">
@@ -202,10 +201,10 @@ function createTableProduct( $idProduct, $dataProduct = '' ) {
                         </td>
                         
                         <?php if ( $post_weight ) { ?>
-                            <td class="amountProductWeight"><span><?php echo esc_html( $post_weight * $amountProduct ); ?></span> кг</td>
+                            <td class="amountProductWeight"><span><?php echo esc_html( $post_weight * $amountProduct ); ?></span> <?php esc_html_e( 'kg', 'argon-shop' ); ?></td>
                         <?php } ?>
                         
-                        <td class="amountProductPrice"><span><?php echo esc_html( $post_price * $amountProduct ); ?></span> ₽</td>
+                        <td class="amountProductPrice"><?php echo as_price_html( '<span>' . esc_html( $post_price * $amountProduct ) . '</span>' ); ?></td>
                     </tr>
                     
                 </table>
@@ -217,18 +216,18 @@ function createTableProduct( $idProduct, $dataProduct = '' ) {
 }
 
 /**
- * МЕТАБОКС: Информация от заказчика
+ * META BOX: Customer information
  * 
- * ГДЕ ТЕСТИРОВАТЬ: Страница заказа → основной блок "Информация от заказчика"
- * ЧТО ДЕЛАЕТ:
- * 1. Выводит заполненные покупателем поля (имя, телефон, email и др.)
- * 2. Выпадающий список для добавления недостающих полей
- * 3. Радио-кнопки способа доставки
- * 4. Радио-кнопки способа оплаты
+ * WHERE TO TEST: Order page → main "Customer information" block
+ * WHAT IT DOES:
+ * 1. Outputs the fields filled in by the buyer (name, phone, email, etc.)
+ * 2. A dropdown for adding missing fields
+ * 3. Delivery method radio buttons
+ * 4. Payment method radio buttons
  */
-function detailBuyer_metabox( $post ) {
+function as_detailBuyer_metabox( $post ) {
     
-    // Nonce-поле для защиты при сохранении
+    // Nonce field for protection on save
     wp_nonce_field( 'detailOrders_protect_action', 'detailOrders_protect_name' );
     
     $fieldsCart = get_post_meta( $post->ID, '_fieldsCart', true );
@@ -260,32 +259,32 @@ function detailBuyer_metabox( $post ) {
     
     </ul>
     
-    <div class="as-order-itemTitle">Добавить отсутствующие поля из:</div>
+    <div class="as-order-itemTitle"><?php esc_html_e( 'Add missing fields from:', 'argon-shop' ); ?></div>
     
     <select class="as-order-addFieldsSelect">
-        <option selected value="person">Физические лица</option>
-        <option value="legalPerson">Юридические лица</option>
+        <option selected value="person"><?php esc_html_e( 'Individuals', 'argon-shop' ); ?></option>
+        <option value="legalPerson"><?php esc_html_e( 'Legal entities', 'argon-shop' ); ?></option>
     </select>
     
-    <input type="button" class="as-order-addFieldsSend" value="Добавить">
+    <input type="button" class="as-order-addFieldsSend" value="<?php esc_attr_e( 'Add', 'argon-shop' ); ?>">
     
     <div class="as-order-addFieldsError"></div>
     <p></p>
     
-    <div class="as-order-itemTitle">Способ доставки:</div>
+    <div class="as-order-itemTitle"><?php esc_html_e( 'Shipping method:', 'argon-shop' ); ?></div>
     
     <?php
     
     $typeShipping = array(
-        'selfExport'        => 'Самовывоз',
-        'shippingToAddress' => 'Доставка по адресу',
+        'selfExport'        => __( 'Pickup', 'argon-shop' ),
+        'shippingToAddress' => __( 'Delivery to address', 'argon-shop' ),
     );
     
     foreach ( $typeShipping as $key => $value ) {
         
         $checked = ( $key === $shipping ) ? "checked='checked'" : '';
         
-        // Экранирование
+        // Escaping
         $key_esc = esc_attr( $key );
         $value_esc = esc_html( $value );
         
@@ -294,19 +293,19 @@ function detailBuyer_metabox( $post ) {
     
     ?>
     
-    <div class="as-order-itemTitle">Способ оплаты:</div>
+    <div class="as-order-itemTitle"><?php esc_html_e( 'Payment method:', 'argon-shop' ); ?></div>
     
     <?php
     
     $typePaiment = array(
-        'paimentUponReceipt' => 'Оплата при получении',
+        'paimentUponReceipt' => __( 'Payment on delivery', 'argon-shop' ),
     );
     
     foreach ( $typePaiment as $key => $value ) {
         
         $checked = ( $key === $payment ) ? "checked='checked'" : '';
         
-        // Экранирование
+        // Escaping
         $key_esc = esc_attr( $key );
         $value_esc = esc_html( $value );
         
@@ -315,18 +314,18 @@ function detailBuyer_metabox( $post ) {
 }
 
 /**
- * ФУНКЦИЯ: Вывод HTML-поля формы
+ * FUNCTION: Output an HTML form field
  * 
- * ГДЕ ТЕСТИРОВАТЬ: Автоматически вызывается в метабоксе "Информация от заказчика"
- * ЧТО ДЕЛАЕТ: Выводит поле с label, input/textarea и скрытым полем с названием
+ * WHERE TO TEST: Called automatically in the "Customer information" meta box
+ * WHAT IT DOES: Outputs a field with a label, input/textarea and a hidden field with the name
  * 
- * @param string $type            — 'input' или 'textarea'
- * @param string $keyField        — ключ поля (например, addressUser)
- * @param array  $valueArrayField — массив с данными (name, value)
+ * @param string $type            — 'input' or 'textarea'
+ * @param string $keyField        — field key (for example, addressUser)
+ * @param array  $valueArrayField — data array (name, value)
  */
 function as_getHTMLField( $type, $keyField, $valueArrayField ) {
     
-    // Экранирование данных
+    // Data escaping
     $keyField_esc = esc_attr( $keyField );
     $fieldName = isset( $valueArrayField['name'] ) ? esc_html( $valueArrayField['name'] ) : '';
     $fieldValue = isset( $valueArrayField['value'] ) ? esc_html( $valueArrayField['value'] ) : '';

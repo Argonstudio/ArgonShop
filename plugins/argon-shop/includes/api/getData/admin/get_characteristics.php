@@ -1,45 +1,44 @@
 <?php
 /**
- * Получение значений характеристик товара
+ * Getting product characteristic values
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * Вызывается из шаблонов темы при выводе характеристик товара.
- * Например: get_charact( 'id', 123, $product_id );
+ * WHERE TO TEST:
+ * Called from theme templates when product characteristics are output.
+ * For example: as_get_charact( 'id', 123, $product_id );
  * 
- * ЧТО ДЕЛАЕТ:
- * 1. Находит характеристику по имени или ID
- * 2. Если характеристика имеет варианты (дочерние) — возвращает массив выбранных опций
- * 3. Если характеристика простая — возвращает текстовое значение
+ * WHAT IT DOES:
+ * 1. Finds a characteristic by name or ID
+ * 2. If the characteristic has options (children) — returns an array of selected options
+ * 3. If the characteristic is simple — returns the text value
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 /**
- * ФУНКЦИЯ: Получение значения характеристики товара
+ * FUNCTION: Get a product characteristic value
  * 
- * @param string $typeField  — тип поиска: 'name' (по имени) или 'id' (по ID)
- * @param mixed  $valueField — значение для поиска (имя или ID)
- * @param int    $productID  — ID товара
+ * @param string $typeField  — lookup type: 'name' (by name) or 'id' (by ID)
+ * @param mixed  $valueField — lookup value (name or ID)
+ * @param int    $productID  — product ID
  * 
- * @return array|string|false — Массив опций, строка значения или false
+ * @return array|string|false — Array of options, value string or false
  */
-function get_charact( $typeField, $valueField, $productID ) {
+function as_get_charact( $typeField, $valueField, $productID ) {
     
-    // Валидация ID товара
+    // Product ID validation
     $productID = absint( $productID );
     
     if ( 0 === $productID ) {
         return false;
     }
     
-    // Поиск характеристики
+    // Find the characteristic
     if ( $typeField === 'name' ) {
         
         $valueField = sanitize_text_field( $valueField );
@@ -64,14 +63,14 @@ function get_charact( $typeField, $valueField, $productID ) {
         return false;
     }
     
-    // Проверяем, есть ли у характеристики дочерние элементы (варианты выбора)
+    // Check whether the characteristic has children (choice options)
     $termChildren = get_term_children( $termID, 'characteristics' );
     
     if ( is_wp_error( $termChildren ) ) {
         return false;
     }
     
-    // Если есть дочерние — это характеристика с вариантами выбора (чекбоксы)
+    // If there are children — this is a characteristic with choice options (checkboxes)
     if ( ! empty( $termChildren ) ) {
         
         $characteristics = get_post_meta( $productID, '_characteristics_checkbox_field', true );
@@ -104,7 +103,7 @@ function get_charact( $typeField, $valueField, $productID ) {
         }
         
     } else {
-        // Простая характеристика (текстовое поле)
+        // Simple characteristic (text field)
         
         $characteristics = get_post_meta( $productID, '_characteristics_text_field', true );
         

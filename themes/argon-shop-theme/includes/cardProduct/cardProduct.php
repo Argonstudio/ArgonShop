@@ -1,80 +1,79 @@
 <?php
 /**
- * Карточка товара (шаблон части)
+ * Product card (template part)
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ИСПОЛЬЗУЕТСЯ:
- * Подключается через require из functions.php темы.
- * Вызывается в шаблонах каталога, поиска, sidebar, главной:
+ * WHERE IT IS USED:
+ * Included via require from the theme's functions.php.
+ * Called in the catalog, search, sidebar and home page templates:
  * 
  * - taxonomy-catalog.php
  * - search.php
  * - tag.php
  * - archive.php
- * - single-product.php (блок похожих товаров)
- * - sidebar.php (через view_products_list)
+ * - single-product.php (similar products block)
+ * - sidebar.php (via view_products_list)
  * - history.php
  * 
- * ЧТО ВЫВОДИТ:
- * Карточку товара с изображением, характеристиками, ценой
- * и кнопками покупки.
+ * WHAT IT OUTPUTS:
+ * A product card with an image, characteristics, price
+ * and purchase buttons.
  * 
  * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  * 
- * ФУНКЦИИ ПЛАГИНА:
+ * PLUGIN FUNCTIONS:
  * 
- * 1. get_charact( $type, $value, $productID )
- *    Файл: includes/api/getData/admin/get_characteristics.php
- *    Возвращает значение характеристики товара.
- *    Для "id" — ищет по ID термина, для "name" — по имени.
- *    Если у характеристики есть дочерние — возвращает массив
- *    выбранных вариантов.
+ * 1. as_get_charact( $type, $value, $productID )
+ *    File: includes/api/getData/admin/get_characteristics.php
+ *    Returns the value of a product characteristic.
+ *    For "id" it searches by term ID, for "name" — by name.
+ *    If the characteristic has children, it returns an array
+ *    of the selected options.
  * 
- * 2. check_saleSteps()
- *    Файл: includes/api/getSetting.php
- *    Проверяет, включена ли система оптовых скидок.
+ * 2. as_check_saleSteps()
+ *    File: includes/api/getSetting.php
+ *    Checks whether the wholesale discount system is enabled.
  * 
- * 3. getActualPrice( $type, $cart, $productID, $price, $amount )
- *    Файл: includes/api/getData/getData.php
- *    Возвращает актуальную цену с учётом оптовой скидки.
- *    Тип "cardProduct" — расчёт для карточки товара.
+ * 3. as_getActualPrice( $type, $cart, $productID, $price, $amount )
+ *    File: includes/api/getData/getData.php
+ *    Returns the current price including the wholesale discount.
+ *    The "cardProduct" type is the calculation for the product card.
  * 
- * 4. button_card_product( $productID, $cardInBascet, $cardBuy, $productsShoppingCart )
- *    Файл: includes/interface/product/cardProduct.php
- *    Выводит кнопки "В корзину" / "Купить" или ссылку
- *    на корзину (если товар уже добавлен).
+ * 4. as_button_card_product( $productID, $cardInBascet, $cardBuy, $productsShoppingCart )
+ *    File: includes/interface/product/cardProduct.php
+ *    Outputs the "Add to cart" / "Buy" buttons or a link
+ *    to the cart (if the product has already been added).
  * 
- * МЕТА-ПОЛЯ ТОВАРА:
+ * PRODUCT META FIELDS:
  * 
- * - _price          → цена
- * - _article        → артикул
- * - _weight         → вес
- * - _hit            → "on" если хит продаж
- * - _newProduct     → "on" если новинка
+ * - _price          → price
+ * - _article        → SKU
+ * - _weight         → weight
+ * - _hit            → "on" if it is a bestseller
+ * - _newProduct     → "on" if it is a new product
  * 
- * ACF-ПОЛЯ:
+ * ACF FIELDS:
  * 
- * - unit_product → единица измерения (шт, м², кг и т.д.)
+ * - unit_product → unit of measure (pc, m², kg, etc.)
  * 
- * ХАРАКТЕРИСТИКИ:
+ * CHARACTERISTICS:
  * 
- * - ID 24 — "ТОРГОВАЯ МАРКА" (жёстко зашито в код)
- *   Используется для вывода бренда товара.
+ * - ID 24 — "BRAND" (hardcoded)
+ *   Used to output the product brand.
  * 
- * AJAX-ОБРАБОТЧИКИ КНОПОК:
+ * BUTTON AJAX HANDLERS:
  * 
- * - addProducts_shoppingCart  — добавить товар в корзину
- *   Файл: includes/interface/shoppingCart/shoppingCart.php
+ * - addProducts_shoppingCart  — add the product to the cart
+ *   File: includes/interface/shoppingCart/shoppingCart.php
  * 
- * JS-ФАЙЛЫ:
+ * JS FILES (plugin):
  * 
- * - assets/interface/js/cardProduct.js — обработка кнопок карточки
- * - assets/interface/js/site.js        — общий функционал
+ * - assets/js/interface/modules/card-product.js — card button handling
+ * - assets/js/interface/main.js                 — entry point
  * 
  */
 
@@ -83,31 +82,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * ФУНКЦИЯ: Вывод карточки товара
+ * FUNCTION: Outputs a product card
  * 
- * @param WP_Post     $post                  — объект поста (текущий товар в цикле)
- * @param array|false $productsShoppingCart — товары в корзине
+ * @param WP_Post     $post                  — post object (current product in the loop)
+ * @param array|false $productsShoppingCart — products in the cart
  */
 function generate_product_card( $post, $productsShoppingCart ) {
     
     $productID = get_the_ID();
     
-    // Валидация: если пост некорректный — не выводим карточку
+    // Validation: if the post is invalid, do not output the card
     if ( ! $productID ) {
         return;
     }
     
-    // Мета-поля товара
-    $price   = get_post_meta( $productID, '_price', true );
+    // Product meta fields
+    $price   = function_exists( 'as_get_product_price' ) ? as_get_product_price( $productID ) : get_post_meta( $productID, '_price', true );
     $article = get_post_meta( $productID, '_article', true );
     $weight  = get_post_meta( $productID, '_weight', true );
     $hit     = get_post_meta( $productID, '_hit', true );
     $new     = get_post_meta( $productID, '_newProduct', true );
     
-    // Торговая марка — характеристика с ID 24
-    // Функция плагина Argon Shop (includes/api/getData/admin/get_characteristics.php)
-    $trademark = function_exists( 'get_charact' ) 
-        ? get_charact( 'id', 24, $productID ) 
+    // Brand — the characteristic with ID 24
+    // Argon Shop plugin function (includes/api/getData/admin/get_characteristics.php)
+    $trademark = function_exists( 'as_get_charact' ) 
+        ? as_get_charact( 'id', 24, $productID ) 
         : false;
     
     ?>
@@ -135,17 +134,17 @@ function generate_product_card( $post, $productsShoppingCart ) {
             <ul class="block-cardProductCharact">
                 
                 <?php if ( $article ) { ?>
-                    <li>Артикул: <?php echo esc_html( $article ); ?></li>
+                    <li><?php esc_html_e( 'SKU:', 'argon-shop-theme' ); ?> <?php echo esc_html( $article ); ?></li>
                 <?php } ?>
                 
                 <?php if ( $trademark && is_array( $trademark ) && ! empty( $trademark[0] ) ) { ?>
-                    <li>ТМ: <?php echo esc_html( $trademark[0] ); ?></li>
+                    <li><?php esc_html_e( 'Brand:', 'argon-shop-theme' ); ?> <?php echo esc_html( $trademark[0] ); ?></li>
                 <?php } elseif ( $trademark && is_string( $trademark ) ) { ?>
-                    <li>ТМ: <?php echo esc_html( $trademark ); ?></li>
+                    <li><?php esc_html_e( 'Brand:', 'argon-shop-theme' ); ?> <?php echo esc_html( $trademark ); ?></li>
                 <?php } ?>
                 
                 <?php if ( $weight ) { ?>
-                    <li>Вес: <?php echo esc_html( $weight ); ?> кг</li>
+                    <li><?php esc_html_e( 'Weight:', 'argon-shop-theme' ); ?> <?php echo esc_html( $weight ); ?> <?php esc_html_e( 'kg', 'argon-shop-theme' ); ?></li>
                 <?php } ?>
                 
             </ul>
@@ -162,18 +161,18 @@ function generate_product_card( $post, $productsShoppingCart ) {
         
         if ( $price ) { 
             
-            // Расчёт актуальной цены с учётом оптовой скидки
-            // Функция плагина Argon Shop (includes/api/getData/getData.php)
-            if ( function_exists( 'check_saleSteps' ) && function_exists( 'getActualPrice' ) ) {
+            // Calculate the current price including the wholesale discount
+            // Argon Shop plugin function (includes/api/getData/getData.php)
+            if ( function_exists( 'as_check_saleSteps' ) && function_exists( 'as_getActualPrice' ) ) {
                 
-                if ( check_saleSteps() && $productsShoppingCart && is_array( $productsShoppingCart ) ) {
+                if ( as_check_saleSteps() && $productsShoppingCart && is_array( $productsShoppingCart ) ) {
                     
-                    $price = getActualPrice( 'cardProduct', $productsShoppingCart, $productID, $price, 1 );
+                    $price = as_getActualPrice( 'cardProduct', $productsShoppingCart, $productID, $price, 1 );
                 }
             }
             
-            // Единица измерения через ACF
-            $unitProduct = 'шт';
+            // Unit of measure via ACF
+            $unitProduct = __( 'pcs', 'argon-shop-theme' );
             
             if ( function_exists( 'get_field' ) ) {
                 
@@ -183,7 +182,7 @@ function generate_product_card( $post, $productsShoppingCart ) {
                     
                     $unitProduct = $unit_field;
                     
-                    // Сокращение длинной единицы измерения
+                    // Shorten a long unit of measure
                     $unitProductLength = mb_strlen( $unitProduct, 'utf-8' );
                     
                     if ( $unitProductLength > 13 ) {
@@ -195,14 +194,14 @@ function generate_product_card( $post, $productsShoppingCart ) {
             
         ?>
             
-            <div class="cardProductPrice"> <span><?php echo esc_html( $price ); ?></span> Р/<?php echo esc_html( $unitProduct ); ?></div>
+            <div class="cardProductPrice"> <?php echo astheme_price_html( '<span>' . esc_html( $price ) . '</span>', (string) $unitProduct ); ?></div>
             
             <?php 
             
-            // Кнопки покупки
-            // Функция плагина Argon Shop (includes/interface/product/cardProduct.php)
-            if ( function_exists( 'button_card_product' ) ) {
-                button_card_product( $productID, true, true, $productsShoppingCart );
+            // Purchase buttons
+            // Argon Shop plugin function (includes/interface/product/cardProduct.php)
+            if ( function_exists( 'as_button_card_product' ) ) {
+                as_button_card_product( $productID, true, true, $productsShoppingCart );
             }
             
             ?>

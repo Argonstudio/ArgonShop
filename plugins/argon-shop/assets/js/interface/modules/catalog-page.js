@@ -1,43 +1,42 @@
 /**
- * ArgonShop — мобильные блоки страницы каталога.
+ * ArgonShop — mobile blocks of the catalog page.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Управляет сворачиваемыми блоками на странице каталога, которые
- * на мобильных устройствах скрыты и раскрываются по клику:
+ * Controls the collapsible blocks on the catalog page that
+ * are hidden on mobile devices and expand on click:
  *
- *   - «Описание категории»;
- *   - «Дочерние категории»;
- *   - «Популярные запросы»;
- *   - «Сортировать по».
+ *   - "Category description";
+ *   - "Child categories";
+ *   - "Popular queries";
+ *   - "Sort by".
  *
- * Классы и структура задаются шаблоном темы taxonomy-catalog.php.
+ * Classes and structure are defined by the theme template taxonomy-catalog.php.
  *
  * ============================================================
- * DOM-ЭЛЕМЕНТЫ
+ * DOM ELEMENTS
  * ============================================================
  *
  * .catalogPage_openMobile
- *   Заголовок сворачиваемого блока (кнопка).
+ *   Header of the collapsible block (button).
  *
  * .catalogPage_mobileExtensible
- *   Содержимое блока, следующий сосед кнопки.
+ *   Block content, the next sibling of the button.
  *
  * ============================================================
- * ИСПОЛЬЗОВАНИЕ
+ * USAGE
  * ============================================================
  *
  *     import { arsCatalogPage } from './modules/catalog-page.js';
  *     arsCatalogPage.init();
  *
- * Модуль безопасен для вызова на любой странице: если блоков нет,
- * ничего не выполняется.
+ * The module is safe to call on any page: if there are no blocks,
+ * nothing happens.
  */
 
 'use strict';
@@ -45,7 +44,7 @@
 import { delegate } from '../../shared/dom.js';
 
 /**
- * Модуль мобильных блоков каталога.
+ * Catalog mobile blocks module.
  */
 class ArsCatalogPage {
 
@@ -53,7 +52,7 @@ class ArsCatalogPage {
     #initialized = false;
 
     /**
-     * Инициализация. Безопасна для повторного вызова.
+     * Initialization. Safe to call repeatedly.
      *
      * @return {void}
      */
@@ -81,7 +80,7 @@ class ArsCatalogPage {
 }
 
 /**
- * Готовый синглтон модуля мобильных блоков каталога.
+ * Ready singleton of the catalog mobile blocks module.
  *
  * @type {ArsCatalogPage}
  */

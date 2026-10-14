@@ -1,15 +1,15 @@
-# AI_DATA_FLOWS.md — Сценарии данных
+# AI_DATA_FLOWS.md — Data scenarios
 
-> Продолжение [AI.md](../../AI.md). Здесь — 7 ключевых сценариев: как данные
-> ходят между фронтендом, PHP и БД.
+> Continuation of [AI.md](../../AI.md). Seven key scenarios: how data
+> travels between the front end, PHP and the database.
 >
-> **Формат:** триггер → JS → AJAX → PHP → ответ → JS → DOM.
+> **Format:** trigger → JS → AJAX → PHP → response → JS → DOM.
 
 ---
 
-## Сценарий 1. Добавление товара в корзину
+## Scenario 1. Adding a product to the cart
 
-**Триггер:** клик по кнопке «В корзину» на странице товара или в карточке.
+**Trigger:** click on the "Add to cart" button on the product page or in a product card.
 
 ### JS
 
@@ -19,21 +19,25 @@ addProductToCart(productId, amount);
 ```
 
 1. `arsApi.postJson('addProducts_shoppingCart', { productID, amountProduct })`.
-2. При успехе — `arsCartWidget.update({ productAmountCart, totalPrice })`
-   обновляет виджет в шапке.
-3. Дальше — колбэки вызывающего модуля:
-   - `product.js`: показать `#howManyProducts`, скрыть `#addProductError`.
-   - `card-product.js`: скрыть `.block-cardProductBascet`, показать `.card-alreadyAdded`.
-4. «Купить» — переход на `config.cartUrl`.
+2. On success — `arsCartWidget.update({ productAmountCart, totalPrice })`
+   updates the header widget.
+3. Then the caller's callbacks run:
+   - `product.js`: show `#howManyProducts`, hide `#addProductError`.
+   - `card-product.js`: hide `.block-cardProductBascet`, show `.card-alreadyAdded`.
+4. "Buy" — navigates to `config.cartUrl`.
 
 ### PHP
 
-**Файл:** `shoppingCart.php` → `addProducts_shoppingCart_callback`.
+**File:** `shoppingCart/cart-ajax.php` → `as_addProducts_shoppingCart_callback`.
+
+> `as_getCookie('productsShoppingCart')` returns a cart that has already passed
+> `as_sanitize_cart()`: only published products, quantity > 0,
+> **the price always comes from `_price` in the database** (the cookie price is ignored).
 
 ```php
 check_ajax_referer('argon_shop_nonce', 'nonce');
 
-$productsShoppingCart = getCookie('productsShoppingCart');
+$productsShoppingCart = as_getCookie('productsShoppingCart');
 
 if (isset($productsShoppingCart[$productID])) {
     $productsShoppingCart[$productID]['amountProduct'] += $amountProduct;
@@ -41,34 +45,38 @@ if (isset($productsShoppingCart[$productID])) {
 
 setcookie('productsShoppingCart', wp_json_encode($productsShoppingCart), time() + 1209600, COOKIEPATH, COOKIE_DOMAIN);
 
-wp_send_json([
-    'amountProduct'     => $amountProduct,
-    'productAmountCart' => $productAmountCart,
-    'totalPrice'        => $totalPrice,
+$dataCart = as_getDataCart($productsShoppingCart);
+
+// amountProduct — the new total quantity of this product in the cart
+echo wp_json_encode([
+    'amountProduct'     => $data['amountProduct'],
+    'productAmountCart' => $dataCart['productAmountCart'],
+    'totalPrice'        => $dataCart['totalPrice'],
 ]);
+wp_die();
 ```
 
-### DOM-эффекты
+### DOM effects
 
-- Виджет корзины: `.viewBlock-amountProducts span`, `.viewBlock-priceProducts`.
+- Cart widget: `.viewBlock-amountProducts span`, `.viewBlock-priceProducts`.
 
 ---
 
-## Сценарий 2. Изменение количества в корзине
+## Scenario 2. Changing a quantity in the cart
 
-**Триггер:** ввод в `.shoppingCartAmountProduct` или клик по `.plusProduct` / `.minusProduct`.
+**Trigger:** typing in `.shoppingCartAmountProduct` or clicking `.plusProduct` / `.minusProduct`.
 
 ### JS
 
-**Файл:** `modules/cart.js` → `#bindAmountChange` и `#bindPlusMinus`.
+**File:** `modules/cart.js` → `#bindAmountChange` and `#bindPlusMinus`.
 
 ```javascript
-// Плюс/минус меняют input.value и вручную диспатчат input,
-// чтобы сработал один обработчик.
+// Plus/minus change input.value and dispatch "input" manually
+// so that a single handler runs.
 input.dispatchEvent(new Event('input', { bubbles: true }));
 
-// #requestAmountChange(productId, amount) через AbortController
-// (отмена предыдущего запроса).
+// #requestAmountChange(productId, amount) uses an AbortController
+// (cancels the previous request).
 const controller = new AbortController();
 
 fetch(url, {
@@ -78,17 +86,17 @@ fetch(url, {
 });
 ```
 
-> **Примечание:** `fetch` используется напрямую (не через `arsApi`),
-> потому что нужен `signal`.
+> **Note:** `fetch` is used directly (not via `arsApi`)
+> because `signal` is needed.
 
 ### PHP
 
-**Файл:** `shoppingCart.php` → `amountProducts_shoppingCart_callback`.
+**File:** `shoppingCart/cart-ajax.php` → `as_amountProducts_shoppingCart_callback`.
 
-1. Валидирует `productAmount > 0`.
-2. Обновляет куку.
-3. Считает вес товара и `actualPrices` для всей корзины.
-4. Возвращает JSON:
+1. Validates `productAmount > 0`.
+2. Updates the cookie.
+3. Calculates the product weight and `actualPrices` for the whole cart.
+4. Returns JSON:
 
 ```json
 {
@@ -98,24 +106,24 @@ fetch(url, {
 }
 ```
 
-### JS-обработка ответа
+### JS response handling
 
 ```javascript
-// #updateProductWeight обновляет вес товара.
-// #recountCart(actualPrices) пересчитывает все цены, сумму и вес.
-// #updateCartTotals пишет в .cartTotalPrice span и .cartTotalWeight span.
+// #updateProductWeight updates the product weight.
+// #recountCart(actualPrices) recalculates all prices, the total and the weight.
+// #updateCartTotals writes to .cartTotalPrice span and .cartTotalWeight span.
 ```
 
-### DOM-эффекты
+### DOM effects
 
-- Цены товаров, итоговая сумма, итоговый вес.
-- Скрытие/показ `.cartTotalWeight`.
+- Product prices, cart total, total weight.
+- Hiding/showing `.cartTotalWeight`.
 
 ---
 
-## Сценарий 3. Удаление товара и очистка корзины
+## Scenario 3. Removing a product and clearing the cart
 
-**Триггер:** клик по `.deleteProduct` или `.deleteAllProducts`.
+**Trigger:** click on `.deleteProduct` or `.deleteAllProducts`.
 
 ### JS
 
@@ -124,43 +132,46 @@ fetch(url, {
 arsApi.post('deleteProducts_shoppingCart', { productID })
     .then(text => {
         if (text === 'false' || text === '0') {
-            // Корзина пуста
+            // Cart is empty
             block.remove();
-            document.getElementById('shoppingCart').innerHTML = 'Корзина пуста';
+            document.getElementById('shoppingCart').textContent = t('cartEmpty');
         } else {
-            const data = JSON.parse(text);
+            // The response IS the price map { productID: price }, no wrapper key
+            const actualPrices = JSON.parse(text);
             parent.remove();
-            recountCart(data.actualPrices);
+            recountCart(actualPrices);
         }
     });
 
 // .deleteAllProducts → arsApi.post('deleteAllProducts_shoppingCart')
-// без nonce (в config.skipNonceActions)
+// since 1.1.0 — with a nonce, like every other action
 arsApi.post('deleteAllProducts_shoppingCart');
 ```
+
+> User-visible text comes from `t()` (`core/config.js`), never from string literals.
 
 ### PHP
 
 ```php
-// deleteProducts_shoppingCart_callback
+// as_deleteProducts_shoppingCart_callback
 unset($productsShoppingCart[$productID]);
 setcookie('productsShoppingCart', wp_json_encode($productsShoppingCart), time() + 1209600, COOKIEPATH, COOKIE_DOMAIN);
-// Возвращает JSON актуальных цен или 'false'.
+// echo wp_json_encode($actualPriceAllProducts) — the price map itself, or 'false' if the cart is empty.
 
-// deleteAllProducts_shoppingCart_callback
+// as_deleteAllProducts_shoppingCart_callback
 setcookie('productsShoppingCart', '', time() - 1209600, COOKIEPATH, COOKIE_DOMAIN);
-// Ничего не возвращает.
+// Returns nothing.
 ```
 
 ---
 
-## Сценарий 4. Оформление заказа
+## Scenario 4. Checkout
 
-**Триггер:** submit формы `.form-cart`.
+**Trigger:** submit of the `.form-cart` form.
 
 ### JS
 
-**Файл:** `modules/cart.js` → `#bindFormSubmit` → `#submitCart`.
+**File:** `modules/cart.js` → `#bindFormSubmit` → `#submitCart`.
 
 ```javascript
 event.preventDefault();
@@ -168,28 +179,39 @@ event.preventDefault();
 const formData = new FormData(form);
 formData.append('typeForm', form.dataset.type);
 formData.append('productsCart', JSON.stringify(productsCart));
-formData.append('required', JSON.stringify(required));
+formData.append('required', JSON.stringify(required)); // ignored by the server (since 1.1.0)
 
 arsApi.postFormData('submitCart_shoppingCart', formData);
 ```
 
 ### PHP
 
-**Файл:** `shoppingCart.php` → `submitCart_shoppingCart_callback`.
+**File:** `shoppingCart/checkout.php` → `as_submitCart_shoppingCart_callback`
+(modules: `checkout-fields.php`, `checkout-files.php`, `checkout-registration.php`, `checkout-emails.php`).
 
-1. `check_ajax_referer` и `get_valueFieldsCart` — собирает поля формы,
-   валидирует обязательные.
-2. Проверка соответствия товаров формы и куки — защита от подмены.
-3. Расчёт `actualPriceAllProducts`, `totalPrice`, `productAmountCart`.
-4. Обработка файлов:
-   ```php
-   move_uploaded_file($_FILES['fileCart']['tmp_name'][$i], $uploadDir . $filename);
-   // Проверка размера (< 15 МБ) и расширений
-   // (doc, docx, xls, xlsx, jpg, jpeg, gif, bmp, png, pdf).
-   ```
-5. Опциональная регистрация: `wp_create_user`, `wp_signon`.
-6. `wp_insert_post` с `post_type = 'shoporder'`.
-7. `add_post_meta` с:
+1. `check_ajax_referer`; `typeForm` — only `quick` / `person` / `legalPerson`.
+2. `as_get_valueFieldsCart` collects the form fields. **Required fields are defined by the server**
+   (`as_get_required_fields()`, filter `argon_shop_required_fields`); `$_POST['required']` is ignored.
+   Email is required when registering.
+3. The cart comes from the cookie via `as_sanitize_cart()` (prices from the database). Empty cart → error.
+   Quantities in the cookie must match `productsCart` from the page.
+4. Calculation of `actualPriceAllProducts`, `totalPrice`, `productAmountCart`.
+   Delivery/payment — only codes from `as_get_shipping_methods()` / `as_get_payment_methods()`.
+5. Filter `argon_shop_checkout_errors` — extra checks from other modules.
+6. Files — `as_checkout_handle_files()`: **all checks first** (up to 3 files, ≤ 5 MB each,
+   ≤ 15 MB total, extension allow-list, real type via `wp_check_filetype_and_ext`),
+   then saving to the protected `uploads/argon-shop-private/<random folder>/`.
+7. Optional registration — `as_checkout_register_user()`: the random password is never sent,
+   the customer gets a set-password link, login via `wp_set_auth_cookie`.
+8. `as_checkout_create_order()`: `wp_insert_post` (`shoporder`, filter `argon_shop_order_post_data`),
+   meta fields, status `neworder`, `update_option('counterOrders')`.
+9. `do_action('argon_shop_order_created', $order_id, $order)`.
+10. `as_checkout_send_emails()` — to the administrator and the customer (filter `argon_shop_email`).
+    Prices in emails use the store currency (`as_get_currency_symbol()` / `as_price_html()`).
+11. `as_checkout_cleanup_files()` — removes the order files.
+12. Response (filter `argon_shop_checkout_response`), cart cookie cleared.
+
+Order meta fields:
    ```php
    _productsCart
    _fieldsCart
@@ -199,24 +221,20 @@ arsApi.postFormData('submitCart_shoppingCart', formData);
    _shipping
    _payment
    ```
-8. `wp_set_object_terms($post_id, 'neworder', 'statusorders')`.
-9. `emailTextsGenerator()` — HTML для писем.
-10. `wp_mail` администратору (с вложениями) и покупателю.
-11. Удаление временных файлов после отправки.
-12. `update_option('counterOrders', $actuallyCounterOrder)`.
-13. Очистка куки `productsShoppingCart` (`setcookie` с истёкшим сроком).
 
-### Ответ
+### Response
 
 ```json
 {
     "type": "success",
     "typeForm": "person",
-    "message": "Заказ успешно оформлен"
+    "message": "Order placed successfully"
 }
 ```
 
-### JS-обработка
+(`message` is a translated string from PHP.)
+
+### JS handling
 
 ```javascript
 if (data.type === 'error') {
@@ -226,81 +244,100 @@ if (data.type === 'error') {
 if (data.type === 'success') {
     hideFormError();
     document.getElementById('shoppingCart').innerHTML = data.message;
-    arsCartWidget.clear();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 ```
 
+> The form is found by `.form-cart${data.typeForm}` (`.form-cartquick`, `.form-cartperson`, `.form-cartlegalPerson`).
+> The header cart widget is **not** cleared by JS after the order — the server clears the cookie, the widget shows 0 after the next page load.
+
 ---
 
-## Сценарий 5. AJAX-поиск
+## Scenario 5. AJAX search
 
-**Триггер:** ввод в `.asInputSearchForm` (с `data-ajax`).
+**Trigger:** typing in `.asInputSearchForm` (with `data-ajax`).
 
 ### JS
 
-**Файл:** `modules/search.js`.
+**File:** `modules/search.js`.
 
 ```javascript
-// #onInput — сброс предыдущего debounce, проверка длины ≥ 2.
-// Через 300 мс — #requestSearch.
+// #onInput — resets the previous debounce, checks length ≥ 2.
+// After 300 ms — #requestSearch.
 let searchToken = Symbol('search');
 
 arsApi.post('getAjaxSearchResult', { dataAjax, searchStr })
     .then(html => {
-        if (currentToken !== searchToken) return; // Игнорируем устаревший ответ
+        if (currentToken !== searchToken) return; // Ignore a stale response
         resultBlock.innerHTML = html;
         resultBlock.style.display = 'block';
     });
 ```
 
-> **Токены-Symbol** защищают от гонок: ответ устаревшего запроса игнорируется.
+> **Symbol tokens** protect against races: a stale response is ignored.
 
 ### PHP
 
-**Файл:** `searchAjax.php` → `getAjaxSearchResult_callback`.
+**File:** `searchAjax.php` → `as_getAjaxSearchResult_callback`.
 
 ```php
 check_ajax_referer('argon_shop_nonce', 'nonce');
 
-$searchResult = queryManagerSearchResult($searchStr, $searchParameters);
+$searchResult = as_queryManagerSearchResult($searchStr, $searchParameters);
 
-// Логика ранжирования:
-// - точное совпадение      → 1000 очков
-// - начало title           → 500
-// - слово в title          → 10
-// - артикул                → 5
+// Ranking (argon_search_ajax_orderby / as_search_custom_orderby, sum of points):
+// - title = full phrase            → 1000
+// - SKU (_article) = full phrase   → 800
+// - title starts with the phrase   → 500
+// - SKU starts with the phrase     → 400
+// per query word:
+// - title starts with the word     → 50
+// - word at the start of a word    → 30
+// - word anywhere in the title     → 10
+// - word in the SKU                → 5
+// ties: post_date DESC, ID DESC
 
 if (empty($searchResult) && !ctype_digit($searchStr)) {
-    // Исправление раскладки: ghjlern → продукт
-    $searchStr = fixKeyboardlayout($searchStr);
-    $searchResult = queryManagerSearchResult($searchStr, $searchParameters);
+    // Wrong keyboard layout: variants depend on the store language
+    // ru: ghjlern → продукт; en: ыскуц → screw; fr: chqise → chaise
+    foreach (as_search_layout_variants($searchStr) as $searchStrFix) {
+        $searchResult = as_queryManagerSearchResult($searchStrFix, $searchParameters);
+        if ($searchResult) break;
+    }
 }
 
-showResult($searchResult); // HTML через generateResultHTML
+as_showResult($searchResult); // HTML via as_generateResultHTML
 ```
 
-### Синхронизация с GET-поиском
+### Language rules (since 1.1.0)
 
-Та же логика ранжирования реализована в `searchGetFilters.php` через хуки:
+`searchLanguage.php` defines the language (`as_search_language()` → `ru` / `en` / `fr`,
+from the site locale), splits the query into words (`as_search_get_words()`: stop words,
+elisions, plural endings for en/fr) and builds the SQL (`as_search_where_sql()`).
+Russian behaviour is unchanged from 1.1.0.
+
+### Sync with the GET search
+
+The same ranking is implemented in `searchGetFilters.php` / `searchAjax.php` via hooks:
 
 ```php
 posts_search
 posts_join
+posts_distinct
 posts_orderby
 ```
 
-> ⚠️ **Важно:** правки в одной ветке поиска нужно синхронно вносить и в другую.
+> ⚠️ **Important:** changes in one search branch must be mirrored in the other.
 
 ---
 
-## Сценарий 6. Личный кабинет — смена email / пароля
+## Scenario 6. Customer account — changing email / password
 
-**Триггер:** клик по `#editEmailPasswordButton`.
+**Trigger:** click on `#editEmailPasswordButton`.
 
 ### JS
 
-**Файл:** `modules/cabinet.js`.
+**File:** `modules/cabinet.js`.
 
 ```javascript
 const payload = { userID, email, oldEmail, pass, newPass, newPassConfirm };
@@ -310,113 +347,118 @@ arsApi.postJson('cabinetEditEmailPassword', payload);
 
 ### PHP
 
-**Файл:** `myCabinet.php` → `cabinetEditEmailPassword_callback`.
+**File:** `myCabinet.php` → `as_cabinetEditEmailPassword_callback`.
 
 ```php
 check_ajax_referer('argon_shop_nonce', 'nonce');
 
-// Проверка: userID === get_current_user_id().
-if ((int)$_POST['userID'] !== get_current_user_id()) {
-    wp_send_json_error(['message' => 'Forbidden'], 403);
+// Check: userID === get_current_user_id().
+$userID = isset($_POST['userID']) ? absint($_POST['userID']) : 0;
+if (0 === $userID || $userID !== get_current_user_id()) {
+    wp_die(__('Insufficient permissions', 'argon-shop')); // plain text, not JSON
 }
 
-// Валидация:
+// Validation:
 // - is_email
 // - email_exists
-// - длина пароля ≥ 6
+// - password length ≥ 6
 // - wp_check_password($pass, ...)
 
-// Обновление email
+// Email update
 wp_update_user(['ID' => $userID, 'user_email' => $email]);
 
-// Смена пароля
+// Password change
 wp_set_password($newPass, $userID);
 wp_signon($creds, false);
-// Сессия и nonce инвалидируются — возвращаем newNonce.
+// Session and nonce are invalidated — newNonce is returned.
 ```
 
-### Ответ
+### Response
 
 ```json
 {
-    "edited": { "newEmail": "user@example.com", "newPass": true },
+    "edited": {
+        "newEmail": "Email changed",
+        "newPass": "Password changed, you are logged in with the new password"
+    },
     "errors": {},
     "newNonce": "a1b2c3d4e5"
 }
 ```
 
-### JS-обработка
+All values in `edited` and `errors` are **translated messages**, not data (`errors` keys: `email`, `pass`, `newPass`, `newPassConfirm`). `newNonce` is present only after a password change.
+
+### JS handling
 
 ```javascript
-// #showErrors — раскладывает ошибки по .editEmailError span,
-// .editPassError span и т.д.
+// #showErrors — distributes errors into .editEmailError span,
+// .editPassError span, etc.
 
-// edited.newEmail — обновляет data-oldemail и очищает поля паролей.
-// edited.newPass — редирект через window.location.reload() через 2 секунды
-// (сессия новая).
+// edited.newEmail — updates data-oldemail with the entered email and shows the message.
+// edited.newPass — window.location.reload() after 2 seconds
+// (new session).
 ```
 
-### Перехватчик nonce
+### Nonce interceptor
 
 ```javascript
-// core/nonce.js слушает XMLHttpRequest.load и обновляет config.nonce
-// при получении newNonce.
-// Дополнительно arsApi проверяет ответ в tryApplyNonceFromText.
+// core/nonce.js listens to XMLHttpRequest.load and updates config.nonce
+// when newNonce is received.
+// arsApi also checks responses in tryApplyNonceFromText.
 ```
 
 ---
 
-## Сценарий 7. Сортировка каталога
+## Scenario 7. Catalog sorting
 
-**Триггер:** клик по `.as-sort[name]` в `.sortParameters`.
+**Trigger:** click on `.as-sort[name]` inside `.sortParameters`.
 
 ### JS
 
-**Файл:** `modules/sort.js`.
+**File:** `modules/sort.js`.
 
 ```javascript
 const catId   = sorting.closest('.sortParameters').dataset.catId;
 const pageNum = sorting.closest('.sortParameters').dataset.page;
 
-// howSorting = 'DESC', если на кнопке sort-min, иначе 'ASC'.
+// howSorting = 'DESC' if the button has sort-min, otherwise 'ASC'.
 const howSorting = sorting.classList.contains('sort-min') ? 'DESC' : 'ASC';
 
 arsApi.post('sortingCatalog', { typeSort, howSorting, catId, pageNum });
 
-// #showResult — сброс подсветки, установка класса,
-// productList.innerHTML = html.
+// #showResult(html, button, howSorting) — resets highlighting (sort-min / sort-max),
+// sets the class, productList.innerHTML = html.
 ```
 
 ### PHP
 
-**Файл:** `sort.php` → `sortingCatalog_callback`.
+**File:** `sort.php` → `as_sortingCatalog_callback`.
 
-1. Сохраняет сортировку в куку `AS_CatalogSorting` (JSON).
-2. `get_sort_products($typeSort, $howSorting, $catId, $pageNum)` —
-   `WP_Query` с `tax_query` по `catalog` и сортировкой:
-   - `date` — по дате;
-   - `title` — по названию;
-   - `meta_value_num` для `_price` — по цене.
-3. `view_products_list($productsList)` выводит HTML карточек.
+1. Saves the sorting in the `AS_CatalogSorting` cookie (JSON).
+2. `as_get_sort_products($typeSort, $howSorting, $catId, $pageNum)` —
+   `WP_Query` with a `tax_query` on `catalog` and ordering:
+   - `typeSort = date` → `orderby => date`;
+   - `typeSort = name` → `orderby => title`;
+   - `typeSort = price` → `orderby => meta_value_num`, `meta_key => _price`.
+3. `as_view_products_list($productsList)` renders the card HTML.
 
-### DOM-эффекты
+### DOM effects
 
-- `.catalogProductList` перезаписывается целиком.
-- `.as-error-sort` скрывается.
-
----
-
-## Вспомогательное: несохранённые данные
-
-В проекте **не используется** `sessionStorage` и `localStorage`.
-Все данные магазина — только в куках:
-
-| Cookie | Назначение |
-|--------|-----------|
-| `productsShoppingCart` | Корзина |
-| `AS_History` | История просмотров |
-| `AS_CatalogSorting` | Сортировка |
-| `WP-LastViewedPosts` | Из форка; используется только на одной странице |
+- `.catalogProductList` is fully replaced.
+- `.as-error-sort` is hidden.
 
 ---
 
+## Auxiliary: client-side storage
+
+The project does **not use** `sessionStorage` or `localStorage`.
+All store data lives in cookies only:
+
+| Cookie | Purpose |
+|--------|---------|
+| `productsShoppingCart` | Cart |
+| `AS_History` | Recently viewed |
+| `AS_CatalogSorting` | Sorting |
+| `WP-LastViewedPosts` | **Not used.** Only read/written by `includes/interface/last_viewed_posts.php`, which `argon-shop.php` does not load (dead code); `uninstall.php` still removes its `zg_lwp_widget` option |
+
+---

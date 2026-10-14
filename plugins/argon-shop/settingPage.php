@@ -1,65 +1,64 @@
 <?php
 /**
- * Страница настроек магазина
+ * Store settings page
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * WordPress Админка → Настройки → Магазин
+ * WHERE TO TEST:
+ * WordPress Admin → Settings → Store
  * URL: /wp-admin/options-general.php?page=settings-shop
  * 
- * ЧТО ДЕЛАЕТ:
- * 1. Регистрирует страницу настроек в админке
- * 2. Выводит поля: ID корзины, ID кабинета, тип скидок, формы заказа
- * 3. Валидирует и сохраняет настройки
+ * WHAT IT DOES:
+ * 1. Registers the settings page in the admin
+ * 2. Outputs fields: cart ID, account ID, discount type, currency, order forms
+ * 3. Validates and saves the settings
  * 
  * PHP 8.5:
- * - убран extract()
- * - проверки isset() и типов
- * - защита от undefined index
- * - экранирование вывода
+ * - extract() removed
+ * - isset() and type checks
+ * - protection against undefined index
+ * - output escaping
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 // ============================================
-// РЕГИСТРАЦИЯ СТРАНИЦЫ НАСТРОЕК
+// SETTINGS PAGE REGISTRATION
 // ============================================
 
-add_action( 'admin_menu', 'setting_register_admin_page' );
+add_action( 'admin_menu', 'as_setting_register_admin_page' );
 
-function setting_register_admin_page() {
+function as_setting_register_admin_page() {
     
     add_options_page(
-        'Настройки магазина',           // Заголовок страницы
-        'Магазин',                      // Название пункта меню
-        'manage_options',               // Права доступа
-        'settings-shop',                // Слаг страницы
-        'settings_shop_rendering'       // Функция вывода
+        __( 'Store settings', 'argon-shop' ),           // Page title
+        __( 'Store', 'argon-shop' ),                      // Menu item title
+        'manage_options',               // Capability
+        'settings-shop',                // Page slug
+        'as_settings_shop_rendering'       // Render function
     );
 }
 
 /**
- * ФУНКЦИЯ: Вывод страницы настроек
+ * FUNCTION: Render the settings page
  * 
- * ГДЕ: WordPress Админка → Настройки → Магазин
+ * WHERE: WordPress Admin → Settings → Store
  */
-function settings_shop_rendering() {
+function as_settings_shop_rendering() {
     ?>
     <div class="wrap">
         <h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
 
         <form action="options.php" class="settingShopForm" method="POST">
             <?php
-            // Защитные поля
+            // Hidden security fields
             settings_fields( 'option_group' );
             
-            // Секции с настройками
+            // Settings sections
             do_settings_sections( 'settingShopPage' );
             
             submit_button();
@@ -70,120 +69,128 @@ function settings_shop_rendering() {
 }
 
 // ============================================
-// РЕГИСТРАЦИЯ НАСТРОЕК
+// SETTINGS REGISTRATION
 // ============================================
 
-add_action( 'admin_init', 'plugin_settings' );
+add_action( 'admin_init', 'as_plugin_settings' );
 
-function plugin_settings() {
+function as_plugin_settings() {
     
-    // Регистрируем группу опций
-    register_setting( 'option_group', 'settingShop', 'sanitize_callback' );
+    // Register the option group
+    register_setting( 'option_group', 'settingShop', 'as_sanitize_settings' );
     
     // ============================================
-    // СЕКЦИЯ: ОСНОВНЫЕ НАСТРОЙКИ
+    // SECTION: GENERAL SETTINGS
     // ============================================
     
     add_settings_section(
         'mainSettingShop',
-        'Основные настройки',
+        __( 'General settings', 'argon-shop' ),
         '',
         'settingShopPage'
     );
     
     add_settings_field(
         'shoppingCartPage',
-        'ID страницы корзины',
-        'shoppingCartPage_callback',
+        __( 'Cart page ID', 'argon-shop' ),
+        'as_shoppingCartPage_callback',
         'settingShopPage',
         'mainSettingShop'
     );
     
     add_settings_field(
         'cabinetPage',
-        'ID страницы кабинета',
-        'cabinetPage_callback',
+        __( 'Account page ID', 'argon-shop' ),
+        'as_cabinetPage_callback',
+        'settingShopPage',
+        'mainSettingShop'
+    );
+    
+    add_settings_field(
+        'currency',
+        __( 'Currency', 'argon-shop' ),
+        'as_currency_callback',
         'settingShopPage',
         'mainSettingShop'
     );
     
     // ============================================
-    // СЕКЦИЯ: СКИДКИ
+    // SECTION: DISCOUNTS
     // ============================================
     
     add_settings_section(
         'discountsSettingShop',
-        'Скидки',
+        __( 'Discounts', 'argon-shop' ),
         '',
         'settingShopPage'
     );
     
     $saleParemeters = array(
         'typeSale' => array(
-            'noSale'              => 'Без скидок',
-            'wholesalePriceSteps' => 'Шаги оптовых цен',
+            'noSale'              => __( 'No discounts', 'argon-shop' ),
+            'wholesalePriceSteps' => __( 'Wholesale price steps', 'argon-shop' ),
         ),
     );
     
     add_settings_field(
         'typeSale',
-        'Тип системы скидок',
-        'typeSale_callback',
+        __( 'Discount system type', 'argon-shop' ),
+        'as_typeSale_callback',
         'settingShopPage',
         'discountsSettingShop',
         $saleParemeters
     );
     
     // ============================================
-    // СЕКЦИЯ: ДАННЫЕ ПОЛЬЗОВАТЕЛЯ
+    // SECTION: USER DATA
     // ============================================
     
     add_settings_section(
         'userDataShop',
-        'Данные пользователя',
+        __( 'User data', 'argon-shop' ),
         '',
         'settingShopPage'
     );
     
     add_settings_field(
         'quickLine',
-        'Быстрый заказ',
-        'quick_callback',
+        __( 'Quick order', 'argon-shop' ),
+        'as_quick_callback',
         'settingShopPage',
         'userDataShop'
     );
     
     add_settings_field(
         'personLine',
-        'Физические лица',
-        'person_callback',
+        __( 'Individuals', 'argon-shop' ),
+        'as_person_callback',
         'settingShopPage',
         'userDataShop'
     );
     
     add_settings_field(
         'legalPersonLine',
-        'Юридические лица',
-        'legalPerson_callback',
+        __( 'Legal entities', 'argon-shop' ),
+        'as_legalPerson_callback',
         'settingShopPage',
         'userDataShop'
     );
 }
 
 // ============================================
-// CALLBACK-ФУНКЦИИ ПОЛЕЙ
+// FIELD CALLBACKS
 // ============================================
 
 /**
- * CALLBACK: Поле выбора типа скидок (radio)
+ * CALLBACK: Discount type selector (radio)
  * 
- * PHP 8.5: убран extract(), используется явное обращение к $arguments['typeSale']
+ * PHP 8.5: extract() removed, $arguments['typeSale'] is accessed explicitly
  * 
- * @param array $arguments — массив с параметрами поля
+ * @param array $arguments — array of field parameters
  */
-function typeSale_callback( $arguments ) {
+function as_typeSale_callback( $arguments ) {
     
-    // PHP 8.5: проверяем, что передан массив и есть ключ
+    // PHP 8.5: make sure an array with the key was passed
     if ( ! is_array( $arguments ) || ! isset( $arguments['typeSale'] ) ) {
         return;
     }
@@ -214,7 +221,7 @@ function typeSale_callback( $arguments ) {
         $option_name_esc = esc_attr( $option_name );
         $id_esc = esc_attr( $id );
         
-        // PHP 8.5: строгие сравнения
+        // PHP 8.5: strict comparisons
         $is_checked = (
             ( empty( $current_value ) && $key === 'noSale' )
             || ( $current_value === $key )
@@ -229,9 +236,35 @@ function typeSale_callback( $arguments ) {
 }
 
 /**
- * CALLBACK: ID страницы корзины
+ * CALLBACK: Store currency (select)
+ *
+ * USD is selected when the setting has not been saved yet.
+ *
+ * @since 1.1.0
  */
-function shoppingCartPage_callback() {
+function as_currency_callback() {
+    
+    $current = as_get_currency();
+    
+    echo '<select name="settingShop[currency]" id="settingShop-currency">';
+    
+    foreach ( as_get_currencies() as $code => $label ) {
+        printf(
+            '<option value="%1$s"%2$s>%3$s</option>',
+            esc_attr( $code ),
+            selected( $current, $code, false ),
+            esc_html( $label )
+        );
+    }
+    
+    echo '</select>';
+    echo '<p class="description">' . esc_html__( 'Used for all prices in the store, the cart, orders and emails.', 'argon-shop' ) . '</p>';
+}
+
+/**
+ * CALLBACK: Cart page ID
+ */
+function as_shoppingCartPage_callback() {
     
     $setting = get_option( 'settingShop' );
     
@@ -245,9 +278,9 @@ function shoppingCartPage_callback() {
 }
 
 /**
- * CALLBACK: ID страницы кабинета
+ * CALLBACK: Account page ID
  */
-function cabinetPage_callback() {
+function as_cabinetPage_callback() {
     
     $setting = get_option( 'settingShop' );
     
@@ -261,9 +294,9 @@ function cabinetPage_callback() {
 }
 
 /**
- * CALLBACK: Быстрый заказ
+ * CALLBACK: Quick order
  */
-function quick_callback() {
+function as_quick_callback() {
     
     $setting = get_option( 'settingShop' );
     
@@ -277,9 +310,9 @@ function quick_callback() {
 }
 
 /**
- * CALLBACK: Физические лица
+ * CALLBACK: Individuals
  */
-function person_callback() {
+function as_person_callback() {
     
     $setting = get_option( 'settingShop' );
     
@@ -293,9 +326,9 @@ function person_callback() {
 }
 
 /**
- * CALLBACK: Юридические лица
+ * CALLBACK: Legal entities
  */
-function legalPerson_callback() {
+function as_legalPerson_callback() {
     
     $setting = get_option( 'settingShop' );
     
@@ -309,17 +342,17 @@ function legalPerson_callback() {
 }
 
 // ============================================
-// ВАЛИДАЦИЯ И СОХРАНЕНИЕ
+// VALIDATION AND SAVING
 // ============================================
 
 /**
- * CALLBACK: Очистка и преобразование значений перед сохранением * 
+ * CALLBACK: Clean and transform values before saving
  * 
- * @param mixed $options — сырые значения из формы
+ * @param mixed $options — raw values from the form
  * 
- * @return array Очищенный массив настроек
+ * @return array Cleaned settings array
  */
-function sanitize_callback( $options ) {
+function as_sanitize_settings( $options ) {
     
     if ( ! is_array( $options ) ) {
         return array();
@@ -327,11 +360,17 @@ function sanitize_callback( $options ) {
     
     foreach ( $options as $name => $value ) {
         
-        // Очистка от HTML-тегов
+        // Already parsed values (for example "quick" when saved settings are
+        // sanitized again) are rebuilt from their "...Line" source below.
+        if ( ! is_scalar( $value ) ) {
+            continue;
+        }
+        
+        // Strip HTML tags
         $options[ $name ] = strip_tags( $value );
         
         // ============================================
-        // ОБРАБОТКА МНОГОСТРОЧНЫХ ПОЛЕЙ ФОРМ
+        // MULTI-LINE FORM FIELD PROCESSING
         // ============================================
         
         if ( in_array( $name, array( 'quickLine', 'personLine', 'legalPersonLine' ), true ) ) {
@@ -344,12 +383,12 @@ function sanitize_callback( $options ) {
             
             foreach ( $options[ $nameArray ] as $numberLine => $undividedLine ) {
                 
-                // Пропускаем пустые строки
+                // Skip empty lines
                 if ( trim( $undividedLine ) === '' ) {
                     continue;
                 }
                 
-                // PHP 8.5: проверяем наличие разделителя "["
+                // PHP 8.5: make sure the "[" separator is present
                 $separationKeyValue = explode( '[', $undividedLine );
                 
                 if ( ! isset( $separationKeyValue[1] ) ) {
@@ -358,14 +397,14 @@ function sanitize_callback( $options ) {
                 
                 $separationKeyValue[1] = str_replace( ']', '', $separationKeyValue[1] );
                 
-                // Ключ поля должен быть непустой
+                // The field key must not be empty
                 if ( empty( $separationKeyValue[0] ) ) {
                     continue;
                 }
                 
                 // ============================================
-                // РАЗБОР ЗНАЧЕНИЙ
-                // Формат строки: ключ[Имя,placeholder,размер]
+                // VALUE PARSING
+                // Line format: key[Name,placeholder,size]
                 // ============================================
                 
                 $separationValueOfLine = explode( ',', $separationKeyValue[1] );
@@ -382,8 +421,8 @@ function sanitize_callback( $options ) {
                     ? trim( $separationValueOfLine[2] ) 
                     : '100';
                 
-                // Замена спец-метки на запятую
-                $field_placeholder = str_replace( '/запятая/', ',', $field_placeholder );
+                // Replace the special marker with a comma (/comma/; the old Russian marker is still accepted)
+                $field_placeholder = str_replace( array( '/comma/', '/запятая/' ), ',', $field_placeholder );
                 
                 $keyField = trim( $separationKeyValue[0] );
                 
@@ -400,11 +439,20 @@ function sanitize_callback( $options ) {
         }
         
         // ============================================
-        // ОБРАБОТКА ФЛАЖКА ОПТОВЫХ ЦЕН
+        // WHOLESALE PRICES CHECKBOX PROCESSING
         // ============================================
         
         if ( $name === 'wholesalePriceSteps' ) {
             $options[ $name ] = intval( $value );
+        }
+        
+        // ============================================
+        // CURRENCY: only the supported codes (since 1.1.0)
+        // ============================================
+        
+        if ( $name === 'currency' ) {
+            $currency = strtoupper( trim( (string) $value ) );
+            $options[ $name ] = array_key_exists( $currency, as_get_currencies() ) ? $currency : 'USD';
         }
     }
     

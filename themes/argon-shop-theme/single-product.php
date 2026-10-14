@@ -1,107 +1,106 @@
 <?php 
 /**
- * Шаблон страницы товара (product)
+ * Product page template (product)
  * 
- * Шаблон для вывода отдельного товара каталога
+ * Template for displaying a single catalog product
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * Страница отдельного товара
+ * WHERE TO TEST:
+ * A single product page
  * 
  * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  * 
- * Этот шаблон — один из наиболее тесно связанных с плагином.
+ * This template is one of the most tightly coupled with the plugin.
  * 
- * ФУНКЦИИ ПЛАГИНА, ИСПОЛЬЗУЕМЫЕ В ШАБЛОНЕ:
+ * PLUGIN FUNCTIONS USED IN THE TEMPLATE:
  * 
- * 1. kama_breadcrumbs( ' » ' )
- *    Файл: includes/interface/breadcrumbs.php
- *    Выводит хлебные крошки вида:
- *    Главная » Каталог » Родительская категория » Товар
+ * 1. as_kama_breadcrumbs( ' » ' )
+ *    File: includes/interface/breadcrumbs.php
+ *    Outputs breadcrumbs like:
+ *    Home » Catalog » Parent category » Product
  * 
- * 2. getCookie( 'productsShoppingCart' )
- *    Файл: includes/api/getData/getData.php
- *    Читает куки корзины в виде ассоциативного массива:
+ * 2. as_getCookie( 'productsShoppingCart' )
+ *    File: includes/api/getData/getData.php
+ *    Reads the cart cookies as an associative array:
  *    [product_id => ['amountProduct' => N, 'price' => X, ...], ...]
- *    Возвращает false, если корзина пуста.
+ *    Returns false if the cart is empty.
  * 
- * 3. check_saleSteps()
- *    Файл: includes/api/getSetting.php
- *    Проверяет, активирована ли система оптовых скидок
- *    (настройка "тип системы скидок" = "Шаги оптовых цен").
+ * 3. as_check_saleSteps()
+ *    File: includes/api/getSetting.php
+ *    Checks whether the wholesale discount system is enabled
+ *    (the "discount system type" setting = "Wholesale price steps").
  * 
- * 4. getActualStepDiscont( $product_id, $cart, $total_price )
- *    Файл: includes/api/getData/getData.php
- *    Определяет текущий шаг оптовой скидки, достигнутый
- *    с учётом суммы товаров в корзине. Возвращает число.
+ * 4. as_getActualStepDiscont( $product_id, $cart, $total_price )
+ *    File: includes/api/getData/getData.php
+ *    Determines the current wholesale discount step reached
+ *    taking into account the total of products in the cart. Returns a number.
  * 
- * 5. getActualPrice( "pageProduct", $cart, $product_id, $price, $amount )
- *    Файл: includes/api/getData/getData.php
- *    Возвращает актуальную цену товара с учётом оптовой скидки.
- *    Тип "pageProduct" учитывает количество, введённое в форму,
- *    но ещё не добавленное в корзину.
+ * 5. as_getActualPrice( "pageProduct", $cart, $product_id, $price, $amount )
+ *    File: includes/api/getData/getData.php
+ *    Returns the current product price including the wholesale discount.
+ *    The "pageProduct" type takes into account the quantity entered in the form
+ *    but not yet added to the cart.
  * 
- * 6. get_cartPageURL()
- *    Файл: includes/api/getSetting.php
- *    Возвращает URL страницы корзины.
+ * 6. as_get_cartPageURL()
+ *    File: includes/api/getSetting.php
+ *    Returns the cart page URL.
  * 
- * ДАННЫЕ ТОВАРА (МЕТА-ПОЛЯ ЧЕРЕЗ get_post_meta из ArgonShop):
+ * PRODUCT DATA (META FIELDS VIA get_post_meta FROM ArgonShop):
  * 
- * - _price                          → цена товара (число)
- * - _article                        → артикул (строка)
- * - _wholesalePrice                 → массив оптовых цен [term_id => price]
- * - _characteristics_text_field     → текстовые характеристики [term_id => value] Пример: $characteristicsText = get_post_meta(get_the_ID(), '_characteristics_text_field',true);
- * - _characteristics_checkbox_field → характеристики-чекбоксы [parent_id => [child_id => 'on']] Пример: $characteristicsCheckbox = get_post_meta(get_the_ID(), '_characteristics_checkbox_field',true);
- * - slider_imgs                     → список ID изображений через запятую
+ * - _price                          → product price (number)
+ * - _article                        → SKU (string)
+ * - _wholesalePrice                 → array of wholesale prices [term_id => price]
+ * - _characteristics_text_field     → text characteristics [term_id => value] Example: $characteristicsText = get_post_meta(get_the_ID(), '_characteristics_text_field',true);
+ * - _characteristics_checkbox_field → checkbox characteristics [parent_id => [child_id => 'on']] Example: $characteristicsCheckbox = get_post_meta(get_the_ID(), '_characteristics_checkbox_field',true);
+ * - slider_imgs                     → comma-separated list of image IDs
  * 
- * ДАННЫЕ ИЗ ACF (функция get_field):
+ * DATA FROM ACF (get_field function):
  * 
- * - unit_product → единица измерения товара (по умолчанию "шт")
- * - application  → текст блока "Применение" для таба
+ * - unit_product → product unit of measure (default "pc", translated)
+ * - application  → text of the "Application" tab block
  * 
- * HTML-ЭЛЕМЕНТЫ, ОБРАБАТЫВАЕМЫЕ JS ПЛАГИНА:
+ * HTML ELEMENTS HANDLED BY THE PLUGIN JS:
  * 
- * - #basePrice              → текущая цена за единицу (обновляется AJAX) < id="basePrice"> ЦЕНА </ >
- * - #amountProduct          → поле ввода количества <input type="text" id="amountProduct" value="1">
- * - .plusProduct-Page       → кнопка "+" (увеличить количество)
- * - .minusProduct-Page      → кнопка "-" (уменьшить количество)
- * - #addShoppingCart        → кнопка "В корзину" (data-productid = ID товара) <input type="button" id="addShoppingCart" data-productid="ID товара" value="В корзину">
- * - #productPageCartBuy     → кнопка "Купить" (добавить + открыть корзину)
- * - .totalPrice span        → итоговая стоимость выбранного количества <div class="totalPrice">сумма <span></span> руб.</div>
- * - #howManyProducts span   → сколько единиц товара уже в корзине <div id="howManyProducts"><span>число</span></div>
- * - #addProductError        → блок для вывода ошибки добавления в корзину AJAX <div id="addProductError"></div>  
+ * - #basePrice              → current unit price (updated via AJAX) < id="basePrice"> PRICE </ >
+ * - #amountProduct          → quantity input <input type="text" id="amountProduct" value="1">
+ * - .plusProduct-Page       → "+" button (increase quantity)
+ * - .minusProduct-Page      → "-" button (decrease quantity)
+ * - #addShoppingCart        → "Add to cart" button (data-productid = product ID) <input type="button" id="addShoppingCart" data-productid="product ID" value="Add to cart">
+ * - #productPageCartBuy     → "Buy" button (add + open the cart)
+ * - .totalPrice span        → total cost of the selected quantity <div class="totalPrice">total <span></span> (currency symbol from as_price_html())</div>
+ * - #howManyProducts span   → how many units of the product are already in the cart <div id="howManyProducts"><span>number</span></div>
+ * - #addProductError        → block for the AJAX add-to-cart error <div id="addProductError"></div>
  * 
- * JS-ФАЙЛЫ, ОБРАБАТЫВАЮЩИЕ ЭЛЕМЕНТЫ:
+ * JS FILES HANDLING THE ELEMENTS:
  * 
- * - assets/interface/js/product.js (из темы)
- * - assets/interface/js/site.js (из темы)
- * - assets/interface/js/jquery.js (из темы)
+ * - assets/js/interface/modules/product.js (plugin)
+ * - assets/js/interface/modules/slider-product.js (plugin)
+ * - assets/js/interface/main.js (plugin, entry point)
  * 
- * CSS-КЛАССЫ, СТИЛИЗУЮЩИЕ БЛОКИ:
+ * CSS CLASSES STYLING THE BLOCKS:
  * 
  * - .block-productMain, .block-productSlider (product.css)
- * - .block-wholesale-price (для таблицы оптовых цен)
- * - .actualStepDiscont (подсветка активного шага скидки)
+ * - .block-wholesale-price (for the wholesale price table)
+ * - .actualStepDiscont (highlight of the active discount step)
  * - .block-productAbout (characteristics.css)
  * 
- * ШАБЛОНЫ ЧАСТЕЙ (get_template_part):
+ * TEMPLATE PARTS (get_template_part):
  * 
  * - template-parts/productPage/characteristics →
- *   блок характеристик товара (использует _characteristics_* мета-поля)
+ *   product characteristics block (uses the _characteristics_* meta fields)
  * 
- * ВНЕШНИЕ ЗАВИСИМОСТИ:
+ * EXTERNAL DEPENDENCIES:
  * 
- * - ACF (Advanced Custom Fields) — поля unit_product, application
- * - Fancybox — для просмотра изображений на весь экран
- * - Slick — для слайдера изображений
+ * - ACF (Advanced Custom Fields) — unit_product, application fields
+ * - GLightbox — for full-screen image viewing (bundled with the plugin)
+ * - Swiper — for the image slider (bundled with the plugin)
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -117,8 +116,8 @@ get_header();
         <main class="block-content">
           
             <?php 
-            if ( function_exists( 'kama_breadcrumbs' ) ) {
-                kama_breadcrumbs( ' » ' );
+            if ( function_exists( 'as_kama_breadcrumbs' ) ) {
+                AS_Kama_Breadcrumbs( ' » ' );
             }
             ?> 
 
@@ -129,31 +128,30 @@ get_header();
                     
                     $product_id = get_the_ID();
                     
-                    // Цена — приводим к числу.
-                    // _price может содержать "5 000", "5,000" или пустую строку.
+                    // Price — cast to a number.
+                    // _price may contain "5 000", "5,000" or an empty string.
                     $price_raw = get_post_meta( $product_id, '_price', true );
-                    $price     = floatval( str_replace( array( ' ', ',' ), array( '', '.' ), (string) $price_raw ) );
-                    $price     = floatval( str_replace( array( ' ', ',' ), array( '', '.' ), (string) $price_raw ) );
+                    $price     = function_exists( 'as_get_product_price' ) ? as_get_product_price( $product_id ) : ( function_exists( 'as_to_float' ) ? as_to_float( $price_raw ) : floatval( str_replace( array( ' ', ',' ), array( '', '.' ), (string) $price_raw ) ) );
                     $article     = get_post_meta( $product_id, '_article', true );
                     
-                    $productsShoppingCart = function_exists( 'getCookie' ) ? getCookie( 'productsShoppingCart' ) : false;
+                    $productsShoppingCart = function_exists( 'as_getCookie' ) ? as_getCookie( 'productsShoppingCart' ) : false;
                     
                     $actualStepDiscont = null;
                     
-                    if ( function_exists( 'check_saleSteps' ) && function_exists( 'getActualStepDiscont' ) && function_exists( 'getActualPrice' ) ) {
+                    if ( function_exists( 'as_check_saleSteps' ) && function_exists( 'as_getActualStepDiscont' ) && function_exists( 'as_getActualPrice' ) ) {
                         
-                        if ( check_saleSteps() && $productsShoppingCart ) {
+                        if ( as_check_saleSteps() && $productsShoppingCart ) {
                             
-                            $actualStepDiscont = getActualStepDiscont( $product_id, $productsShoppingCart, 1 * $price );
-                            $price = getActualPrice( 'pageProduct', $productsShoppingCart, $product_id, $price, 1 );
+                            $actualStepDiscont = as_getActualStepDiscont( $product_id, $productsShoppingCart, 1 * $price );
+                            $price = as_getActualPrice( 'pageProduct', $productsShoppingCart, $product_id, $price, 1 );
                         }
                     }
                     
                     
                     $price_display = ( $price === '' || $price === false || $price === null ) ? 'none' : $price;
                     
-                    // Единица измерения
-                    $unitProduct = 'шт';
+                    // Unit of measure
+                    $unitProduct = __( 'pcs', 'argon-shop-theme' );
                     
                     if ( function_exists( 'get_field' ) ) {
                         $unit_field = get_field( 'unit_product', $product_id );
@@ -163,7 +161,7 @@ get_header();
                         }
                     }
                     
-                    // Блок "Применение"
+                    // "Application" block
                     $productUsage = '';
                     
                     if ( function_exists( 'get_field' ) ) {
@@ -180,7 +178,7 @@ get_header();
                 
                 <?php if ( $article ) { ?>
                     
-                    <div class="articlePost">артикул: <?php echo esc_html( $article ); ?></div>
+                    <div class="articlePost"><?php esc_html_e( 'item code:', 'argon-shop-theme' ); ?> <?php echo esc_html( $article ); ?></div>
                     
                 <?php } ?>
             
@@ -190,9 +188,9 @@ get_header();
                     <div class="block-productSlider">
                         
                         <?php
-                        // Слайдер изображений товара.
-                        // Выводится функцией плагина ArgonShop (Swiper).
-                        // См. includes/interface/slider/sliderProduct.php.
+                        // Product image slider.
+                        // Output by the ArgonShop plugin function (Swiper).
+                        // See includes/interface/slider/sliderProduct.php.
                         if ( function_exists( 'as_slider_product' ) ) {
                             as_slider_product( $product_id );
                         }
@@ -204,8 +202,8 @@ get_header();
 						<tbody>
 							<tr>
 								<td class="block-basePrice"> 
-								    <span id="basePrice"><?php echo esc_html( $price_display ); ?></span> 
-								    <span class="unitMeasure">Р/<?php echo esc_html( $unitProduct ); ?></span>
+								    <?php if ( astheme_currency_position() === 'before' ) : ?><span class="currencySymbol"><?php echo esc_html( astheme_currency_symbol() ); ?></span><?php endif; ?><span id="basePrice"><?php echo esc_html( $price_display ); ?></span> 
+								    <span class="unitMeasure"><?php echo esc_html( ( astheme_currency_position() === 'before' ? '' : astheme_currency_symbol() ) . '/' . $unitProduct ); ?></span>
 								</td>
 							</tr>
 								
@@ -218,7 +216,7 @@ get_header();
 								<tr>
 									<td class="block-wholesale-price">
 										    
-									    <div class='title-wholesale-price'>ОПТОВАЯ ЦЕНА, от:</div>
+									    <div class='title-wholesale-price'><?php esc_html_e( 'WHOLESALE PRICE, from:', 'argon-shop-theme' ); ?></div>
 										    
 									    <table>
 										        
@@ -230,14 +228,15 @@ get_header();
                                                     continue;
                                                 }
                                                 
-                                                $is_actual = ( $actualStepDiscont !== null && $actualStepDiscont == $term->name );
+                                                $term_step = function_exists( 'as_to_float' ) ? as_to_float( $term->name ) : floatval( str_replace( ',', '.', (string) $term->name ) );
+                                                $is_actual = ( $actualStepDiscont !== null && abs( (float) $actualStepDiscont - $term_step ) < 0.00001 );
 										        
 										 ?>
 										        
     									    <tr class="<?php echo $is_actual ? 'actualStepDiscont' : ''; ?>">
     									        
-            									<td class="step-discont-name"> <span><?php echo esc_html( $term->name ); ?></span> Р </td>
-            									<td class="step-discont-value"> <span><?php echo esc_html( $value ); ?></span> Р/<?php echo esc_html( $unitProduct ); ?> </td>
+            									<td class="step-discont-name"> <?php echo astheme_price_html( '<span>' . esc_html( $term->name ) . '</span>' ); ?> </td>
+            									<td class="step-discont-value"> <?php echo astheme_price_html( '<span>' . esc_html( $value ) . '</span>', (string) $unitProduct ); ?> </td>
     										            
     										</tr>
 										        
@@ -245,7 +244,7 @@ get_header();
 										        
 									    </table>
 									    
-										<div class="clarify">учитывается стоимость товаров в корзине</div>
+										<div class="clarify"><?php esc_html_e( 'based on the value of products in the cart', 'argon-shop-theme' ); ?></div>
 								    </td>
 								</tr>
 							<?php } ?>
@@ -270,21 +269,21 @@ get_header();
     									
     									?>
     										    
-    									<input type="button" id="addShoppingCart" class="buttonPurchase" data-productid="<?php echo esc_attr( $product_id ); ?>" <?php echo $disabledProduct; ?> value="В корзину">
-										<input type="button" id="productPageCartBuy" class="buttonPurchase" data-productid="<?php echo esc_attr( $product_id ); ?>" <?php echo $disabledProduct; ?> value="Купить">
+    									<input type="button" id="addShoppingCart" class="buttonPurchase" data-productid="<?php echo esc_attr( $product_id ); ?>" <?php echo $disabledProduct; ?> value="<?php esc_attr_e( 'Add to cart', 'argon-shop-theme' ); ?>">
+										<input type="button" id="productPageCartBuy" class="buttonPurchase" data-productid="<?php echo esc_attr( $product_id ); ?>" <?php echo $disabledProduct; ?> value="<?php esc_attr_e( 'Buy', 'argon-shop-theme' ); ?>">
 									
-									    <div class="totalPrice">сумма <span></span> руб.</div>
+									    <div class="totalPrice"><?php esc_html_e( 'total', 'argon-shop-theme' ); ?> <?php echo astheme_price_html( '<span></span>' ); ?></div>
 										    
 									</div>
 										    
 										               
                                     <div id="howManyProducts" style="<?php if ( ! isset( $productsShoppingCart[ $product_id ] ) ) { ?> display:none <?php } ?>">
                                         
-                                        <a href="<?php echo esc_url( get_cartPageURL() ); ?>"><input type="button" value="Перейти в корзину"></a>
+                                        <a href="<?php echo esc_url( as_get_cartPageURL() ); ?>"><input type="button" value="<?php esc_attr_e( 'Go to cart', 'argon-shop-theme' ); ?>"></a>
                                         
                                         <div class="howManyProductsText">
                                         
-                                            добавлено 
+                                            <?php esc_html_e( 'added', 'argon-shop-theme' ); ?> 
                                                         
                                             <span>
                                                 <?php 
@@ -298,7 +297,7 @@ get_header();
                                                 ?>
                                             </span> 
                                                             
-                                            ед. данного товара<br/>
+                                            <?php esc_html_e( 'units of this product', 'argon-shop-theme' ); ?><br/>
                                                 
                                         </div>
                                                 
@@ -318,12 +317,12 @@ get_header();
                 
                     <div class="pageControlPanel productPageControlPanel">
                         
-                        <div class="itemControlPanel itemControlPanelActive" data-type="switch" name="productDescription">Описание</div>
-                        <div class="itemControlPanel" data-type="switch" name="productСharacteristics">Характеристики</div>
+                        <div class="itemControlPanel itemControlPanelActive" data-type="switch" name="productDescription"><?php esc_html_e( 'Description', 'argon-shop-theme' ); ?></div>
+                        <div class="itemControlPanel" data-type="switch" name="productCharacteristics"><?php esc_html_e( 'Characteristics', 'argon-shop-theme' ); ?></div>
                         
                         <?php if ( $productUsage ) { ?>
                         
-                            <div class="itemControlPanel" data-type="switch" name="productUsage">Применение</div>
+                            <div class="itemControlPanel" data-type="switch" name="productUsage"><?php esc_html_e( 'Usage', 'argon-shop-theme' ); ?></div>
                         
                         <?php } ?>
                         
@@ -331,7 +330,7 @@ get_header();
                     
                     <div class="block-productDescription">
                         
-                        <div class="mobileItemControlPanel" data-mobileWidth="720" data-type="openingList" name="productDescription">Описание</div>
+                        <div class="mobileItemControlPanel" data-mobileWidth="720" data-type="openingList" name="productDescription"><?php esc_html_e( 'Description', 'argon-shop-theme' ); ?></div>
                         
                         <div class="blockItemPage" id="block_productDescription"><?php the_content(); ?></div>
                         
@@ -339,9 +338,9 @@ get_header();
                     
                     <div class="block-productCharacteristics">
                         
-                        <div class="mobileItemControlPanel" data-mobileWidth="720" data-type="openingList" name="productСharacteristics">Характеристики</div>
+                        <div class="mobileItemControlPanel" data-mobileWidth="720" data-type="openingList" name="productCharacteristics"><?php esc_html_e( 'Characteristics', 'argon-shop-theme' ); ?></div>
                         
-                        <div class="blockItemPage" id="block_productСharacteristics"><?php get_template_part( 'template-parts/productPage/characteristics' ); ?></div>
+                        <div class="blockItemPage" id="block_productCharacteristics"><?php get_template_part( 'template-parts/productPage/characteristics' ); ?></div>
                         
                     </div>
                     
@@ -349,7 +348,7 @@ get_header();
                     
                         <div class="block-productUsage">
                             
-                            <div class="mobileItemControlPanel" data-mobileWidth="720" data-type="openingList" name="productUsage">Применение</div>
+                            <div class="mobileItemControlPanel" data-mobileWidth="720" data-type="openingList" name="productUsage"><?php esc_html_e( 'Usage', 'argon-shop-theme' ); ?></div>
                             
                             <div class="blockItemPage" id="block_productUsage"><?php echo $productUsage; ?></div>
                             

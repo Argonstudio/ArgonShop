@@ -1,67 +1,66 @@
 <?php
 /**
- * AJAX-функционал личного кабинета
+ * Account AJAX features
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * Личный кабинет → редактирование данных, смена email/пароля
- * URL: /cabinet/
+ * WHERE TO TEST:
+ * Account → editing data, changing email/password
+ * URL: /account/ (is changed in the control panel)
  * 
- * ЧТО ДЕЛАЕТ:
- * 1. Сохранение данных пользователя (accountData)
- * 2. Изменение email и пароля
+ * WHAT IT DOES:
+ * 1. Saves user data (accountData)
+ * 2. Changes the email and password
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Регистрация AJAX-обработчиков
-add_action( 'wp_ajax_cabinetEditEmailPassword', 'cabinetEditEmailPassword_callback' );
-add_action( 'wp_ajax_nopriv_cabinetEditEmailPassword', 'cabinetEditEmailPassword_callback' );
+// AJAX handler registration
+add_action( 'wp_ajax_cabinetEditEmailPassword', 'as_cabinetEditEmailPassword_callback' );
+add_action( 'wp_ajax_nopriv_cabinetEditEmailPassword', 'as_cabinetEditEmailPassword_callback' );
 
-add_action( 'wp_ajax_cabinetAccountSave', 'cabinetAccountSave_callback' );
-add_action( 'wp_ajax_nopriv_cabinetAccountSave', 'cabinetAccountSave_callback' );
+add_action( 'wp_ajax_cabinetAccountSave', 'as_cabinetAccountSave_callback' );
+add_action( 'wp_ajax_nopriv_cabinetAccountSave', 'as_cabinetAccountSave_callback' );
 
 /**
- * ОБРАБОТЧИК: Сохранение данных пользователя
+ * HANDLER: Save user data
  * 
- * ГДЕ: Личный кабинет → "Сохранить"
+ * WHERE: Account → "Save"
  */
-function cabinetAccountSave_callback() {
+function as_cabinetAccountSave_callback() {
     
-    // Проверка nonce
+    // Nonce check
     check_ajax_referer( 'argon_shop_nonce', 'nonce' );
     
-    // Валидация userID
+    // userID validation
     $userID = isset( $_POST['userID'] ) ? absint( $_POST['userID'] ) : 0;
     
-    // Проверка: пользователь может сохранять только свои данные
-    if ( $userID !== get_current_user_id() ) {
-        wp_die( 'Недостаточно прав' );
+    // Check: a user may save only their own data
+    if ( 0 === $userID || $userID !== get_current_user_id() ) {
+        wp_die( __( 'Insufficient permissions', 'argon-shop' ) );
     }
     
     if ( ! isset( $_POST['forBack'] ) ) {
-        wp_die( 'Недостаточно данных' );
+        wp_die( __( 'Not enough data', 'argon-shop' ) );
     }
     
-    // Удаляем экранирование символов
+    // Remove character escaping
     $data = stripslashes( $_POST['forBack'] );
     
-    // Удаляем php и html теги
+    // Strip PHP and HTML tags
     $data = strip_tags( $data );
     
     $data = json_decode( $data, true );
     
     if ( ! is_array( $data ) ) {
-        wp_die( 'Ошибка: некорректные данные' );
+        wp_die( __( 'Error: invalid data', 'argon-shop' ) );
     }
     
-    // Санитизация всех полей
+    // Sanitize all fields
     foreach ( $data as $dataType => $dataTypeValue ) {
         
         if ( ! is_array( $dataTypeValue ) ) {
@@ -73,102 +72,105 @@ function cabinetAccountSave_callback() {
         }
     }
     
-    // Экранирование для SQL
+    // Escaping for SQL
     $data = wp_slash( $data );
     
-    // Проверка: были ли изменения
+    // Check: were there any changes
     $old_data = get_user_meta( $userID, 'accountData', true );
     
     if ( $old_data == $data ) {
-        wp_die( 'Вы не забыли внести изменения? Новые данные соответствуют старым' );
+        wp_die( __( 'Did you forget to make changes? The new data is the same as the old', 'argon-shop' ) );
     }
     
-    // Сохранение
+    // Save
     update_user_meta( $userID, 'accountData', $data );
     
-    // Проверка, что данные сохранились
+    // Make sure the data was saved
     if ( get_user_meta( $userID, 'accountData', true ) != $data ) {
-        wp_die( 'Ошибка: новые данные не были сохранены' );
+        wp_die( __( 'Error: the new data was not saved', 'argon-shop' ) );
     }
     
-    echo 'Информация успешно сохранена';
+    echo __( 'Information saved successfully', 'argon-shop' );
     
     wp_die();
 }
 
 /**
- * ОБРАБОТЧИК: Изменение email и пароля
+ * HANDLER: Change email and password
  * 
- * ГДЕ: Личный кабинет → блок редактирования
+ * WHERE: Account → edit block
  * 
  */
-function cabinetEditEmailPassword_callback() {
+function as_cabinetEditEmailPassword_callback() {
     
-    // Проверка nonce
+    // Nonce check
     check_ajax_referer( 'argon_shop_nonce', 'nonce' );
     
-    // Валидация userID
+    // userID validation
     $userID = isset( $_POST['userID'] ) ? absint( $_POST['userID'] ) : 0;
     
-    // Проверка: пользователь может менять только свои данные
-    if ( $userID !== get_current_user_id() ) {
-        wp_die( 'Недостаточно прав' );
+    // Check: a user may change only their own data
+    if ( 0 === $userID || $userID !== get_current_user_id() ) {
+        wp_die( __( 'Insufficient permissions', 'argon-shop' ) );
     }
     
     $userdata = get_user_by( 'id', $userID );
     
     if ( ! $userdata ) {
-        wp_die( 'Пользователь не найден' );
+        wp_die( __( 'User not found', 'argon-shop' ) );
     }
     
-    // Валидация входных данных
+    // Input validation
     $email = isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
     $oldEmail = isset( $_POST['oldEmail'] ) ? sanitize_email( wp_unslash( $_POST['oldEmail'] ) ) : '';
-    $pass = isset( $_POST['pass'] ) ? sanitize_text_field( wp_unslash( $_POST['pass'] ) ) : '';
-    $newPass = isset( $_POST['newPass'] ) ? sanitize_text_field( wp_unslash( $_POST['newPass'] ) ) : '';
-    $newPassConfirm = isset( $_POST['newPassConfirm'] ) ? sanitize_text_field( wp_unslash( $_POST['newPassConfirm'] ) ) : '';
+    // Passwords are NOT passed through sanitize_text_field() or any other sanitizer: it strips
+    // <tags> and %xx sequences and collapses spaces, but passwords generated by WordPress
+    // contain exactly such characters (< > % and spaces). They are only unslashed.
+    $pass = ( isset( $_POST['pass'] ) && is_string( $_POST['pass'] ) ) ? wp_unslash( $_POST['pass'] ) : '';
+    $newPass = ( isset( $_POST['newPass'] ) && is_string( $_POST['newPass'] ) ) ? wp_unslash( $_POST['newPass'] ) : '';
+    $newPassConfirm = ( isset( $_POST['newPassConfirm'] ) && is_string( $_POST['newPassConfirm'] ) ) ? wp_unslash( $_POST['newPassConfirm'] ) : '';
     
     $forFront = array(
         'edited' => array(),
         'errors' => array(),
     );
     
-    // Проверка текущего пароля
-    if ( empty( $pass ) ) {
-        $forFront['errors']['pass'] = 'Введите пароль';
+    // Current password check
+    if ( '' === $pass ) {
+        $forFront['errors']['pass'] = __( 'Enter your password', 'argon-shop' );
     } elseif ( ! wp_check_password( $pass, $userdata->data->user_pass, $userID ) ) {
-        $forFront['errors']['pass'] = 'Пароль указан неверно';
+        $forFront['errors']['pass'] = __( 'Incorrect password', 'argon-shop' );
     }
     
-    // Проверка нового пароля
-    if ( ! empty( $newPass ) ) {
+    // New password check
+    if ( '' !== $newPass ) {
         
-        if ( strlen( $newPass ) < 6 ) {
-            $forFront['errors']['newPass'] = 'Пароль слишком короткий, введите от 6 символов';
+        if ( mb_strlen( $newPass, 'UTF-8' ) < 6 ) {
+            $forFront['errors']['newPass'] = __( 'The password is too short, enter at least 6 characters', 'argon-shop' );
         }
         
         if ( $newPass !== $newPassConfirm ) {
-            $forFront['errors']['newPassConfirm'] = 'Новый пароль и его подтверждение не совпадают';
+            $forFront['errors']['newPassConfirm'] = __( 'The new password and its confirmation do not match', 'argon-shop' );
         }
     }
     
-    // Проверка email
+    // Email check
     if ( $email !== $oldEmail ) {
         
         if ( ! is_email( $email ) ) {
-            $forFront['errors']['email'] = 'Некорректный email';
+            $forFront['errors']['email'] = __( 'Invalid email', 'argon-shop' );
         } elseif ( email_exists( $email ) && $email !== $userdata->user_email ) {
-            $forFront['errors']['email'] = 'Такой email уже зарегистрирован';
+            $forFront['errors']['email'] = __( 'This email is already registered', 'argon-shop' );
         }
     }
     
-    // Если есть ошибки — возвращаем
+    // If there are errors — return them
     if ( ! empty( $forFront['errors'] ) ) {
         echo wp_json_encode( $forFront );
         wp_die();
     }
     
-    // Изменение email
+    // Change the email
     if ( $email !== $oldEmail ) {
         
         wp_update_user( array(
@@ -176,10 +178,10 @@ function cabinetEditEmailPassword_callback() {
             'user_email' => $email,
         ) );
         
-        $forFront['edited']['newEmail'] = 'Email изменен';
+        $forFront['edited']['newEmail'] = __( 'Email changed', 'argon-shop' );
     }
     
-        if ( ! empty( $newPass ) ) {
+    if ( '' !== $newPass ) {
         
         wp_set_password( $newPass, $userID );
         
@@ -191,16 +193,16 @@ function cabinetEditEmailPassword_callback() {
         
         wp_signon( $creds, false );
         
-        $forFront['edited']['newPass'] = 'Пароль изменен, произведена авторизация с новым паролем';
+        $forFront['edited']['newPass'] = __( 'Password changed, you are logged in with the new password', 'argon-shop' );
         
         // ============================================
-        // НОВЫЙ NONCE ПОСЛЕ СМЕНЫ ПАРОЛЯ
+        // NEW NONCE AFTER A PASSWORD CHANGE
         // ============================================
         // 
-        // wp_set_password() инвалидирует все сессии пользователя,
-        // старый myajax.nonce становится недействительным.
-        // Возвращаем новый nonce, чтобы JS обновил myajax.nonce
-        // и последующие AJAX-запросы работали.
+        // wp_set_password() invalidates all user sessions,
+        // so the old myajax.nonce becomes invalid.
+        // Return a new nonce so that JS updates myajax.nonce
+        // and subsequent AJAX requests keep working.
         
         $forFront['newNonce'] = wp_create_nonce( 'argon_shop_nonce' );
         

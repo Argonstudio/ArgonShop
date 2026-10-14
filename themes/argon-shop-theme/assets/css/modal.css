@@ -1,27 +1,26 @@
 /**
- * ArgonShopTheme — стили лёгкого модального окна.
+ * ArgonShopTheme — lightweight modal window styles.
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Оформляет .ars-modal: backdrop, окно, кнопку закрытия,
- * loader и error. Работает с modal.js из той же папки.
+ * Styles .ars-modal: backdrop, window, close button,
+ * loader and error. Works with modal.js from the js folder.
  *
  * ============================================================
- * ЦВЕТА
+ * COLORS
  * ============================================================
  *
- * Синий темы — #4e83c6.
- * Тёмный оверлей — rgba(0, 0, 0, 0.6).
+ * The theme blue — #4e83c6.
+ * Dark overlay — rgba(0, 0, 0, 0.6).
  */
 
 /* ============================================================
-   БЛОКИРОВКА СКРОЛЛА СТРАНИЦЫ
+   PAGE SCROLL LOCK
    ============================================================ */
 
 body.ars-modal-open {
@@ -29,7 +28,7 @@ body.ars-modal-open {
 }
 
 /* ============================================================
-   КОРНЕВОЙ КОНТЕЙНЕР
+   ROOT CONTAINER
    ============================================================ */
 
 .ars-modal {
@@ -63,16 +62,16 @@ body.ars-modal-open {
 }
 
 /* ============================================================
-   ОКНО
+   WINDOW
    ============================================================
  *
- * Размеры:
- *   - на широких экранах 60% ширины, до 900px;
- *   - на мобильных 92% ширины.
- * Высота ограничена 85vh, содержимое скроллится внутри.
+ * Sizes:
+ *   - on wide screens 60% of the width, up to 900px;
+ *   - on mobile 92% of the width.
+ * The height is limited to 85vh, the content scrolls inside.
  *
- * overflow-y: auto на самом окне — одна полоса прокрутки,
- * никаких вложенных.
+ * overflow-y: auto on the window itself — a single scrollbar,
+ * no nested ones.
  */
 
 .ars-modal__window {
@@ -99,7 +98,7 @@ body.ars-modal-open {
 }
 
 /* ============================================================
-   КНОПКА ЗАКРЫТИЯ
+   CLOSE BUTTON
    ============================================================ */
 
 .ars-modal__close {
@@ -135,7 +134,7 @@ body.ars-modal-open {
 }
 
 /* ============================================================
-   LOADER И ОШИБКИ
+   LOADER AND ERRORS
    ============================================================ */
 
 .ars-modal__loader,
@@ -162,13 +161,13 @@ body.ars-modal-open {
 }
 
 /* ============================================================
-   ФОРМА CF7 ВНУТРИ МОДАЛКИ
+   CF7 FORM INSIDE THE MODAL
    ============================================================
  *
- * Убираем лишние отступы, чтобы форма корректно легла
- * в наше окно. Сама форма — обычная, никаких клонов
- * с id, потому что мы клонируем содержимое #feedback,
- * а не переносим его.
+ * Remove extra margins so that the form fits correctly
+ * into our window. The form itself is a regular one: the #feedback
+ * element is moved into the modal (not cloned), so there are
+ * no duplicate ids.
  */
 
 .ars-modal__body .wpcf7 {
@@ -180,7 +179,7 @@ body.ars-modal-open {
 }
 
 /* ============================================================
-   АДАПТИВ
+   RESPONSIVE
    ============================================================ */
 
 @media (max-width: 900px) {

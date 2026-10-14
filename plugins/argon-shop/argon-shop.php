@@ -2,15 +2,18 @@
 /**
  * Plugin Name:       Argon Shop
  * Plugin URI:        https://github.com/Argonstudio/ArgonShop
- * Description:       Высокооптимизированный плагин интернет-магазина для WordPress с AJAX-поиском и кастомной шаблонизацией корзины и ЛК.
- * Version:           1.0.0
- * Author:            Иван Войтков (Ivan Voitkov)
+ * Description:       Highly optimized online store plugin for WordPress with AJAX search and fully theme-controlled cart and customer account templates.
+ * Version:           1.1.0
+ * Requires at least: 7.1
+ * Requires PHP:      8.3
+ * Author:            Ivan Voitkov
  * Author URI:        https://argon-studio.ru
  * License:           GPL-3.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain:       argon-shop
+ * Domain Path:       /languages
  * 
- * Copyright (C) 2018-2026 Иван Войтков (voit.ne@gmail.com)
+ * Copyright (C) 2018-2026 Ivan Voitkov (voit.ne@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,21 +21,33 @@
  * (at your option) any later version.
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 // ============================================
-// КОНСТАНТЫ ПЛАГИНА
+// PLUGIN CONSTANTS
 // ============================================
 
-define( 'ARGON_SHOP_VERSION', '1.0.0' );
+define( 'ARGON_SHOP_VERSION', '1.1.0' );
+define( 'ARGON_SHOP_FILE', __FILE__ );
 define( 'ARGON_SHOP_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ARGON_SHOP_URL', plugin_dir_url( __FILE__ ) );
 
+/**
+ * Loads plugin translations: languages/argon-shop-{locale}.mo (ru_RU, fr_FR).
+ * Translations from wp-content/languages/plugins/ take priority, so a site can override them.
+ *
+ * @since 1.1.0
+ */
+function as_load_textdomain() {
+    load_plugin_textdomain( 'argon-shop', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+}
+add_action( 'init', 'as_load_textdomain', 0 );
+
 // ============================================
-// ЛОГИРОВАНИЕ ОШИБОК (только в режиме разработки)
+// ERROR LOGGING (development mode only)
 // ============================================
 
 if ( defined( 'WP_DEBUG' ) && WP_DEBUG && defined( 'DOING_AJAX' ) && DOING_AJAX ) {
@@ -41,29 +56,35 @@ if ( defined( 'WP_DEBUG' ) && WP_DEBUG && defined( 'DOING_AJAX' ) && DOING_AJAX 
 }
 
 // ============================================
-// API ПЛАГИНА
+// PLUGIN API
 // ============================================
 
-// Функция для фильтра, преобразующего name цен в числа для правильной сортировки
-function sort_terms_clause( $orderby, $args, $taxonomies ) {
+// Filter function that converts price names to numbers for correct sorting
+function as_sort_terms_clause( $orderby, $args, $taxonomies ) {
     return 't.name+0';
 }
 
-// Страница настроек магазина
+// Store settings page
 require_once ARGON_SHOP_PATH . 'settingPage.php';
 
-// Функции действия
+// Installation, data migrations, deactivation
+require_once ARGON_SHOP_PATH . 'includes/install.php';
+
+// Old function names (before 1.1.0) — compatibility wrappers for third-party themes
+require_once ARGON_SHOP_PATH . 'includes/legacy-functions.php';
+
+// Action functions
 require_once ARGON_SHOP_PATH . 'includes/api/as_action.php';
 
-// Функции проверки
+// Check functions
 require_once ARGON_SHOP_PATH . 'includes/api/check.php';
 
-// Функции получения данных различными модулями
+// Data retrieval functions for various modules
 require_once ARGON_SHOP_PATH . 'includes/api/getData/getData.php';
 require_once ARGON_SHOP_PATH . 'includes/api/getData/orders.php';
 require_once ARGON_SHOP_PATH . 'includes/api/getData/catalog.php';
 
-// Галерея изображений товара
+// Product image gallery
 require_once ARGON_SHOP_PATH . 'includes/api/getData/gallery.php';
 
 require_once ARGON_SHOP_PATH . 'includes/api/getData/product/productLists/marked.php';
@@ -72,7 +93,7 @@ require_once ARGON_SHOP_PATH . 'includes/api/getData/product/productLists/histor
 
 require_once ARGON_SHOP_PATH . 'includes/api/getData/admin/get_characteristics.php';
 
-// Функции получения настроек
+// Settings retrieval functions
 require_once ARGON_SHOP_PATH . 'includes/api/getSetting.php';
 
 // ============================================
@@ -83,27 +104,27 @@ require_once ARGON_SHOP_PATH . 'includes/api/view/product/productsLists/products
 require_once ARGON_SHOP_PATH . 'includes/api/view/catalog/catalogPage.php';
 
 // ============================================
-// VIEW: СЛАЙДЕРЫ
+// VIEW: SLIDERS
 // ============================================
 
-// Слайдер на главной странице
+// Home page slider
 require_once ARGON_SHOP_PATH . 'includes/interface/slider/sliderMain.php';
 
-// Слайдер изображений товара
+// Product image slider
 require_once ARGON_SHOP_PATH . 'includes/interface/slider/sliderProduct.php';
 
 // ============================================
-// ПОДКЛЮЧЕНИЕ СКРИПТОВ И СТИЛЕЙ
+// ENQUEUEING SCRIPTS AND STYLES
 // ============================================
 
 /**
- * Админские стили и скрипты
+ * Admin styles and scripts
  * 
- * ГДЕ: Страницы админки с товарами и заказами
- * ЧТО: Подключает CSS и JS для работы метабоксов
+ * WHERE: Admin pages with products and orders
+ * WHAT: Enqueues CSS and JS for the meta boxes
  */
-add_action( 'admin_enqueue_scripts', 'add_admin_styleScript' );
-function add_admin_styleScript() {
+add_action( 'admin_enqueue_scripts', 'as_add_admin_styleScript' );
+function as_add_admin_styleScript() {
     
     wp_enqueue_style(
         'style-admin',
@@ -136,7 +157,7 @@ function add_admin_styleScript() {
     );
     
     // ============================================
-    // МЕТАБОКС «ГАЛЕРЕЯ» (только на странице товара)
+    // "GALLERY" META BOX (product edit screen only)
     // ============================================
 
     $screen = get_current_screen();
@@ -160,55 +181,63 @@ function add_admin_styleScript() {
             ARGON_SHOP_VERSION,
             true
         );
+
+        // Interface texts of the gallery (gallery.js falls back to English).
+        wp_localize_script( 'ars-gallery-js', 'arsGalleryI18n', array(
+            'selectImages' => __( 'Select images', 'argon-shop' ),
+            'addToGallery' => __( 'Add to gallery', 'argon-shop' ),
+            'removeImage'  => __( 'Remove image', 'argon-shop' ),
+        ) );
     }
 }
 
 /**
- * Меняем роль нового пользователя на "подписчик"
+ * Change the role of a new user to "subscriber"
  * 
- * ВАЖНО: Это осознанное решение для защиты магазина —
- * чтобы зарегистрированный пользователь не получил доступ к админке.
+ * IMPORTANT: This is a deliberate decision to protect the store —
+ * so that a registered user does not get access to the admin area.
  */
 add_filter( 'pre_option_default_role', function( $default_role ) {
     return 'subscriber';
 } );
 
 /**
- * Фронтенд-стили и скрипты.
+ * Frontend styles and scripts.
  *
- * ГДЕ: На сайте (фронтенд).
+ * WHERE: On the site (frontend).
  *
- * ЧТО ПОДКЛЮЧАЕТ:
- * 1. Функциональный CSS плагина (interface-style.css).
- * 2. ES-модуль ars-main (type="module") — точка входа
- *    современного JavaScript-кода ArgonShop.
+ * WHAT IT ENQUEUES:
+ * 1. The plugin's functional CSS (interface-style.css).
+ * 2. The ars-main ES module (type="module") — the entry point
+ *    of the modern ArgonShop JavaScript code.
  *
  * JQUERY:
- * Плагин использует встроенную jQuery WordPress, если её
- * подключают тема или другие плагины (например, для Slick
- * и Fancybox). Своя кастомная jQuery 2.2.2 больше не
- * подключается — она устарела и заменена встроенной версией.
+ * The plugin uses WordPress's bundled jQuery if the theme
+ * or other plugins enqueue it (for example, for Slick
+ * and Fancybox). The custom jQuery 2.2.2 is no longer
+ * enqueued — it was outdated and replaced with the bundled version.
  *
- * ЛОКАЛИЗАЦИЯ:
- * arsWpAjax — глобальная переменная для ES-модулей,
- * содержит url admin-ajax.php, nonce и URL страницы корзины.
+ * LOCALIZATION:
+ * arsWpAjax — global variable for the ES modules,
+ * contains the admin-ajax.php URL, the nonce, the cart page URL
+ * and the translated UI strings (i18n, see argon_shop_js_i18n()).
  *
  */
-add_action( 'wp_enqueue_scripts', 'add_interface_styleScript' );
-function add_interface_styleScript() {
+add_action( 'wp_enqueue_scripts', 'as_add_interface_styleScript' );
+function as_add_interface_styleScript() {
 
     // ============================================
-    // БИБЛИОТЕКИ (встроены в плагин)
+    // LIBRARIES (bundled with the plugin)
     // ============================================
     //
-    // Swiper — современный слайдер
-    // GLightbox — лёгкий лайтбокс
+    // Swiper — modern slider
+    // GLightbox — lightweight lightbox
     //
-    // Библиотеки лежат в папке assets/vendor/ плагина и доступны
-    // на всех страницах фронтенда. Тема может использовать
-    // глобальные объекты Swiper и GLightbox без собственного
-    // подключения. Если тема хочет гарантировать порядок
-    // загрузки, она указывает хэндлы как зависимости:
+    // The libraries live in the plugin's assets/vendor/ folder and are available
+    // on every frontend page. The theme can use the
+    // global Swiper and GLightbox objects without enqueueing
+    // them itself. If the theme wants to guarantee the loading
+    // order, it lists the handles as dependencies:
     //
     //     wp_enqueue_script( 'my-script', ..., array( 'swiper-js' ), ... );
 
@@ -243,11 +272,11 @@ function add_interface_styleScript() {
     );
 
     // ============================================
-    // ФУНКЦИОНАЛЬНЫЙ CSS ПЛАГИНА
+    // PLUGIN FUNCTIONAL CSS
     // ============================================
     //
-    // Только начальные состояния элементов, управляемых JS.
-    // Всё оформление магазина находится в теме.
+    // Only the initial states of JS-controlled elements.
+    // All store styling lives in the theme.
 
     wp_enqueue_style(
         'style-interface',
@@ -257,14 +286,14 @@ function add_interface_styleScript() {
     );
 
     // ============================================
-    // ES-МОДУЛЬ (ArgonShop 2.0)
+    // ES MODULE (ArgonShop 2.0)
     // ============================================
     //
-    // Подключается без зависимостей: внутри использует только
-    // нативный fetch и DOM API. Не требует jQuery.
+    // Enqueued without dependencies: internally it uses only
+    // native fetch and the DOM API. Does not require jQuery.
     //
-    // Атрибут type="module" добавляется через фильтр
-    // ars_add_module_type() ниже.
+    // The type="module" attribute is added by the
+    // ars_add_module_type() filter below.
 
     wp_enqueue_script(
         'ars-main',
@@ -274,26 +303,27 @@ function add_interface_styleScript() {
         true
     );
 
-    // Локализация для нового модуля.
-    // config.js читает window.arsWpAjax.
+    // Localization for the new module.
+    // config.js reads window.arsWpAjax.
 
     wp_localize_script( 'ars-main', 'arsWpAjax', array(
         'url'     => admin_url( 'admin-ajax.php' ),
         'nonce'   => wp_create_nonce( 'argon_shop_nonce' ),
-        'cartUrl' => get_cartPageURL() ? get_cartPageURL() : '',
+        'cartUrl' => as_get_cartPageURL() ? as_get_cartPageURL() : '',
+        'i18n'    => argon_shop_js_i18n(),
     ) );
 
     // ============================================
-    // ВРЕМЕННАЯ ЗАГЛУШКА ДЛЯ СТАРЫХ INLINE-СКРИПТОВ
+    // TEMPORARY STUB FOR OLD INLINE SCRIPTS
     // ============================================
     //
-    // Некоторые PHP-файлы плагина ещё содержат inline-JS
-    // в wp_footer и читают window.myajax.nonce. Пока они
-    // не удалены, нужно оставить переменную myajax, иначе
-    // AJAX-запросы из этих скриптов будут падать.
+    // Some plugin PHP files still contain inline JS
+    // in wp_footer and read window.myajax.nonce. Until they
+    // are removed, the myajax variable must stay, otherwise
+    // AJAX requests from those scripts will fail.
     //
-    // После удаления всех inline-скриптов из PHP этот блок
-    // можно убрать целиком.
+    // Once all inline scripts are removed from PHP, this block
+    // can be deleted entirely.
 
     wp_register_script( 'ars-legacy-stub', false, array(), ARGON_SHOP_VERSION, true );
     wp_enqueue_script( 'ars-legacy-stub' );
@@ -305,19 +335,58 @@ function add_interface_styleScript() {
 }
 
 /**
- * Добавляет атрибут type="module" к скрипту ars-main.
+ * Translated UI strings for the frontend ES modules.
  *
- * ГДЕ: Автоматически при выводе тега <script> в футере.
+ * The keys must match I18N_DEFAULTS in assets/js/interface/core/config.js,
+ * where the English fallbacks live. Placeholders follow printf syntax
+ * (%d, %s, %1$s) and are substituted by t() on the JS side.
  *
- * ЗАЧЕМ: WordPress не умеет подключать ES-модули напрямую.
- * Единственный способ — отфильтровать готовый HTML тега и
- * добавить атрибут вручную.
+ * @since 1.1.0
+ * @return array<string, string>
+ */
+function argon_shop_js_i18n() {
+    $strings = array(
+        'serverError'        => __( 'Server error', 'argon-shop' ),
+        'dataNotSaved'       => __( 'Error: the data was not saved', 'argon-shop' ),
+        'requestError'       => __( 'Request failed', 'argon-shop' ),
+        /* translators: %d: maximum number of files. */
+        'tooManyFiles'       => __( 'You can attach no more than %d files.', 'argon-shop' ),
+        /* translators: 1: file name, 2: maximum size in megabytes. */
+        'fileTooBig'         => __( 'The file "%1$s" exceeds %2$s MB.', 'argon-shop' ),
+        /* translators: %d: number of uploaded files. */
+        'filesUploaded'      => __( 'Files uploaded: %d', 'argon-shop' ),
+        'cartEmpty'          => __( 'Cart is empty', 'argon-shop' ),
+        'productNotRemoved'  => __( 'Server error, the product was not removed', 'argon-shop' ),
+        'productsNotRemoved' => __( 'Server error, the products were not removed', 'argon-shop' ),
+        'changesNotAccepted' => __( 'Server error, the changes were not accepted', 'argon-shop' ),
+        'orderNotSent'       => __( 'Server error: the order was not sent', 'argon-shop' ),
+        'messageSent'        => __( 'Your message has been sent', 'argon-shop' ),
+        'searching'          => __( 'Searching...', 'argon-shop' ),
+    );
+
+    /**
+     * Filters the UI strings passed to the frontend ES modules.
+     *
+     * @since 1.1.0
+     * @param array<string, string> $strings Key => translated string.
+     */
+    return apply_filters( 'argon_shop_js_i18n', $strings );
+}
+
+/**
+ * Adds the type="module" attribute to the ars-main script.
  *
- * ВАЖНО: фильтр не трогает другие скрипты — только ars-main.
+ * WHERE: Automatically when the <script> tag is printed in the footer.
  *
- * @param  string $tag    — готовый HTML тега <script>
- * @param  string $handle — идентификатор скрипта
- * @return string         — изменённый HTML
+ * WHY: WordPress cannot enqueue ES modules directly.
+ * The only way is to filter the ready tag HTML and
+ * add the attribute manually.
+ *
+ * IMPORTANT: the filter does not touch other scripts — only ars-main.
+ *
+ * @param  string $tag    — ready HTML of the <script> tag
+ * @param  string $handle — script handle
+ * @return string         — modified HTML
  */
 add_filter( 'script_loader_tag', 'ars_add_module_type', 10, 2 );
 function ars_add_module_type( $tag, $handle ) {
@@ -330,109 +399,112 @@ function ars_add_module_type( $tag, $handle ) {
 }
 
 // ============================================
-// ТИПЫ ЗАПИСЕЙ И ТАКСОНОМИИ
+// POST TYPES AND TAXONOMIES
 // ============================================
 
 require_once ARGON_SHOP_PATH . 'includes/createPostType.php';
 
 // ============================================
-// МОДУЛИ ПЛАГИНА
+// PLUGIN MODULES
 // ============================================
 
-// Дополнительные фильтры (админка)
+// Additional filters (admin)
 require_once ARGON_SHOP_PATH . 'includes/admin/additionalFilters.php';
 
-// Дополнительные поля таксономий (админка)
+// Additional taxonomy fields (admin)
 require_once ARGON_SHOP_PATH . 'includes/admin/fieldsTaxonomy.php';
 
-// Дополнительные поля товаров (админка)
+// Additional product fields (admin)
 require_once ARGON_SHOP_PATH . 'includes/admin/fieldsProduct.php';
 
-// Метабокс «Галерея» товара
+// Product "Gallery" meta box
 require_once ARGON_SHOP_PATH . 'includes/admin/galleryMetabox.php';
 
 // ============================================
-// ИНТЕРФЕЙС: КОРЗИНА
+// INTERFACE: CART
 // ============================================
 
-// Корзина покупок (AJAX-обработчики)
+// Shopping cart (AJAX handlers)
 require_once ARGON_SHOP_PATH . 'includes/interface/shoppingCart/shoppingCart.php';
 
-// Виджет корзины (число товаров и сумма)
+// Cart widget (item count and total)
 require_once ARGON_SHOP_PATH . 'includes/interface/shoppingCart/infoCart.php';
 
 // ============================================
-// ИНТЕРФЕЙС: ТОВАРЫ И КАТАЛОГ
+// INTERFACE: PRODUCTS AND CATALOG
 // ============================================
 
-// Карточки товаров
+// Product cards
 require_once ARGON_SHOP_PATH . 'includes/interface/product/cardProduct.php';
 
-// Сортировка каталога
+// Catalog sorting
 require_once ARGON_SHOP_PATH . 'includes/interface/catalog/sort.php';
 
 // ============================================
-// ИНТЕРФЕЙС: ЛИЧНЫЙ КАБИНЕТ
+// INTERFACE: ACCOUNT
 // ============================================
 
-// Личный кабинет
+// User account
 require_once ARGON_SHOP_PATH . 'includes/interface/cabinet/myCabinet.php';
 
-// Вывод заказов пользователя
+// User orders output
 require_once ARGON_SHOP_PATH . 'includes/interface/cabinet/userOrders/ordersView.php';
 
-// AJAX-фильтры заказов
+// AJAX order filters
 require_once ARGON_SHOP_PATH . 'includes/interface/cabinet/userOrders/ordersAjax.php';
 
-// Переадресация пользователя при входе
+// User redirect on login
 require_once ARGON_SHOP_PATH . 'includes/interface/cabinet/redirectUser.php';
 
 // ============================================
-// ИНТЕРФЕЙС: НАВИГАЦИЯ
+// INTERFACE: NAVIGATION
 // ============================================
 
-// Хлебные крошки
+// Breadcrumbs
 require_once ARGON_SHOP_PATH . 'includes/interface/breadcrumbs.php';
 
-// Пагинация
+// Pagination
 require_once ARGON_SHOP_PATH . 'includes/interface/pagenavi.php';
 
 // ============================================
-// ИНТЕРФЕЙС: ПОИСК
+// INTERFACE: SEARCH
 // ============================================
 
-// Вывод формы поиска
+// Search form output
 require_once ARGON_SHOP_PATH . 'includes/interface/search/searchForm.php';
 
-// Фильтр результатов на странице /?s=
+// Search language rules (keyboard layouts, word normalization)
+require_once ARGON_SHOP_PATH . 'includes/interface/search/searchLanguage.php';
+
+// Results filter on the /?s= page
 require_once ARGON_SHOP_PATH . 'includes/interface/search/searchGetFilters.php';
 
-// AJAX-события поиска
+// Search AJAX events
 require_once ARGON_SHOP_PATH . 'includes/interface/search/searchAjax.php';
 
 // ============================================
-// ИНТЕРФЕЙС: ПРОЧЕЕ
+// INTERFACE: OTHER
 // ============================================
 
-// История просмотров
+// View history
 require_once ARGON_SHOP_PATH . 'includes/interface/history.php';
 
 // ============================================
-// АДМИНКА: ЗАКАЗЫ
+// ADMIN: ORDERS
 // ============================================
 
-// Метабоксы заказа
+// Order meta boxes
 require_once ARGON_SHOP_PATH . 'includes/admin/order/orderMetabox.php';
 
-// AJAX-функционал страницы заказа
+// Order page AJAX
 require_once ARGON_SHOP_PATH . 'includes/admin/order/orderAjax.php';
 
-// Сохранение заказа
+// Order saving
 require_once ARGON_SHOP_PATH . 'includes/admin/order/orderSave.php';
 
 // ============================================
-// ПРОЧИЕ МОДУЛИ
+// OTHER MODULES
 // ============================================
 
-// Сеть сайтов (мультирегиональность)
+// Site network (multi-region)
 require_once ARGON_SHOP_PATH . 'includes/siteLine.php';

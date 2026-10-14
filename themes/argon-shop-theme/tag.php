@@ -1,41 +1,40 @@
 <?php
 /**
- * Шаблон архива метки (tag)
+ * Tag archive template (tag)
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * Страницы меток
- * URL: /tag/название-метки/
+ * WHERE TO TEST:
+ * Tag pages
+ * URL: /tag/tag-name/
  * 
- * ЧТО ВЫВОДИТ:
- * 1. Хлебные крошки (ручная разметка)
- * 2. Заголовок метки
- * 3. Блок дочерних категорий (если есть)
- * 4. Облако тегов (только для рубрики ID = 37)
- * 5. Список записей с этой меткой
- * 6. Пагинацию
+ * WHAT IT OUTPUTS:
+ * 1. Breadcrumbs (manual markup)
+ * 2. Tag title
+ * 3. Child categories block (if any)
+ * 4. Tag cloud (only for the category with ID = 37)
+ * 5. List of posts with this tag
+ * 6. Pagination
  * 
  * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  * 
- * В этом шаблоне используется функция плагина:
+ * This template uses the following plugin function:
  * 
- * - kama_pagenavi() → пагинация (includes/interface/pagenavi.php)
+ * - as_kama_pagenavi() → pagination (includes/interface/pagenavi.php)
  * 
- * Хлебные крошки выводятся ручной разметкой (не через kama_breadcrumbs),
- * так как на странице метки нужна промежуточная ссылка "Статьи" (/stati/),
- * которую плагин не строит автоматически.
+ * The breadcrumbs are output with manual markup (not via kama_breadcrumbs),
+ * because the tag page needs an intermediate "Articles" link (/stati/),
+ * which the plugin does not build automatically.
  * 
- * ВНЕШНИЕ ЗАВИСИМОСТИ:
- * - ACF (Advanced Custom Fields) — поле image_catalog у рубрик
- * - ID рубрики 37 — "Статьи" (рубрика, где показывается облако тегов)
+ * EXTERNAL DEPENDENCIES:
+ * - ACF (Advanced Custom Fields) — the image_catalog field of categories
+ * - Category ID 37 — "Articles" (the category where the tag cloud is shown)
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -43,7 +42,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 get_header();
 
 // ============================================
-// ПОЛУЧЕНИЕ ДАННЫХ О ТЕКУЩЕЙ МЕТКЕ
+// GET DATA ABOUT THE CURRENT TAG
 // ============================================
 
 $queried_object = get_queried_object();
@@ -69,18 +68,18 @@ if ( $queried_object && is_object( $queried_object ) && isset( $queried_object->
             <div class="kama_breadcrumbs" itemscope="" itemtype="http://schema.org/BreadcrumbList">
                 
                 <span itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem">
-                    <a href="<?php echo esc_url( get_home_url() ); ?>" itemprop="item"><span itemprop="name">Главная</span></a>
+                    <a href="<?php echo esc_url( get_home_url() ); ?>" itemprop="item"><span itemprop="name"><?php esc_html_e( 'Home', 'argon-shop-theme' ); ?></span></a>
                 </span>
                 
                 <span class="kb_sep"> » </span>
                 
                 <span itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem">
-                    <a href="/stati/" itemprop="item"><span itemprop="name">Статьи</span></a>
+                    <a href="/stati/" itemprop="item"><span itemprop="name"><?php esc_html_e( 'Articles', 'argon-shop-theme' ); ?></span></a>
                 </span>
                 
                 <span class="kb_sep"> » </span>
                 
-                <span class="kb_title">Записи по метке: <?php single_cat_title(); ?></span>
+                <span class="kb_title"><?php esc_html_e( 'Posts tagged:', 'argon-shop-theme' ); ?> <?php single_cat_title(); ?></span>
                 
             </div>
 
@@ -90,7 +89,7 @@ if ( $queried_object && is_object( $queried_object ) && isset( $queried_object->
             <?php 
             
             // ============================================
-            // ДОЧЕРНИЕ КАТЕГОРИИ
+            // CHILD CATEGORIES
             // ============================================
             
             $terms = get_terms( array(
@@ -105,7 +104,7 @@ if ( $queried_object && is_object( $queried_object ) && isset( $queried_object->
                 $i = 0;
                 ?>
                     
-                <div class="itemControlPanel" data-type="openingList" name="childRubric">Дочерние категории</div>
+                <div class="itemControlPanel" data-type="openingList" name="childRubric"><?php esc_html_e( 'Subcategories', 'argon-shop-theme' ); ?></div>
                     
                 <div class="blockItemPage block-cards-childRubric" id="block_childRubric">
                         
@@ -152,7 +151,7 @@ if ( $queried_object && is_object( $queried_object ) && isset( $queried_object->
                 <?php 
                 
                 // ============================================
-                // ОБЛАКО ТЕГОВ (только для рубрики ID = 37)
+                // TAG CLOUD (only for the category with ID = 37)
                 // ============================================
                 
                 if ( $current_id === 37 ) {
@@ -177,7 +176,7 @@ if ( $queried_object && is_object( $queried_object ) && isset( $queried_object->
                         );
                         ?>
                         
-                        <div class="itemControlPanel itemControlPanel-tags" data-type="openingList" name="entryTags">Облако тегов</div>
+                        <div class="itemControlPanel itemControlPanel-tags" data-type="openingList" name="entryTags"><?php esc_html_e( 'Tag cloud', 'argon-shop-theme' ); ?></div>
                            
                         <div class="blockItemPage block-mobileEntryTags" id="block_entryTags">
                             
@@ -229,7 +228,7 @@ if ( $queried_object && is_object( $queried_object ) && isset( $queried_object->
                             </div>
                             
                             <div class="entryButtons">
-                                <a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title_attribute(); ?>">Читать далее</a>
+                                <a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title_attribute(); ?>"><?php esc_html_e( 'Read more', 'argon-shop-theme' ); ?></a>
                             </div>
                             
                         </div>
@@ -244,14 +243,14 @@ if ( $queried_object && is_object( $queried_object ) && isset( $queried_object->
                     
                 } else {
                     
-                    echo 'Материалов нет';
+                    echo __( 'No posts', 'argon-shop-theme' );
                 }
                 
                 ?>
                 
                 <?php 
-                if ( function_exists( 'kama_pagenavi' ) ) {
-                    kama_pagenavi();
+                if ( function_exists( 'as_kama_pagenavi' ) ) {
+                    as_kama_pagenavi();
                 }
                 ?>
                 

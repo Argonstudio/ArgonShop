@@ -234,9 +234,9 @@
 }
 
 /**
- * Развёрнутое состояние блока популярных запросов.
- * Класс добавляется JS-модулем modules/request.js при клике
- * по кнопке «Смотреть все».
+ * Expanded state of the popular queries block.
+ * The class is added by the modules/request.js JS module on a click
+ * on the "View all" button.
  */
 .block-cards-request.is-expanded {
     max-height: none;

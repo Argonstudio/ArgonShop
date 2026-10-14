@@ -1,94 +1,96 @@
-# AI_TEMPLATE_MAP.md — Шаблоны темы ↔ функции плагина
+# AI_TEMPLATE_MAP.md — Theme templates ↔ plugin functions
 
-> Продолжение [AI.md](../../AI.md). Карта: какой шаблон что вызывает.
-> Функции плагина помечены как `as_*` / `get_*` / `view_*`; функции темы — `astheme_*`.
+> Continuation of [AI.md](../../AI.md). Map: which template calls what.
+> Plugin functions use the `as_*` prefix (since 1.1.0; the old `get_*` / `view_*` names exist only as wrappers, see `AI_FUNCTION_NAMES.md`); theme functions are mostly `astheme_*` (exceptions are listed in section 6).
+>
+> ⚠️ Templates marked **"not created yet"** do not exist in the repository. They are needed only for the multi-region (cities) feature — see `AI_EXTENDING.md`, section 11.
 
 ---
 
-## 1. Глобальные шаблоны
+## 1. Global templates
 
 ### `header.php`
 
-| Что вызывает | Назначение |
+| Calls | Purpose |
 |--------------|-----------|
-| `wp_head()` | Подключение скриптов/стилей ядра и плагинов |
-| `wp_nav_menu()` (`top_menu`) | Верхнее меню |
-| `as_infocart()` | Виджет корзины (число товаров + сумма) |
-| `as_search($searchParameters)` | Форма поиска (AJAX) |
-| `do_shortcode('[contact-form-7 id="7"]')` | Форма обратной связи в модалке |
-| `#feedback` (разметка) | Модалка CF7 |
-| `.sitySelect` | Селект городов |
+| `wp_head()` | Core and plugin scripts/styles |
+| `wp_nav_menu()` (`top_menu`) | Top menu |
+| `as_infocart()` | Cart widget (item count + total in the store currency) |
+| `as_search($searchParameters)` | Search form (AJAX) |
+| `do_shortcode('[contact-form-7 id="7"]')` | Feedback form in a modal |
+| `#feedback` (markup) | CF7 modal |
+| `.sitySelect` | City select (only the current city is active; the second city option is commented out — multi-region, `AI_EXTENDING.md` §11) |
 
-**DOM, на который смотрит JS темы:**
+**DOM used by the theme JS:**
 
 ```
 .block-topSearch
-.topSearchSubmit   (из search-toggle.js)
+.topSearchSubmit   (from search-toggle.js)
 ```
 
 ### `footer.php`
 
-| Что вызывает | Назначение |
+| Calls | Purpose |
 |--------------|-----------|
-| `wp_nav_menu()` (`bottom_menu`, `bottom_menu2`) | Нижние меню |
-| `wp_footer()` | Подключение скриптов в подвале |
+| `wp_nav_menu()` (`bottom_menu`, `bottom_menu2`) | Footer menus |
+| `wp_footer()` | Footer scripts |
 
 ### `sidebar.php`
 
-| Что вызывает | Назначение |
+| Calls | Purpose |
 |--------------|-----------|
-| `get_catalog_terms()` | Дерево каталога |
-| `splitMenu()` | Разбивка на столбцы |
-| `view_menu_elements()` | Вывод меню каталога |
-| `getCookie('productsShoppingCart')` | Для карточек товаров |
-| `get_history_products(2)` | «Вы смотрели» |
-| `get_marked_products(2, '_hit')` | «Хиты продаж» |
-| `get_marked_products(2, '_newProduct')` | «Новинки» |
-| `view_products_list()` | Вывод карточек |
-| `post_in_term([37, 1], 'category')` | Для облака тегов |
-| `wp_tag_cloud()` | Облако тегов |
+| `as_get_catalog_terms()` | Catalog tree |
+| `as_splitMenu()` | Split into columns |
+| `as_view_menu_elements()` | Catalog menu output |
+| `as_getCookie('productsShoppingCart')` | For product cards |
+| `as_get_history_products(2)` | "You viewed" |
+| `as_get_marked_products(2, '_hit')` | "Best sellers" |
+| `as_get_marked_products(2, '_newProduct')` | "New arrivals" |
+| `as_view_products_list()` | Card output |
+| `as_post_in_term([37, 1], 'category')` | For the tag cloud |
+| `wp_tag_cloud()` | Tag cloud |
 
 ---
 
-## 2. Страницы (page templates)
+## 2. Pages (page templates)
 
-| Шаблон | Template Name | Вызывает |
+| Template | Template Name | Calls |
 |--------|---------------|----------|
-| `page.php` | — | `kama_breadcrumbs()` |
-| `aboutCompany.php` | О компании | `kama_breadcrumbs()`, `get_field('our_advantages')`, `WP_Query(ourclients)`, `get_field('our_clients')`, `WP_Query(sertificates)` |
-| `contacts.php` | Контакты | `kama_breadcrumbs()`, `get_template_part('addressMap')`, CF7 |
-| `history.php` | История просмотров | `kama_breadcrumbs()`, `getCookie()`, `get_history_products()`, `generate_product_card()`, `kama_pagenavi()` |
-| `myCabinetPage.php` | CabinetPage | `kama_breadcrumbs()`, `get_template_part('template-parts/cabinet/*')` |
-| `shoppingCartPage.php` | shoppingCart | `kama_breadcrumbs()`, `getCookie()`, `getActualPrice()`, `getClassActiveItem()`, `get_template_part('template-parts/cart/*')` |
-| `addressMap.php` | Карта AJAX | `iframe` Google Maps |
-| `404.php` | — | `kama_breadcrumbs()` |
+| `page.php` | — | `as_kama_breadcrumbs()` |
+| `aboutCompany.php` | About company | `as_kama_breadcrumbs()`, `get_field('our_advantages')`, `WP_Query(ourclients)`, `get_field('our_clients')`, `WP_Query(sertificates)` |
+| `contacts.php` | Contacts | `as_kama_breadcrumbs()`, `get_template_part('addressMap')`, CF7 |
+| `history.php` | View history | `as_kama_breadcrumbs()`, `as_getCookie()`, `as_get_history_products()`, `generate_product_card()`, `as_kama_pagenavi()` |
+| `myCabinetPage.php` | Account page | `as_kama_breadcrumbs()`, `get_template_part('template-parts/cabinet/*')` |
+| `shoppingCartPage.php` | Cart page | `as_kama_breadcrumbs()`, `as_getCookie()`, `as_getActualPrice()`, `as_getClassActiveItem()`, `astheme_price_html()`, `get_template_part('template-parts/cart/*')` |
+| `addressMap.php` | Map (AJAX) | `iframe` Google Maps |
+| `404.php` | — | `as_kama_breadcrumbs()` |
 
 ---
 
-## 3. Одиночные записи (single)
+## 3. Single entries (single)
 
-| Шаблон | Что выводит |
+| Template | Outputs |
 |--------|-------------|
-| `single.php` | **Диспетчер:** `in_category(36)` → `single-aktsii-moskva`, `in_category(35)` → `single-aktsii-istra`, иначе → `single-default` |
-| `single-default.php` | `kama_breadcrumbs()`, стандартный цикл |
-| `single-product.php` | `kama_breadcrumbs()`, `getCookie()`, `check_saleSteps()`, `getActualStepDiscont()`, `getActualPrice()`, `as_slider_product`, `get_template_part('template-parts/productPage/characteristics')` |
-| `single-aktsii-moskva.php` | Ручные хлебные крошки, `get_post_meta('promo_active')` |
-| `single-aktsii-istra.php` | `kama_breadcrumbs()` с разделителем `<b> / </b>` |
+| `single.php` | **Dispatcher:** `in_category(36)` → `single-aktsii-moskva`, `in_category(35)` → `single-aktsii-istra` (**template not created yet**; the call is also written incorrectly as `get_template_part( 'single-aktsii-istra.php' )` — the `.php` must be removed when the template is created), otherwise → `single-default` |
+| `single-default.php` | `as_kama_breadcrumbs()`, standard loop |
+| `single-product.php` | `as_kama_breadcrumbs()`, `as_getCookie()`, `as_check_saleSteps()`, `as_getActualStepDiscont()`, `as_getActualPrice()`, `as_slider_product`, `astheme_currency_symbol()` / `astheme_currency_position()` (`span.currencySymbol`), `get_template_part('template-parts/productPage/characteristics')` |
+| `single-aktsii-moskva.php` | Manual breadcrumbs, `get_post_meta('promo_active')` |
+| `single-aktsii-istra.php` | ⚠️ **Not created yet.** Create it (as a copy of `single-aktsii-moskva.php` adapted to the second city) **only when the task is to enable city selection** — follow `AI_EXTENDING.md`, section 11, and first ask the user whether they would rather use WordPress Multisite |
 
 ---
 
-## 4. Архивы
+## 4. Archives
 
-| Шаблон | Что выводит |
+| Template | Outputs |
 |--------|-------------|
-| `archive.php` | `kama_breadcrumbs()`, `get_terms(category)`, `wp_tag_cloud` (при `ID=37`), `kama_pagenavi()` |
-| `tag.php` | Ручные крошки, `kama_pagenavi()` |
-| `taxonomy-catalog.php` | `kama_breadcrumbs()`, `get_field` (`second_title`, `image_catalog`, `catalog_type`, `second_desc`, `bottom_desc`), `get_terms(catalog)`, `getCookie('AS_CatalogSorting')`, `as_sort()`, `get_sort_products()`, `view_products_list()`, `kama_pagenavi()` |
-| `category-aktsii-moskva.php` | `kama_breadcrumbs()`, `WP_Query` с `promo_active=1`, `kama_pagenavi()` |
-| `category-aktsii-istra.php` | **Заглушка:** `include(404.php)` |
-| `categoryArchive-aktsii-moskva.php` | Ручные крошки, `WP_Query` с `promo_active=0` |
-| `categoryArchive-aktsii-istra.php` | Ручные крошки, `WP_Query` с `promo_active=0` |
-| `search.php` | `kama_breadcrumbs()`, `as_search()`, `getCookie()`, `generate_product_card()`, `kama_pagenavi()` |
+| `archive.php` | `as_kama_breadcrumbs()`, `get_terms(category)`, `wp_tag_cloud` (when `ID=37`), `as_kama_pagenavi()` |
+| `tag.php` | Manual breadcrumbs, `as_kama_pagenavi()` |
+| `taxonomy-catalog.php` | `as_kama_breadcrumbs()`, `get_field` (`second_title`, `image_catalog`, `catalog_type`, `second_desc`, `bottom_desc`), `get_terms(catalog)`, `as_getCookie('AS_CatalogSorting')`, `as_sort()`, `as_get_sort_products()`, `as_view_products_list()`, `as_kama_pagenavi()` |
+| `category-aktsii-moskva.php` | `as_kama_breadcrumbs()`, `WP_Query` with `promo_active=1`, `as_kama_pagenavi()` |
+| `category-aktsii-istra.php` | ⚠️ **Not created yet** — second-city promotions category (category ID 35). Create it only for the city-selection task (`AI_EXTENDING.md`, section 11) |
+| `categoryArchive-aktsii-moskva.php` | Page template "Promotions archive (Moscow)": manual breadcrumbs, `WP_Query` with `promo_active=0` |
+| `categoryArchive-aktsii-istra.php` | ⚠️ **Not created yet** — second-city promotions archive. Create it only for the city-selection task (`AI_EXTENDING.md`, section 11) |
+| `search.php` | `as_kama_breadcrumbs()`, `as_search()`, `as_getCookie()`, `generate_product_card()`, `as_kama_pagenavi()` |
 
 ---
 
@@ -96,73 +98,86 @@
 
 ### `template-parts/cabinet/`
 
-| Файл | Что выводит |
+| File | Outputs |
 |------|-------------|
-| `account.php` | `show_user_fields('person')`, чекбокс юрлица, `show_user_fields('legalPerson')`, кнопка `#accountSaveButton` |
-| `setting.php` | `#editEmail`, `#editOldPass`, `#editNewPass`, `#editNewPassConfirm`, `#editEmailPasswordButton`, ссылка `wp_logout_url()` |
-| `ordering.php` | `view_user_orders($user_ID)` |
+| `account.php` | `as_show_user_fields('person')`, legal-entity checkbox, `as_show_user_fields('legalPerson')`, button `#accountSaveButton` |
+| `setting.php` | `#editEmail`, `#editOldPass`, `#editNewPass`, `#editNewPassConfirm`, `#editEmailPasswordButton`, link `wp_logout_url()` |
+| `ordering.php` | `as_view_user_orders($user_ID)` |
 
 ### `template-parts/cart/`
 
-| Файл | Что выводит |
+| File | Outputs |
 |------|-------------|
-| `quickOrder.php` | `show_user_fields('quick')`, `messageUser`, submit |
-| `person.php` | `show_user_fields('person')`, `emailUser`, `messageUser`, `fileCart[]`, `cartReg`, `shipping`, `payment`, submit |
-| `legalPerson.php` | `show_user_fields('person')`, `emailUser`, `show_user_fields('legalPerson')`, `messageUser`, `fileCart[]`, `cartReg`, `shipping`, `payment`, submit |
+| `quickOrder.php` | `as_show_user_fields('quick')`, `messageUser`, submit |
+| `person.php` | `as_show_user_fields('person')`, `emailUser`, `messageUser`, `fileCart[]`, `cartReg`, `shipping`, `payment`, submit |
+| `legalPerson.php` | `as_show_user_fields('person')`, `emailUser`, `as_show_user_fields('legalPerson')`, `messageUser`, `fileCart[]`, `cartReg`, `shipping`, `payment`, submit |
 
 ### `template-parts/productPage/`
 
-| Файл | Что выводит |
+| File | Outputs |
 |------|-------------|
-| `characteristics.php` | `_weight`, `_characteristics_text_field`, `_characteristics_checkbox_field`, `get_term_by('characteristics')`, Fancybox-описания |
+| `characteristics.php` | `_weight`, `_characteristics_text_field`, `_characteristics_checkbox_field`, `get_term_by('id', …, 'characteristics')`. The term description is read into `$productDescr` but **not output** (the old Fancybox popup was removed; Fancybox is no longer used — modals are `modal.js`, galleries are GLightbox) |
 
 ---
 
-## 6. Функции темы (не плагина)
+## 6. Theme functions (not plugin)
 
 ### PHP — `functions.php`
 
-| Функция | Что делает |
+| Function | Does |
 |---------|-----------|
-| `astheme_after_setup` | Меню, `add_theme_support`, `add_image_size` |
+| `astheme_load_textdomain` | Loads the `argon-shop-theme` text domain |
+| `astheme_after_setup` | Menus, `add_theme_support`, `add_image_size` |
 | `astheme_scripts` | `wp_enqueue_style`, `wp_enqueue_script` |
 | `astheme_create_post_type` | CPT `ourclients`, `sertificates` |
-| `true_catalog_redirect` | Редирект вложенных категорий каталога |
-| `astheme_excerpt_length`, `astheme_excerpt_more` | Настройки excerpt |
-| `post_is_in_descendant_category` | Хелпер для тегов |
-| `astheme_top_menu`, `astheme_category_menu` | Хелперы для вывода меню |
+| `true_catalog_redirect` | Redirect of nested catalog categories |
+| `astheme_excerpt_length`, `astheme_excerpt_more` | Excerpt settings |
+| `post_is_in_descendant_category` | Tag helper |
+| `astheme_top_menu`, `astheme_category_menu` | Menu output helpers |
+| `disable_wp_emojis_in_tinymce` | Removes the emoji plugin from TinyMCE |
+| `astheme_price_html`, `astheme_currency_symbol`, `astheme_currency_position` | Currency wrappers around the plugin helpers |
 
-### JS темы (не плагина)
+`generate_product_card()` — product card output, `includes/cardProduct/cardProduct.php` of the theme.
 
-| Файл | Что делает |
+### Theme JS (not plugin)
+
+| File | Does |
 |------|-----------|
-| `assets/js/modal.js` | Лёгкая модалка (AJAX / inline / iframe) |
-| `assets/js/search-toggle.js` | Раскрытие поиска в шапке |
-| `assets/js/slider-sertificates.js` | Слайдер сертификатов (Swiper + GLightbox) |
+| `assets/js/modal.js` | Lightweight modal (AJAX / inline / iframe), strings from `arsModalI18n` |
+| `assets/js/search-toggle.js` | Header search expand |
+| `assets/js/slider-sertificates.js` | Certificate slider (Swiper + GLightbox) |
 
-> **Примечание:** в исторической ветке `historic/php56-jquery` префикс функций
-> темы — `bito_*`, а не `astheme_*`. В актуальной версии плагина префиксы
-> приведены к `astheme_*` / `ars*`. См. `AI_CONTEXT.md` для деталей.
+> **Note:** in the historic branch `historic/php56-jquery` the theme function
+> prefix is `bito_*`, not `astheme_*`. In the current version new theme functions use
+> `astheme_*` (older unprefixed ones: `true_catalog_redirect`, `post_is_in_descendant_category`,
+> `disable_wp_emojis_in_tinymce`, `generate_product_card`), JS objects use `ars*`,
+> plugin functions use `as_*` (since 1.1.0, see `AI_FUNCTION_NAMES.md`).
 
 ---
 
-## 7. Правила правок в шаблонах
+## 7. Rules for editing templates
 
-1. **Не менять вызовы функций плагина.** Если функция `as_infocart()`
-   вызывается — оставить. Если обёрнута в `if ( function_exists(...) )` —
-   обёртку тоже.
+1. **Don't change plugin function calls.** If `as_infocart()` is
+   called — keep it. If it is wrapped in `if ( function_exists(...) )` —
+   keep the wrapper too.
 
-2. **Не добавлять `get_search_form()`** — форма поиска выводится через
+2. **Don't add `get_search_form()`** — the search form is rendered by
    `as_search()`.
 
-3. **Не вызывать функции плагина напрямую без `function_exists`,** если
-   шаблон может использоваться без плагина (сейчас не может, но оставь запас).
+3. **Don't call plugin functions without `function_exists`** if the
+   template may be used without the plugin (it can't today, but keep the margin).
 
-4. **Не перемещать `<script>` в шаблонах** — JS подключается через
-   `wp_enqueue_script` в `functions.php` или `argon-shop.php`.
+4. **Don't move `<script>` into templates** — JS is loaded via
+   `wp_enqueue_script` in `functions.php` or `argon-shop.php`.
 
-5. **Шаблон страницы для заказа (`single-shoporder.php`) не нужен** —
+5. **No page template for orders (`single-shoporder.php`) is needed** —
    `publicly_queryable => false`.
+
+6. **Prices and currency** — only via `astheme_price_html()` /
+   `astheme_currency_symbol()`; never hardcode `₽`, `$`, `€` or `руб.`.
+
+7. **Text** — in English inside `__()` / `esc_html_e()` with the
+   `argon-shop-theme` domain; comments in English.
 
 ---
 

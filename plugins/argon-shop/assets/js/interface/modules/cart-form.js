@@ -1,61 +1,60 @@
 /**
- * ArgonShop — поля формы корзины.
+ * ArgonShop — cart form fields.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Отвечает за поля формы оформления заказа, не связанные
- * с товарами и корзиной:
+ * Handles the checkout form fields that are not related
+ * to products and the cart:
  *
- *   1. Клик по области .block-regQuestion переключает
- *      чекбокс .cartReg — «Зарегистрировать вас?».
- *      Сам чекбокс скрыт, клик идёт по всей плашке с текстом.
+ *   1. A click on the .block-regQuestion area toggles
+ *      the .cartReg checkbox — "Register an account?".
+ *      The checkbox itself is hidden, the click goes to the whole label with text.
  *
- *   2. Отметка .cartReg показывает/скрывает блок .cartLogin
- *      с полем логина.
+ *   2. Checking .cartReg shows/hides the .cartLogin block
+ *      with the login field.
  *
- *   3. Клик по кнопке .labelAddFile программно открывает
- *      диалог выбора файлов у input[type=file][name="fileCart[]"].
+ *   3. A click on the .labelAddFile button programmatically opens
+ *      the file picker of input[type=file][name="fileCart[]"].
  *
- *   4. После выбора файлов — валидация по data-атрибутам
- *      (data-sizeFile, data-amountFiles) и вывод списка
- *      в .loadedFiles.
+ *   4. After files are chosen — validation by the data attributes
+ *      (data-sizeFile, data-amountFiles) and the list output
+ *      in .loadedFiles.
  *
- * Вся работа с товарами и заказом — в cart.js.
+ * All work with products and the order is in cart.js.
  *
  * ============================================================
- * ПОЧЕМУ ПРЯМЫЕ ОБРАБОТЧИКИ, А НЕ ДЕЛЕГИРОВАНИЕ
+ * WHY DIRECT HANDLERS AND NOT DELEGATION
  * ============================================================
  *
- * Делегирование на document для .cartReg не работает, потому
- * что чекбокс скрыт через CSS (display:none), это историческая реализация темы.
+ * Delegation to document does not work for .cartReg because
+ * the checkbox is hidden via CSS (display:none), a historical theme implementation.
  * 
- * Решил это не переписывать, прямой обработчик надежнее.
+ * Decided not to rewrite it, a direct handler is more reliable.
  *
  * ============================================================
- * DOM-ЭЛЕМЕНТЫ
+ * DOM ELEMENTS
  * ============================================================
  *
- * .block-regQuestion    — плашка с чекбоксом и текстом
- * .cartReg              — сам чекбокс (скрыт)
- * .cartLogin            — блок с полем логина (скрыт)
+ * .block-regQuestion    — label with the checkbox and text
+ * .cartReg              — the checkbox itself (hidden)
+ * .cartLogin            — block with the login field (hidden)
  *
- * .labelAddFile         — кнопка «Прикрепить файлы»
+ * .labelAddFile         — "Attach files" button
  * input[type=file][name="fileCart[]"]
- *     data-sizeFile    — макс. размер файла в МБ
- *     data-amountFiles — макс. количество файлов
+ *     data-sizeFile    — max file size in MB
+ *     data-amountFiles — max number of files
  *
- * .block-fileCartMessage — общий контейнер блока вывода
- * .fileCartMessage      — счётчик и сообщения об ошибках
- * .loadSaccess          — заголовок «ЗАГРУЖЕНО ФАЙЛОВ: N»
- * .loadError            — сообщение об ошибке
- * .loadedFiles          — контейнер списка (скрыт)
- * .loadedFiles > ol > li — строки с именами файлов
+ * .block-fileCartMessage — shared output block container
+ * .fileCartMessage      — counter and error messages
+ * .loadSaccess          — "Files uploaded: N" heading (translated, see i18n.filesUploaded)
+ * .loadError            — error message
+ * .loadedFiles          — list container (hidden)
+ * .loadedFiles > ol > li — rows with file names
  *
  * ============================================================
  */
@@ -63,9 +62,10 @@
 'use strict';
 
 import { qs, qsa } from '../../shared/dom.js';
+import { t } from '../core/config.js';
 
 /**
- * Модуль полей формы корзины.
+ * Cart form fields module.
  */
 class ArsCartForm {
 
@@ -73,10 +73,10 @@ class ArsCartForm {
     #initialized = false;
 
     /**
-     * Инициализация обработчиков.
+     * Handler initialization.
      *
-     * Безопасна для любой страницы: если .form-cart нет,
-     * модуль просто ничего не делает.
+     * Safe for any page: if there is no .form-cart,
+     * the module simply does nothing.
      *
      * @return {void}
      */
@@ -86,7 +86,7 @@ class ArsCartForm {
             return;
         }
 
-        // Формы корзины нет на странице — выходим
+        // No cart form on the page — exit
         if ( ! qs( '.form-cart' ) ) {
             return;
         }
@@ -100,12 +100,12 @@ class ArsCartForm {
     }
 
     // ============================================================
-    // РЕГИСТРАЦИЯ
+    // REGISTRATION
     // ============================================================
 
     /**
-     * Клик по плашке .block-regQuestion эмулирует клик
-     * по скрытому чекбоксу .cartReg.
+     * A click on the .block-regQuestion label emulates a click
+     * on the hidden .cartReg checkbox.
      *
      * @return {void}
      */
@@ -121,8 +121,8 @@ class ArsCartForm {
                     return;
                 }
 
-                // Клик был по самому чекбоксу — браузер
-                // переключит его сам, не вмешиваемся.
+                // The click was on the checkbox itself — the browser
+                // toggles it on its own, do not interfere.
                 if ( event.target === checkbox ) {
                     return;
                 }
@@ -134,8 +134,8 @@ class ArsCartForm {
     }
 
     /**
-     * Отметка чекбокса .cartReg показывает или скрывает
-     * блок .cartLogin в той же форме.
+     * Checking .cartReg shows or hides
+     * the .cartLogin block in the same form.
      *
      * @return {void}
      */
@@ -163,12 +163,12 @@ class ArsCartForm {
     }
 
     // ============================================================
-    // ПРИКРЕПЛЕНИЕ ФАЙЛОВ
+    // ATTACHING FILES
     // ============================================================
 
     /**
-     * Клик по кнопке .labelAddFile открывает диалог выбора
-     * файлов у соответствующего input.
+     * A click on the .labelAddFile button opens the file picker
+     * of the corresponding input.
      *
      * @return {void}
      */
@@ -196,7 +196,7 @@ class ArsCartForm {
     }
 
     /**
-     * Обработка выбора файлов: валидация, счётчик, список.
+     * Handling the file selection: validation, counter, list.
      *
      * @return {void}
      */
@@ -220,30 +220,30 @@ class ArsCartForm {
                     return;
                 }
 
-                // Показываем контейнер
+                // Show the container
                 blockMessage.style.display = 'block';
 
-                // Сброс прошлого вывода
+                // Reset the previous output
                 fileCartMessage.innerHTML = '';
                 loadedFiles.innerHTML = '';
                 loadedFiles.style.display = 'none';
 
                 const files = Array.from( input.files || [] );
 
-                // Файлы убраны — прячем весь блок
+                // Files were removed — hide the whole block
                 if ( ! files.length ) {
                     blockMessage.style.display = 'none';
                     return;
                 }
 
-                // ---------- Проверки ----------
+                // ---------- Checks ----------
 
                 const maxSizeMb = parseFloat( input.dataset.sizefile ) || 0;
                 const maxFiles  = parseInt( input.dataset.amountfiles, 10 ) || 0;
                 const maxBytes  = maxSizeMb * 1024 * 1024;
 
                 if ( maxFiles > 0 && files.length > maxFiles ) {
-                    this.#showFileError( fileCartMessage, loadedFiles, 'Можно прикрепить не более ' + maxFiles + ' файлов.' );
+                    this.#showFileError( fileCartMessage, loadedFiles, t( 'tooManyFiles', maxFiles ) );
                     input.value = '';
                     return;
                 }
@@ -251,21 +251,21 @@ class ArsCartForm {
                 for ( let i = 0; i < files.length; i++ ) {
 
                     if ( maxBytes > 0 && files[i].size > maxBytes ) {
-                        this.#showFileError( fileCartMessage, loadedFiles, 'Файл "' + files[i].name + '" превышает ' + maxSizeMb + ' МБ.' );
+                        this.#showFileError( fileCartMessage, loadedFiles, t( 'fileTooBig', files[i].name, maxSizeMb ) );
                         input.value = '';
                         return;
                     }
                 }
 
-                // ---------- Заголовок-счётчик ----------
+                // ---------- Counter heading ----------
 
                 const counter = document.createElement( 'div' );
                 counter.className = 'loadSaccess';
-                counter.textContent = 'ЗАГРУЖЕНО ФАЙЛОВ: ' + files.length;
+                counter.textContent = t( 'filesUploaded', files.length );
 
                 fileCartMessage.appendChild( counter );
 
-                // ---------- Список файлов ----------
+                // ---------- File list ----------
 
                 const list = document.createElement( 'ol' );
 
@@ -286,11 +286,11 @@ class ArsCartForm {
     }
 
     /**
-     * Показывает сообщение об ошибке выбора файлов.
+     * Shows a file selection error message.
      *
-     * @param  {Element} fileCartMessage — контейнер сообщений
-     * @param  {Element} loadedFiles     — контейнер списка
-     * @param  {string}  message         — текст ошибки
+     * @param  {Element} fileCartMessage — message container
+     * @param  {Element} loadedFiles     — list container
+     * @param  {string}  message         — error text
      * @return {void}
      */
     #showFileError( fileCartMessage, loadedFiles, message ) {
@@ -306,7 +306,7 @@ class ArsCartForm {
 }
 
 /**
- * Готовый синглтон модуля полей формы корзины.
+ * Ready singleton of the cart form fields module.
  *
  * @type {ArsCartForm}
  */

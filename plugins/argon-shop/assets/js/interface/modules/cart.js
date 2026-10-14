@@ -1,117 +1,117 @@
 /**
- * ArgonShop — модуль корзины покупок.
+ * ArgonShop — shopping cart module.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Управляет страницей корзины и виджетом корзины:
+ * Controls the cart page and the cart widget:
  *
- *   1. Изменение количества товара (поле ввода и кнопки +/-).
- *   2. Удаление одного товара.
- *   3. Очистка корзины целиком.
- *   4. Пересчёт цен, веса и итогов после каждого изменения.
- *   5. Отправка формы оформления заказа.
+ *   1. Changing the product quantity (input field and +/- buttons).
+ *   2. Removing a single product.
+ *   3. Clearing the whole cart.
+ *   4. Recalculating prices, weight and totals after every change.
+ *   5. Submitting the checkout form.
  *
- * Все действия выполняются через AJAX-обработчики плагина
- * (см. includes/interface/shoppingCart/shoppingCart.php).
+ * All actions go through the plugin AJAX handlers
+ * (see includes/interface/shoppingCart/shoppingCart.php).
  *
  * ============================================================
- * СООТВЕТСТВИЕ AJAX-ДЕЙСТВИЙ
+ * AJAX ACTIONS
  * ============================================================
  *
  * amountProducts_shoppingCart
- *   Изменение количества одного товара.
- *   Принимает: productID, productAmount.
- *   Возвращает JSON: { weight, actualPrices, productsShoppingCart }
+ *   Changing the quantity of one product.
+ *   Accepts: productID, productAmount.
+ *   Returns JSON: { weight, actualPrices, productsShoppingCart }
  *
  * deleteProducts_shoppingCart
- *   Удаление одного товара.
- *   Принимает: productID.
- *   Возвращает JSON actualPrices или строку "false", если корзина пуста.
+ *   Removing one product.
+ *   Accepts: productID.
+ *   Returns the actualPrices JSON or the string "false" if the cart is empty.
  *
  * deleteAllProducts_shoppingCart
- *   Полная очистка корзины. Nonce не передаётся (см. config.skipNonceActions).
- *   Ничего не возвращает.
+ *   Clearing the cart completely. The nonce is sent too (the server checks it for all actions).
+ *   Returns nothing.
  *
  * submitCart_shoppingCart
- *   Отправка формы оформления заказа.
- *   Принимает FormData: typeForm, required, productsCart, поля формы.
- *   Возвращает JSON: { type, typeForm, message }.
+ *   Submitting the checkout form.
+ *   Accepts FormData: typeForm, required, productsCart, form fields.
+ *   Returns JSON: { type, typeForm, message }.
  *
  * ============================================================
- * DOM-ЭЛЕМЕНТЫ
+ * DOM ELEMENTS
  * ============================================================
  *
  * .shoppingCartAmountProduct[data-productid]
- *   Поле количества товара.
+ *   Product quantity field.
  *
  * .plusProduct[data-productid] / .minusProduct[data-productid]
- *   Кнопки увеличения и уменьшения количества.
+ *   Quantity increase and decrease buttons.
  *
  * .deleteProduct[data-productid]
- *   Кнопка удаления одного товара.
+ *   Remove button for one product.
  *
  * .deleteAllProducts
- *   Кнопка полной очистки корзины.
+ *   Button for clearing the whole cart.
  *
  * .blockCartProduct[data-productid]
- *   Контейнер одного товара в корзине.
+ *   Container of one product in the cart.
  *
- * .productPrice span           — цена за единицу товара.
- * .amountProductPrice span     — итоговая цена за количество этого товара.
- * .amountProductWeight span    — вес за количество этого товара.
- * .shoppingCartError           — блок ошибки на карточке товара.
+ * .productPrice span           — product unit price.
+ * .amountProductPrice span     — total price for the quantity of this product.
+ * .amountProductWeight span    — weight for the quantity of this product.
+ * .shoppingCartError           — error block on the product card.
  *
- * .cartTotalPrice span         — итоговая сумма всей корзины.
- * .cartTotalWeight span        — итоговый вес всей корзины.
- * .cartTotalWeight             — контейнер итогового веса (управляет видимостью).
+ * .cartTotalPrice span         — total of the whole cart.
+ * .cartTotalWeight span        — total weight of the whole cart.
+ * .cartTotalWeight             — total weight container (controls visibility).
  *
- * #shoppingCart                — контейнер корзины (для сообщения "Корзина пуста").
- * .errorDeleteProducts         — блок ошибки полной очистки.
+ * #shoppingCart                — cart container (for the "Cart is empty" message).
+ * .errorDeleteProducts         — error block for clearing the cart.
  *
- * .form-cart[data-type]        — форма оформления заказа.
- * .submitError span            — блок ошибки при отправке формы.
+ * .form-cart[data-type]        — checkout form.
+ * .submitError span            — error block for the form submission.
  *
  * ============================================================
- * ИСПОЛЬЗОВАНИЕ
+ * USAGE
  * ============================================================
  *
  *     import { arsCart } from './modules/cart.js';
  *     arsCart.init();
  *
- * Модуль безопасен для вызова на любой странице: если элементов
- * корзины нет, обработчики не сработают.
+ * The module is safe to call on any page: if there are no cart
+ * elements, the handlers do not fire.
  */
 
 'use strict';
 
 import { arsApi }            from '../core/api.js';
+import { t }               from '../core/config.js';
 import { qs, qsa, delegate } from '../../shared/dom.js';
-import { formatPrice, formatWeight } from '../../shared/format.js';
+import { formatPrice, formatWeight, parseNumber } from '../../shared/format.js';
 
 /**
- * Модуль корзины покупок.
+ * Shopping cart module.
  */
 class ArsShoppingCart {
 
     /**
-     * Текущий незавершённый запрос изменения количества.
-     * Используется для отмены предыдущего запроса, если пользователь
-     * быстро меняет количество — иначе ответы приходят в разном
-     * порядке и перезаписывают данные.
+     * The current unfinished quantity change request.
+     * Used to cancel the previous request if the user
+     * changes the quantity quickly — otherwise the responses arrive in a different
+     * order and overwrite the data.
      *
      * @type {AbortController|null}
      */
     #amountController = null;
 
     /**
-     * Инициализация обработчиков. Повторный вызов
-     * ничего не делает.
+     * Handler initialization. A repeated call
+     * does nothing.
      *
      * @return {void}
      */
@@ -134,14 +134,14 @@ class ArsShoppingCart {
     #initialized = false;
 
     // ============================================================
-    // ОБРАБОТЧИКИ СОБЫТИЙ
+    // EVENT HANDLERS
     // ============================================================
 
     /**
-     * Изменение количества через поле ввода.
+     * Changing the quantity via the input field.
      *
-     * При некорректном значении (пустое, ноль, не число) — сбрасывает
-     * в 1 и отправляет на сервер.
+     * On an invalid value (empty, zero, not a number) resets it
+     * to 1 and sends it to the server.
      *
      * @return {void}
      */
@@ -163,10 +163,10 @@ class ArsShoppingCart {
     }
 
     /**
-     * Кнопки увеличения и уменьшения количества.
+     * Quantity increase and decrease buttons.
      *
-     * После изменения значения поля вручную вызывается событие
-     * input — так срабатывает тот же обработчик, что и при ручном вводе.
+     * After the field value is changed manually the input event
+     * is dispatched — so the same handler fires as on manual input.
      *
      * @return {void}
      */
@@ -204,7 +204,7 @@ class ArsShoppingCart {
     }
 
     /**
-     * Удаление одного товара.
+     * Removing one product.
      *
      * @return {void}
      */
@@ -226,7 +226,7 @@ class ArsShoppingCart {
                     const cart = qs( '#shoppingCart' );
 
                     if ( cart ) {
-                        cart.innerHTML = 'Корзина пуста';
+                        cart.textContent = t( 'cartEmpty' );
                     }
 
                     return;
@@ -241,13 +241,13 @@ class ArsShoppingCart {
                 this.#recountCart( actualPrices );
 
             } catch {
-                this.#showError( productId, 'Ошибка на сервере, товар не удалён' );
+                this.#showError( productId, t( 'productNotRemoved' ) );
             }
         });
     }
 
     /**
-     * Полная очистка корзины.
+     * Clearing the whole cart.
      *
      * @return {void}
      */
@@ -262,7 +262,7 @@ class ArsShoppingCart {
                 const cart = qs( '#shoppingCart' );
 
                 if ( cart ) {
-                    cart.innerHTML = 'Корзина пуста';
+                    cart.textContent = t( 'cartEmpty' );
                 }
 
                 const errorBlock = qs( '.errorDeleteProducts' );
@@ -276,7 +276,7 @@ class ArsShoppingCart {
                 const errorBlock = qs( '.errorDeleteProducts' );
 
                 if ( errorBlock ) {
-                    errorBlock.textContent = 'Ошибка на сервере, товары не удалены';
+                    errorBlock.textContent = t( 'productsNotRemoved' );
                     errorBlock.style.display = 'block';
                 }
             }
@@ -284,12 +284,12 @@ class ArsShoppingCart {
     }
 
     /**
-     * Отправка формы оформления заказа.
+     * Submitting the checkout form.
      *
-     * Дополнительно к данным формы собирает:
-     *   - typeForm — тип формы (quick / person / legalPerson)
-     *   - productsCart — текущее количество всех товаров корзины
-     *   - required — карта обязательных полей формы
+     * In addition to the form data it collects:
+     *   - typeForm — form type (quick / person / legalPerson)
+     *   - productsCart — current quantity of all cart products
+     *   - required — map of required form fields
      *
      * @return {void}
      */
@@ -301,7 +301,7 @@ class ArsShoppingCart {
 
             const formData = new FormData( form );
 
-            // Текущее количество всех товаров корзины.
+            // Current quantity of all cart products.
             const productsCart = {};
 
             qsa( '.shoppingCartAmountProduct' ).forEach( input => {
@@ -310,7 +310,7 @@ class ArsShoppingCart {
                 };
             });
 
-            // Карта обязательных полей формы.
+            // Map of required form fields.
             const required = {};
 
             qsa( '[required]', form ).forEach( field => {
@@ -328,18 +328,18 @@ class ArsShoppingCart {
     }
 
     // ============================================================
-    // AJAX-ОПЕРАЦИИ
+    // AJAX OPERATIONS
     // ============================================================
 
     /**
-     * Отправка запроса изменения количества одного товара.
+     * Sends the quantity change request for one product.
      *
-     * Предыдущий незавершённый запрос отменяется — так исключается
-     * ситуация, когда ответы приходят в разном порядке и портят
-     * финальное состояние.
+     * The previous unfinished request is cancelled — this rules out
+     * the situation when responses arrive in a different order and spoil
+     * the final state.
      *
-     * @param  {string} productId — ID товара
-     * @param  {number} amount    — новое количество
+     * @param  {string} productId — product ID
+     * @param  {number} amount    — new quantity
      * @return {Promise<void>}
      */
     async #requestAmountChange( productId, amount ) {
@@ -387,14 +387,14 @@ class ArsShoppingCart {
 
             this.#amountController = null;
 
-            this.#showError( productId, 'Ошибка на сервере, изменения не приняты' );
+            this.#showError( productId, t( 'changesNotAccepted' ) );
         }
     }
 
     /**
-     * Отправка формы оформления заказа.
+     * Submitting the checkout form.
      *
-     * @param  {FormData} formData — данные формы
+     * @param  {FormData} formData — form data
      * @return {Promise<void>}
      */
     async #submitCart( formData ) {
@@ -426,25 +426,25 @@ class ArsShoppingCart {
         } catch {
             this.#showFormError(
                 qs( '.form-cart' ),
-                'Ошибка на сервере: заказ не отправлен'
+                t( 'orderNotSent' )
             );
         }
     }
 
     // ============================================================
-    // ПЕРЕСЧЁТ ЦЕН И ВЕСА
+    // RECALCULATING PRICES AND WEIGHT
     // ============================================================
 
     /**
-     * Обновляет вес одного товара на странице.
+     * Updates the weight of one product on the page.
      *
-     * Вес приходит от сервера для одной единицы товара, здесь
-     * умножается на количество и записывается во все span-элементы
-     * .amountProductWeight внутри карточки.
+     * The server sends the weight of one unit of the product, here
+     * it is multiplied by the quantity and written into all
+     * .amountProductWeight span elements inside the card.
      *
-     * @param  {string} productId — ID товара
-     * @param  {number} weight    — вес одной единицы
-     * @param  {number} amount    — количество
+     * @param  {string} productId — product ID
+     * @param  {number} weight    — weight of one unit
+     * @param  {number} amount    — quantity
      * @return {void}
      */
     #updateProductWeight( productId, weight, amount ) {
@@ -455,7 +455,7 @@ class ArsShoppingCart {
             return;
         }
 
-        const totalWeight = ( parseFloat( weight ) || 0 ) * amount;
+        const totalWeight = ( parseNumber( weight ) || 0 ) * amount;
 
         qsa( '.amountProductWeight span', block ).forEach( span => {
             span.textContent = formatWeight( totalWeight );
@@ -463,9 +463,9 @@ class ArsShoppingCart {
     }
 
     /**
-     * Пересчитывает цены и веса всей корзины.
+     * Recalculates the prices and weights of the whole cart.
      *
-     * @param  {Object<string, number>} actualPrices — актуальные цены по ID товаров
+     * @param  {Object<string, number>} actualPrices — current prices by product ID
      * @return {void}
      */
     #recountCart( actualPrices ) {
@@ -482,21 +482,21 @@ class ArsShoppingCart {
             }
 
             const amountInput = qs( '.shoppingCartAmountProduct', block );
-            const amount = parseFloat( amountInput ? amountInput.value : 0 ) || 0;
+            const amount = parseNumber( amountInput ? amountInput.value : 0 ) || 0;
 
-            // Обновляем цену за единицу (все span-элементы, включая мобильный блок).
+            // Update the unit price (all span elements, including the mobile block).
             qsa( '.productPrice span', block ).forEach( span => {
                 span.textContent = formatPrice( price );
             });
 
-            // Обновляем итоговую цену за количество этого товара.
+            // Update the total price for the quantity of this product.
             qsa( '.amountProductPrice span', block ).forEach( span => {
                 span.textContent = formatPrice( price * amount );
             });
 
-            // Вес за количество товара уже записан в span, суммируем.
+            // The weight for the product quantity is already written to the span, sum it up.
             const weightSpan = qs( '.amountProductWeight span', block );
-            const weight = parseFloat( weightSpan ? weightSpan.textContent : 0 ) || 0;
+            const weight = parseNumber( weightSpan ? weightSpan.textContent : 0 ) || 0;
 
             if ( weight ) {
                 totalWeight += weight;
@@ -509,10 +509,10 @@ class ArsShoppingCart {
     }
 
     /**
-     * Обновляет итоговые значения корзины в интерфейсе.
+     * Updates the cart totals in the interface.
      *
-     * @param  {number} totalPrice  — итоговая сумма
-     * @param  {number} totalWeight — итоговый вес
+     * @param  {number} totalPrice  — total
+     * @param  {number} totalWeight — total weight
      * @return {void}
      */
     #updateCartTotals( totalPrice, totalWeight ) {
@@ -534,14 +534,14 @@ class ArsShoppingCart {
     }
 
     // ============================================================
-    // СООБЩЕНИЯ ОБ ОШИБКАХ
+    // ERROR MESSAGES
     // ============================================================
 
     /**
-     * Показывает сообщение об ошибке на карточке товара.
+     * Shows an error message on the product card.
      *
-     * @param  {string} productId — ID товара
-     * @param  {string} message   — текст ошибки
+     * @param  {string} productId — product ID
+     * @param  {string} message   — error text
      * @return {void}
      */
     #showError( productId, message ) {
@@ -568,9 +568,9 @@ class ArsShoppingCart {
     }
 
     /**
-     * Скрывает сообщение об ошибке на карточке товара.
+     * Hides the error message on the product card.
      *
-     * @param  {string} productId — ID товара
+     * @param  {string} productId — product ID
      * @return {void}
      */
     #hideError( productId ) {
@@ -597,10 +597,10 @@ class ArsShoppingCart {
     }
 
     /**
-     * Показывает сообщение об ошибке под формой.
+     * Shows an error message under the form.
      *
-     * @param  {Element|null} form    — форма
-     * @param  {string}       message — текст ошибки
+     * @param  {Element|null} form    — form
+     * @param  {string}       message — error text
      * @return {void}
      */
     #showFormError( form, message ) {
@@ -625,9 +625,9 @@ class ArsShoppingCart {
     }
 
     /**
-     * Скрывает сообщение об ошибке под формой.
+     * Hides the error message under the form.
      *
-     * @param  {Element|null} form — форма
+     * @param  {Element|null} form — form
      * @return {void}
      */
     #hideFormError( form ) {
@@ -645,7 +645,7 @@ class ArsShoppingCart {
 }
 
 /**
- * Готовый синглтон модуля корзины.
+ * Ready singleton of the cart module.
  *
  * @type {ArsShoppingCart}
  */

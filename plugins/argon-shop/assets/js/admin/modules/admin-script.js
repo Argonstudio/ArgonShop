@@ -1,53 +1,52 @@
 /**
- * ArgonShop — скрипты страниц администратора.
+ * ArgonShop — admin page scripts.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Управляет интерактивными элементами админки плагина:
+ * Controls the interactive elements of the plugin admin:
  *
- *   1. Дерево категорий в форме «Характеристики»:
- *      - раскрытие и сворачивание вложенных уровней
- *        по кнопке-стрелке;
- *      - каскадная отметка чекбоксов (выбор родителя
- *        отмечает всех потомков, выбор чекбокса «Выбрать все»
- *        отмечает всё дерево).
+ *   1. The category tree in the "Characteristics" form:
+ *      - expanding and collapsing nested levels
+ *        with the arrow button;
+ *      - cascading checkbox selection (selecting a parent
+ *        checks all descendants, selecting the "Select all"
+ *        checkbox checks the whole tree).
  *
- *   2. Пересчёт списка характеристик товара при смене
- *      категории каталога: собирает текущее состояние полей
- *      характеристик и выбранные категории, затем передаёт
- *      их в глобальную функцию updateCharacteristics(),
- *      определённую в PHP (см. includes/admin/fieldsProduct.php).
+ *   2. Recalculating the product characteristics list when the
+ *      catalog category changes: collects the current state of the
+ *      characteristic fields and the selected categories, then passes
+ *      them to the global updateCharacteristics() function
+ *      defined in PHP (see includes/admin/fieldsProduct.php).
  *
- *   3. Кнопка сохранения настроек магазина: передаёт ID
- *      страниц корзины и кабинета в глобальную функцию
+ *   3. The store settings save button: passes the IDs
+ *      of the cart and account pages to the global function
  *      saveSettingPage().
  *
  * ============================================================
- * СТРУКТУРА ФАЙЛА
+ * FILE STRUCTURE
  * ============================================================
  *
- * Файл самостоятельный: не импортирует core-утилиты плагина
- * из интерфейса.
+ * The file is standalone: it does not import the plugin's core utilities
+ * from the interface.
  *
  * ============================================================
- * ГЛОБАЛЬНЫЕ ФУНКЦИИ ИЗ PHP
+ * GLOBAL FUNCTIONS FROM PHP
  * ============================================================
  *
  * updateCharacteristics( categories, textFields, checkboxFields )
- *   Пересчёт блока характеристик при смене категории.
- *   Определена в includes/admin/fieldsProduct.php через
+ *   Recalculates the characteristics block when the category changes.
+ *   Defined in includes/admin/fieldsProduct.php via
  *   admin_print_footer_scripts.
  *
  * saveSettingPage( cartPageID, cabinetPageID )
- *   Сохранение ID страниц корзины и кабинета.
- *   Опциональна: если функция не определена — вызов молча
- *   игнорируется.
+ *   Saves the IDs of the cart and account pages.
+ *   Optional: if the function is not defined, the call is silently
+ *   ignored.
  */
 
 'use strict';
@@ -55,10 +54,10 @@
 ( function () {
 
     /**
-     * querySelector — короткая обёртка.
+     * querySelector — a short wrapper.
      *
-     * @param  {string}           selector             — CSS-селектор
-     * @param  {Element|Document} [context=document]   — контекст поиска
+     * @param  {string}           selector             — CSS selector
+     * @param  {Element|Document} [context=document]   — search context
      * @return {Element|null}
      */
     const qs = ( selector, context = document ) => {
@@ -71,11 +70,11 @@
     };
 
     /**
-     * querySelectorAll — короткая обёртка.
-     * Возвращает настоящий массив для удобства .forEach / .map / .filter.
+     * querySelectorAll — a short wrapper.
+     * Returns a real array for convenient .forEach / .map / .filter.
      *
-     * @param  {string}           selector             — CSS-селектор
-     * @param  {Element|Document} [context=document]   — контекст поиска
+     * @param  {string}           selector             — CSS selector
+     * @param  {Element|Document} [context=document]   — search context
      * @return {Element[]}
      */
     const qsa = ( selector, context = document ) => {
@@ -88,18 +87,18 @@
     };
 
     // ============================================================
-    // ДЕРЕВО КАТЕГОРИЙ В ФОРМЕ «ХАРАКТЕРИСТИКИ»
+    // CATEGORY TREE IN THE "CHARACTERISTICS" FORM
     // ============================================================
 
     /**
-     * Раскрытие и сворачивание вложенного списка категорий.
+     * Expanding and collapsing a nested category list.
      *
-     * Кнопка с классом .showHideButton (input[type=button])
-     * находится внутри li.checkCategory и управляет видимостью
-     * вложенного <ul> в этом же li.
+     * The button with the .showHideButton class (input[type=button])
+     * is inside li.checkCategory and controls the visibility
+     * of the nested <ul> in the same li.
      *
-     * Обработчик делегированный — работает для динамически
-     * добавленных элементов дерева.
+     * The handler is delegated — it works for dynamically
+     * added tree elements.
      *
      * @return {void}
      */
@@ -130,16 +129,16 @@
     };
 
     /**
-     * Каскадная отметка чекбоксов.
+     * Cascading checkbox selection.
      *
-     * Правила:
-     *   - чекбокс внутри li.checkCategory — устанавливает то же
-     *     состояние всем чекбоксам внутри этого li (включая
-     *     вложенные уровни);
-     *   - чекбокс внутри li.checkAllCategory — устанавливает то
-     *     же состояние всем чекбоксам дерева .choiceCategory.
+     * Rules:
+     *   - a checkbox inside li.checkCategory sets the same
+     *     state on all checkboxes inside that li (including
+     *     nested levels);
+     *   - a checkbox inside li.checkAllCategory sets the
+     *     same state on all checkboxes of the .choiceCategory tree.
      *
-     * Обработчик делегированный.
+     * The handler is delegated.
      *
      * @return {void}
      */
@@ -182,26 +181,26 @@
     };
 
     // ============================================================
-    // ПЕРЕСЧЁТ ХАРАКТЕРИСТИК ПРИ СМЕНЕ КАТЕГОРИИ
+    // RECALCULATING CHARACTERISTICS WHEN THE CATEGORY CHANGES
     // ============================================================
 
     /**
-     * Извлекает ID категории из id чекбокса таксономии.
+     * Extracts the category ID from the taxonomy checkbox id.
      *
-     * WordPress формирует id вида:
+     * WordPress builds ids like:
      *   in-catalog-123
      *   in-catalog-123-hierarchy
      *
-     * Алгоритм:
-     *   1. Разбиваем id по дефису.
-     *   2. Если получилось 3 части — убираем первую (in),
-     *      берём вторую часть как ID.
-     *   3. Если получилось 4 части — убираем первые две
-     *      (in + название таксономии), берём вторую часть
-     *      оставшихся как ID.
+     * Algorithm:
+     *   1. Split the id by hyphen.
+     *   2. If there are 3 parts — drop the first one (in),
+     *      take the second part as the ID.
+     *   3. If there are 4 parts — drop the first two
+     *      (in + taxonomy name), take the second part
+     *      of the remaining ones as the ID.
      *
-     * @param  {string} checkboxId — id чекбокса
-     * @return {string}            — ID категории или пустая строка
+     * @param  {string} checkboxId — checkbox id
+     * @return {string}            — category ID or an empty string
      */
     const extractCategoryId = ( checkboxId ) => {
 
@@ -221,9 +220,9 @@
     };
 
     /**
-     * Собирает ID выбранных категорий в контейнере #taxonomy-catalog.
+     * Collects the IDs of the selected categories in the #taxonomy-catalog container.
      *
-     * @return {string[]|string} Массив ID или строка 'no categories'
+     * @return {string[]|string} Array of IDs or the string 'no categories'
      */
     const collectSelectedCategories = () => {
 
@@ -256,12 +255,12 @@
     };
 
     /**
-     * Собирает значения текстовых характеристик из полей формы.
+     * Collects the values of text characteristics from the form fields.
      *
-     * Ищет input[name^="characteristics_text_field"] внутри
-     * .advanced-field, извлекает ID характеристики из имени
-     * вида characteristics_text_field[24] и складывает значение
-     * в объект { 24: 'значение' }.
+     * Looks for input[name^="characteristics_text_field"] inside
+     * .advanced-field, extracts the characteristic ID from a name
+     * like characteristics_text_field[24] and puts the value
+     * into an object { 24: 'value' }.
      *
      * @return {Object<string, string>}
      */
@@ -290,11 +289,11 @@
     };
 
     /**
-     * Собирает значения характеристик-чекбоксов из полей формы.
+     * Collects the values of checkbox characteristics from the form fields.
      *
-     * Ищет отмеченные input[name^="characteristics_checkbox_field"]
-     * внутри .advanced-field. Родительский ID берётся из
-     * data-parentid у родительского элемента (обычно это
+     * Looks for checked input[name^="characteristics_checkbox_field"]
+     * inside .advanced-field. The parent ID is taken from
+     * data-parentid of the parent element (usually it is
      * div.checkbox-advanced-fields).
      *
      * @return {Object<string, Object<string, string>>}
@@ -342,13 +341,13 @@
     };
 
     /**
-     * Обработчик смены категории каталога.
+     * Catalog category change handler.
      *
-     * При каждом изменении чекбокса внутри #taxonomy-catalog
-     * собирает актуальное состояние категорий и полей
-     * характеристик и передаёт всё в PHP-функцию
-     * updateCharacteristics(), которая обновляет метабокс
-     * характеристик через AJAX.
+     * On every checkbox change inside #taxonomy-catalog
+     * collects the current state of the categories and the
+     * characteristic fields and passes everything to the PHP function
+     * updateCharacteristics(), which updates the characteristics
+     * meta box via AJAX.
      *
      * @return {void}
      */
@@ -377,16 +376,16 @@
     };
 
     // ============================================================
-    // СОХРАНЕНИЕ НАСТРОЕК МАГАЗИНА
+    // SAVING STORE SETTINGS
     // ============================================================
 
     /**
-     * Кнопка сохранения настроек магазина.
+     * Store settings save button.
      *
-     * Передаёт ID страниц корзины и кабинета в глобальную
-     * функцию saveSettingPage(). Если функция не определена
-     * (в текущей версии плагина она не используется) — вызов
-     * игнорируется.
+     * Passes the IDs of the cart and account pages to the global
+     * saveSettingPage() function. If the function is not defined
+     * (it is not used in the current plugin version), the call
+     * is ignored.
      *
      * @return {void}
      */
@@ -413,11 +412,11 @@
     };
 
     // ============================================================
-    // ИНИЦИАЛИЗАЦИЯ
+    // INITIALIZATION
     // ============================================================
 
     /**
-     * Точка входа. Вызывается после готовности DOM.
+     * Entry point. Called once the DOM is ready.
      *
      * @return {void}
      */

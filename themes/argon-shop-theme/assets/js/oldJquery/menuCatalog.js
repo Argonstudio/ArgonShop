@@ -1,10 +1,10 @@
-/* Архивная копия старого Jquery 2018 года
+/* Archived copy of the old 2018 jQuery code.
 
-При установке плагина файлы из папки oldJquery не нужны и их можно удалить, это только для Гитхаба
+The files in the oldJquery folder are not needed when installing the plugin and can be deleted; they are kept only for GitHub.
 
-Позднее я переписал все на чистый современный JS, сейчас он в плагине.В файлах же темы остался css и php шаблоны. */
+Later I rewrote everything in plain modern JS, which now lives in the plugin. Only the CSS and PHP templates remained in the theme files. */
 
-//Правим высоту если выпадающий блок меню не помешается на странице(большие разрешения)
+//Adjust the height if the dropdown menu block does not fit on the page (large resolutions)
 $('.menuCatalogItem').hover(
     function(){
         if( $("body")[0].clientWidth > 1000  ){
@@ -54,8 +54,8 @@ $(".itemHasChildren").click(
               
             if( $("body")[0].clientWidth <= 1000  ){
                 
-            //Проверка на самом элементе клик или на дочерних(выпадающих пунктах)
-            //$(this).closest(".submenuCatalog") проверям на клик по дочернему выпадающему списку(ищем у источника клика родителя с id дочернего ul)
+            //Check whether the click is on the element itself or on its children (dropdown items)
+            //$(this).closest(".submenuCatalog") checks for a click on the child dropdown list (looks for a parent with the child ul id at the click source)
             if(event.target == this || $(this).closest(".submenuCatalog").length === 0){
             
                  if( $(this).children(".submenuCatalog").is(':visible') ) {
@@ -70,7 +70,7 @@ $(".itemHasChildren").click(
                 
             }
             
-            //прекращаем всплытие клика
+            //stop the click propagation
             event.stopPropagation();        
             
         }

@@ -1,34 +1,33 @@
 /**
- * ArgonShop — слайдер изображений на странице товара.
+ * ArgonShop — image slider on the product page.
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Стилизует два связанных Swiper-слайдера на странице товара:
+ * Styles two linked Swiper sliders on the product page:
  *
- *   .as-slider-product-main        — большие изображения
- *   .as-slider-product-thumbs      — миниатюры под основным
- *   .as-slider-product-thumbs-stage — обёртка миниатюр со стрелками
+ *   .as-slider-product-main        — large images
+ *   .as-slider-product-thumbs      — thumbnails under the main slider
+ *   .as-slider-product-thumbs-stage — thumbnail wrapper with arrows
  *
- * Разметка выводится PHP-функцией плагина as_slider_product()
- * (см. includes/interface/slider/sliderProduct.php), а инициализация
- * Swiper и GLightbox — модулем slider-product.js.
+ * The markup is output by the plugin's PHP function as_slider_product()
+ * (see includes/interface/slider/sliderProduct.php), and the
+ * Swiper and GLightbox initialization — by the slider-product.js module.
  *
  * ============================================================
- * ЦВЕТА
+ * COLORS
  * ============================================================
  *
- * Основной акцент — #4e83c6
- * Фон и границы — #fff / #9ebce0
+ * The main accent is #4e83c6
+ * Background and borders — #fff / #9ebce0
  */
 
 /* ============================================================
-   КОНТЕЙНЕР
+   CONTAINER
    ============================================================ */
 
 .block-productSlider {
@@ -41,12 +40,12 @@
 }
 
 /* ============================================================
-   ОСНОВНОЙ СЛАЙДЕР (большие изображения)
+   MAIN SLIDER (large images)
    ============================================================
  *
- * Фиксированная высота, рамка цвета темы, белый фон.
- * Изображение масштабируется через object-fit: contain,
- * поэтому не искажается и не выходит за пределы блока.
+ * Fixed height, a border in the theme color, white background.
+ * The image is scaled via object-fit: contain,
+ * so it is not distorted and does not overflow the block.
  */
 
 .as-slider-product-main {
@@ -98,13 +97,13 @@
 }
 
 /* ============================================================
-   ОБЁРТКА МИНИАТЮР СО СТРЕЛКАМИ
+   THUMBNAIL WRAPPER WITH ARROWS
    ============================================================
  *
- * Строка из трёх элементов: стрелка влево, слайдер миниатюр,
- * стрелка вправо. Swiper рассчитывает ширину слайдов сам
- * (slidesPerView: 3), поэтому стрелки просто прижимаются
- * к слайдеру по бокам.
+ * A row of three elements: left arrow, thumbnail slider,
+ * right arrow. Swiper calculates the slide width itself
+ * (slidesPerView: 3), so the arrows simply stick
+ * to the slider sides.
  */
 
 .as-slider-product-thumbs-stage {
@@ -124,11 +123,11 @@
 }
 
 /* ============================================================
-   МИНИАТЮРЫ (оформление слайдов)
+   THUMBNAILS (slide styling)
    ============================================================
  *
- * Три миниатюры на виду. Активная миниатюра выделяется
- * синей рамкой цвета темы.
+ * Three thumbnails in view. The active thumbnail is highlighted
+ * with a blue border in the theme color.
  */
 
 .as-slider-product-thumbs .swiper-wrapper {
@@ -165,18 +164,18 @@
     pointer-events: none;
 }
 
-/* Активная миниатюра — синяя рамка цвета темы */
+/* Active thumbnail — a blue border in the theme color */
 .as-slider-product-thumbs .swiper-slide-thumb-active {
     border-color: #4e83c6;
     box-shadow: 0 0 0 2px rgba(78, 131, 198, 0.25);
 }
 
 /* ============================================================
-   СТРЕЛКИ МИНИАТЮР
+   THUMBNAIL ARROWS
    ============================================================
  *
- * Квадратные кнопки 26×26 по бокам миниатюр.
- * Цвет — синий темы #4e83c6.
+ * Square 26×26 buttons on the sides of the thumbnails.
+ * The color is the theme blue #4e83c6.
  */
 
 .as-slider-product-thumbs-prev,
@@ -216,7 +215,7 @@
     pointer-events: none;
 }
 
-/* Стрелка в неактивном состоянии (нечего листать дальше) */
+/* Arrow in the inactive state (nothing more to scroll) */
 .as-slider-product-thumbs-nav-disabled {
     opacity: 0.35;
     cursor: default;
@@ -224,13 +223,13 @@
 }
 
 /* ============================================================
-   СКРЫТИЕ СТРЕЛОК, КОГДА ВСЕ МИНИАТЮРЫ ВИДНЫ
+   HIDING THE ARROWS WHEN ALL THUMBNAILS ARE VISIBLE
    ============================================================
  *
- * Класс .as-slider-product-thumbs-no-nav ставит JS, если
- * количество слайдов не превышает slidesPerView (по умолчанию 3).
- * В этом случае стрелки скрываются, слайдер растягивается
- * на всю ширину блока.
+ * The .as-slider-product-thumbs-no-nav class is set by JS if
+ * the number of slides does not exceed slidesPerView (3 by default).
+ * In this case the arrows are hidden and the slider stretches
+ * to the full block width.
  */
 
 .as-slider-product-thumbs-stage.as-slider-product-thumbs-no-nav {
@@ -243,7 +242,7 @@
 }
 
 /* ============================================================
-   АДАПТИВ
+   RESPONSIVE
    ============================================================ */
 
 @media (min-width: 1000px) and (max-width: 1215px) {
@@ -294,9 +293,9 @@
         margin: 0 auto;
     }
 
-    /* На узких экранах обёртка со стрелками центрируется.
-       Само .as-slider-product-thumbs уже центрируется
-       через flex в .as-slider-product-thumbs-stage. */
+    /* On narrow screens the wrapper with arrows is centered.
+       The .as-slider-product-thumbs itself is already centered
+       via flex in .as-slider-product-thumbs-stage. */
 }
 
 @media (max-width: 388px) {

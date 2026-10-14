@@ -1,57 +1,57 @@
 /**
- * ArgonShop — кнопки карточек товаров.
+ * ArgonShop — product card buttons.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Обрабатывает кнопки добавления товара в корзину на карточках
- * товаров в каталоге, на главной, в сайдбаре и в результатах
- * поиска.
+ * Handles the add-to-cart buttons on product cards
+ * in the catalog, on the home page, in the sidebar and in the search
+ * results.
  *
- * Карточки товаров выводятся в нескольких местах сайта и содержат
- * две кнопки:
+ * Product cards are shown in several places of the site and contain
+ * two buttons:
  *
- *   .card-inBascet — «В корзину»: добавление без перехода.
- *   .card-buy      — «Купить»: добавление и переход в корзину.
+ *   .card-inBascet — "Add to cart": adds without navigating away.
+ *   .card-buy      — "Buy": adds and goes to the cart.
  *
- * После успешного добавления через «В корзину» блок с кнопками
- * скрывается, а вместо него показывается блок «Товар добавлен
- * в корзину» (.card-alreadyAdded), который содержит ссылку на
- * страницу корзины.
- *
- * ============================================================
- * DOM-ЭЛЕМЕНТЫ
- * ============================================================
- *
- * .card-inBascet[data-productid]      — кнопка «В корзину».
- * .card-buy[data-productid]           — кнопка «Купить».
- * .block-cardProductBascet            — блок с обеими кнопками.
- * .card-alreadyAdded                  — блок «Товар добавлен в корзину».
- * .card-addProductError               — блок ошибки на карточке.
+ * After a successful add via "Add to cart" the buttons block
+ * is hidden and the "Product added to cart" block
+ * (.card-alreadyAdded) with a link to the cart page
+ * is shown instead.
  *
  * ============================================================
- * ИСПОЛЬЗОВАНИЕ
+ * DOM ELEMENTS
+ * ============================================================
+ *
+ * .card-inBascet[data-productid]      — "Add to cart" button.
+ * .card-buy[data-productid]           — "Buy" button.
+ * .block-cardProductBascet            — block with both buttons.
+ * .card-alreadyAdded                  — "Product added to cart" block.
+ * .card-addProductError               — error block on the card.
+ *
+ * ============================================================
+ * USAGE
  * ============================================================
  *
  *     import { arsCardProduct } from './modules/card-product.js';
  *     arsCardProduct.init();
  *
- * Модуль безопасен для вызова на любой странице: если карточек
- * с кнопками нет, обработчики не сработают.
+ * The module is safe to call on any page: if there are no cards
+ * with buttons, the handlers do not fire.
  */
 
 'use strict';
 
 import { addProductToCart } from './add-to-cart.js';
+import { t } from '../core/config.js';
 import { delegate } from '../../shared/dom.js';
 
 /**
- * Модуль кнопок карточек товаров.
+ * Product card buttons module.
  */
 class ArsCardProduct {
 
@@ -59,7 +59,7 @@ class ArsCardProduct {
     #initialized = false;
 
     /**
-     * Инициализация. Идемпотентна.
+     * Initialization. Idempotent.
      *
      * @return {void}
      */
@@ -76,7 +76,7 @@ class ArsCardProduct {
     }
 
     /**
-     * Кнопка «В корзину» на карточке.
+     * The "Add to cart" button on a card.
      *
      * @return {void}
      */
@@ -94,7 +94,7 @@ class ArsCardProduct {
     }
 
     /**
-     * Кнопка «Купить» на карточке.
+     * The "Buy" button on a card.
      *
      * @return {void}
      */
@@ -112,9 +112,9 @@ class ArsCardProduct {
     }
 
     /**
-     * Показывает блок «Товар добавлен в корзину».
+     * Shows the "Product added to cart" block.
      *
-     * @param  {Element} button — нажатая кнопка
+     * @param  {Element} button — clicked button
      * @return {void}
      */
     #showAdded( button ) {
@@ -143,10 +143,10 @@ class ArsCardProduct {
     }
 
     /**
-     * Показывает блок ошибки на карточке.
+     * Shows the error block on the card.
      *
-     * @param  {Element} button — нажатая кнопка
-     * @param  {Error}   error  — объект ошибки
+     * @param  {Element} button — clicked button
+     * @param  {Error}   error  — error object
      * @return {void}
      */
     #showError( button, error ) {
@@ -162,13 +162,13 @@ class ArsCardProduct {
             : null;
 
         if ( errorBlock ) {
-            errorBlock.textContent = 'Ошибка при выполнении запроса';
+            errorBlock.textContent = t( 'requestError' );
             errorBlock.style.display = 'block';
         }
     }
 
     /**
-     * Переход на страницу корзины.
+     * Going to the cart page.
      *
      * @return {void}
      */
@@ -185,7 +185,7 @@ class ArsCardProduct {
 }
 
 /**
- * Готовый синглтон модуля кнопок карточек.
+ * Ready singleton of the product card buttons module.
  *
  * @type {ArsCardProduct}
  */

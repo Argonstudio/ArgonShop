@@ -1,37 +1,36 @@
 /**
- * ArgonShop — виджет корзины в шапке сайта.
+ * ArgonShop — cart widget in the site header.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Управляет отображением числа товаров и суммы корзины в шапке
- * сайта. Виджет присутствует на всех страницах, кроме страницы
- * корзины (см. includes/interface/shoppingCart/infoCart.php).
+ * Controls the display of the number of products and the cart total in the site
+ * header. The widget is present on all pages except the cart
+ * page (see includes/interface/shoppingCart/infoCart.php).
  *
- * Модуль используется другими модулями:
- *   - add-to-cart.js — после добавления товара
- *   - cart.js        — при удалении или очистке корзины
+ * The module is used by other modules:
+ *   - add-to-cart.js — after a product is added
+ *   - cart.js        — when the cart is emptied or an item is removed
  *
  * ============================================================
- * DOM-ЭЛЕМЕНТЫ
+ * DOM ELEMENTS
  * ============================================================
  *
  * .viewBlock-amountProducts span
- *   Число товаров в корзине.
+ *   Number of products in the cart.
  *
  * .viewBlock-priceProducts
- *   Контейнер суммы. Скрывается, если корзина пуста.
+ *   Total container. Hidden if the cart is empty.
  *
  * .viewBlock-priceProducts span
- *   Сумма товаров в корзине.
+ *   Total of the products in the cart.
  *
  * ============================================================
- * ИСПОЛЬЗОВАНИЕ
+ * USAGE
  * ============================================================
  *
  *     import { arsCartWidget } from './modules/cart-widget.js';
@@ -42,11 +41,11 @@
  *     });
  *
  * ============================================================
- * ЭКСПОРТ
+ * EXPORTS
  * ============================================================
  *
- * arsCartWidget.update( data )   — обновить число и сумму
- * arsCartWidget.clear()          — сбросить виджет (корзина пуста)
+ * arsCartWidget.update( data )   — update the number and total
+ * arsCartWidget.clear()          — reset the widget (the cart is empty)
  */
 
 'use strict';
@@ -55,16 +54,16 @@ import { qs } from '../../shared/dom.js';
 import { formatPrice } from '../../shared/format.js';
 
 /**
- * Виджет корзины в шапке сайта.
+ * Cart widget in the site header.
  */
 class ArsCartWidget {
 
     /**
-     * Обновляет число товаров и сумму в виджете.
+     * Updates the number of products and the total in the widget.
      *
-     * @param  {Object} data                         — данные корзины
-     * @param  {number} [data.productAmountCart=0]   — число товаров
-     * @param  {number} [data.totalPrice=0]          — сумма корзины
+     * @param  {Object} data                         — cart data
+     * @param  {number} [data.productAmountCart=0]   — number of products
+     * @param  {number} [data.totalPrice=0]          — cart total
      * @return {void}
      */
     update( data ) {
@@ -95,7 +94,7 @@ class ArsCartWidget {
     }
 
     /**
-     * Сбрасывает виджет — используется после полной очистки корзины.
+     * Resets the widget — used after the cart is fully cleared.
      *
      * @return {void}
      */
@@ -105,7 +104,7 @@ class ArsCartWidget {
 }
 
 /**
- * Готовый синглтон виджета корзины.
+ * Ready cart widget singleton.
  *
  * @type {ArsCartWidget}
  */

@@ -1,24 +1,23 @@
 <?php
 /**
- * AJAX-функционал страницы заказа в админ-панели
+ * AJAX features of the order page in the admin panel
  * 
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * WordPress Админка → Заказы → Редактирование конкретного заказа
- * URL: /wp-admin/post.php?post=ID_ЗАКАЗА&action=edit
+ * WHERE TO TEST:
+ * WordPress Admin → Orders → Edit a specific order
+ * URL: /wp-admin/post.php?post=ORDER_ID&action=edit
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 /**
- * Подключение скриптов в футере админки
- * Создаёт nonce и определяет глобальные JS-функции:
+ * Prints scripts in the admin footer
+ * Creates the nonce and defines global JS functions:
  * - searchSuitableProduct()
  * - addProduct()
  * - addFields()
@@ -30,14 +29,14 @@ function as_ajax_order_products_scripts() {
     <script>
         (function(){
             
-            // Nonce объявлен глобально — используется в orders.js
-            // и других скриптах страницы заказа.
+            // The nonce is declared globally — it is used in orders.js
+            // and other scripts of the order page.
             window.argonShopOrderNonce = '<?php echo esc_js( $nonce_order ); ?>';
             
             'use strict';
             
             // ============================================
-            // ПЕРЕМЕННЫЕ
+            // VARIABLES
             // ============================================
             
             const nonce   = '<?php echo esc_js( $nonce_order ); ?>';
@@ -45,17 +44,17 @@ function as_ajax_order_products_scripts() {
             
             
             // ============================================
-            // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+            // HELPER FUNCTIONS
             // ============================================
             
             /**
-             * Пост-запрос через fetch.
-             * Автоматически сериализует массивы в формат WP: key[]=val1&key[]=val2
+             * POST request via fetch.
+             * Automatically serializes arrays in the WP format: key[]=val1&key[]=val2
              * 
-             * @param {string}   action    — имя AJAX-действия
-             * @param {Object}   params    — параметры запроса
-             * @param {Function} onSuccess — колбэк при успехе (принимает текст ответа)
-             * @param {Function} onError   — колбэк при ошибке
+             * @param {string}   action    — AJAX action name
+             * @param {Object}   params    — request parameters
+             * @param {Function} onSuccess — success callback (receives the response text)
+             * @param {Function} onError   — error callback
              */
             const postAjax = ( action, params, onSuccess, onError ) => {
                 
@@ -100,8 +99,8 @@ function as_ajax_order_products_scripts() {
             
             
             /**
-             * Приводит jQuery-объект или нативный DOM-элемент к нативному.
-             * Нужно для совместимости, если функция вызывается из старого кода.
+             * Converts a jQuery object or a native DOM element to a native element.
+             * Needed for compatibility when the function is called from old code.
              * 
              * @param  {Element|jQuery|string} el
              * @return {Element|null}
@@ -116,7 +115,7 @@ function as_ajax_order_products_scripts() {
                     return el;
                 }
                 
-                // jQuery-объект
+                // jQuery object
                 if ( el[ 0 ] instanceof Element ) {
                     return el[ 0 ];
                 }
@@ -126,16 +125,16 @@ function as_ajax_order_products_scripts() {
             
             
             // ============================================
-            // ФУНКЦИИ, ДОСТУПНЫЕ ИЗ orders.js
+            // FUNCTIONS AVAILABLE FROM orders.js
             // ============================================
             
             /**
-             * ФУНКЦИЯ: Поиск подходящих товаров
-             * ГДЕ: Поле "Добавить товар" → ввод текста
+             * FUNCTION: Search for matching products
+             * WHERE: "Add product" field → typing text
              * 
-             * @param {string}          searchStr    — текст поиска
-             * @param {Element|jQuery}  blockResult  — блок для вывода результатов
-             * @param {Array}           addedProduct — ID уже добавленных товаров
+             * @param {string}          searchStr    — search text
+             * @param {Element|jQuery}  blockResult  — block for the results
+             * @param {Array}           addedProduct — IDs of products already added
              */
             window.searchSuitableProduct = ( searchStr, blockResult, addedProduct ) => {
                 
@@ -159,17 +158,17 @@ function as_ajax_order_products_scripts() {
                         if ( ! targetBlock ) return;
                         
                         targetBlock.style.display = 'block';
-                        targetBlock.innerHTML     = 'Ошибка на сервере';
+                        targetBlock.innerHTML     = '<?php echo esc_js( __( 'Server error', 'argon-shop' ) ); ?>';
                     }
                 );
             };
             
             
             /**
-             * ФУНКЦИЯ: Добавление товара в заказ
-             * ГДЕ: Результаты поиска → кнопка "+"
+             * FUNCTION: Add a product to the order
+             * WHERE: Search results → "+" button
              * 
-             * @param {Element} product — кнопка добавления с data-productid
+             * @param {Element} product — add button with data-productid
              */
             window.addProduct = ( product ) => {
                 
@@ -194,21 +193,21 @@ function as_ajax_order_products_scripts() {
                     },
                     response => {
                         
-                        // Убираем товар из результатов поиска
+                        // Remove the product from the search results
                         const parentLi = product.closest( '.as-order-foundProduct' );
                         
                         if ( parentLi ) {
                             parentLi.remove();
                         }
                         
-                        // Добавляем HTML товара в список заказа
+                        // Add the product HTML to the order list
                         const blockProducts = document.querySelector( '.orderAllProducts' );
                         
                         if ( blockProducts ) {
                             blockProducts.insertAdjacentHTML( 'beforeend', response );
                         }
                         
-                        // Единая функция пересчёта (из orders.js)
+                        // Shared recalculation function (from orders.js)
                         if ( typeof window.recountOrderPrices === 'function' ) {
                             window.recountOrderPrices();
                         }
@@ -218,7 +217,7 @@ function as_ajax_order_products_scripts() {
                         const blockError = document.querySelector( '.orderError' );
                         
                         if ( blockError ) {
-                            blockError.innerHTML = 'Ошибка на сервере';
+                            blockError.innerHTML = '<?php echo esc_js( __( 'Server error', 'argon-shop' ) ); ?>';
                         }
                     }
                 );
@@ -226,12 +225,12 @@ function as_ajax_order_products_scripts() {
             
             
             /**
-             * ФУНКЦИЯ: Добавление полей формы
-             * ГДЕ: Блок "Информация от заказчика" → "Добавить"
+             * FUNCTION: Add form fields
+             * WHERE: "Customer information" block → "Add"
              * 
-             * @param {string}          type         — тип формы (person / legalPerson)
-             * @param {Array}           fieldsInStock — уже существующие поля
-             * @param {Element|jQuery}  blockFields   — блок для вставки полей
+             * @param {string}          type         — form type (person / legalPerson)
+             * @param {Array}           fieldsInStock — fields that already exist
+             * @param {Element|jQuery}  blockFields   — block to insert the fields into
              */
             window.addFields = ( type, fieldsInStock, blockFields ) => {
                 
@@ -254,7 +253,7 @@ function as_ajax_order_products_scripts() {
                         const errorBlock = document.querySelector( '.as-order-addFieldsError' );
                         
                         if ( errorBlock ) {
-                            errorBlock.innerHTML = 'Ошибка на сервере';
+                            errorBlock.innerHTML = '<?php echo esc_js( __( 'Server error', 'argon-shop' ) ); ?>';
                         }
                     }
                 );
@@ -266,29 +265,29 @@ function as_ajax_order_products_scripts() {
 }
 
 // ============================================
-// РЕГИСТРАЦИЯ AJAX-ОБРАБОТЧИКОВ
+// AJAX HANDLER REGISTRATION
 // ============================================
 
 add_action( 'wp_ajax_as_searchSuitableProduct_order', 'as_search_suitable_product_order_callback' );
 add_action( 'wp_ajax_as_addProduct_order', 'as_add_product_order_callback' );
 add_action( 'wp_ajax_as_addFields_order', 'as_add_fields_order_callback' );
 
-// Единый обработчик пересчёта заказа
+// Shared order recalculation handler
 add_action( 'wp_ajax_as_admin_recount_order', 'as_admin_recount_order_callback' );
 
 /**
- * ОБРАБОТЧИК: Добавление полей формы
+ * HANDLER: Add form fields
  */
 function as_add_fields_order_callback() {
     
     check_ajax_referer( 'argon_shop_order_nonce', 'nonce' );
 
     if ( ! current_user_can( 'manage_options' ) ) {
-        wp_die( 'Недостаточно прав' );
+        wp_die( __( 'Insufficient permissions', 'argon-shop' ) );
     }
     
     if ( ! isset( $_POST['type'] ) || ! isset( $_POST['fieldsInStock'] ) ) {
-        wp_die( 'Недостаточно данных' );
+        wp_die( __( 'Not enough data', 'argon-shop' ) );
     }
     
     $type = sanitize_text_field( wp_unslash( $_POST['type'] ) );
@@ -304,13 +303,13 @@ function as_add_fields_order_callback() {
     $settingShop = get_option( 'settingShop' );
     
     if ( ! isset( $settingShop[ $type ] ) || ! is_array( $settingShop[ $type ] ) ) {
-        wp_die( 'Настройки не найдены' );
+        wp_die( __( 'Settings not found', 'argon-shop' ) );
     }
     
     $userFildsSetting = $settingShop[ $type ];
     
     $userFildsSetting['emailUser']   = array( 'name' => 'Email' );
-    $userFildsSetting['messageUser'] = array( 'name' => 'Сообщение' );
+    $userFildsSetting['messageUser'] = array( 'name' => __( 'Message', 'argon-shop' ) );
     
     foreach ( $userFildsSetting as $keyField => $valueArrayField ) {
         
@@ -328,79 +327,79 @@ function as_add_fields_order_callback() {
 }
 
 /**
- * ОБРАБОТЧИК: Добавление товара в заказ
+ * HANDLER: Add a product to the order
  */
 function as_add_product_order_callback() {
     
     check_ajax_referer( 'argon_shop_order_nonce', 'nonce' );
     
     if ( ! current_user_can( 'manage_options' ) ) {
-        wp_die( 'Недостаточно прав' );
+        wp_die( __( 'Insufficient permissions', 'argon-shop' ) );
     }
     
     if ( ! isset( $_POST['productID'] ) || ! isset( $_POST['postID'] ) ) {
-        wp_die( 'Недостаточно данных' );
+        wp_die( __( 'Not enough data', 'argon-shop' ) );
     }
     
     $productID = absint( $_POST['productID'] );
     $postID    = absint( $_POST['postID'] );
     
     if ( 0 === $productID ) {
-        wp_die( 'Неверный ID товара' );
+        wp_die( __( 'Invalid product ID', 'argon-shop' ) );
     }
     
     if ( 0 === $postID ) {
-        wp_die( 'Неверный ID заказа' );
+        wp_die( __( 'Invalid order ID', 'argon-shop' ) );
     }
     
-    // Получаем текущие товары заказа
+    // Get the current order products
     $orderProducts = get_post_meta( $postID, '_productsCart', true );
     
     if ( ! is_array( $orderProducts ) ) {
         $orderProducts = array();
     }
     
-    // Если товар уже есть — увеличиваем количество
+    // If the product is already there — increase the quantity
     if ( isset( $orderProducts[ $productID ] ) ) {
         $orderProducts[ $productID ]['amountProduct'] = floatval( $orderProducts[ $productID ]['amountProduct'] ) + 1;
     } else {
-        // Иначе — добавляем новый товар
+        // Otherwise — add a new product
         $post_data = get_post( $productID );
         
         if ( ! $post_data ) {
-            wp_die( 'Товар не найден' );
+            wp_die( __( 'Product not found', 'argon-shop' ) );
         }
         
         $orderProducts[ $productID ] = array(
             'amountProduct' => 1,
-            'price'         => floatval( get_post_meta( $productID, '_price', true ) ),
+            'price'         => as_get_product_price( $productID ),
             'name'          => $post_data->post_title,
             'link'          => get_post_permalink( $productID ),
         );
     }
     
-    // Сохраняем обновлённый массив в мета-поле
+    // Save the updated array to the meta field
     update_post_meta( $postID, '_productsCart', $orderProducts );
     
-    // Выводим HTML таблицы товара
-    createTableProduct( $productID, $orderProducts[ $productID ] );
+    // Output the product table HTML
+    as_createTableProduct( $productID, $orderProducts[ $productID ] );
     
     wp_die();
 }
 
 /**
- * ОБРАБОТЧИК: Поиск подходящих товаров
+ * HANDLER: Search for matching products
  */
 function as_search_suitable_product_order_callback() {
     
     check_ajax_referer( 'argon_shop_order_nonce', 'nonce' );
 
     if ( ! current_user_can( 'manage_options' ) ) {
-        wp_die( 'Недостаточно прав' );
+        wp_die( __( 'Insufficient permissions', 'argon-shop' ) );
     }
     
     if ( ! isset( $_POST['searchStr'] ) ) {
-        wp_die( 'Недостаточно данных' );
+        wp_die( __( 'Not enough data', 'argon-shop' ) );
     }
     
     $searchStr = sanitize_text_field( wp_unslash( $_POST['searchStr'] ) );
@@ -415,14 +414,17 @@ function as_search_suitable_product_order_callback() {
         'postResult' => true,
     );
     
-    $searchResult = queryManagerSearchResult( $searchStr, $searchParameters );
+    $searchResult = as_queryManagerSearchResult( $searchStr, $searchParameters );
     
     if ( empty( $searchResult ) && ! ctype_digit( $searchStr ) ) {
         
-        $searchStrFix = fixKeyboardlayout( $searchStr );
-        
-        if ( $searchStrFix !== $searchStr ) {
-            $searchResult = queryManagerSearchResult( $searchStrFix, $searchParameters );
+        foreach ( as_search_layout_variants( $searchStr ) as $searchStrFix ) {
+            
+            $searchResult = as_queryManagerSearchResult( $searchStrFix, $searchParameters );
+            
+            if ( ! empty( $searchResult ) ) {
+                break;
+            }
         }
     }
     
@@ -443,14 +445,14 @@ function as_search_suitable_product_order_callback() {
     if ( ! empty( $listResult ) ) {
         as_order_showSearchResult( $listResult );
     } else {
-        echo 'Нет подходящих результатов';
+        echo __( 'No matching results', 'argon-shop' );
     }
     
     wp_die();
 }
 
 /**
- * ФУНКЦИЯ: Вывод результатов поиска
+ * FUNCTION: Output the search results
  */
 function as_order_showSearchResult( $searchResult ) {
     ?>
@@ -481,30 +483,30 @@ function as_order_showSearchResult( $searchResult ) {
 }
 
 /**
- * ЕДИНЫЙ ОБРАБОТЧИК: Пересчёт заказа
+ * SHARED HANDLER: Order recalculation
  */
 function as_admin_recount_order_callback() {
     
     check_ajax_referer( 'argon_shop_order_nonce', 'nonce' );
     
     if ( ! current_user_can( 'manage_options' ) ) {
-        wp_die( 'Недостаточно прав' );
+        wp_die( __( 'Insufficient permissions', 'argon-shop' ) );
     }
     
     $postID = isset( $_POST['postID'] ) ? absint( $_POST['postID'] ) : 0;
     
     if ( 0 === $postID ) {
-        wp_die( 'Неверный ID заказа' );
+        wp_die( __( 'Invalid order ID', 'argon-shop' ) );
     }
     
-    // Получаем товары со страницы
+    // Get the products from the page
     $orderProductsFromPage = isset( $_POST['orderProducts'] ) ? $_POST['orderProducts'] : array();
     
     if ( ! is_array( $orderProductsFromPage ) ) {
         $orderProductsFromPage = array();
     }
     
-    // Формируем полный массив товаров
+    // Build the full product array
     $orderProducts = array();
     $weights       = array();
     
@@ -525,7 +527,7 @@ function as_admin_recount_order_callback() {
         
         $orderProducts[ $productID ] = array(
             'amountProduct' => $amount,
-            'price'         => floatval( get_post_meta( $productID, '_price', true ) ),
+            'price'         => as_get_product_price( $productID ),
             'name'          => $post_data->post_title,
             'link'          => get_post_permalink( $productID ),
         );
@@ -534,7 +536,7 @@ function as_admin_recount_order_callback() {
     }
     
     // ============================================
-    // Пересчитываем скидки через API плагина
+    // Recalculate discounts via the plugin API
     // ============================================
     
     $actualPriceProducts = array();
@@ -543,7 +545,7 @@ function as_admin_recount_order_callback() {
         
         foreach ( $orderProducts as $productID => $data ) {
             
-            $actualPriceProducts[ $productID ] = getActualPrice(
+            $actualPriceProducts[ $productID ] = as_getActualPrice(
                 'cart',
                 $orderProducts,
                 $productID,
@@ -552,7 +554,7 @@ function as_admin_recount_order_callback() {
         }
     }
     
-    // Итоговая сумма
+    // Order total
     $totalPrice = 0;
     foreach ( $actualPriceProducts as $productID => $price ) {
         if ( isset( $orderProducts[ $productID ] ) ) {
@@ -560,7 +562,7 @@ function as_admin_recount_order_callback() {
         }
     }
     
-    // Итоговый вес
+    // Total weight
     $totalWeight = 0;
     foreach ( $weights as $productID => $weight ) {
         if ( isset( $orderProducts[ $productID ] ) ) {
@@ -568,7 +570,7 @@ function as_admin_recount_order_callback() {
         }
     }
     
-    // Формируем ответ
+    // Build the response
     $forFront = array(
         'actualPrices' => $actualPriceProducts,
         'weights'      => $weights,

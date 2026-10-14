@@ -1,40 +1,39 @@
 <?php
 /**
- * Шаблон рубрики "Акции и скидки" (Москва)
+ * "Promotions and discounts" category template (Moscow)
  * 
- * Шаблон для рубрики category с slug "aktsii-moskva"
+ * Template for the category with the slug "aktsii-moskva"
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.1
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * Страница рубрики "Акции и скидки"
+ * WHERE TO TEST:
+ * The "Promotions and discounts" category page
  * URL: /category/aktsii-moskva/
  * 
- * ЧТО ВЫВОДИТ:
- * 1. Хлебные крошки (через kama_breadcrumbs из плагина Argon Shop)
- * 2. Заголовок рубрики
- * 3. Список активных акций (post_type = post, promo_active = 1, category = 36)
- * 4. Ссылку на архив акций (если в архиве есть посты)
+ * WHAT IT OUTPUTS:
+ * 1. Breadcrumbs (via kama_breadcrumbs from the Argon Shop plugin)
+ * 2. Category title
+ * 3. List of active promotions (post_type = post, promo_active = 1, category = 36)
+ * 4. Link to the promotions archive (if the archive has posts)
  * 
  * ============================================================
- * ВЗАИМОДЕЙСТВИЕ С ПЛАГИНОМ ARGON SHOP
+ * INTERACTION WITH THE ARGON SHOP PLUGIN
  * ============================================================
  * 
- * В этом шаблоне используются функции плагина:
+ * This template uses the following plugin functions:
  * 
- * - kama_breadcrumbs() → хлебные крошки (includes/interface/breadcrumbs.php)
- * - kama_pagenavi()    → пагинация (includes/interface/pagenavi.php)
+ * - as_kama_breadcrumbs() → breadcrumbs (includes/interface/breadcrumbs.php)
+ * - as_kama_pagenavi()    → pagination (includes/interface/pagenavi.php)
  *  
- * ВНЕШНИЕ ЗАВИСИМОСТИ:
- * - ID рубрики 36 = "Акции и скидки"
- * - Мета-поле promo_active = 1 (акция активна), 0 (в архиве)
+ * EXTERNAL DEPENDENCIES:
+ * - Category ID 36 = "Promotions and discounts"
+ * - Meta field promo_active = 1 (the promotion is active), 0 (archived)
  * 
  * ============================================================
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -50,30 +49,30 @@ get_header(); ?>
             
             <?php 
             // ============================================
-            // ХЛЕБНЫЕ КРОШКИ
+            // BREADCRUMBS
             // ============================================
             // 
-            // Функция плагина Argon Shop (includes/interface/breadcrumbs.php)
+            // Argon Shop plugin function (includes/interface/breadcrumbs.php)
             // 
-            // Выводит: Главная » Акции и скидки
-            // с микроразметкой schema.org (BreadcrumbList)
+            // Outputs: Home » Promotions and discounts
+            // with schema.org microdata (BreadcrumbList)
             // 
-            // Разделитель по умолчанию — ' » ' оборачивается 
-            // в <span class="kb_sep">...</span> самой функцией.
+            // The default separator ' » ' is wrapped
+            // in <span class="kb_sep">...</span> by the function itself.
             
-            if ( function_exists( 'kama_breadcrumbs' ) ) {
-                kama_breadcrumbs( ' » ' );
+            if ( function_exists( 'as_kama_breadcrumbs' ) ) {
+                AS_Kama_Breadcrumbs( ' » ' );
             }
             ?>
             
-            <h1 class="title">Акции и скидки</h1>
+            <h1 class="title"><?php esc_html_e( 'Promotions and discounts', 'argon-shop-theme' ); ?></h1>
             
             <div class="block-rubricEntrys">
             
             <?php 
             
             // ============================================
-            // АКТИВНЫЕ АКЦИИ
+            // ACTIVE PROMOTIONS
             // ============================================
             
             $arg = array(
@@ -134,7 +133,7 @@ get_header(); ?>
                             </div>
                             
                             <div class="entryButtons">
-                                <a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title_attribute(); ?>">Узнать больше</a>
+                                <a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title_attribute(); ?>"><?php esc_html_e( 'Learn more', 'argon-shop-theme' ); ?></a>
                             </div>
                             
                         </div>
@@ -145,23 +144,23 @@ get_header(); ?>
                     
                 endwhile;
                 
-                // PHP 8.5: сброс глобального $post после цикла
+                // PHP 8.5: reset the global $post after the loop
                 wp_reset_postdata();
                 
             } else {
                 
-                echo 'Актуальных акций нет';
+                echo __( 'No current promotions', 'argon-shop-theme' );
             }
             ?>
             
             <?php 
-            // Функция плагина Argon Shop (includes/interface/pagenavi.php)
+            // Argon Shop plugin function (includes/interface/pagenavi.php)
             // 
-            // ВНИМАНИЕ: posts_per_page => -1 значит одна страница.
-            // Пагинация не имеет смысла — kama_pagenavi() вернёт false.
-            // Оставлено для совместимости, если в будущем posts_per_page изменится.
-            if ( function_exists( 'kama_pagenavi' ) ) {
-                kama_pagenavi();
+            // NOTE: posts_per_page => -1 means a single page.
+            // Pagination makes no sense — as_kama_pagenavi() returns false.
+            // Kept for compatibility in case posts_per_page changes in the future.
+            if ( function_exists( 'as_kama_pagenavi' ) ) {
+                as_kama_pagenavi();
             }
             ?>
             
@@ -171,7 +170,7 @@ get_header(); ?>
             <?php 
             
             // ============================================
-            // АРХИВ АКЦИЙ (проверяем, есть ли записи)
+            // PROMOTIONS ARCHIVE (check whether there are posts)
             // ============================================
             
             $argArchive = array(
@@ -201,7 +200,7 @@ get_header(); ?>
                 
                 <div class="block-archive">
                     
-                    <a href="/arhiv-aktsij-moskva/">Архив акций</a>
+                    <a href="/arhiv-aktsij-moskva/"><?php esc_html_e( 'Promotions archive', 'argon-shop-theme' ); ?></a>
                     
                 </div>
                 

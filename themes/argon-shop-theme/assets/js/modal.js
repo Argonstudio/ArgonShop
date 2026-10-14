@@ -1,68 +1,67 @@
 /**
- * ArgonShopTheme — лёгкое модальное окно.
+ * ArgonShopTheme — lightweight modal window.
  *
  * @package ArgonShopTheme
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.1
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Заменяет Fancybox для карты и формы обратной связи. Не тянет
- * никаких библиотек: чистый ES6+ и DOM API.
+ * Replaces Fancybox for the map and the feedback form. Pulls in
+ * no libraries: plain ES6+ and the DOM API.
  *
- * Поддерживает три типа открытия:
+ * Supports three ways of opening:
  *
- *   1. AJAX — запрос к URL, полученный HTML вставляется в модалку.
- *      Используется для карты (шаблон «Карта AJAX» в теме).
+ *   1. AJAX — a request to a URL, the received HTML is inserted into the modal.
+ *      Used for the map (the "Map AJAX" template in the theme).
  *
- *   2. INLINE — перенос DOM-элемента в модалку по селектору.
- *      Используется для формы CF7 (#feedback в header.php).
- *      Элемент НЕ клонируется, а перемещается — это сохраняет
- *      обработчики Contact Form 7, привязанные к исходному узлу.
+ *   2. INLINE — moving a DOM element into the modal by selector.
+ *      Used for the CF7 form (#feedback in header.php).
+ *      The element is NOT cloned but moved — this keeps the
+ *      Contact Form 7 handlers bound to the original node.
  *
- *   3. IFRAME — открытие URL в iframe. На будущее, сейчас
- *      не используется.
- *
- * ============================================================
- * РАЗМЕТКА
- * ============================================================
- *
- * Кнопка, открывающая модалку, должна иметь один из атрибутов:
- *
- *   data-modal-ajax="/url/"      — загрузить через AJAX
- *   data-modal-inline="#elem"    — открыть как inline
- *   data-modal-iframe="/url/"    — открыть в iframe
- *
- * Пример:
- *
- *   <a href="#" data-modal-ajax="/adres-na-karte-moskva/">Карта</a>
- *   <a href="#feedback" data-modal-inline="#feedback">Обратная связь</a>
+ *   3. IFRAME — opening a URL in an iframe. For the future, currently
+ *      not used.
  *
  * ============================================================
- * ЗАКРЫТИЕ
+ * MARKUP
  * ============================================================
  *
- *   - клик по фону вне окна;
- *   - клик по кнопке с data-modal-close;
- *   - нажатие Esc.
+ * The button that opens the modal must have one of the attributes:
+ *
+ *   data-modal-ajax="/url/"      — load via AJAX
+ *   data-modal-inline="#elem"    — open as inline
+ *   data-modal-iframe="/url/"    — open in an iframe
+ *
+ * Example:
+ *
+ *   <a href="#" data-modal-ajax="/adres-na-karte-moskva/">Map</a>
+ *   <a href="#feedback" data-modal-inline="#feedback">Feedback</a>
  *
  * ============================================================
- * ОСОБЕННОСТИ РАБОТЫ С INLINE И CF7
+ * CLOSING
  * ============================================================
  *
- * Contact Form 7 подменяет содержимое формы на сообщение
- * «Спасибо» после успешной отправки — прямо внутри того же
- * DOM-узла. Если просто вернуть этот узел на место при
- * закрытии, при повторном открытии пользователь увидит
- * уже не форму, а success-сообщение.
+ *   - a click on the backdrop outside the window;
+ *   - a click on a button with data-modal-close;
+ *   - pressing Esc.
  *
- * Поэтому при открытии мы запоминаем исходный HTML и исходный
- * inline-стиль элемента, а при закрытии:
- *   - если CF7 заменил содержимое на success — восстанавливаем
- *     исходный HTML;
- *   - возвращаем исходный inline-стиль (обычно display: none).
+ * ============================================================
+ * NOTES ON INLINE AND CF7
+ * ============================================================
+ *
+ * Contact Form 7 replaces the form content with a "Thank you"
+ * message after a successful submission — right inside the same
+ * DOM node. If we just return this node to its place on
+ * close, on the next opening the user will see
+ * the success message instead of the form.
+ *
+ * Therefore on opening we remember the original HTML and the original
+ * inline style of the element, and on closing:
+ *   - if CF7 replaced the content with the success message, we restore
+ *     the original HTML;
+ *   - we return the original inline style (usually display: none).
  *
  * ============================================================
  */
@@ -70,6 +69,38 @@
 'use strict';
 
 ( () => {
+
+    /**
+     * Interface texts. They come from PHP (wp_localize_script →
+     * arsModalI18n, text domain argon-shop-theme); English is the fallback.
+     *
+     * @since 1.1.0
+     * @type {{ close: string, loading: string, loadError: string }}
+     */
+    const i18n = Object.assign( {
+        close:     'Close',
+        loading:   'Loading…',
+        loadError: 'Loading failed. Please try again.',
+    }, window.arsModalI18n || {} );
+
+    /**
+     * Escapes a string for HTML text.
+     *
+     * @param  {string} value
+     * @return {string}
+     */
+    const escapeHtml = ( value ) => String( value )
+        .replace( /&/g, '&amp;' )
+        .replace( /</g, '&lt;' )
+        .replace( />/g, '&gt;' );
+
+    /**
+     * Escapes a string for an HTML attribute.
+     *
+     * @param  {string} value
+     * @return {string}
+     */
+    const escapeAttr = ( value ) => escapeHtml( value ).replace( /"/g, '&quot;' );
 
     /** @type {Element|null} */
     let modalRoot = null;
@@ -87,36 +118,36 @@
     let inlineAnchor = null;
 
     /**
-     * Исходный HTML inline-элемента — для восстановления формы
-     * после того, как CF7 заменит её на success-сообщение.
+     * Original HTML of the inline element — to restore the form
+     * after CF7 replaces it with the success message.
      *
      * @type {string}
      */
     let inlineOriginalHTML = '';
 
     /**
-     * Исходный inline-стиль элемента. null — атрибута style
-     * изначально не было; пустая строка — был, но пустой;
-     * иначе — строка со значением.
+     * Original inline style of the element. null — there was no style
+     * attribute initially; an empty string — there was one, but empty;
+     * otherwise — a string with the value.
      *
      * @type {string|null}
      */
     let inlineOriginalStyle = null;
 
     /**
-     * Элемент, который был в фокусе до открытия модалки.
-     * Используется для возврата фокуса при закрытии.
+     * The element that had focus before the modal was opened.
+     * Used to return the focus on close.
      *
      * @type {Element|null}
      */
     let lastFocused = null;
 
     // ============================================================
-    // КАРКАС
+    // SKELETON
     // ============================================================
 
     /**
-     * Создаёт каркас модалки в DOM, если его ещё нет.
+     * Creates the modal skeleton in the DOM if it does not exist yet.
      *
      * @return {void}
      */
@@ -135,7 +166,7 @@
         modalRoot.innerHTML =
             '<div class="ars-modal__backdrop" data-modal-close></div>' +
             '<div class="ars-modal__window" role="document">' +
-                '<button type="button" class="ars-modal__close" data-modal-close aria-label="Закрыть">' +
+                '<button type="button" class="ars-modal__close" data-modal-close aria-label="' + escapeAttr( i18n.close ) + '">' +
                     '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">' +
                         '<path d="M6 6 L18 18 M18 6 L6 18" ' +
                               'fill="none" stroke="currentColor" ' +
@@ -151,13 +182,13 @@
     };
 
     // ============================================================
-    // ОТКРЫТИЕ / ЗАКРЫТИЕ
+    // OPEN / CLOSE
     // ============================================================
 
     /**
-     * Открывает модалку с заданным содержимым.
+     * Opens the modal with the given content.
      *
-     * @param  {string} html — готовый HTML
+     * @param  {string} html — ready HTML
      * @return {void}
      */
     const open = ( html ) => {
@@ -173,10 +204,10 @@
 
         isOpen = true;
 
-        // Возврат фокуса — запоминаем, куда его вернуть при закрытии
+        // Focus return — remember where to return it on close
         lastFocused = document.activeElement;
 
-        // Фокус на кнопку закрытия
+        // Focus on the close button
         const closeButton = modalRoot.querySelector( '.ars-modal__close' );
 
         if ( closeButton ) {
@@ -185,7 +216,7 @@
     };
 
     /**
-     * Закрывает модалку.
+     * Closes the modal.
      *
      * @return {void}
      */
@@ -195,29 +226,29 @@
             return;
         }
 
-        // Возвращаем inline-элемент на исходное место.
-        // Делаем это до очистки modalBody, чтобы не потерять ссылку.
+        // Return the inline element to its original place.
+        // Do this before clearing modalBody so as not to lose the reference.
         if ( inlineElement && inlineAnchor && inlineAnchor.parentNode ) {
 
-            // Если CF7 заменил форму на success-сообщение —
-            // восстанавливаем исходный HTML.
+            // If CF7 replaced the form with the success message,
+            // restore the original HTML.
             const hasSuccess = inlineElement.querySelector( '.wpcf7-mail-sent-ok' );
 
             if ( hasSuccess && inlineOriginalHTML ) {
                 inlineElement.innerHTML = inlineOriginalHTML;
             }
 
-            // Возвращаем элемент на место
+            // Return the element to its place
             inlineAnchor.parentNode.insertBefore( inlineElement, inlineAnchor );
 
-            // Возвращаем исходный inline-стиль
+            // Return the original inline style
             if ( inlineOriginalStyle !== null ) {
                 inlineElement.setAttribute( 'style', inlineOriginalStyle );
             } else {
                 inlineElement.removeAttribute( 'style' );
             }
 
-            // Сбрасываем сохранённые ссылки
+            // Reset the saved references
             inlineElement         = null;
             inlineAnchor          = null;
             inlineOriginalHTML    = '';
@@ -229,8 +260,8 @@
 
         document.body.classList.remove( 'ars-modal-open' );
 
-        // Очищаем тело через задержку — чтобы анимация закрытия
-        // не мигала пустым блоком.
+        // Clear the body after a delay so that the closing animation
+        // does not flash an empty block.
         window.setTimeout( () => {
             if ( ! isOpen && modalBody ) {
                 modalBody.innerHTML = '';
@@ -239,7 +270,7 @@
 
         isOpen = false;
 
-        // Возврат фокуса на элемент, который открыл модалку
+        // Return the focus to the element that opened the modal
         if ( lastFocused && typeof lastFocused.focus === 'function' ) {
             lastFocused.focus();
         }
@@ -248,23 +279,23 @@
     };
 
     // ============================================================
-    // ТИПЫ КОНТЕНТА
+    // CONTENT TYPES
     // ============================================================
 
     /**
-     * Открывает модалку с AJAX-контентом.
+     * Opens the modal with AJAX content.
      *
-     * @param  {string} url — адрес страницы
+     * @param  {string} url — page address
      * @return {Promise<void>}
      */
     const openAjax = async ( url ) => {
 
-        // Если предыдущая модалка ещё открыта — закрываем
+        // If the previous modal is still open — close it
         if ( isOpen ) {
             close();
         }
 
-        open( '<div class="ars-modal__loader">Загрузка…</div>' );
+        open( '<div class="ars-modal__loader">' + escapeHtml( i18n.loading ) + '</div>' );
 
         try {
 
@@ -285,23 +316,23 @@
 
         } catch {
             if ( isOpen ) {
-                modalBody.innerHTML = '<div class="ars-modal__error">Ошибка загрузки. Попробуйте ещё раз.</div>';
+                modalBody.innerHTML = '<div class="ars-modal__error">' + escapeHtml( i18n.loadError ) + '</div>';
             }
         }
     };
 
     /**
-     * Открывает модалку с inline-контентом.
+     * Opens the modal with inline content.
      *
-     * ПЕРЕМЕЩАЕТ элемент в модалку, а не клонирует его.
-     * Клонирование не работает с Contact Form 7: его скрипты
-     * вешаются на исходный DOM-узел, а у клона обработчиков
-     * нет — форма визуально есть, но не реагирует.
+     * MOVES the element into the modal instead of cloning it.
+     * Cloning does not work with Contact Form 7: its scripts
+     * are attached to the original DOM node, and the clone has no
+     * handlers — the form is visible but does not react.
      *
-     * На месте исходного элемента оставляем якорь-комментарий,
-     * по которому вернём его при закрытии.
+     * An anchor comment is left in place of the original element,
+     * by which we return it on close.
      *
-     * @param  {string} selector — CSS-селектор элемента
+     * @param  {string} selector — CSS selector of the element
      * @return {void}
      */
     const openInline = ( selector ) => {
@@ -312,43 +343,43 @@
             return;
         }
 
-        // Если предыдущая модалка ещё открыта — закрываем
+        // If the previous modal is still open — close it
         if ( isOpen ) {
             close();
         }
 
-        // Сохраняем исходный inline-стиль, чтобы вернуть его при закрытии
+        // Save the original inline style to return it on close
         inlineOriginalStyle = source.getAttribute( 'style' );
 
-        // Сохраняем эталонный HTML формы (для восстановления после CF7)
+        // Save the reference HTML of the form (for restoring after CF7)
         inlineOriginalHTML = source.innerHTML;
 
-        // Оставляем якорь на месте будущего возврата
+        // Leave an anchor in the place of the future return
         inlineAnchor = document.createComment( 'ars-modal-anchor' );
         source.parentNode.insertBefore( inlineAnchor, source );
 
-        // Запоминаем элемент и переносим его в модалку
+        // Remember the element and move it into the modal
         inlineElement = source;
 
-        // Сначала убираем исходный inline-стиль (display: none),
-        // потом явно показываем элемент
+        // First remove the original inline style (display: none),
+        // then show the element explicitly
         inlineElement.removeAttribute( 'style' );
         inlineElement.style.display = 'block';
 
-        // Открываем пустую модалку и вставляем туда элемент
+        // Open an empty modal and insert the element into it
         open( '' );
         modalBody.appendChild( inlineElement );
     };
 
     /**
-     * Открывает модалку с iframe.
+     * Opens the modal with an iframe.
      *
-     * @param  {string} url — адрес
+     * @param  {string} url — address
      * @return {void}
      */
     const openIframe = ( url ) => {
 
-        // Если предыдущая модалка ещё открыта — закрываем
+        // If the previous modal is still open — close it
         if ( isOpen ) {
             close();
         }
@@ -364,19 +395,19 @@
     };
 
     // ============================================================
-    // ОБРАБОТЧИКИ
+    // HANDLERS
     // ============================================================
 
     /**
-     * Обработчик клика по документу.
+     * Document click handler.
      *
-     * @param  {MouseEvent} event — событие
+     * @param  {MouseEvent} event — event
      * @return {void}
      */
     const onClick = ( event ) => {
 
-        // На случай клика по текстовому узлу — приводим target
-        // к элементу.
+        // In case of a click on a text node — cast the target
+        // to an element.
         const target = ( event.target instanceof Element )
             ? event.target
             : event.target.parentElement;
@@ -385,7 +416,7 @@
             return;
         }
 
-        // Закрытие по клику на data-modal-close
+        // Closing on a click on data-modal-close
         const closeTarget = target.closest( '[data-modal-close]' );
 
         if ( closeTarget ) {
@@ -394,7 +425,7 @@
             return;
         }
 
-        // Открытие
+        // Opening
         const trigger = target.closest( '[data-modal-ajax], [data-modal-inline], [data-modal-iframe]' );
 
         if ( ! trigger ) {
@@ -419,9 +450,9 @@
     };
 
     /**
-     * Закрытие по Esc.
+     * Closing on Esc.
      *
-     * @param  {KeyboardEvent} event — событие
+     * @param  {KeyboardEvent} event — event
      * @return {void}
      */
     const onKeyDown = ( event ) => {
@@ -432,7 +463,7 @@
     };
 
     // ============================================================
-    // СТАРТ
+    // START
     // ============================================================
 
     document.addEventListener( 'click', onClick );

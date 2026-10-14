@@ -1,80 +1,79 @@
 /**
- * ArgonShop — слайдер изображений товара.
+ * ArgonShop — product image slider.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Инициализирует два связанных Swiper-слайдера на странице товара
- * и GLightbox для просмотра изображений в полном размере.
- * Заменяет старый слайдер на Slick и Fancybox.
+ * Initializes two linked Swiper sliders on the product page
+ * and GLightbox for viewing images in full size.
+ * Replaces the old Slick slider and Fancybox.
  *
- * HTML-разметка выводится PHP-функцией as_slider_product()
- * (см. includes/interface/slider/sliderProduct.php).
+ * The HTML markup is printed by the PHP function as_slider_product()
+ * (see includes/interface/slider/sliderProduct.php).
  *
  * ============================================================
- * DOM-ЭЛЕМЕНТЫ
+ * DOM ELEMENTS
  * ============================================================
  *
  * .as-slider-product
- *   Общий контейнер слайдера товара.
+ *   Common product slider container.
  *
  * .as-slider-product-main
- *   Основной Swiper с большими изображениями. Слайды содержат
- *   ссылки с классом .glightbox-gallery и атрибутом data-glightbox.
+ *   Main Swiper with large images. Slides contain
+ *   links with the .glightbox-gallery class and the data-glightbox attribute.
  *
  * .as-slider-product-thumbs-stage
- *   Обёртка миниатюр со стрелками навигации.
+ *   Thumbnail wrapper with navigation arrows.
  *
  * .as-slider-product-thumbs
- *   Swiper с миниатюрами. Служит визуальной полосой: показывает
- *   по 3 миниатюры за раз и подсвечивает активную.
+ *   Swiper with thumbnails. Serves as a visual strip: shows
+ *   3 thumbnails at a time and highlights the active one.
  *
  * .as-slider-product-thumbs-prev / -next
- *   Кнопки навигации миниатюр. Показываются, если миниатюр
- *   больше, чем помещается в видимой области.
+ *   Thumbnail navigation buttons. Shown if there are more
+ *   thumbnails than fit in the visible area.
  *
  * .as-slider-product-thumb-active
- *   Класс активной миниатюры. Ставится вручную из JS, потому
- *   что встроенный .swiper-slide-active у миниатюр не подходит:
- *   при slidesPerView: 3 он всегда лежит на левом слайде и не
- *   отражает реальный активный индекс.
+ *   Active thumbnail class. Set manually from JS, because
+ *   the built-in .swiper-slide-active is not suitable for thumbnails:
+ *   with slidesPerView: 3 it always sits on the left slide and does not
+ *   reflect the real active index.
  *
  * ============================================================
- * ИСТОЧНИК ИСТИНЫ — ОСНОВНОЙ СЛАЙДЕР
+ * SOURCE OF TRUTH — THE MAIN SLIDER
  * ============================================================
  *
- * Основной слайдер содержит по одному слайду на изображение,
- * его activeIndex всегда лежит в диапазоне 0..N-1. Миниатюры же
- * показывают по 3 слайда за раз, и у них есть только snap-позиции
- * 0, 1, 2 — activeIndex миниатюр НЕ может быть 3 или 4 при 5
- * слайдах и slidesPerView: 3. Именно поэтому встроенная опция
- * slideToClickedSlide у миниатюр не работает дальше третьей
- * картинки.
+ * The main slider has one slide per image,
+ * its activeIndex is always in the range 0..N-1. Thumbnails, however,
+ * show 3 slides at a time and only have snap positions
+ * 0, 1, 2 — the thumbnails' activeIndex CANNOT be 3 or 4 with 5
+ * slides and slidesPerView: 3. That is why the built-in
+ * slideToClickedSlide option does not work for thumbnails beyond the third
+ * image.
  *
- * Поэтому весь активный индекс живёт в основном слайдере:
+ * Therefore the whole active index lives in the main slider:
  *
- *   - клик по стрелке → mainSwiper.slideNext() / slidePrev();
- *   - клик по миниатюре → mainSwiper.slideTo(index);
- *   - при смене activeIndex у main:
- *       1) обновляем подсветку активной миниатюры (наш класс),
- *       2) прокручиваем thumbsSwiper к нужному индексу,
- *          чтобы миниатюра была видна на экране,
- *       3) обновляем состояние стрелок (disabled на краях).
+ *   - arrow click → mainSwiper.slideNext() / slidePrev();
+ *   - thumbnail click → mainSwiper.slideTo(index);
+ *   - when main's activeIndex changes:
+ *       1) update the active thumbnail highlight (our class),
+ *       2) scroll thumbsSwiper to the required index
+ *          so that the thumbnail is visible on screen,
+ *       3) update the arrow state (disabled at the edges).
  *
  * ============================================================
- * ИСПОЛЬЗОВАНИЕ
+ * USAGE
  * ============================================================
  *
  *     import { arsSliderProduct } from './modules/slider-product.js';
  *     arsSliderProduct.init();
  *
- * Модуль безопасен для вызова на любой странице: если слайдера
- * нет, ничего не выполняется.
+ * The module is safe to call on any page: if there is no slider,
+ * nothing is executed.
  */
 
 'use strict';
@@ -82,7 +81,7 @@
 import { qs, qsa } from '../../shared/dom.js';
 
 /**
- * Модуль слайдера товара.
+ * Product slider module.
  */
 class ArsSliderProduct {
 
@@ -90,64 +89,64 @@ class ArsSliderProduct {
     #initialized = false;
 
     /**
-     * Экземпляр основного Swiper.
+     * Main Swiper instance.
      *
      * @type {Object|null}
      */
     #mainSwiper = null;
 
     /**
-     * Экземпляр Swiper с миниатюрами.
+     * Thumbnail Swiper instance.
      *
      * @type {Object|null}
      */
     #thumbsSwiper = null;
 
     /**
-     * Экземпляр GLightbox для галереи.
+     * GLightbox instance for the gallery.
      *
      * @type {Object|null}
      */
     #glightbox = null;
 
     /**
-     * Обёртка миниатюр со стрелками.
+     * Thumbnail wrapper with arrows.
      *
      * @type {Element|null}
      */
     #stage = null;
 
     /**
-     * Кнопка «назад».
+     * "Previous" button.
      *
      * @type {Element|null}
      */
     #prevButton = null;
 
     /**
-     * Кнопка «вперёд».
+     * "Next" button.
      *
      * @type {Element|null}
      */
     #nextButton = null;
 
     /**
-     * Массив слайдов миниатюр (реальных DOM-элементов).
-     * Нужен для ручной подсветки активной миниатюры.
+     * Array of thumbnail slides (real DOM elements).
+     * Needed for manual highlighting of the active thumbnail.
      *
      * @type {Element[]}
      */
     #thumbSlides = [];
 
     /**
-     * Сколько слайдов миниатюр видно одновременно.
+     * How many thumbnail slides are visible at once.
      *
      * @type {number}
      */
     #thumbsPerView = 3;
 
     /**
-     * Инициализация. Безопасна для повторного вызова.
+     * Initialization. Safe to call repeatedly.
      *
      * @return {void}
      */
@@ -173,28 +172,28 @@ class ArsSliderProduct {
         this.#prevButton = container.querySelector( '.as-slider-product-thumbs-prev' );
         this.#nextButton = container.querySelector( '.as-slider-product-thumbs-next' );
 
-        // Сначала основной слайдер — он источник истины.
+        // Main slider first — it is the source of truth.
         this.#initMain( container );
 
-        // Затем миниатюры, привязанные к основному.
+        // Then the thumbnails linked to the main slider.
         this.#initThumbs( container );
 
-        // GLightbox для галереи.
+        // GLightbox for the gallery.
         this.#initLightbox( container );
 
-        // Обработчики стрелок и кликов по миниатюрам.
+        // Arrow and thumbnail click handlers.
         this.#bindArrows();
         this.#bindThumbClicks();
 
-        // Первичная подсветка, состояние стрелок, позиция миниатюр.
+        // Initial highlight, arrow state, thumbnail position.
         this.#refreshActiveThumb();
         this.#refreshNavState();
     }
 
     /**
-     * Инициализирует основной Swiper.
+     * Initializes the main Swiper.
      *
-     * @param  {Element} container — общий контейнер слайдера
+     * @param  {Element} container — common slider container
      * @return {void}
      */
     #initMain( container ) {
@@ -217,29 +216,29 @@ class ArsSliderProduct {
             },
         });
 
-        // При смене активного слайда основного слайдера
-        // обновляем подсветку миниатюр, прокрутку и стрелки.
+        // When the active slide of the main slider changes,
+        // update the thumbnail highlight, scrolling and arrows.
         this.#mainSwiper.on( 'activeIndexChange', () => {
             this.#refreshActiveThumb();
             this.#scrollThumbsToActive();
             this.#refreshNavState();
         });
 
-        // На случай, если activeIndex не менялся,
-        // но край изменился (resize и т.п.).
+        // In case activeIndex did not change
+        // but the edge did (resize, etc.).
         this.#mainSwiper.on( 'reachBeginning reachEnd fromEdge toEdge', () => {
             this.#refreshNavState();
         });
     }
 
     /**
-     * Инициализирует Swiper с миниатюрами.
+     * Initializes the thumbnail Swiper.
      *
-     * Встроенная навигация и slideToClickedSlide не используются —
-     * их работу берут на себя собственные обработчики и основной
-     * слайдер как источник истины.
+     * Built-in navigation and slideToClickedSlide are not used —
+     * their job is done by custom handlers and the main
+     * slider as the source of truth.
      *
-     * @param  {Element} container — общий контейнер слайдера
+     * @param  {Element} container — common slider container
      * @return {void}
      */
     #initThumbs( container ) {
@@ -264,25 +263,25 @@ class ArsSliderProduct {
             },
         });
 
-        // Собираем DOM-элементы слайдов миниатюр для ручной
-        // подсветки активной. Используем querySelectorAll
-        // по реальному контейнеру, чтобы порядок совпадал
-        // с порядком в разметке PHP.
+        // Collect the DOM elements of the thumbnail slides for manual
+        // highlighting of the active one. Use querySelectorAll
+        // on the real container so that the order matches
+        // the order in the PHP markup.
         this.#thumbSlides = qsa(
             '.as-slider-product-thumbs .swiper-slide',
             container
         );
 
-        // Обновляем видимость стрелок — например, если миниатюр
-        // меньше, чем помещается, они не нужны.
+        // Update arrow visibility — for example, if there are fewer
+        // thumbnails than fit, the arrows are not needed.
         this.#updateThumbsVisibility();
     }
 
     /**
-     * Навешивает обработчики клика на кнопки-стрелки.
+     * Attaches click handlers to the arrow buttons.
      *
-     * Обе стрелки управляют основным слайдером — это гарантирует
-     * переключение ровно на один слайд вперёд или назад.
+     * Both arrows control the main slider — this guarantees
+     * switching exactly one slide forward or backward.
      *
      * @return {void}
      */
@@ -308,12 +307,12 @@ class ArsSliderProduct {
     }
 
     /**
-     * Навешивает обработчики клика на каждую миниатюру.
+     * Attaches click handlers to each thumbnail.
      *
-     * Клик по миниатюре переключает основной слайдер на индекс
-     * этой миниатюры. Дальнейшая синхронизация (подсветка,
-     * прокрутка миниатюр, стрелки) сработает автоматически
-     * по событию activeIndexChange у main.
+     * A thumbnail click switches the main slider to the index
+     * of that thumbnail. Further synchronization (highlight,
+     * thumbnail scrolling, arrows) happens automatically
+     * on main's activeIndexChange event.
      *
      * @return {void}
      */
@@ -329,20 +328,20 @@ class ArsSliderProduct {
 
                 event.preventDefault();
 
-                // Используем индекс из замыкания — он совпадает
-                // с реальным порядком слайдов в разметке.
+                // Use the index from the closure — it matches
+                // the real order of slides in the markup.
                 this.#mainSwiper.slideTo( index );
             });
         });
     }
 
     /**
-     * Обновляет подсветку активной миниатюры.
+     * Updates the active thumbnail highlight.
      *
-     * Снимает класс со всех миниатюр и ставит его на миниатюру
-     * с индексом, равным main.activeIndex. Свой класс используется
-     * вместо встроенного .swiper-slide-active, потому что последний
-     * у миниатюр при slidesPerView: 3 всегда лежит на левом слайде.
+     * Removes the class from all thumbnails and sets it on the thumbnail
+     * whose index equals main.activeIndex. A custom class is used
+     * instead of the built-in .swiper-slide-active, because the latter
+     * always sits on the left thumbnail with slidesPerView: 3.
      *
      * @return {void}
      */
@@ -363,11 +362,11 @@ class ArsSliderProduct {
     }
 
     /**
-     * Прокручивает миниатюры так, чтобы активная миниатюра была
-     * видна на экране.
+     * Scrolls the thumbnails so that the active thumbnail is
+     * visible on screen.
      *
-     * Используем slideTo с параметром runCallbacks = false, чтобы
-     * прокрутка миниатюр не запускала цепочку синхронизации заново.
+     * slideTo is used with runCallbacks = false so that
+     * scrolling the thumbnails does not restart the synchronization chain.
      *
      * @return {void}
      */
@@ -379,7 +378,7 @@ class ArsSliderProduct {
 
         const activeIndex = this.#mainSwiper.activeIndex;
 
-        // Если уже совпадает — ничего не делаем
+        // If it already matches — do nothing
         if ( this.#thumbsSwiper.activeIndex === activeIndex ) {
             return;
         }
@@ -388,10 +387,10 @@ class ArsSliderProduct {
     }
 
     /**
-     * Инициализирует GLightbox для просмотра изображений
-     * в полном размере.
+     * Initializes GLightbox for viewing images
+     * in full size.
      *
-     * @param  {Element} container — общий контейнер слайдера
+     * @param  {Element} container — common slider container
      * @return {void}
      */
     #initLightbox( container ) {
@@ -416,8 +415,8 @@ class ArsSliderProduct {
     }
 
     /**
-     * Обновляет видимость стрелок: если миниатюр не больше,
-     * чем помещается — стрелки скрываются.
+     * Updates arrow visibility: if the thumbnails all fit,
+     * the arrows are hidden.
      *
      * @return {void}
      */
@@ -437,11 +436,11 @@ class ArsSliderProduct {
     }
 
     /**
-     * Обновляет состояние стрелок: видимость и disabled.
+     * Updates the arrow state: visibility and disabled.
      *
-     *   - Если миниатюры все видны — стрелки скрываются целиком.
-     *   - На первом слайде стрелка влево disabled.
-     *   - На последнем слайде стрелка вправо disabled.
+     *   - If all thumbnails are visible, the arrows are hidden entirely.
+     *   - On the first slide the left arrow is disabled.
+     *   - On the last slide the right arrow is disabled.
      *
      * @return {void}
      */
@@ -470,7 +469,7 @@ class ArsSliderProduct {
 }
 
 /**
- * Готовый синглтон модуля слайдера товара.
+ * Ready-made singleton of the product slider module.
  *
  * @type {ArsSliderProduct}
  */

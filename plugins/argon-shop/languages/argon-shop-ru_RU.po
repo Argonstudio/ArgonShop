@@ -1,0 +1,1054 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Argon Shop 1.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/argon-shop\n"
+"Last-Translator: Ivan Voitkov <voit.ne@gmail.com>\n"
+"Language-Team: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-08T09:36:46+00:00\n"
+"PO-Revision-Date: 2026-10-08 09:36+0000\n"
+"Language: ru_RU\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Domain: argon-shop\n"
+"X-Generator: WP-CLI 2.12.0\n"
+
+#. Plugin Name of the plugin
+#: argon-shop.php
+msgid "Argon Shop"
+msgstr "Argon Shop"
+
+#. Plugin URI of the plugin
+#: argon-shop.php
+msgid "https://github.com/Argonstudio/ArgonShop"
+msgstr "https://github.com/Argonstudio/ArgonShop"
+
+#. Description of the plugin
+#: argon-shop.php
+msgid "Highly optimized online store plugin for WordPress with AJAX search and fully theme-controlled cart and customer account templates."
+msgstr "Высокооптимизированный плагин интернет-магазина для WordPress с AJAX-поиском и кастомной шаблонизацией корзины и ЛК."
+
+#. Author of the plugin
+#: argon-shop.php
+msgid "Ivan Voitkov"
+msgstr "Иван Войтков"
+
+#. Author URI of the plugin
+#: argon-shop.php
+msgid "https://argon-studio.ru"
+msgstr "https://argon-studio.ru"
+
+#: includes/admin/additionalFilters.php:45
+#: includes/createPostType.php:108
+msgid "All statuses"
+msgstr "Все статусы"
+
+#: includes/admin/fieldsProduct.php:38
+msgid "Main parameters"
+msgstr "Основные параметры"
+
+#: includes/admin/fieldsProduct.php:41
+msgid "Discounted price"
+msgstr "Цена со скидкой"
+
+#: includes/admin/fieldsProduct.php:44
+#: includes/createPostType.php:267
+#: includes/createPostType.php:268
+#: includes/createPostType.php:269
+msgid "Characteristics"
+msgstr "Характеристики"
+
+#: includes/admin/fieldsProduct.php:73
+#: includes/admin/order/orderMetabox.php:188
+msgid "Price"
+msgstr "Цена"
+
+#: includes/admin/fieldsProduct.php:74
+msgid "Product price"
+msgstr "Цена товара"
+
+#: includes/admin/fieldsProduct.php:78
+#: includes/admin/order/orderMetabox.php:185
+msgid "Weight"
+msgstr "Вес"
+
+#: includes/admin/fieldsProduct.php:79
+msgid "Product weight"
+msgstr "Вес товара"
+
+#: includes/admin/fieldsProduct.php:79
+#: includes/admin/order/orderMetabox.php:204
+msgid "kg"
+msgstr "кг"
+
+#: includes/admin/fieldsProduct.php:83
+#: includes/admin/fieldsProduct.php:84
+msgid "SKU"
+msgstr "Артикул"
+
+#: includes/admin/fieldsProduct.php:88
+msgid "Bestseller"
+msgstr "Хит продаж"
+
+#: includes/admin/fieldsProduct.php:92
+msgid "New"
+msgstr "Новинка"
+
+#: includes/admin/fieldsProduct.php:200
+msgid "from"
+msgstr "от"
+
+#: includes/admin/fieldsProduct.php:201
+msgid "Price with discount"
+msgstr "Цена по скидке"
+
+#: includes/admin/fieldsProduct.php:227
+#: includes/admin/fieldsProduct.php:380
+msgid "No matching characteristics</br>Select a catalog category"
+msgstr "Нет подходящих характеристик</br>Выберите категорию в каталоге"
+
+#: includes/admin/fieldsProduct.php:307
+msgid "Value"
+msgstr "Значение"
+
+#: includes/admin/fieldsProduct.php:523
+#: includes/admin/order/orderAjax.php:286
+#: includes/admin/order/orderAjax.php:337
+#: includes/admin/order/orderAjax.php:398
+#: includes/admin/order/orderAjax.php:493
+#: includes/interface/cabinet/myCabinet.php:44
+#: includes/interface/cabinet/myCabinet.php:114
+#: includes/interface/cabinet/userOrders/ordersAjax.php:52
+msgid "Insufficient permissions"
+msgstr "Недостаточно прав"
+
+#: includes/admin/fieldsProduct.php:535
+#: includes/admin/order/orderAjax.php:348
+#: includes/interface/shoppingCart/cart-ajax.php:55
+#: includes/interface/shoppingCart/cart-ajax.php:90
+#: includes/interface/shoppingCart/cart-ajax.php:152
+#: includes/interface/shoppingCart/cart-ajax.php:193
+msgid "Invalid product ID"
+msgstr "Неверный ID товара"
+
+#: includes/admin/fieldsTaxonomy.php:145
+msgid "Select all / Deselect"
+msgstr "Выбрать все / Снять выбор"
+
+#: includes/admin/fieldsTaxonomy.php:264
+#: includes/admin/fieldsTaxonomy.php:288
+msgid "Belongs to categories:"
+msgstr "Относится к категориям:"
+
+#: includes/admin/galleryMetabox.php:73
+msgid "Gallery"
+msgstr "Галерея"
+
+#: argon-shop.php:189
+#: includes/admin/galleryMetabox.php:128
+msgid "Remove image"
+msgstr "Удалить изображение"
+
+#: includes/admin/galleryMetabox.php:140
+msgid "Add images"
+msgstr "Добавить изображения"
+
+#: includes/admin/galleryMetabox.php:144
+msgid "Drag images with the mouse to change the order. The first image is the main one and is shown first."
+msgstr "Перетаскивайте изображения мышью, чтобы изменить порядок. Первое изображение — главное, оно показывается первым."
+
+#: argon-shop.php:349
+#: includes/admin/order/orderAjax.php:161
+#: includes/admin/order/orderAjax.php:220
+#: includes/admin/order/orderAjax.php:256
+msgid "Server error"
+msgstr "Ошибка на сервере"
+
+#: includes/admin/order/orderAjax.php:290
+#: includes/admin/order/orderAjax.php:341
+#: includes/admin/order/orderAjax.php:402
+#: includes/interface/cabinet/myCabinet.php:48
+#: includes/interface/search/searchAjax.php:50
+msgid "Not enough data"
+msgstr "Недостаточно данных"
+
+#: includes/admin/order/orderAjax.php:306
+msgid "Settings not found"
+msgstr "Настройки не найдены"
+
+#: includes/admin/order/orderAjax.php:312
+#: includes/interface/shoppingCart/checkout-fields.php:129
+msgid "Message"
+msgstr "Сообщение"
+
+#: includes/admin/order/orderAjax.php:352
+#: includes/admin/order/orderAjax.php:499
+msgid "Invalid order ID"
+msgstr "Неверный ID заказа"
+
+#: includes/admin/order/orderAjax.php:370
+msgid "Product not found"
+msgstr "Товар не найден"
+
+#: includes/admin/order/orderAjax.php:448
+#: includes/interface/search/searchAjax.php:86
+msgid "No matching results"
+msgstr "Нет подходящих результатов"
+
+#: includes/admin/order/orderMetabox.php:28
+#: includes/createPostType.php:148
+#: includes/createPostType.php:149
+#: includes/interface/breadcrumbs.php:431
+msgid "Products"
+msgstr "Товары"
+
+#: includes/admin/order/orderMetabox.php:29
+msgid "Customer information"
+msgstr "Информация от заказчика"
+
+#: includes/admin/order/orderMetabox.php:30
+msgid "Order status"
+msgstr "Статус заказа"
+
+#: includes/admin/order/orderMetabox.php:103
+#: includes/createPostType.php:150
+#: includes/createPostType.php:151
+msgid "Add product"
+msgstr "Добавить товар"
+
+#: includes/admin/order/orderMetabox.php:105
+msgid "product name or SKU"
+msgstr "название или артикул товара"
+
+#: includes/admin/order/orderMetabox.php:182
+msgid "Quantity"
+msgstr "Количество"
+
+#: includes/admin/order/orderMetabox.php:262
+msgid "Add missing fields from:"
+msgstr "Добавить отсутствующие поля из:"
+
+#: includes/admin/order/orderMetabox.php:265
+#: settingPage.php:165
+msgid "Individuals"
+msgstr "Физические лица"
+
+#: includes/admin/order/orderMetabox.php:266
+#: settingPage.php:173
+msgid "Legal entities"
+msgstr "Юридические лица"
+
+#: includes/admin/order/orderMetabox.php:269
+msgid "Add"
+msgstr "Добавить"
+
+#: includes/admin/order/orderMetabox.php:274
+#: includes/interface/shoppingCart/checkout-emails.php:80
+msgid "Shipping method:"
+msgstr "Способ доставки:"
+
+#: includes/admin/order/orderMetabox.php:279
+#: includes/interface/shoppingCart/checkout.php:54
+msgid "Pickup"
+msgstr "Самовывоз"
+
+#: includes/admin/order/orderMetabox.php:280
+#: includes/interface/shoppingCart/checkout.php:55
+msgid "Delivery to address"
+msgstr "Доставка по адресу"
+
+#: includes/admin/order/orderMetabox.php:296
+#: includes/interface/shoppingCart/checkout-emails.php:84
+msgid "Payment method:"
+msgstr "Способ оплаты:"
+
+#: includes/admin/order/orderMetabox.php:301
+#: includes/interface/shoppingCart/checkout.php:68
+msgid "Payment on delivery"
+msgstr "Оплата при получении"
+
+#. translators: 1: order number, 2: number of items, 3: order total.
+#: includes/admin/order/orderSave.php:118
+#: includes/interface/shoppingCart/checkout.php:110
+#, php-format
+msgid "Order #%1$s. Items in order: %2$s, total: %3$s"
+msgstr "Заказ №%1$s Товаров в заказе: %2$s, на сумму: %3$s"
+
+#: includes/createPostType.php:42
+msgid "Slider"
+msgstr "Слайдер"
+
+#: includes/createPostType.php:43
+msgid "Slide"
+msgstr "Слайд"
+
+#: includes/createPostType.php:44
+#: includes/createPostType.php:45
+msgid "Add slide"
+msgstr "Добавить слайд"
+
+#: includes/createPostType.php:46
+#: includes/createPostType.php:78
+#: includes/createPostType.php:152
+msgid "Edit"
+msgstr "Редактировать"
+
+#: includes/createPostType.php:47
+msgid "Edit slide"
+msgstr "Редактировать слайд"
+
+#: includes/createPostType.php:48
+msgid "New slide"
+msgstr "Новый слайд"
+
+#: includes/createPostType.php:49
+#: includes/createPostType.php:81
+#: includes/createPostType.php:155
+msgid "View"
+msgstr "Просмотр"
+
+#: includes/createPostType.php:50
+msgid "View slide"
+msgstr "Посмотреть слайд"
+
+#: includes/createPostType.php:51
+msgid "Search slides"
+msgstr "Поиск слайда"
+
+#: includes/createPostType.php:52
+msgid "No slides yet"
+msgstr "Слайдов пока нет"
+
+#: includes/createPostType.php:53
+msgid "No slides found in Trash"
+msgstr "Слайды не найдены в корзине"
+
+#: includes/createPostType.php:54
+msgid "Parent slide"
+msgstr "Parent слайд"
+
+#: includes/createPostType.php:74
+msgid "Orders"
+msgstr "Заказы"
+
+#: includes/createPostType.php:75
+#: includes/interface/cabinet/userOrders/ordersView.php:100
+#: includes/interface/shoppingCart/checkout-emails.php:57
+msgid "Order"
+msgstr "Заказ"
+
+#: includes/createPostType.php:76
+#: includes/createPostType.php:77
+msgid "Add order"
+msgstr "Добавить заказ"
+
+#: includes/createPostType.php:79
+msgid "Edit order"
+msgstr "Редактировать заказ"
+
+#: includes/createPostType.php:80
+msgid "New order"
+msgstr "Новый заказ"
+
+#: includes/createPostType.php:82
+msgid "View order"
+msgstr "Посмотреть заказ"
+
+#: includes/createPostType.php:83
+msgid "Search orders"
+msgstr "Поиск заказа"
+
+#: includes/createPostType.php:84
+msgid "No orders yet"
+msgstr "Заказов пока нет"
+
+#: includes/createPostType.php:85
+msgid "No orders found in Trash"
+msgstr "Заказы не найдены в корзине"
+
+#: includes/createPostType.php:86
+msgid "Parent order"
+msgstr "Parent заказы"
+
+#: includes/createPostType.php:105
+#: includes/createPostType.php:107
+msgid "Order statuses"
+msgstr "Статусы заказов"
+
+#: includes/createPostType.php:106
+msgid "Status"
+msgstr "Статус заказов"
+
+#: includes/createPostType.php:112
+msgid "Add status"
+msgstr "Добавить статус"
+
+#: includes/createPostType.php:113
+msgid "Edit status"
+msgstr "Редактировать статус"
+
+#: includes/createPostType.php:116
+msgid "Search statuses"
+msgstr "Поиск статуса"
+
+#: includes/createPostType.php:153
+msgid "Edit product"
+msgstr "Редактировать товар"
+
+#: includes/createPostType.php:154
+msgid "New product"
+msgstr "Новый товар"
+
+#: includes/createPostType.php:156
+msgid "View product"
+msgstr "Посмотреть товар"
+
+#: includes/createPostType.php:157
+msgid "Search products"
+msgstr "Поиск товара"
+
+#: includes/createPostType.php:158
+msgid "No products yet"
+msgstr "Товаров пока нет"
+
+#: includes/createPostType.php:159
+msgid "No products found in Trash"
+msgstr "Товары не найдены в корзине"
+
+#: includes/createPostType.php:160
+msgid "Parent product"
+msgstr "Parent товары"
+
+#: includes/createPostType.php:177
+#: includes/createPostType.php:178
+#: includes/createPostType.php:179
+msgid "Catalog"
+msgstr "Каталог"
+
+#: includes/createPostType.php:180
+#: includes/createPostType.php:229
+msgid "All categories"
+msgstr "Все категории"
+
+#: includes/createPostType.php:184
+msgid "Add new category"
+msgstr "Добавить новую категорию"
+
+#: includes/createPostType.php:185
+msgid "Edit category"
+msgstr "Редактировать категорию"
+
+#: includes/createPostType.php:188
+msgid "Search categories"
+msgstr "Поиск категории"
+
+#: includes/createPostType.php:226
+#: includes/createPostType.php:227
+#: includes/createPostType.php:228
+#: settingPage.php:131
+msgid "Wholesale price steps"
+msgstr "Шаги оптовых цен"
+
+#: includes/createPostType.php:233
+msgid "Add step"
+msgstr "Добавить шаг"
+
+#: includes/createPostType.php:234
+msgid "Edit step"
+msgstr "Редактировать шаг"
+
+#: includes/createPostType.php:237
+msgid "Search steps"
+msgstr "Поиск шага"
+
+#: includes/createPostType.php:270
+msgid "All characteristics"
+msgstr "Все характеристики"
+
+#: includes/createPostType.php:271
+msgid "Parent characteristic"
+msgstr "Родительская характеристика"
+
+#: includes/createPostType.php:272
+msgid "Parent characteristic:"
+msgstr "Родительская характеристика:"
+
+#: includes/createPostType.php:274
+msgid "Add new characteristic"
+msgstr "Добавить новую характеристику"
+
+#: includes/createPostType.php:275
+msgid "Edit characteristic"
+msgstr "Редактировать характеристику"
+
+#: includes/createPostType.php:278
+msgid "Search characteristics"
+msgstr "Поиск характеристики"
+
+#: includes/install.php:66
+msgid "Cart"
+msgstr "Корзина"
+
+#: includes/install.php:67
+msgid "My account"
+msgstr "Личный кабинет"
+
+#: includes/install.php:72
+#: includes/install.php:77
+msgid "Phone"
+msgstr "Телефон"
+
+#: includes/install.php:72
+#: includes/install.php:77
+msgctxt "phone placeholder"
+msgid "+7 (___) ___-__-__"
+msgstr "+7 (___) ___-__-__"
+
+#: includes/install.php:73
+msgid "Delivery address"
+msgstr "Адрес доставки"
+
+#: includes/install.php:73
+msgid "City, street, house"
+msgstr "Город, улица, дом"
+
+#: includes/install.php:76
+msgid "Name"
+msgstr "Имя"
+
+#: includes/install.php:76
+msgctxt "name placeholder"
+msgid "John"
+msgstr "Иван"
+
+#: includes/install.php:80
+msgid "Company name"
+msgstr "Название компании"
+
+#: includes/install.php:80
+msgctxt "company placeholder"
+msgid "Example LLC"
+msgstr "ООО «Ромашка»"
+
+#: includes/install.php:81
+msgctxt "taxpayer identification number"
+msgid "TIN"
+msgstr "ИНН"
+
+#: includes/install.php:82
+msgctxt "Russian tax registration reason code"
+msgid "KPP"
+msgstr "КПП"
+
+#: includes/install.php:83
+msgid "Legal address"
+msgstr "Юридический адрес"
+
+#: includes/interface/breadcrumbs.php:69
+msgid "Home"
+msgstr "Главная"
+
+#. translators: %d: page number.
+#: includes/interface/breadcrumbs.php:71
+#, php-format
+msgid "Page %d"
+msgstr "Страница %d"
+
+#: includes/interface/breadcrumbs.php:72
+msgid "Error 404"
+msgstr "Ошибка 404"
+
+#. translators: %s: search query.
+#: includes/interface/breadcrumbs.php:74
+#, php-format
+msgid "Search results for - <b>%s</b>"
+msgstr "Результаты поиска по запросу - <b>%s</b>"
+
+#: includes/interface/breadcrumbs.php:75
+#: includes/interface/search/searchForm.php:179
+#: includes/interface/search/searchForm.php:231
+msgid "Search"
+msgstr "Поиск"
+
+#. translators: %s: author name.
+#: includes/interface/breadcrumbs.php:77
+#, php-format
+msgid "Author archive: <b>%s</b>"
+msgstr "Архив автора: <b>%s</b>"
+
+#. translators: %d: year.
+#: includes/interface/breadcrumbs.php:79
+#, php-format
+msgid "Archive for <b>%d</b>"
+msgstr "Архив за <b>%d</b> год"
+
+#. translators: %s: month and year.
+#: includes/interface/breadcrumbs.php:81
+#, php-format
+msgid "Archive for: <b>%s</b>"
+msgstr "Архив за: <b>%s</b>"
+
+#. translators: %s: attachment title.
+#: includes/interface/breadcrumbs.php:84
+#, php-format
+msgid "Media: %s"
+msgstr "Медиа: %s"
+
+#. translators: %s: tag name.
+#: includes/interface/breadcrumbs.php:86
+#, php-format
+msgid "Posts tagged: <b>%s</b>"
+msgstr "Записи по метке: <b>%s</b>"
+
+#. translators: 1: post type label, 2: taxonomy term, 3: tag.
+#: includes/interface/breadcrumbs.php:88
+#, php-format
+msgid "%1$s from \"%2$s\" tagged: <b>%3$s</b>"
+msgstr "%1$s из \"%2$s\" по тегу: <b>%3$s</b>"
+
+#: includes/interface/cabinet/myCabinet.php:60
+msgid "Error: invalid data"
+msgstr "Ошибка: некорректные данные"
+
+#: includes/interface/cabinet/myCabinet.php:82
+msgid "Did you forget to make changes? The new data is the same as the old"
+msgstr "Вы не забыли внести изменения? Новые данные соответствуют старым"
+
+#: includes/interface/cabinet/myCabinet.php:90
+msgid "Error: the new data was not saved"
+msgstr "Ошибка: новые данные не были сохранены"
+
+#: includes/interface/cabinet/myCabinet.php:93
+msgid "Information saved successfully"
+msgstr "Информация успешно сохранена"
+
+#: includes/interface/cabinet/myCabinet.php:120
+msgid "User not found"
+msgstr "Пользователь не найден"
+
+#: includes/interface/cabinet/myCabinet.php:137
+msgid "Enter your password"
+msgstr "Введите пароль"
+
+#: includes/interface/cabinet/myCabinet.php:139
+msgid "Incorrect password"
+msgstr "Пароль указан неверно"
+
+#: includes/interface/cabinet/myCabinet.php:146
+msgid "The password is too short, enter at least 6 characters"
+msgstr "Пароль слишком короткий, введите от 6 символов"
+
+#: includes/interface/cabinet/myCabinet.php:150
+msgid "The new password and its confirmation do not match"
+msgstr "Новый пароль и его подтверждение не совпадают"
+
+#: includes/interface/cabinet/myCabinet.php:158
+msgid "Invalid email"
+msgstr "Некорректный email"
+
+#: includes/interface/cabinet/myCabinet.php:160
+msgid "This email is already registered"
+msgstr "Такой email уже зарегистрирован"
+
+#: includes/interface/cabinet/myCabinet.php:178
+msgid "Email changed"
+msgstr "Email изменен"
+
+#: includes/interface/cabinet/myCabinet.php:193
+msgid "Password changed, you are logged in with the new password"
+msgstr "Пароль изменен, произведена авторизация с новым паролем"
+
+#: includes/interface/cabinet/userOrders/ordersAjax.php:79
+msgid "No matching posts"
+msgstr "Нет подходящих постов"
+
+#: includes/interface/cabinet/userOrders/ordersAjax.php:83
+msgid "Invalid request data"
+msgstr "Некорректные данные запроса"
+
+#: includes/interface/cabinet/userOrders/ordersView.php:46
+msgid "order processing status:"
+msgstr "статус обработки заказа:"
+
+#: includes/interface/cabinet/userOrders/ordersView.php:50
+msgid "all"
+msgstr "все"
+
+#: includes/interface/cabinet/userOrders/ordersView.php:80
+#: includes/interface/cabinet/userOrders/ordersView.php:89
+msgid "You have not placed any orders yet"
+msgstr "Вы ещё не оставляли заказов"
+
+#: includes/interface/cabinet/userOrders/ordersView.php:99
+msgid "Date"
+msgstr "Дата"
+
+#: includes/interface/cabinet/userOrders/ordersView.php:145
+msgid "Order status:"
+msgstr "Статус заказа:"
+
+#: includes/interface/cabinet/userOrders/ordersView.php:146
+msgid "Date:"
+msgstr "Дата:"
+
+#: includes/interface/cabinet/userOrders/ordersView.php:147
+msgid "Product types:"
+msgstr "Виды товара:"
+
+#: includes/interface/cabinet/userOrders/ordersView.php:148
+msgid "Cost:"
+msgstr "Стоимость:"
+
+#: includes/interface/last_viewed_posts.php:323
+msgid "hit"
+msgstr "хит"
+
+#: includes/interface/last_viewed_posts.php:348
+msgid "Details"
+msgstr "Подробнее"
+
+#: includes/interface/last_viewed_posts.php:434
+msgid "Title:"
+msgstr "Заголовок:"
+
+#: includes/interface/product/cardProduct.php:52
+msgid "Add to cart"
+msgstr "В корзину"
+
+#: includes/interface/product/cardProduct.php:58
+msgid "Buy"
+msgstr "Купить"
+
+#: includes/interface/product/cardProduct.php:69
+msgid "Product added to cart"
+msgstr "Товар добавлен в корзину"
+
+#: includes/interface/product/cardProduct.php:74
+msgid "Update cart"
+msgstr "Обновить корзину"
+
+#: includes/interface/search/searchAjax.php:127
+msgid "Matching products"
+msgstr "Подходящие товары"
+
+#: includes/interface/search/searchAjax.php:141
+msgid "Categories"
+msgstr "Категории"
+
+#: includes/interface/shoppingCart/checkout-emails.php:63
+msgid "Order details:"
+msgstr "Детали заказа:"
+
+#: includes/interface/shoppingCart/checkout-emails.php:66
+msgid "Order number:"
+msgstr "Номер заказа:"
+
+#: includes/interface/shoppingCart/checkout-emails.php:68
+msgid "Your order number:"
+msgstr "Номер вашего заказа:"
+
+#: includes/interface/shoppingCart/checkout-emails.php:72
+msgid "Number of items:"
+msgstr "Наименований товаров:"
+
+#: includes/interface/shoppingCart/checkout-emails.php:76
+msgid "Total:"
+msgstr "На сумму:"
+
+#: includes/interface/shoppingCart/checkout-emails.php:87
+msgid "List of products:"
+msgstr "Перечень товаров:"
+
+#: includes/interface/shoppingCart/checkout-emails.php:108
+msgid "SKU:"
+msgstr "Артикул:"
+
+#: includes/interface/shoppingCart/checkout-emails.php:113
+msgid "pcs ×"
+msgstr "шт ×"
+
+#: includes/interface/shoppingCart/checkout-emails.php:125
+msgid "Customer information:"
+msgstr "Информация от покупателя:"
+
+#: includes/interface/shoppingCart/checkout-emails.php:125
+msgid "The information you provided:"
+msgstr "Оставленная Вами информация:"
+
+#: includes/interface/shoppingCart/checkout-emails.php:158
+msgid "Thank you for your order! Our manager will contact you shortly."
+msgstr "Благодарим за ваш заказ! Наш менеджер свяжется с Вами в ближайшее время."
+
+#: includes/interface/shoppingCart/checkout-emails.php:161
+msgid "To change your order details, contact the store manager by the phone number listed on the site."
+msgstr "Для изменения деталей заказа свяжитесь с менеджером магазина по телефону, указанному на сайте."
+
+#: includes/interface/shoppingCart/checkout-emails.php:197
+msgid "New order received"
+msgstr "Получен заказ"
+
+#: includes/interface/shoppingCart/checkout-emails.php:210
+msgid "Your order has been placed"
+msgstr "Ваш заказ успешно добавлен"
+
+#: includes/interface/shoppingCart/checkout-fields.php:139
+msgid "Username"
+msgstr "Логин"
+
+#: includes/interface/shoppingCart/checkout-fields.php:157
+msgid "Please fill in the fields: "
+msgstr "Заполните поля: "
+
+#: includes/interface/shoppingCart/checkout-fields.php:184
+msgid "The email is incorrect"
+msgstr "Email введен не верно"
+
+#: includes/interface/shoppingCart/checkout-fields.php:203
+msgid "The phone number has fewer than 11 characters"
+msgstr "Телефон содержит менее 11 символов"
+
+#. translators: %s: maximum file size.
+#: includes/interface/shoppingCart/checkout-files.php:140
+#, php-format
+msgid "File size must not exceed %s."
+msgstr "Размер файла не должен превышать %s."
+
+#: includes/interface/shoppingCart/checkout-files.php:146
+msgid "Could not upload the file, please try again."
+msgstr "Не удалось загрузить файл, попробуйте ещё раз."
+
+#. translators: 1: file name, 2: maximum file size.
+#: includes/interface/shoppingCart/checkout-files.php:153
+#, php-format
+msgid "File “%1$s” is larger than %2$s."
+msgstr "Файл «%1$s» больше %2$s."
+
+#. translators: 1: file name, 2: list of allowed extensions.
+#: includes/interface/shoppingCart/checkout-files.php:161
+#, php-format
+msgid "File “%1$s” is not allowed. Allowed formats: %2$s."
+msgstr "Файл «%1$s» не подходит. Допустимые форматы: %2$s."
+
+#. translators: %d: maximum number of files.
+#: argon-shop.php:353
+#: includes/interface/shoppingCart/checkout-files.php:174
+#, php-format
+msgid "You can attach no more than %d files."
+msgstr "Можно прикрепить не более %d файлов."
+
+#. translators: %s: maximum total size.
+#: includes/interface/shoppingCart/checkout-files.php:178
+#, php-format
+msgid "Total file size must not exceed %s."
+msgstr "Общий размер файлов не должен превышать %s."
+
+#: includes/interface/shoppingCart/checkout-files.php:190
+#: includes/interface/shoppingCart/checkout-files.php:196
+msgid "Could not save the files. Try placing the order without files or contact us."
+msgstr "Не удалось сохранить файлы. Попробуйте оформить заказ без файлов или свяжитесь с нами."
+
+#: includes/interface/shoppingCart/checkout-files.php:207
+msgid "Could not save the files. Please try again."
+msgstr "Не удалось сохранить файлы. Попробуйте ещё раз."
+
+#: includes/interface/shoppingCart/checkout-registration.php:37
+msgid "Please enter a username."
+msgstr "Укажите логин."
+
+#: includes/interface/shoppingCart/checkout-registration.php:41
+msgid "Please enter a valid email to register."
+msgstr "Для регистрации укажите корректный email."
+
+#: includes/interface/shoppingCart/checkout.php:169
+msgid "Unknown order form type. Please refresh the page."
+msgstr "Неизвестный тип формы заказа. Обновите страницу."
+
+#: includes/interface/shoppingCart/checkout.php:192
+msgid "Your cart is empty. Add products and try again."
+msgstr "Корзина пуста. Добавьте товары и попробуйте снова."
+
+#: includes/interface/shoppingCart/checkout.php:206
+msgid "Error: the number or names of products in the cart and on the page do not match. Try changing the quantity of any product or refresh the page (data entered in the form may be lost)"
+msgstr "Ошибка: Число или наименования товаров в корзине и на странице не совпадают, попробуйте изменить число любого из товаров или обновите страницу (возможна потеря данных, введённых в форму)"
+
+#: includes/interface/shoppingCart/checkout.php:240
+#: includes/interface/shoppingCart/checkout.php:242
+msgid "Not specified"
+msgstr "Не указано"
+
+#: includes/interface/shoppingCart/checkout.php:280
+msgid "Registration error: "
+msgstr "Ошибка при регистрации: "
+
+#: includes/interface/shoppingCart/checkout.php:285
+msgid "You are registered on the site."
+msgstr "Вы зарегистрированы на сайте."
+
+#: includes/interface/shoppingCart/checkout.php:286
+msgid "Username:"
+msgstr "Логин:"
+
+#: includes/interface/shoppingCart/checkout.php:287
+msgid "Set your password using this link"
+msgstr "Установите пароль по этой ссылке"
+
+#. translators: %s: customer email.
+#: includes/interface/shoppingCart/checkout.php:294
+#, php-format
+msgid "You have been registered. A link to set your password has been sent to %s"
+msgstr "Вы успешно зарегистрированы, ссылка для установки пароля отправлена на email: %s"
+
+#: includes/interface/shoppingCart/checkout.php:297
+msgid "You are now logged in."
+msgstr "Произведён вход на сайт."
+
+#. translators: %s: link to the customer account page.
+#: includes/interface/shoppingCart/checkout.php:302
+#, php-format
+msgid "You can <a href=\"%s\">go to your account</a> to edit your details and track your orders."
+msgstr "Вы можете <a href=\"%s\">перейти в личный кабинет</a> для редактирования личных данных и отслеживания заказов."
+
+#: includes/interface/shoppingCart/checkout.php:315
+msgid "Error saving the order to the database: "
+msgstr "Ошибка при записи заказа в базу данных: "
+
+#. translators: %s: order number.
+#: includes/interface/shoppingCart/checkout.php:336
+#, php-format
+msgid "Thank you for your order! To change or track your order, remember its number: <b>%s</b><p></p> Our manager will contact you shortly"
+msgstr "Благодарим за ваш заказ! Для изменения и отслеживания заказа запомните его номер: <b>%s</b><p></p> Наш менеджер свяжется с Вами в ближайшее время"
+
+#: includes/api/getSetting.php:311
+msgid "₽"
+msgstr "Р"
+
+#: includes/interface/slider/sliderProduct.php:127
+msgid "Previous thumbnails"
+msgstr "Предыдущие миниатюры"
+
+#: includes/interface/slider/sliderProduct.php:168
+msgid "Next thumbnails"
+msgstr "Следующие миниатюры"
+
+#: settingPage.php:38
+msgid "Store settings"
+msgstr "Настройки магазина"
+
+#: settingPage.php:39
+msgid "Store"
+msgstr "Магазин"
+
+#: settingPage.php:88
+msgid "General settings"
+msgstr "Основные настройки"
+
+#: settingPage.php:95
+msgid "Cart page ID"
+msgstr "ID страницы корзины"
+
+#: settingPage.php:103
+msgid "Account page ID"
+msgstr "ID страницы кабинета"
+
+#: settingPage.php:123
+msgid "Discounts"
+msgstr "Скидки"
+
+#: settingPage.php:130
+msgid "No discounts"
+msgstr "Без скидок"
+
+#: settingPage.php:137
+msgid "Discount system type"
+msgstr "Тип системы скидок"
+
+#: settingPage.php:150
+msgid "User data"
+msgstr "Данные пользователя"
+
+#: settingPage.php:157
+msgid "Quick order"
+msgstr "Быстрый заказ"
+
+#: argon-shop.php:187
+msgid "Select images"
+msgstr "Выберите изображения"
+
+#: argon-shop.php:188
+msgid "Add to gallery"
+msgstr "Добавить в галерею"
+
+#: argon-shop.php:350
+msgid "Error: the data was not saved"
+msgstr "Ошибка: данные не сохранены"
+
+#: argon-shop.php:351
+msgid "Request failed"
+msgstr "Ошибка при выполнении запроса"
+
+#. translators: 1: file name, 2: maximum size in megabytes.
+#: argon-shop.php:355
+#, php-format
+msgid "The file \"%1$s\" exceeds %2$s MB."
+msgstr "Файл \"%1$s\" превышает %2$s МБ."
+
+#. translators: %d: number of uploaded files.
+#: argon-shop.php:357
+#, php-format
+msgid "Files uploaded: %d"
+msgstr "ЗАГРУЖЕНО ФАЙЛОВ: %d"
+
+#: argon-shop.php:358
+msgid "Cart is empty"
+msgstr "Корзина пуста"
+
+#: argon-shop.php:359
+msgid "Server error, the product was not removed"
+msgstr "Ошибка на сервере, товар не удалён"
+
+#: argon-shop.php:360
+msgid "Server error, the products were not removed"
+msgstr "Ошибка на сервере, товары не удалены"
+
+#: argon-shop.php:361
+msgid "Server error, the changes were not accepted"
+msgstr "Ошибка на сервере, изменения не приняты"
+
+#: argon-shop.php:362
+msgid "Server error: the order was not sent"
+msgstr "Ошибка на сервере: заказ не отправлен"
+
+#: argon-shop.php:363
+msgid "Your message has been sent"
+msgstr "Ваше сообщение успешно отправлено"
+
+#: argon-shop.php:364
+msgid "Searching..."
+msgstr "Ищем результаты..."
+
+#: includes/api/getSetting.php:253
+msgid "US dollar ($)"
+msgstr "Доллар США ($)"
+
+#: includes/api/getSetting.php:254
+msgid "Euro (€)"
+msgstr "Евро (€)"
+
+#: includes/api/getSetting.php:255
+msgid "Russian ruble (₽)"
+msgstr "Российский рубль (₽)"
+
+#. translators: %s: currency symbol.
+#: includes/api/getSetting.php:396
+#, php-format
+msgid "%s/pc"
+msgstr "%s/шт"
+
+#: settingPage.php:111
+msgid "Currency"
+msgstr "Валюта"
+
+#: settingPage.php:261
+msgid "Used for all prices in the store, the cart, orders and emails."
+msgstr "Используется для всех цен магазина, корзины, заказов и писем."

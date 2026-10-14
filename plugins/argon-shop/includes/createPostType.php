@@ -1,30 +1,29 @@
 <?php
 /**
- * Регистрация типов записей и таксономий
+ * Registration of post types and taxonomies
  *
  * @package Argon_Shop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  * 
- * ГДЕ ТЕСТИРОВАТЬ:
- * WordPress Админка → меню "Товары", "Заказы", "Слайдер", "Каталог", "Характеристики"
+ * WHERE TO TEST:
+ * WordPress Admin → the "Products", "Orders", "Slider", "Catalog", "Characteristics" menus
  * 
- * ЧТО РЕГИСТРИРУЕТ:
- * 1. Тип записи "slider" — Слайдер
- * 2. Тип записи "shoporder" — Заказы
- * 3. Тип записи "product" — Товары
- * 4. Таксономия "statusorders" — Статусы заказов
- * 5. Таксономия "catalog" — Каталог (иерархическая)
- * 6. Таксономия "wholesalePrice" — Шаги оптовых цен (при включённых скидках)
- * 7. Таксономия "characteristics" — Характеристики
+ * WHAT IT REGISTERS:
+ * 1. Post type "slider" — Slider
+ * 2. Post type "shoporder" — Orders
+ * 3. Post type "product" — Products
+ * 4. Taxonomy "statusorders" — Order statuses
+ * 5. Taxonomy "catalog" — Catalog (hierarchical)
+ * 6. Taxonomy "wholesalePrice" — Wholesale price steps (when discounts are enabled)
+ * 7. Taxonomy "characteristics" — Characteristics
  * 
  * PHP 8.5:
- * - Проверка $setting перед доступом к ключу
- * - Проверка isset() для $_POST и опций
- * - Явные проверки типов
+ * - $setting is checked before accessing a key
+ * - isset() checks for $_POST and options
+ * - Explicit type checks
  */
 
-// Защита от прямого вызова файла
+// Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -34,25 +33,25 @@ add_action( 'init', 'as_create_post_type' );
 function as_create_post_type() {
     
     // ============================================
-    // ТИП ЗАПИСИ: СЛАЙДЕР
+    // POST TYPE: SLIDER
     // ============================================
     
     register_post_type( 'slider',
         array(
             'labels' => array(
-                'name'               => 'Слайдер',
-                'singular_name'      => 'Слайд',
-                'add_new'            => 'Добавить слайд',
-                'add_new_item'       => 'Добавить слайд',
-                'edit'               => 'Редактировать',
-                'edit_item'          => 'Редактировать слайд',
-                'new_item'           => 'Новый слайд',
-                'view'               => 'Просмотр',
-                'view_item'          => 'Посмотреть слайд',
-                'search_items'       => 'Поиск слайда',
-                'not_found'          => 'Слайдов пока нет',
-                'not_found_in_trash' => 'Слайды не найдены в корзине',
-                'parent'             => 'Parent слайд',
+                'name'               => __( 'Slider', 'argon-shop' ),
+                'singular_name'      => __( 'Slide', 'argon-shop' ),
+                'add_new'            => __( 'Add slide', 'argon-shop' ),
+                'add_new_item'       => __( 'Add slide', 'argon-shop' ),
+                'edit'               => __( 'Edit', 'argon-shop' ),
+                'edit_item'          => __( 'Edit slide', 'argon-shop' ),
+                'new_item'           => __( 'New slide', 'argon-shop' ),
+                'view'               => __( 'View', 'argon-shop' ),
+                'view_item'          => __( 'View slide', 'argon-shop' ),
+                'search_items'       => __( 'Search slides', 'argon-shop' ),
+                'not_found'          => __( 'No slides yet', 'argon-shop' ),
+                'not_found_in_trash' => __( 'No slides found in Trash', 'argon-shop' ),
+                'parent'             => __( 'Parent slide', 'argon-shop' ),
             ),
             'public'              => true,
             'show_in_menu'        => true,
@@ -66,25 +65,25 @@ function as_create_post_type() {
     );
     
     // ============================================
-    // ТИП ЗАПИСИ: ЗАКАЗЫ
+    // POST TYPE: ORDERS
     // ============================================
     
     register_post_type( 'shoporder',
         array(
             'labels' => array(
-                'name'               => 'Заказы',
-                'singular_name'      => 'Заказ',
-                'add_new'            => 'Добавить заказ',
-                'add_new_item'       => 'Добавить заказ',
-                'edit'               => 'Редактировать',
-                'edit_item'          => 'Редактировать заказ',
-                'new_item'           => 'Новый заказ',
-                'view'               => 'Просмотр',
-                'view_item'          => 'Посмотреть заказ',
-                'search_items'       => 'Поиск заказа',
-                'not_found'          => 'Заказов пока нет',
-                'not_found_in_trash' => 'Заказы не найдены в корзине',
-                'parent'             => 'Parent заказы',
+                'name'               => __( 'Orders', 'argon-shop' ),
+                'singular_name'      => __( 'Order', 'argon-shop' ),
+                'add_new'            => __( 'Add order', 'argon-shop' ),
+                'add_new_item'       => __( 'Add order', 'argon-shop' ),
+                'edit'               => __( 'Edit', 'argon-shop' ),
+                'edit_item'          => __( 'Edit order', 'argon-shop' ),
+                'new_item'           => __( 'New order', 'argon-shop' ),
+                'view'               => __( 'View', 'argon-shop' ),
+                'view_item'          => __( 'View order', 'argon-shop' ),
+                'search_items'       => __( 'Search orders', 'argon-shop' ),
+                'not_found'          => __( 'No orders yet', 'argon-shop' ),
+                'not_found_in_trash' => __( 'No orders found in Trash', 'argon-shop' ),
+                'parent'             => __( 'Parent order', 'argon-shop' ),
             ),
             'public'              => true,
             'publicly_queryable'  => false,
@@ -99,22 +98,22 @@ function as_create_post_type() {
     );
     
     // ============================================
-    // ТАКСОНОМИЯ: СТАТУСЫ ЗАКАЗОВ
+    // TAXONOMY: ORDER STATUSES
     // ============================================
     
     $taxonomy_statusOrders_labels = array(
-        'name'                       => 'Статусы заказов',
-        'singular_name'              => 'Статус заказов',
-        'menu_name'                  => 'Статусы заказов',
-        'all_items'                  => 'Все статусы',
+        'name'                       => __( 'Order statuses', 'argon-shop' ),
+        'singular_name'              => __( 'Status', 'argon-shop' ),
+        'menu_name'                  => __( 'Order statuses', 'argon-shop' ),
+        'all_items'                  => __( 'All statuses', 'argon-shop' ),
         'parent_item'                => 'Parent Category',
         'parent_item_colon'          => 'Parent Category:',
         'new_item_name'              => 'New Category Name',
-        'add_new_item'               => 'Добавить статус',
-        'edit_item'                  => 'Редактировать статус',
+        'add_new_item'               => __( 'Add status', 'argon-shop' ),
+        'edit_item'                  => __( 'Edit status', 'argon-shop' ),
         'update_item'                => 'Update Category',
         'separate_items_with_commas' => 'Separate categories with commas',
-        'search_items'               => 'Поиск статуса',
+        'search_items'               => __( 'Search statuses', 'argon-shop' ),
         'add_or_remove_items'        => 'Add or remove categories',
         'choose_from_most_used'      => 'Choose from the most used categories',
     );
@@ -140,25 +139,25 @@ function as_create_post_type() {
     register_taxonomy( 'statusorders', 'shoporder', $taxonomy_statusOrders_args );
     
     // ============================================
-    // ТИП ЗАПИСИ: ТОВАРЫ
+    // POST TYPE: PRODUCTS
     // ============================================
     
     register_post_type( 'product',
         array(
             'labels' => array(
-                'name'               => 'Товары',
-                'singular_name'      => 'Товары',
-                'add_new'            => 'Добавить товар',
-                'add_new_item'       => 'Добавить товар',
-                'edit'               => 'Редактировать',
-                'edit_item'          => 'Редактировать товар',
-                'new_item'           => 'Новый товар',
-                'view'               => 'Просмотр',
-                'view_item'          => 'Посмотреть товар',
-                'search_items'       => 'Поиск товара',
-                'not_found'          => 'Товаров пока нет',
-                'not_found_in_trash' => 'Товары не найдены в корзине',
-                'parent'             => 'Parent товары',
+                'name'               => __( 'Products', 'argon-shop' ),
+                'singular_name'      => __( 'Products', 'argon-shop' ),
+                'add_new'            => __( 'Add product', 'argon-shop' ),
+                'add_new_item'       => __( 'Add product', 'argon-shop' ),
+                'edit'               => __( 'Edit', 'argon-shop' ),
+                'edit_item'          => __( 'Edit product', 'argon-shop' ),
+                'new_item'           => __( 'New product', 'argon-shop' ),
+                'view'               => __( 'View', 'argon-shop' ),
+                'view_item'          => __( 'View product', 'argon-shop' ),
+                'search_items'       => __( 'Search products', 'argon-shop' ),
+                'not_found'          => __( 'No products yet', 'argon-shop' ),
+                'not_found_in_trash' => __( 'No products found in Trash', 'argon-shop' ),
+                'parent'             => __( 'Parent product', 'argon-shop' ),
             ),
             'public'        => true,
             'menu_icon'     => 'dashicons-clipboard',
@@ -171,22 +170,22 @@ function as_create_post_type() {
     );
     
     // ============================================
-    // ТАКСОНОМИЯ: КАТАЛОГ
+    // TAXONOMY: CATALOG
     // ============================================
     
     $taxonomy_labels = array(
-        'name'                       => 'Каталог',
-        'singular_name'              => 'Каталог',
-        'menu_name'                  => 'Каталог',
-        'all_items'                  => 'Все категории',
+        'name'                       => __( 'Catalog', 'argon-shop' ),
+        'singular_name'              => __( 'Catalog', 'argon-shop' ),
+        'menu_name'                  => __( 'Catalog', 'argon-shop' ),
+        'all_items'                  => __( 'All categories', 'argon-shop' ),
         'parent_item'                => 'Parent Category',
         'parent_item_colon'          => 'Parent Category:',
         'new_item_name'              => 'New Category Name',
-        'add_new_item'               => 'Добавить новую категорию',
-        'edit_item'                  => 'Редактировать категорию',
+        'add_new_item'               => __( 'Add new category', 'argon-shop' ),
+        'edit_item'                  => __( 'Edit category', 'argon-shop' ),
         'update_item'                => 'Update Category',
         'separate_items_with_commas' => 'Separate categories with commas',
-        'search_items'               => 'Поиск категории',
+        'search_items'               => __( 'Search categories', 'argon-shop' ),
         'add_or_remove_items'        => 'Add or remove categories',
         'choose_from_most_used'      => 'Choose from the most used categories',
     );
@@ -211,10 +210,10 @@ function as_create_post_type() {
     register_taxonomy( 'catalog', 'product', $taxonomy_args );
     
     // ============================================
-    // ТАКСОНОМИЯ: ОПТОВЫЕ ЦЕНЫ (только при включённых скидках)
+    // TAXONOMY: WHOLESALE PRICES (only when discounts are enabled)
     // ============================================
     
-    // PHP 8.5: проверяем $setting перед доступом к ключу
+    // PHP 8.5: check $setting before accessing the key
     $setting = get_option( 'settingShop' );
     
     $type_sale = ( is_array( $setting ) && isset( $setting['typeSale'] ) ) 
@@ -224,18 +223,18 @@ function as_create_post_type() {
     if ( $type_sale === 'wholesalePriceSteps' ) {
         
         $taxonomy_wholesalePrice_labels = array(
-            'name'                       => 'Шаги оптовых цен',
-            'singular_name'              => 'Шаги оптовых цен',
-            'menu_name'                  => 'Шаги оптовых цен',
-            'all_items'                  => 'Все категории',
+            'name'                       => __( 'Wholesale price steps', 'argon-shop' ),
+            'singular_name'              => __( 'Wholesale price steps', 'argon-shop' ),
+            'menu_name'                  => __( 'Wholesale price steps', 'argon-shop' ),
+            'all_items'                  => __( 'All categories', 'argon-shop' ),
             'parent_item'                => 'Parent Category',
             'parent_item_colon'          => 'Parent Category:',
             'new_item_name'              => 'New Category Name',
-            'add_new_item'               => 'Добавить шаг',
-            'edit_item'                  => 'Редактировать шаг',
+            'add_new_item'               => __( 'Add step', 'argon-shop' ),
+            'edit_item'                  => __( 'Edit step', 'argon-shop' ),
             'update_item'                => 'Update Category',
             'separate_items_with_commas' => 'Separate categories with commas',
-            'search_items'               => 'Поиск шага',
+            'search_items'               => __( 'Search steps', 'argon-shop' ),
             'add_or_remove_items'        => 'Add or remove categories',
             'choose_from_most_used'      => 'Choose from the most used categories',
         );
@@ -261,22 +260,22 @@ function as_create_post_type() {
     }
     
     // ============================================
-    // ТАКСОНОМИЯ: ХАРАКТЕРИСТИКИ
+    // TAXONOMY: CHARACTERISTICS
     // ============================================
     
     $taxonomy_characteristics_labels = array(
-        'name'                       => 'Характеристики',
-        'singular_name'              => 'Характеристики',
-        'menu_name'                  => 'Характеристики',
-        'all_items'                  => 'Все характеристики',
-        'parent_item'                => 'Родительская характеристика',
-        'parent_item_colon'          => 'Родительская характеристика:',
+        'name'                       => __( 'Characteristics', 'argon-shop' ),
+        'singular_name'              => __( 'Characteristics', 'argon-shop' ),
+        'menu_name'                  => __( 'Characteristics', 'argon-shop' ),
+        'all_items'                  => __( 'All characteristics', 'argon-shop' ),
+        'parent_item'                => __( 'Parent characteristic', 'argon-shop' ),
+        'parent_item_colon'          => __( 'Parent characteristic:', 'argon-shop' ),
         'new_item_name'              => 'New Category Name',
-        'add_new_item'               => 'Добавить новую характеристику',
-        'edit_item'                  => 'Редактировать характеристику',
+        'add_new_item'               => __( 'Add new characteristic', 'argon-shop' ),
+        'edit_item'                  => __( 'Edit characteristic', 'argon-shop' ),
         'update_item'                => 'Update Category',
         'separate_items_with_commas' => 'Separate categories with commas',
-        'search_items'               => 'Поиск характеристики',
+        'search_items'               => __( 'Search characteristics', 'argon-shop' ),
         'add_or_remove_items'        => 'Add or remove categories',
         'choose_from_most_used'      => 'Choose from the most used categories',
     );

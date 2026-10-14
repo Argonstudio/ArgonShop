@@ -1,60 +1,59 @@
 /**
- * ArgonShop — сортировка каталога товаров.
+ * ArgonShop — catalog product sorting.
  *
  * @package ArgonShop
- * @author  Иван Войтков (Ivan Voitkov)
- * @version 1.0.0
+ * @author  Ivan Voitkov
  *
  * ============================================================
- * НАЗНАЧЕНИЕ
+ * PURPOSE
  * ============================================================
  *
- * Обрабатывает клики по кнопкам сортировки каталога. При каждом
- * клике отправляется AJAX-запрос, а сервер возвращает уже
- * отсортированный HTML-список товаров. Результат подставляется
- * в блок .catalogProductList без перезагрузки страницы.
+ * Handles clicks on the catalog sort buttons. On each
+ * click an AJAX request is sent and the server returns an already
+ * sorted HTML product list. The result is inserted
+ * into the .catalogProductList block without a page reload.
  *
  * ============================================================
- * DOM-ЭЛЕМЕНТЫ
+ * DOM ELEMENTS
  * ============================================================
  *
  * .as-sort
- *   Кнопка сортировки. Имеет атрибут name — тип сортировки
- *   ('price', 'name', 'date'). Классы sort-min / sort-max
- *   показывают текущее направление: от меньшего или к большему.
+ *   Sort button. Has a name attribute — the sort type
+ *   ('price', 'name', 'date'). The sort-min / sort-max classes
+ *   show the current direction: ascending or descending.
  *
  * .sortParameters
- *   Контейнер над кнопками. Хранит:
- *     data-cat-id  — ID текущей категории каталога
- *     data-page    — номер текущей страницы пагинации
+ *   Container above the buttons. Stores:
+ *     data-cat-id  — current catalog category ID
+ *     data-page    — current pagination page number
  *
  * .catalogProductList
- *   Блок, в который выводится список товаров.
+ *   Block that receives the product list.
  *
  * .as-error-sort
- *   Блок для отображения ошибок сортировки.
+ *   Block for displaying sorting errors.
  *
  * ============================================================
- * AJAX-ДЕЙСТВИЕ
+ * AJAX ACTION
  * ============================================================
  *
  * sortingCatalog
- *   Принимает: typeSort, howSorting, catId, pageNum.
- *   Возвращает HTML-список товаров.
+ *   Accepts: typeSort, howSorting, catId, pageNum.
+ *   Returns the HTML product list.
  *
  * ============================================================
- * ЛОГИКА НАПРАВЛЕНИЯ СОРТИРОВКИ
+ * SORT DIRECTION LOGIC
  * ============================================================
  *
- * Если на кнопке уже стоит класс sort-min — значит, текущая
- * сортировка была «по возрастанию», новый клик переключит на
- * убывание (DESC).
+ * If the button already has the sort-min class, the current
+ * sorting was "ascending" and a new click switches to
+ * descending (DESC).
  *
- * Во всех остальных случаях новое направление — ASC (возрастание),
- * и это переключение запоминается классом sort-min.
+ * In all other cases the new direction is ASC (ascending),
+ * and this switch is remembered by the sort-min class.
  *
  * ============================================================
- * ИСПОЛЬЗОВАНИЕ
+ * USAGE
  * ============================================================
  *
  *     import { arsSort } from './modules/sort.js';
@@ -64,10 +63,11 @@
 'use strict';
 
 import { arsApi }             from '../core/api.js';
+import { t }            from '../core/config.js';
 import { qs, qsa, delegate }  from '../../shared/dom.js';
 
 /**
- * Модуль сортировки каталога.
+ * Catalog sorting module.
  */
 class ArsSort {
 
@@ -75,7 +75,7 @@ class ArsSort {
     #initialized = false;
 
     /**
-     * Инициализация. Безопасна для повторного вызова.
+     * Initialization. Safe to call repeatedly.
      *
      * @return {void}
      */
@@ -85,8 +85,8 @@ class ArsSort {
             return;
         }
 
-        // Если на странице нет ни одной кнопки сортировки —
-        // это не страница каталога, выходим.
+        // If the page has no sort buttons at all,
+        // this is not a catalog page — exit.
         if ( ! qs( '.as-sort' ) ) {
             return;
         }
@@ -100,13 +100,13 @@ class ArsSort {
     }
 
     // ============================================================
-    // ОБРАБОТКА КЛИКА
+    // CLICK HANDLING
     // ============================================================
 
     /**
-     * Обрабатывает клик по кнопке сортировки.
+     * Handles a click on a sort button.
      *
-     * @param  {Element} button — кнопка .as-sort
+     * @param  {Element} button — .as-sort button
      * @return {Promise<void>}
      */
     async #handleSort( button ) {
@@ -121,7 +121,7 @@ class ArsSort {
         const catId    = parseInt( sortParameters.dataset.catId, 10 ) || 0;
         const pageNum  = parseInt( sortParameters.dataset.page, 10 )  || 1;
 
-        // Определяем направление сортировки
+        // Determine the sort direction
         const howSorting = button.classList.contains( 'sort-min' ) ? 'DESC' : 'ASC';
 
         try {
@@ -141,39 +141,39 @@ class ArsSort {
     }
 
     // ============================================================
-    // ОБНОВЛЕНИЕ ИНТЕРФЕЙСА
+    // UI UPDATE
     // ============================================================
 
     /**
-     * Применяет результат сортировки к странице.
+     * Applies the sorting result to the page.
      *
-     * @param  {string}  html       — готовый HTML-список товаров
-     * @param  {Element} button     — кнопка, по которой кликнули
-     * @param  {string}  howSorting — 'ASC' или 'DESC'
+     * @param  {string}  html       — ready HTML product list
+     * @param  {Element} button     — the clicked button
+     * @param  {string}  howSorting — 'ASC' or 'DESC'
      * @return {void}
      */
     #showResult( html, button, howSorting ) {
 
-        // Сбрасываем подсветку со всех кнопок
+        // Reset the highlight on all buttons
         qsa( '.as-sort' ).forEach( el => {
             el.classList.remove( 'sort-min', 'sort-max' );
         });
 
-        // Подсвечиваем активную кнопку направлением
+        // Highlight the active button with the direction
         if ( howSorting === 'ASC' ) {
             button.classList.add( 'sort-min' );
         } else {
             button.classList.add( 'sort-max' );
         }
 
-        // Обновляем список товаров
+        // Update the product list
         const productList = qs( '.catalogProductList' );
 
         if ( productList ) {
             productList.innerHTML = html;
         }
 
-        // Прячем блок ошибки, если он был виден
+        // Hide the error block if it was visible
         const errorBlock = qs( '.as-error-sort' );
 
         if ( errorBlock ) {
@@ -182,7 +182,7 @@ class ArsSort {
     }
 
     /**
-     * Показывает сообщение об ошибке сортировки.
+     * Shows a sorting error message.
      *
      * @return {void}
      */
@@ -194,13 +194,13 @@ class ArsSort {
             return;
         }
 
-        errorBlock.textContent = 'Ошибка на сервере';
+        errorBlock.textContent = t( 'serverError' );
         errorBlock.style.display = 'block';
     }
 }
 
 /**
- * Готовый синглтон модуля сортировки.
+ * Ready-made singleton of the sorting module.
  *
  * @type {ArsSort}
  */
