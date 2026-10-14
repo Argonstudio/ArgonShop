@@ -73,7 +73,7 @@ WordPress e-commerce plugin.
 11. **🤖 AI-Ready Architecture**
     The plugin is designed to be simple and understandable for AI — just give the AI a link and it will be able to write the necessary modules.     
 
-    ### 📈 **GPT-6 Luna review:** [View Full Chat Review](https://chatgpt.com/share/6acfa646-1674-83eb-8b56-0674a05ed2bf)
+    ### 📈 **GPT-6 Luna review:** [View Full Chat Review](https://chatgpt.com/share/6acfa646-1674-83eb-8b56-0674a05ed2bf), My Understandability Scores
     *These scores measure how easily an AI assistant can comprehend the codebase, navigate it, predict side effects, and safely implement new functionality.*
 
     * **ArgonShop 1.0.0** — `8.0 / 10`
