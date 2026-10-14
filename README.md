@@ -71,11 +71,9 @@ WordPress e-commerce plugin.
    * 🔢 **[Pagination module (pagenavi.php)](https://github.com/Argonstudio/ArgonShop/blob/main/plugins/argon-shop/includes/interface/pagenavi.php)** — completely free of the deprecated `extract()` function, loose comparisons (`==`) replaced with safe strict ones (`===`), and hardware-level protection against division by zero added.
 
 11. **🤖 AI-Ready Architecture**
-    The plugin is designed to be simple and understandable for AI — just give the AI a link and it will be able to write the necessary modules. 
+    The plugin is designed to be simple and understandable for AI — just give the AI a link and it will be able to write the necessary modules.     
 
-    **GPT-6 Luna review:** [View Full Chat Review](https://chatgpt.com/share/6acfa646-1674-83eb-8b56-0674a05ed2bf)
-
-    ### 📈 My Understandability Scores
+    ### 📈 **GPT-6 Luna review:** [View Full Chat Review](https://chatgpt.com/share/6acfa646-1674-83eb-8b56-0674a05ed2bf)
     *These scores measure how easily an AI assistant can comprehend the codebase, navigate it, predict side effects, and safely implement new functionality.*
 
     * **ArgonShop 1.0.0** — `8.0 / 10`
