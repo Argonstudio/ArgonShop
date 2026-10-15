@@ -1,0 +1,31 @@
+.cartControlPanel-mobile{
+    display:none;
+}
+
+@media(max-width:800px){
+    
+    .cartControlPanel{
+        display:none;
+    }
+    
+    .cartControlPanel-mobile{
+        display:block;
+    }
+}
+
+@media(max-width:420px){
+    
+    .cartControlPanel-mobile {
+        margin: 0 -5px;
+    }
+    
+    .cartControlPanel-mobile .itemControlPanel {
+        font-size: 14px;
+        height: 45px;
+        padding: 15px 0 0 0;
+        font-weight: 700;
+        text-transform: uppercase;
+        width: 33.3%;
+        text-align: center;
+    }
+}

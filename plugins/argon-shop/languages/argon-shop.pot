@@ -1,0 +1,1054 @@
+# Copyright (C) 2026 Ivan Voitkov
+# This file is distributed under the GPL-3.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Argon Shop 1.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/argon-shop\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-08T12:42:41+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: argon-shop\n"
+
+#. Plugin Name of the plugin
+#: argon-shop.php
+msgid "Argon Shop"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: argon-shop.php
+msgid "https://github.com/Argonstudio/ArgonShop"
+msgstr ""
+
+#. Description of the plugin
+#: argon-shop.php
+msgid "Highly optimized online store plugin for WordPress with AJAX search and fully theme-controlled cart and customer account templates."
+msgstr ""
+
+#. Author of the plugin
+#: argon-shop.php
+msgid "Ivan Voitkov"
+msgstr ""
+
+#. Author URI of the plugin
+#: argon-shop.php
+msgid "https://argon-studio.ru"
+msgstr ""
+
+#: argon-shop.php:187
+msgid "Select images"
+msgstr ""
+
+#: argon-shop.php:188
+msgid "Add to gallery"
+msgstr ""
+
+#: argon-shop.php:189
+#: includes/admin/galleryMetabox.php:128
+msgid "Remove image"
+msgstr ""
+
+#: argon-shop.php:349
+#: includes/admin/order/orderAjax.php:161
+#: includes/admin/order/orderAjax.php:220
+#: includes/admin/order/orderAjax.php:256
+msgid "Server error"
+msgstr ""
+
+#: argon-shop.php:350
+msgid "Error: the data was not saved"
+msgstr ""
+
+#: argon-shop.php:351
+msgid "Request failed"
+msgstr ""
+
+#. translators: %d: maximum number of files.
+#: argon-shop.php:353
+#: includes/interface/shoppingCart/checkout-files.php:174
+#, php-format
+msgid "You can attach no more than %d files."
+msgstr ""
+
+#. translators: 1: file name, 2: maximum size in megabytes.
+#: argon-shop.php:355
+#, php-format
+msgid "The file \"%1$s\" exceeds %2$s MB."
+msgstr ""
+
+#. translators: %d: number of uploaded files.
+#: argon-shop.php:357
+#, php-format
+msgid "Files uploaded: %d"
+msgstr ""
+
+#: argon-shop.php:358
+msgid "Cart is empty"
+msgstr ""
+
+#: argon-shop.php:359
+msgid "Server error, the product was not removed"
+msgstr ""
+
+#: argon-shop.php:360
+msgid "Server error, the products were not removed"
+msgstr ""
+
+#: argon-shop.php:361
+msgid "Server error, the changes were not accepted"
+msgstr ""
+
+#: argon-shop.php:362
+msgid "Server error: the order was not sent"
+msgstr ""
+
+#: argon-shop.php:363
+msgid "Your message has been sent"
+msgstr ""
+
+#: argon-shop.php:364
+msgid "Searching..."
+msgstr ""
+
+#: includes/admin/additionalFilters.php:45
+#: includes/createPostType.php:108
+msgid "All statuses"
+msgstr ""
+
+#: includes/admin/fieldsProduct.php:38
+msgid "Main parameters"
+msgstr ""
+
+#: includes/admin/fieldsProduct.php:41
+msgid "Discounted price"
+msgstr ""
+
+#: includes/admin/fieldsProduct.php:44
+#: includes/createPostType.php:267
+#: includes/createPostType.php:268
+#: includes/createPostType.php:269
+msgid "Characteristics"
+msgstr ""
+
+#: includes/admin/fieldsProduct.php:73
+#: includes/admin/order/orderMetabox.php:188
+msgid "Price"
+msgstr ""
+
+#: includes/admin/fieldsProduct.php:74
+msgid "Product price"
+msgstr ""
+
+#: includes/admin/fieldsProduct.php:78
+#: includes/admin/order/orderMetabox.php:185
+msgid "Weight"
+msgstr ""
+
+#: includes/admin/fieldsProduct.php:79
+msgid "Product weight"
+msgstr ""
+
+#: includes/admin/fieldsProduct.php:79
+#: includes/admin/order/orderMetabox.php:204
+msgid "kg"
+msgstr ""
+
+#: includes/admin/fieldsProduct.php:83
+#: includes/admin/fieldsProduct.php:84
+msgid "SKU"
+msgstr ""
+
+#: includes/admin/fieldsProduct.php:88
+msgid "Bestseller"
+msgstr ""
+
+#: includes/admin/fieldsProduct.php:92
+msgid "New"
+msgstr ""
+
+#: includes/admin/fieldsProduct.php:200
+msgid "from"
+msgstr ""
+
+#: includes/admin/fieldsProduct.php:201
+msgid "Price with discount"
+msgstr ""
+
+#: includes/admin/fieldsProduct.php:227
+#: includes/admin/fieldsProduct.php:380
+msgid "No matching characteristics</br>Select a catalog category"
+msgstr ""
+
+#: includes/admin/fieldsProduct.php:307
+msgid "Value"
+msgstr ""
+
+#: includes/admin/fieldsProduct.php:523
+#: includes/admin/order/orderAjax.php:286
+#: includes/admin/order/orderAjax.php:337
+#: includes/admin/order/orderAjax.php:398
+#: includes/admin/order/orderAjax.php:493
+#: includes/interface/cabinet/myCabinet.php:44
+#: includes/interface/cabinet/myCabinet.php:114
+#: includes/interface/cabinet/userOrders/ordersAjax.php:52
+msgid "Insufficient permissions"
+msgstr ""
+
+#: includes/admin/fieldsProduct.php:535
+#: includes/admin/order/orderAjax.php:348
+#: includes/interface/shoppingCart/cart-ajax.php:55
+#: includes/interface/shoppingCart/cart-ajax.php:90
+#: includes/interface/shoppingCart/cart-ajax.php:152
+#: includes/interface/shoppingCart/cart-ajax.php:193
+msgid "Invalid product ID"
+msgstr ""
+
+#: includes/admin/fieldsTaxonomy.php:145
+msgid "Select all / Deselect"
+msgstr ""
+
+#: includes/admin/fieldsTaxonomy.php:264
+#: includes/admin/fieldsTaxonomy.php:288
+msgid "Belongs to categories:"
+msgstr ""
+
+#: includes/admin/galleryMetabox.php:73
+msgid "Gallery"
+msgstr ""
+
+#: includes/admin/galleryMetabox.php:140
+msgid "Add images"
+msgstr ""
+
+#: includes/admin/galleryMetabox.php:144
+msgid "Drag images with the mouse to change the order. The first image is the main one and is shown first."
+msgstr ""
+
+#: includes/admin/order/orderAjax.php:290
+#: includes/admin/order/orderAjax.php:341
+#: includes/admin/order/orderAjax.php:402
+#: includes/interface/cabinet/myCabinet.php:48
+#: includes/interface/search/searchAjax.php:50
+msgid "Not enough data"
+msgstr ""
+
+#: includes/admin/order/orderAjax.php:306
+msgid "Settings not found"
+msgstr ""
+
+#: includes/admin/order/orderAjax.php:312
+#: includes/interface/shoppingCart/checkout-fields.php:129
+msgid "Message"
+msgstr ""
+
+#: includes/admin/order/orderAjax.php:352
+#: includes/admin/order/orderAjax.php:499
+msgid "Invalid order ID"
+msgstr ""
+
+#: includes/admin/order/orderAjax.php:370
+msgid "Product not found"
+msgstr ""
+
+#: includes/admin/order/orderAjax.php:448
+#: includes/interface/search/searchAjax.php:86
+msgid "No matching results"
+msgstr ""
+
+#: includes/admin/order/orderMetabox.php:28
+#: includes/createPostType.php:148
+#: includes/createPostType.php:149
+#: includes/interface/breadcrumbs.php:431
+msgid "Products"
+msgstr ""
+
+#: includes/admin/order/orderMetabox.php:29
+msgid "Customer information"
+msgstr ""
+
+#: includes/admin/order/orderMetabox.php:30
+msgid "Order status"
+msgstr ""
+
+#: includes/admin/order/orderMetabox.php:103
+#: includes/createPostType.php:150
+#: includes/createPostType.php:151
+msgid "Add product"
+msgstr ""
+
+#: includes/admin/order/orderMetabox.php:105
+msgid "product name or SKU"
+msgstr ""
+
+#: includes/admin/order/orderMetabox.php:182
+msgid "Quantity"
+msgstr ""
+
+#: includes/admin/order/orderMetabox.php:262
+msgid "Add missing fields from:"
+msgstr ""
+
+#: includes/admin/order/orderMetabox.php:265
+#: settingPage.php:165
+msgid "Individuals"
+msgstr ""
+
+#: includes/admin/order/orderMetabox.php:266
+#: settingPage.php:173
+msgid "Legal entities"
+msgstr ""
+
+#: includes/admin/order/orderMetabox.php:269
+msgid "Add"
+msgstr ""
+
+#: includes/admin/order/orderMetabox.php:274
+#: includes/interface/shoppingCart/checkout-emails.php:80
+msgid "Shipping method:"
+msgstr ""
+
+#: includes/admin/order/orderMetabox.php:279
+#: includes/interface/shoppingCart/checkout.php:54
+msgid "Pickup"
+msgstr ""
+
+#: includes/admin/order/orderMetabox.php:280
+#: includes/interface/shoppingCart/checkout.php:55
+msgid "Delivery to address"
+msgstr ""
+
+#: includes/admin/order/orderMetabox.php:296
+#: includes/interface/shoppingCart/checkout-emails.php:84
+msgid "Payment method:"
+msgstr ""
+
+#: includes/admin/order/orderMetabox.php:301
+#: includes/interface/shoppingCart/checkout.php:68
+msgid "Payment on delivery"
+msgstr ""
+
+#. translators: 1: order number, 2: number of items, 3: order total.
+#: includes/admin/order/orderSave.php:118
+#: includes/interface/shoppingCart/checkout.php:110
+#, php-format
+msgid "Order #%1$s. Items in order: %2$s, total: %3$s"
+msgstr ""
+
+#: includes/api/getSetting.php:253
+msgid "US dollar ($)"
+msgstr ""
+
+#: includes/api/getSetting.php:254
+msgid "Euro (€)"
+msgstr ""
+
+#: includes/api/getSetting.php:255
+msgid "Russian ruble (₽)"
+msgstr ""
+
+#: includes/api/getSetting.php:311
+msgid "₽"
+msgstr ""
+
+#. translators: %s: currency symbol.
+#: includes/api/getSetting.php:396
+#, php-format
+msgid "%s/pc"
+msgstr ""
+
+#: includes/createPostType.php:42
+msgid "Slider"
+msgstr ""
+
+#: includes/createPostType.php:43
+msgid "Slide"
+msgstr ""
+
+#: includes/createPostType.php:44
+#: includes/createPostType.php:45
+msgid "Add slide"
+msgstr ""
+
+#: includes/createPostType.php:46
+#: includes/createPostType.php:78
+#: includes/createPostType.php:152
+msgid "Edit"
+msgstr ""
+
+#: includes/createPostType.php:47
+msgid "Edit slide"
+msgstr ""
+
+#: includes/createPostType.php:48
+msgid "New slide"
+msgstr ""
+
+#: includes/createPostType.php:49
+#: includes/createPostType.php:81
+#: includes/createPostType.php:155
+msgid "View"
+msgstr ""
+
+#: includes/createPostType.php:50
+msgid "View slide"
+msgstr ""
+
+#: includes/createPostType.php:51
+msgid "Search slides"
+msgstr ""
+
+#: includes/createPostType.php:52
+msgid "No slides yet"
+msgstr ""
+
+#: includes/createPostType.php:53
+msgid "No slides found in Trash"
+msgstr ""
+
+#: includes/createPostType.php:54
+msgid "Parent slide"
+msgstr ""
+
+#: includes/createPostType.php:74
+msgid "Orders"
+msgstr ""
+
+#: includes/createPostType.php:75
+#: includes/interface/cabinet/userOrders/ordersView.php:100
+#: includes/interface/shoppingCart/checkout-emails.php:57
+msgid "Order"
+msgstr ""
+
+#: includes/createPostType.php:76
+#: includes/createPostType.php:77
+msgid "Add order"
+msgstr ""
+
+#: includes/createPostType.php:79
+msgid "Edit order"
+msgstr ""
+
+#: includes/createPostType.php:80
+msgid "New order"
+msgstr ""
+
+#: includes/createPostType.php:82
+msgid "View order"
+msgstr ""
+
+#: includes/createPostType.php:83
+msgid "Search orders"
+msgstr ""
+
+#: includes/createPostType.php:84
+msgid "No orders yet"
+msgstr ""
+
+#: includes/createPostType.php:85
+msgid "No orders found in Trash"
+msgstr ""
+
+#: includes/createPostType.php:86
+msgid "Parent order"
+msgstr ""
+
+#: includes/createPostType.php:105
+#: includes/createPostType.php:107
+msgid "Order statuses"
+msgstr ""
+
+#: includes/createPostType.php:106
+msgid "Status"
+msgstr ""
+
+#: includes/createPostType.php:112
+msgid "Add status"
+msgstr ""
+
+#: includes/createPostType.php:113
+msgid "Edit status"
+msgstr ""
+
+#: includes/createPostType.php:116
+msgid "Search statuses"
+msgstr ""
+
+#: includes/createPostType.php:153
+msgid "Edit product"
+msgstr ""
+
+#: includes/createPostType.php:154
+msgid "New product"
+msgstr ""
+
+#: includes/createPostType.php:156
+msgid "View product"
+msgstr ""
+
+#: includes/createPostType.php:157
+msgid "Search products"
+msgstr ""
+
+#: includes/createPostType.php:158
+msgid "No products yet"
+msgstr ""
+
+#: includes/createPostType.php:159
+msgid "No products found in Trash"
+msgstr ""
+
+#: includes/createPostType.php:160
+msgid "Parent product"
+msgstr ""
+
+#: includes/createPostType.php:177
+#: includes/createPostType.php:178
+#: includes/createPostType.php:179
+msgid "Catalog"
+msgstr ""
+
+#: includes/createPostType.php:180
+#: includes/createPostType.php:229
+msgid "All categories"
+msgstr ""
+
+#: includes/createPostType.php:184
+msgid "Add new category"
+msgstr ""
+
+#: includes/createPostType.php:185
+msgid "Edit category"
+msgstr ""
+
+#: includes/createPostType.php:188
+msgid "Search categories"
+msgstr ""
+
+#: includes/createPostType.php:226
+#: includes/createPostType.php:227
+#: includes/createPostType.php:228
+#: settingPage.php:131
+msgid "Wholesale price steps"
+msgstr ""
+
+#: includes/createPostType.php:233
+msgid "Add step"
+msgstr ""
+
+#: includes/createPostType.php:234
+msgid "Edit step"
+msgstr ""
+
+#: includes/createPostType.php:237
+msgid "Search steps"
+msgstr ""
+
+#: includes/createPostType.php:270
+msgid "All characteristics"
+msgstr ""
+
+#: includes/createPostType.php:271
+msgid "Parent characteristic"
+msgstr ""
+
+#: includes/createPostType.php:272
+msgid "Parent characteristic:"
+msgstr ""
+
+#: includes/createPostType.php:274
+msgid "Add new characteristic"
+msgstr ""
+
+#: includes/createPostType.php:275
+msgid "Edit characteristic"
+msgstr ""
+
+#: includes/createPostType.php:278
+msgid "Search characteristics"
+msgstr ""
+
+#: includes/install.php:66
+msgid "Cart"
+msgstr ""
+
+#: includes/install.php:67
+msgid "My account"
+msgstr ""
+
+#: includes/install.php:72
+#: includes/install.php:77
+msgid "Phone"
+msgstr ""
+
+#: includes/install.php:72
+#: includes/install.php:77
+msgctxt "phone placeholder"
+msgid "+7 (___) ___-__-__"
+msgstr ""
+
+#: includes/install.php:73
+msgid "Delivery address"
+msgstr ""
+
+#: includes/install.php:73
+msgid "City, street, house"
+msgstr ""
+
+#: includes/install.php:76
+msgid "Name"
+msgstr ""
+
+#: includes/install.php:76
+msgctxt "name placeholder"
+msgid "John"
+msgstr ""
+
+#: includes/install.php:80
+msgid "Company name"
+msgstr ""
+
+#: includes/install.php:80
+msgctxt "company placeholder"
+msgid "Example LLC"
+msgstr ""
+
+#: includes/install.php:81
+msgctxt "taxpayer identification number"
+msgid "TIN"
+msgstr ""
+
+#: includes/install.php:82
+msgctxt "Russian tax registration reason code"
+msgid "KPP"
+msgstr ""
+
+#: includes/install.php:83
+msgid "Legal address"
+msgstr ""
+
+#: includes/interface/breadcrumbs.php:69
+msgid "Home"
+msgstr ""
+
+#. translators: %d: page number.
+#: includes/interface/breadcrumbs.php:71
+#, php-format
+msgid "Page %d"
+msgstr ""
+
+#: includes/interface/breadcrumbs.php:72
+msgid "Error 404"
+msgstr ""
+
+#. translators: %s: search query.
+#: includes/interface/breadcrumbs.php:74
+#, php-format
+msgid "Search results for - <b>%s</b>"
+msgstr ""
+
+#: includes/interface/breadcrumbs.php:75
+#: includes/interface/search/searchForm.php:179
+#: includes/interface/search/searchForm.php:231
+msgid "Search"
+msgstr ""
+
+#. translators: %s: author name.
+#: includes/interface/breadcrumbs.php:77
+#, php-format
+msgid "Author archive: <b>%s</b>"
+msgstr ""
+
+#. translators: %d: year.
+#: includes/interface/breadcrumbs.php:79
+#, php-format
+msgid "Archive for <b>%d</b>"
+msgstr ""
+
+#. translators: %s: month and year.
+#: includes/interface/breadcrumbs.php:81
+#, php-format
+msgid "Archive for: <b>%s</b>"
+msgstr ""
+
+#. translators: %s: attachment title.
+#: includes/interface/breadcrumbs.php:84
+#, php-format
+msgid "Media: %s"
+msgstr ""
+
+#. translators: %s: tag name.
+#: includes/interface/breadcrumbs.php:86
+#, php-format
+msgid "Posts tagged: <b>%s</b>"
+msgstr ""
+
+#. translators: 1: post type label, 2: taxonomy term, 3: tag.
+#: includes/interface/breadcrumbs.php:88
+#, php-format
+msgid "%1$s from \"%2$s\" tagged: <b>%3$s</b>"
+msgstr ""
+
+#: includes/interface/cabinet/myCabinet.php:60
+msgid "Error: invalid data"
+msgstr ""
+
+#: includes/interface/cabinet/myCabinet.php:82
+msgid "Did you forget to make changes? The new data is the same as the old"
+msgstr ""
+
+#: includes/interface/cabinet/myCabinet.php:90
+msgid "Error: the new data was not saved"
+msgstr ""
+
+#: includes/interface/cabinet/myCabinet.php:93
+msgid "Information saved successfully"
+msgstr ""
+
+#: includes/interface/cabinet/myCabinet.php:120
+msgid "User not found"
+msgstr ""
+
+#: includes/interface/cabinet/myCabinet.php:137
+msgid "Enter your password"
+msgstr ""
+
+#: includes/interface/cabinet/myCabinet.php:139
+msgid "Incorrect password"
+msgstr ""
+
+#: includes/interface/cabinet/myCabinet.php:146
+msgid "The password is too short, enter at least 6 characters"
+msgstr ""
+
+#: includes/interface/cabinet/myCabinet.php:150
+msgid "The new password and its confirmation do not match"
+msgstr ""
+
+#: includes/interface/cabinet/myCabinet.php:158
+msgid "Invalid email"
+msgstr ""
+
+#: includes/interface/cabinet/myCabinet.php:160
+msgid "This email is already registered"
+msgstr ""
+
+#: includes/interface/cabinet/myCabinet.php:178
+msgid "Email changed"
+msgstr ""
+
+#: includes/interface/cabinet/myCabinet.php:193
+msgid "Password changed, you are logged in with the new password"
+msgstr ""
+
+#: includes/interface/cabinet/userOrders/ordersAjax.php:79
+msgid "No matching posts"
+msgstr ""
+
+#: includes/interface/cabinet/userOrders/ordersAjax.php:83
+msgid "Invalid request data"
+msgstr ""
+
+#: includes/interface/cabinet/userOrders/ordersView.php:46
+msgid "order processing status:"
+msgstr ""
+
+#: includes/interface/cabinet/userOrders/ordersView.php:50
+msgid "all"
+msgstr ""
+
+#: includes/interface/cabinet/userOrders/ordersView.php:80
+#: includes/interface/cabinet/userOrders/ordersView.php:89
+msgid "You have not placed any orders yet"
+msgstr ""
+
+#: includes/interface/cabinet/userOrders/ordersView.php:99
+msgid "Date"
+msgstr ""
+
+#: includes/interface/cabinet/userOrders/ordersView.php:145
+msgid "Order status:"
+msgstr ""
+
+#: includes/interface/cabinet/userOrders/ordersView.php:146
+msgid "Date:"
+msgstr ""
+
+#: includes/interface/cabinet/userOrders/ordersView.php:147
+msgid "Product types:"
+msgstr ""
+
+#: includes/interface/cabinet/userOrders/ordersView.php:148
+msgid "Cost:"
+msgstr ""
+
+#: includes/interface/last_viewed_posts.php:323
+msgid "hit"
+msgstr ""
+
+#: includes/interface/last_viewed_posts.php:348
+msgid "Details"
+msgstr ""
+
+#: includes/interface/last_viewed_posts.php:434
+msgid "Title:"
+msgstr ""
+
+#: includes/interface/product/cardProduct.php:52
+msgid "Add to cart"
+msgstr ""
+
+#: includes/interface/product/cardProduct.php:58
+msgid "Buy"
+msgstr ""
+
+#: includes/interface/product/cardProduct.php:69
+msgid "Product added to cart"
+msgstr ""
+
+#: includes/interface/product/cardProduct.php:74
+msgid "Update cart"
+msgstr ""
+
+#: includes/interface/search/searchAjax.php:127
+msgid "Matching products"
+msgstr ""
+
+#: includes/interface/search/searchAjax.php:141
+msgid "Categories"
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-emails.php:63
+msgid "Order details:"
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-emails.php:66
+msgid "Order number:"
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-emails.php:68
+msgid "Your order number:"
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-emails.php:72
+msgid "Number of items:"
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-emails.php:76
+msgid "Total:"
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-emails.php:87
+msgid "List of products:"
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-emails.php:108
+msgid "SKU:"
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-emails.php:113
+msgid "pcs ×"
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-emails.php:125
+msgid "Customer information:"
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-emails.php:125
+msgid "The information you provided:"
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-emails.php:158
+msgid "Thank you for your order! Our manager will contact you shortly."
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-emails.php:161
+msgid "To change your order details, contact the store manager by the phone number listed on the site."
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-emails.php:197
+msgid "New order received"
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-emails.php:210
+msgid "Your order has been placed"
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-fields.php:139
+msgid "Username"
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-fields.php:157
+msgid "Please fill in the fields: "
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-fields.php:184
+msgid "The email is incorrect"
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-fields.php:203
+msgid "The phone number has fewer than 11 characters"
+msgstr ""
+
+#. translators: %s: maximum file size.
+#: includes/interface/shoppingCart/checkout-files.php:140
+#, php-format
+msgid "File size must not exceed %s."
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-files.php:146
+msgid "Could not upload the file, please try again."
+msgstr ""
+
+#. translators: 1: file name, 2: maximum file size.
+#: includes/interface/shoppingCart/checkout-files.php:153
+#, php-format
+msgid "File “%1$s” is larger than %2$s."
+msgstr ""
+
+#. translators: 1: file name, 2: list of allowed extensions.
+#: includes/interface/shoppingCart/checkout-files.php:161
+#, php-format
+msgid "File “%1$s” is not allowed. Allowed formats: %2$s."
+msgstr ""
+
+#. translators: %s: maximum total size.
+#: includes/interface/shoppingCart/checkout-files.php:178
+#, php-format
+msgid "Total file size must not exceed %s."
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-files.php:190
+#: includes/interface/shoppingCart/checkout-files.php:196
+msgid "Could not save the files. Try placing the order without files or contact us."
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-files.php:207
+msgid "Could not save the files. Please try again."
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-registration.php:37
+msgid "Please enter a username."
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout-registration.php:41
+msgid "Please enter a valid email to register."
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout.php:169
+msgid "Unknown order form type. Please refresh the page."
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout.php:192
+msgid "Your cart is empty. Add products and try again."
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout.php:206
+msgid "Error: the number or names of products in the cart and on the page do not match. Try changing the quantity of any product or refresh the page (data entered in the form may be lost)"
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout.php:240
+#: includes/interface/shoppingCart/checkout.php:242
+msgid "Not specified"
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout.php:280
+msgid "Registration error: "
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout.php:285
+msgid "You are registered on the site."
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout.php:286
+msgid "Username:"
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout.php:287
+msgid "Set your password using this link"
+msgstr ""
+
+#. translators: %s: customer email.
+#: includes/interface/shoppingCart/checkout.php:294
+#, php-format
+msgid "You have been registered. A link to set your password has been sent to %s"
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout.php:297
+msgid "You are now logged in."
+msgstr ""
+
+#. translators: %s: link to the customer account page.
+#: includes/interface/shoppingCart/checkout.php:302
+#, php-format
+msgid "You can <a href=\"%s\">go to your account</a> to edit your details and track your orders."
+msgstr ""
+
+#: includes/interface/shoppingCart/checkout.php:315
+msgid "Error saving the order to the database: "
+msgstr ""
+
+#. translators: %s: order number.
+#: includes/interface/shoppingCart/checkout.php:336
+#, php-format
+msgid "Thank you for your order! To change or track your order, remember its number: <b>%s</b><p></p> Our manager will contact you shortly"
+msgstr ""
+
+#: includes/interface/slider/sliderProduct.php:127
+msgid "Previous thumbnails"
+msgstr ""
+
+#: includes/interface/slider/sliderProduct.php:168
+msgid "Next thumbnails"
+msgstr ""
+
+#: settingPage.php:38
+msgid "Store settings"
+msgstr ""
+
+#: settingPage.php:39
+msgid "Store"
+msgstr ""
+
+#: settingPage.php:88
+msgid "General settings"
+msgstr ""
+
+#: settingPage.php:95
+msgid "Cart page ID"
+msgstr ""
+
+#: settingPage.php:103
+msgid "Account page ID"
+msgstr ""
+
+#: settingPage.php:111
+msgid "Currency"
+msgstr ""
+
+#: settingPage.php:123
+msgid "Discounts"
+msgstr ""
+
+#: settingPage.php:130
+msgid "No discounts"
+msgstr ""
+
+#: settingPage.php:137
+msgid "Discount system type"
+msgstr ""
+
+#: settingPage.php:150
+msgid "User data"
+msgstr ""
+
+#: settingPage.php:157
+msgid "Quick order"
+msgstr ""
+
+#: settingPage.php:261
+msgid "Used for all prices in the store, the cart, orders and emails."
+msgstr ""

@@ -1,0 +1,285 @@
+.block-advantages{
+    display: table;
+    width: 100%;
+    max-width: 836px;
+    margin: 51px 0 0 0;
+}
+
+.block-advantages div{
+    box-sizing:border-box;
+}
+
+.block-advantages-cards{
+    margin: 18px 0 0 0;
+}
+
+.block-advantages-cards .card-advantage{
+    width: 182px;
+    height: 247px;
+    float: left;
+    border: 1px solid #ebeeea;
+    margin: 0 13px;
+}
+
+.block-advantages-cards .card-advantage:first-child{
+}
+
+.block-advantages-cards .card-advantage .advantage-img{
+    height:96px;
+    background: url(../../img/img-glavnOkompanii.png) #f6fcf2;
+    position:relative;
+    z-index:1;
+}
+
+.block-advantages-cards .twentyYear .advantage-img{
+    background-position: -1px -18px;
+}
+
+.block-advantages-cards .assortment .advantage-img{
+    background-position: -180px -18px;
+}
+
+.block-advantages-cards .trust .advantage-img{
+    background-position: -358px -18px;
+}
+
+.block-advantages-cards .autopark .advantage-img{
+    background-position: -538px -18px;
+}
+
+.block-advantages-cards .card-advantage .advantage-img span{
+    color:#fff;
+    font-size:19px;
+    display: block;
+    padding: 1px 0 0 5px;
+}
+
+.block-advantages-cards .card-advantage .advantage-img::before {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    border-left: 37px solid transparent;
+    border-right: 33px solid transparent;
+    border-bottom: 39px solid transparent;
+    border-top: 0px solid transparent;
+}
+
+.block-advantages-cards .twentyYear .advantage-img::before{
+    border-left-color: #ff9595;
+}
+
+.block-advantages-cards .assortment .advantage-img::before{
+    border-left-color: #3ea3d2;
+}
+
+.block-advantages-cards .trust .advantage-img::before{
+    border-left-color: #80d07a;
+}
+
+.block-advantages-cards .autopark .advantage-img::before{
+    border-left-color: #9c78c4;
+}
+    
+.block-advantages-cards .card-advantage .advantage-title{
+    height:38px;
+    color:#fff;
+    font-size:17px;
+    font-weight:700;
+    text-align:center;
+    text-transform:uppercase;
+    padding-top:9px;
+}
+
+.block-advantages-cards .twentyYear .advantage-title{
+    background: #ff6b6b;
+}
+
+.block-advantages-cards .assortment .advantage-title{
+    background: #0085c3;
+}
+
+.block-advantages-cards .trust .advantage-title{
+    background: #56bd4e;
+}
+
+.block-advantages-cards .autopark .advantage-title{
+    background: #744ea0;
+}
+
+.advantage-descr{
+    height:111px;
+    background:#fdfefc;
+    font-size:17px;
+    color:#6c6c6c;
+    text-align:center;
+    padding-top:18px;
+}
+
+@media(max-width:1200px){
+    
+    .block-advantages{
+        margin: 51px auto 0 auto;
+    }
+    
+}
+
+
+@media(min-width:1100px) and (max-width:1200px){
+    
+    .block-advantages-cards {
+        max-width: 720px;
+        margin: 18px auto 0 auto;
+    }
+    
+    .block-advantages-cards .card-advantage {
+        width: 162px;
+        margin: 0 8px;
+    }
+    
+    .block-advantages-cards .twentyYear .advantage-img {
+        background-position: -9px -18px;
+    }
+    
+    .block-advantages-cards .assortment .advantage-img {
+        background-position: -184px -18px;
+    }
+    
+    .block-advantages-cards .trust .advantage-img {
+        background-position: -366px -18px;
+    }
+    
+    .block-advantages-cards .autopark .advantage-img {
+        background-position: -545px -18px;
+    }
+    
+    .block-advantages-cards .card-advantage .advantage-title {
+        font-size: 15px;
+        padding-top: 11px;
+    }
+    
+}
+
+@media(min-width:1001px) and (max-width:1100px){
+    
+    .block-advantages-cards {
+        max-width: 654px;
+        margin: 18px auto 0 auto;
+    }
+    
+    .block-advantages-cards .card-advantage {
+        width: 152px;
+        margin: 0 5px;
+    }
+    
+    .block-advantages-cards .twentyYear .advantage-img {
+        background-position: -13px -18px;
+    }
+    
+    .block-advantages-cards .assortment .advantage-img {
+        background-position: -189px -18px;
+    }
+    
+    .block-advantages-cards .trust .advantage-img {
+        background-position: -370px -18px;
+    }
+    
+    .block-advantages-cards .autopark .advantage-img {
+        background-position: -550px -18px;
+    }
+    
+    .block-advantages-cards .card-advantage .advantage-title {
+        font-size: 15px;
+        padding-top: 11px;
+    }
+}
+
+@media(min-width:751px) and (max-width:900px){
+    
+    .block-advantages-cards {
+        max-width: 654px;
+        margin: 18px auto 0 auto;
+    }
+    
+    .block-advantages-cards .card-advantage {
+        width: 152px;
+        margin: 0 5px;
+    }
+    
+    .block-advantages-cards .twentyYear .advantage-img {
+        background-position: -13px -18px;
+    }
+    
+    .block-advantages-cards .assortment .advantage-img {
+        background-position: -189px -18px;
+    }
+    
+    .block-advantages-cards .trust .advantage-img {
+        background-position: -370px -18px;
+    }
+    
+    .block-advantages-cards .autopark .advantage-img {
+        background-position: -550px -18px;
+    }
+    
+    .block-advantages-cards .card-advantage .advantage-title {
+        font-size: 15px;
+        padding-top: 11px;
+    }
+}
+
+@media(max-width:750px){
+    
+    .block-advantages {
+        margin: 33px 0 0;
+    }
+    
+    .homepage-block-title {
+        background: none;
+        height: 41px;
+        font-size: 17px;
+        font-weight: 700;
+        color: #255784;
+        padding: 11px 0 0 0;
+        border-top: 1px solid #c3e2ff;
+        border-bottom: 1px solid #c3e2ff;
+        text-align: center;
+        position: absolute;
+        left: 0;
+        right: 0;
+    }
+    
+    .block-advantages-cards {
+        width: 420px;
+        margin: 70px auto 0 auto;
+    }
+    
+    .block-advantages-cards .card-advantage {
+        margin: 10px 13px;
+    }
+    
+}
+
+@media(max-width: 650px) {
+    
+    .block-advantages{
+        margin: 0;
+    }
+    
+} 
+
+@media(max-width:472px){
+    
+    .block-advantages-cards {
+        width: 184px;
+        margin: 68px auto 0 auto;
+    }
+    
+    .block-advantages-cards .card-advantage {
+        margin: 10px 0;
+    }
+    
+}

@@ -1,0 +1,253 @@
+/** Список товаров */
+
+.blockCartProduct{
+    margin-top:10px;
+}
+
+.block-bascetDescrProduct .block-bascetProductImg{
+    border: 1px solid #c7d8ed;
+    width: 100px;
+    text-align: center;
+    vertical-align: middle;
+    height: 80px;
+}
+
+.bascetProductImg{
+    max-width: 70px;
+    vertical-align: middle;
+    max-height: 70px;
+}
+
+.block-bascetDeleteShoppingCart{
+    width:54px;
+}
+
+.deleteProduct{
+    border:0;
+    background: url("../../img/deleteProductImg.jpg");
+    width:34px;
+    height:34px;
+    cursor: pointer;
+    float:right;
+}
+
+.block-bascetProductNameArticle{
+    padding-left:20px;
+    
+}
+
+
+.block-bascetProductNameArticle a{
+    color:#255784;
+    font-size:18px;
+    line-height: 1.4;
+    
+}
+.block-bascetProductArticle{
+    padding-top:7px;
+    color:#9cbbd7;
+    font-weight:bold;
+}
+
+.block-bascetCharactProductTitle td{
+    background:#e6f2fd;
+    color:#7295b4;
+    padding: 12px 0 9px 10px;
+}
+
+.block-bascetCharactProductTitle .productPriceTitle{
+    width: 130px;
+    padding: 12px 10px 9px 10px;
+    box-sizing: border-box;
+}
+
+.block-bascetCharactProductTitle .mobileBlock-amountProductTitle{
+    display:none;
+}
+
+.block-bascetCharactProductContent td{
+    border:1px solid #e6f2fd;
+    border-collapse: collapse;
+    padding: 12px 0 9px 10px;
+    
+}
+
+.block-bascetCharactProductContent .amountProductWeight{
+    width:15%;
+}
+
+.block-bascetCharactProductContent .amountProductPrice{
+    width:22%;
+}
+
+.block-bascetCharactProductContent .mobileBlock-amountProduct{
+    display:none;
+    
+}
+
+.mobileBlock-amountProduct .mobileBlock-productPrice{
+    display:none;
+}
+
+
+.block-bascetAmountProduct input[type="text"]{
+    border:1px solid #ccc;
+    border-right:0;
+    padding-left:7px;
+    box-sizing: border-box;
+    float:left;
+    max-width:100px;
+    height:46px;
+}
+
+.block-bascetAmountProduct .block-bascetChangeValue{
+    float:left;
+    width:26px;
+}
+
+/*input[type="button"]{
+    -webkit-appearance: none;
+}*/
+
+.block-bascetAmountProduct .block-bascetChangeValue input[type="button"]{
+    border:1px solid #ccc;
+    -webkit-appearance: none;
+    max-width:100px;
+    cursor:pointer;
+    width:26px;
+    height:23px;
+}
+
+.block-bascetAmountProduct .block-bascetChangeValue input[type="button"]:last-child{
+    border-top:0;
+}
+
+@media(max-width:720px){
+    
+    .blockCartProduct{
+        margin-top:20px;
+    }
+    
+    .block-bascetCharactProductTitle .amountProductWeightTitle{
+        display:none;
+    }
+    
+    .block-bascetCharactProductTitle .amountProductPriceTitle{
+        display:none;
+    }
+    
+    .block-bascetCharactProductTitle .mobileBlock-amountProductTitle{
+        display:table-cell;
+    }
+    
+    .block-bascetCharactProductContent .amountProductWeight{
+        display:none;
+        
+    }
+    
+    .block-bascetCharactProductContent .amountProductPrice{
+        display:none;
+        
+    }
+    
+    .block-bascetCharactProductContent .mobileBlock-amountProduct{
+        display:table-cell;
+        min-width: 48%;
+        
+    }
+    
+    .block-bascetCharactProductContent .mobileBlock-amountProduct .amountProductWeight,
+    .block-bascetCharactProductContent .mobileBlock-amountProduct .amountProductPrice{
+        display:block;
+        padding-bottom: 7px;
+        width:100%;
+    }
+    
+}
+
+@media(max-width:600px){
+    
+    .block-bascetCharactProductContent .block-bascetAmountProduct{
+        min-width:100px;
+    }
+    
+    .block-bascetAmountProduct input[type="text"] {
+        max-width: 50px;
+    }
+    
+}
+
+@media(max-width:500px){
+    
+    .block-bascetDescrProduct .block-bascetProductImg {
+        width: 55px;
+        height: 50px;
+    }
+    
+    .block-bascetProductNameArticle a {
+        font-size: 17px;
+    }
+    
+    .block-bascetProductArticle {
+        font-size: 15px;
+    }
+    
+    .block-bascetCharactProductTitle td {
+        font-size: 15px;
+        padding: 12px 0 9px 3%;
+    }
+    
+    .block-bascetCharactProductContent td {
+        font-size: 15px;
+        padding: 12px 0 9px 3%;
+    }
+    
+    
+}
+
+@media(max-width:420px){
+    
+    .blockCartProduct {
+        margin-top: 30px;
+    }
+    
+    .block-bascetProductImg{
+        display:none;
+    }
+    
+    .block-bascetProductNameArticle {
+        padding-left: 0px;
+    }
+    
+    .block-bascetCharactProductTitle .productPriceTitle{
+        display:none;
+    }
+    
+    .block-bascetCharactProductContent .productPrice{
+        display: none;
+    }
+    
+    .block-bascetCharactProductContent .mobileBlock-amountProduct .mobileBlock-productPrice{
+        display: block;
+        padding-bottom: 7px;
+    }
+    
+    .block-bascetCharactProductTitle td {
+        padding-left: 4%;
+    }
+    
+    .block-bascetAmountProduct input[type="text"] {
+        max-width: 63%;
+    }
+    
+    .block-bascetCharactProductContent .mobileBlock-amountProduct {
+        padding-left: 5%;
+    }
+    
+    .block-bascetCharactProductContent td {
+        width: 30%;
+    }
+    
+    
+    
+}

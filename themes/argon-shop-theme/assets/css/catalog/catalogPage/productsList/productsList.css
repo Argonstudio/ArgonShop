@@ -1,0 +1,12 @@
+.catalogProductList{
+    display:flex;
+    flex-wrap:wrap;
+}
+
+@media(max-width:1250px){
+    
+    .catalogProductList{
+        justify-content: space-around;
+    }
+    
+}

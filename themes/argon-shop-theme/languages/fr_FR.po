@@ -1,0 +1,743 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Argon Shop Theme 1.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/argon-shop-theme\n"
+"Last-Translator: Ivan Voitkov <voit.ne@gmail.com>\n"
+"Language-Team: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-08T09:36:46+00:00\n"
+"PO-Revision-Date: 2026-10-08 09:36+0000\n"
+"Language: fr_FR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Domain: argon-shop-theme\n"
+"X-Generator: WP-CLI 2.12.0\n"
+
+#. Theme Name of the theme
+#: style.css
+msgid "Argon Shop Theme"
+msgstr "Argon Shop Theme"
+
+#. Theme URI of the theme
+#: style.css
+msgid "https://github.com/Argonstudio/ArgonShop"
+msgstr "https://github.com/Argonstudio/ArgonShop"
+
+#. Description of the theme
+#: style.css
+msgid "Online store theme for the Argon Shop plugin: catalog, product cards, cart and customer account. Requires the active Argon Shop plugin."
+msgstr "Thème de boutique en ligne pour l’extension Argon Shop : catalogue, fiches produits, panier et compte client. Nécessite l’extension Argon Shop active."
+
+#. Author of the theme
+#: style.css
+msgid "Ivan Voitkov"
+msgstr "Ivan Voitkov"
+
+#. Author URI of the theme
+#: style.css
+msgid "https://argon-studio.ru"
+msgstr "https://argon-studio.ru"
+
+#: 404.php:60
+msgid "This page does not exist!"
+msgstr "Cette page n’existe pas !"
+
+#: 404.php:64
+msgid "Unfortunately, the page you requested does not exist on this site."
+msgstr "Malheureusement, la page demandée n’existe pas sur ce site."
+
+#: 404.php:66
+msgid "This may have happened for one of these reasons:"
+msgstr "Cela peut être dû à l’une des raisons suivantes :"
+
+#: 404.php:70
+msgid "you mistyped the page address (URL)"
+msgstr "vous avez fait une erreur en saisissant l’adresse (URL)"
+
+#: 404.php:71
+msgid "you followed a broken (non-working or incorrect) link"
+msgstr "vous avez suivi un lien cassé (non fonctionnel ou incorrect)"
+
+#: 404.php:72
+msgid "the requested page never existed on the site or has been deleted"
+msgstr "la page demandée n’a jamais existé sur le site ou a été supprimée"
+
+#: 404.php:77
+msgid "« to the home page"
+msgstr "« vers la page d’accueil"
+
+#. Template Name of the theme
+msgid "About company"
+msgstr "À propos"
+
+#: aboutCompany.php:110
+msgid "Our partners"
+msgstr "Nos partenaires"
+
+#: aboutCompany.php:195
+msgid "Diplomas and certificates"
+msgstr "Diplômes et certificats"
+
+#. Template Name of the theme
+msgid "Map (AJAX)"
+msgstr "Carte (AJAX)"
+
+#: addressMap.php:17
+msgid "Tsar Cannon on Google Maps"
+msgstr "Tsar-Pouchka sur Google Maps"
+
+#: archive.php:106
+#: tag.php:107
+#: taxonomy-catalog.php:145
+msgid "Subcategories"
+msgstr "Sous-catégories"
+
+#: archive.php:185
+#: sidebar.php:258
+#: tag.php:179
+msgid "Tag cloud"
+msgstr "Nuage d’étiquettes"
+
+#: archive.php:238
+#: tag.php:231
+msgid "Read more"
+msgstr "Lire la suite"
+
+#: archive.php:253
+#: tag.php:246
+msgid "No posts"
+msgstr "Aucune publication"
+
+#: category-aktsii-moskva.php:68
+#: categoryArchive-aktsii-moskva.php:54
+#: index.php:165
+#: sidebar.php:175
+msgid "Promotions and discounts"
+msgstr "Promotions et remises"
+
+#: category-aktsii-moskva.php:136
+#: categoryArchive-aktsii-moskva.php:132
+msgid "Learn more"
+msgstr "En savoir plus"
+
+#: category-aktsii-moskva.php:152
+msgid "No current promotions"
+msgstr "Aucune promotion en cours"
+
+#: category-aktsii-moskva.php:203
+#: categoryArchive-aktsii-moskva.php:59
+#: categoryArchive-aktsii-moskva.php:65
+msgid "Promotions archive"
+msgstr "Archives des promotions"
+
+#. Template Name of the theme
+msgid "Promotions archive (Moscow)"
+msgstr "Archives des promotions (Moscou)"
+
+#: categoryArchive-aktsii-moskva.php:48
+#: single-aktsii-moskva.php:80
+#: tag.php:71
+msgid "Home"
+msgstr "Accueil"
+
+#: categoryArchive-aktsii-moskva.php:147
+msgid "The archive is empty"
+msgstr "Les archives sont vides"
+
+#. Template Name of the theme
+#: contacts.php:59
+msgid "Contacts"
+msgstr "Contacts"
+
+#: contacts.php:75
+msgid "Feedback"
+msgstr "Nous contacter"
+
+#: footer.php:65
+#: header.php:255
+msgid "Moscow, Lenina St., 1"
+msgstr "Moscou, rue Lénine, 1"
+
+#: footer.php:69
+#: header.php:257
+msgid "Mon–Fri: 9:00 to 18:00"
+msgstr "Lun–Ven : de 9 h à 18 h"
+
+#: footer.php:69
+#: header.php:257
+msgid "Sat: 10:00 to 15:00"
+msgstr "Sam : de 10 h à 15 h"
+
+#: footer.php:82
+msgid "!!!ATTENTION: Demo stand. This site is not an operating online store. It exists solely to demonstrate web development skills (portfolio) and is not intended for commercial activity. Building materials cannot be ordered or purchased here. All prices, products and descriptions are fictional. No personal data of real users is collected. Access to the private area is provided only to explore the interface."
+msgstr "!!!ATTENTION : site de démonstration. Ce site n’est pas une boutique en ligne en activité. Il sert uniquement à démontrer des compétences en développement web (portfolio) et n’est pas destiné à une activité commerciale. Il est impossible d’y commander ou d’y acheter des matériaux de construction. Tous les prix, produits et descriptions sont fictifs. Aucune donnée personnelle d’utilisateurs réels n’est collectée. L’accès à l’espace privé est fourni uniquement pour découvrir l’interface."
+
+#: functions.php:49
+msgid "Header menu"
+msgstr "Menu d’en-tête"
+
+#: functions.php:53
+msgid "Footer menu"
+msgstr "Menu de pied de page"
+
+#: functions.php:57
+msgid "Footer menu 2"
+msgstr "Menu de pied de page 2"
+
+#: functions.php:223
+msgid "Our clients"
+msgstr "Nos clients"
+
+#: functions.php:224
+msgid "Client"
+msgstr "Client"
+
+#: functions.php:225
+#: functions.php:226
+msgid "Add client"
+msgstr "Ajouter un client"
+
+#: functions.php:227
+#: functions.php:255
+msgid "Edit"
+msgstr "Modifier"
+
+#: functions.php:228
+msgid "Edit client"
+msgstr "Modifier le client"
+
+#: functions.php:229
+msgid "New client"
+msgstr "Nouveau client"
+
+#: functions.php:230
+#: functions.php:258
+msgid "View"
+msgstr "Voir"
+
+#: functions.php:231
+msgid "View client"
+msgstr "Voir le client"
+
+#: functions.php:232
+msgid "Search clients"
+msgstr "Rechercher des clients"
+
+#: functions.php:233
+msgid "No clients yet"
+msgstr "Aucun client pour le moment"
+
+#: functions.php:234
+msgid "No clients found in Trash"
+msgstr "Aucun client dans la corbeille"
+
+#: functions.php:235
+msgid "Parent client"
+msgstr "Client parent"
+
+#: functions.php:251
+msgid "Certificates"
+msgstr "Certificats"
+
+#: functions.php:252
+msgid "Certificate"
+msgstr "Certificat"
+
+#: functions.php:253
+#: functions.php:254
+msgid "Add certificate"
+msgstr "Ajouter un certificat"
+
+#: functions.php:256
+msgid "Edit certificate"
+msgstr "Modifier le certificat"
+
+#: functions.php:257
+msgid "New certificate"
+msgstr "Nouveau certificat"
+
+#: functions.php:259
+msgid "View certificate"
+msgstr "Voir le certificat"
+
+#: functions.php:260
+msgid "Search certificates"
+msgstr "Rechercher des certificats"
+
+#: functions.php:261
+msgid "No certificates yet"
+msgstr "Aucun certificat pour le moment"
+
+#: functions.php:262
+msgid "No certificates found in Trash"
+msgstr "Aucun certificat dans la corbeille"
+
+#: functions.php:263
+msgid "Parent certificate"
+msgstr "Certificat parent"
+
+#. translators: %s: URL of the Appearance > Menus screen.
+#: functions.php:314
+#: functions.php:339
+#, php-format
+msgid "Please create a header menu: <a href=\"%s\" target=\"_blank\">Appearance &gt; Menus</a>"
+msgstr "Veuillez créer un menu d’en-tête : <a href=\"%s\" target=\"_blank\">Apparence &gt; Menus</a>"
+
+#: header.php:94
+msgid "My account"
+msgstr "Mon compte"
+
+#: header.php:220
+#: search.php:199
+msgid "Promotions and articles"
+msgstr "Promotions et articles"
+
+#: header.php:225
+msgid "News"
+msgstr "Actualités"
+
+#: header.php:267
+msgid "FEEDBACK"
+msgstr "NOUS CONTACTER"
+
+#: header.php:306
+msgid "Moscow"
+msgstr "Moscou"
+
+#. Template Name of the theme
+#: sidebar.php:176
+msgid "View history"
+msgstr "Historique de consultation"
+
+#: includes/cardProduct/cardProduct.php:137
+msgid "SKU:"
+msgstr "Référence :"
+
+#: includes/cardProduct/cardProduct.php:141
+#: includes/cardProduct/cardProduct.php:143
+msgid "Brand:"
+msgstr "Marque :"
+
+#: includes/cardProduct/cardProduct.php:147
+#: shoppingCartPage.php:305
+msgid "Weight:"
+msgstr "Poids :"
+
+#: includes/cardProduct/cardProduct.php:147
+#: shoppingCartPage.php:160
+#: shoppingCartPage.php:293
+#: shoppingCartPage.php:305
+#: shoppingCartPage.php:332
+#: template-parts/productPage/characteristics.php:86
+msgid "kg"
+msgstr "kg"
+
+#: includes/cardProduct/cardProduct.php:175
+#: shoppingCartPage.php:207
+#: single-product.php:155
+msgid "pcs"
+msgstr "pcs"
+
+#: index.php:32
+msgid "Our advantages"
+msgstr "Nos avantages"
+
+#: index.php:39
+msgid "20 years"
+msgstr "20 ans"
+
+#: index.php:40
+msgid "in the building materials market"
+msgstr "sur le marché des matériaux de construction"
+
+#: index.php:47
+msgid "Product range"
+msgstr "Gamme"
+
+#: index.php:48
+msgid "More than 60 thousand products"
+msgstr "Plus de 60 000 références"
+
+#: index.php:55
+msgid "Trusted by"
+msgstr "Ils nous font confiance"
+
+#: index.php:56
+msgid "More than a thousand customers a month"
+msgstr "Plus de mille clients par mois"
+
+#: index.php:63
+msgid "Fleet"
+msgstr "Flotte"
+
+#: index.php:64
+msgid "12 trucks and crane trucks, delivery across the Moscow region"
+msgstr "12 camions et camions-grues, livraison dans la région de Moscou"
+
+#: index.php:74
+msgid "Building materials catalog"
+msgstr "Catalogue de matériaux de construction"
+
+#. Template Name of the theme
+msgid "Account page"
+msgstr "Page du compte"
+
+#: myCabinetPage.php:81
+#: myCabinetPage.php:87
+msgid "Account and address"
+msgstr "Compte et adresse"
+
+#: myCabinetPage.php:82
+#: myCabinetPage.php:95
+msgid "Settings"
+msgstr "Réglages"
+
+#: myCabinetPage.php:83
+#: myCabinetPage.php:103
+msgid "Orders"
+msgstr "Commandes"
+
+#: search.php:262
+msgid "Enter a search query"
+msgstr "Saisissez une recherche"
+
+#. Template Name of the theme
+msgid "Cart page"
+msgstr "Page du panier"
+
+#: shoppingCartPage.php:159
+#: shoppingCartPage.php:331
+msgid "Total price:"
+msgstr "Prix total :"
+
+#: shoppingCartPage.php:160
+#: shoppingCartPage.php:332
+msgid "Total weight:"
+msgstr "Poids total :"
+
+#: shoppingCartPage.php:166
+#: shoppingCartPage.php:338
+msgid "Empty cart"
+msgstr "Vider le panier"
+
+#: shoppingCartPage.php:238
+#: single-product.php:182
+msgid "item code:"
+msgstr "réf. :"
+
+#: shoppingCartPage.php:262
+msgid "Quantity"
+msgstr "Quantité"
+
+#: shoppingCartPage.php:266
+msgid "Weight"
+msgstr "Poids"
+
+#: shoppingCartPage.php:270
+msgid "Price"
+msgstr "Prix"
+
+#: shoppingCartPage.php:272
+msgid "Product"
+msgstr "Produit"
+
+#: shoppingCartPage.php:309
+msgid "Price:"
+msgstr "Prix :"
+
+#: shoppingCartPage.php:347
+msgid "Checkout"
+msgstr "Commande"
+
+#: shoppingCartPage.php:366
+msgid "Quick checkout"
+msgstr "Commande rapide"
+
+#: shoppingCartPage.php:367
+msgid "Individuals"
+msgstr "Particuliers"
+
+#: shoppingCartPage.php:368
+msgid "Legal entities"
+msgstr "Entreprises"
+
+#: shoppingCartPage.php:374
+msgid "Quick"
+msgstr "Rapide"
+
+#: shoppingCartPage.php:375
+msgid "Individuals (short)"
+msgstr "Particuliers"
+
+#: shoppingCartPage.php:376
+msgid "Companies"
+msgstr "Entreprises (court)"
+
+#: shoppingCartPage.php:407
+#: template-parts/cabinet/account.php:128
+#: template-parts/cabinet/setting.php:130
+msgid "By checking this box, I consent to the processing of"
+msgstr "En cochant cette case, je consens au traitement des"
+
+#: shoppingCartPage.php:407
+#: template-parts/cabinet/account.php:128
+#: template-parts/cabinet/setting.php:130
+msgid "data for the demo stand"
+msgstr "données pour le site de démonstration"
+
+#: shoppingCartPage.php:407
+msgid "(including first name, last name, address, phone, email, TIN, KPP, legal address, username) and technical files"
+msgstr "(y compris prénom, nom, adresse, téléphone, e-mail, numéro fiscal, KPP, adresse légale, identifiant) et des fichiers techniques"
+
+#: shoppingCartPage.php:407
+#: template-parts/cabinet/account.php:128
+#: template-parts/cabinet/setting.php:130
+msgid "for the purpose of demonstrating and testing the site interface. I understand that this site and all forms are only a simulation of an online store, and I do not enter my real personal data. I have read the processing terms."
+msgstr "afin de démontrer et tester l’interface du site. Je comprends que ce site et tous les formulaires ne sont qu’une simulation de boutique en ligne et je ne saisis pas mes vraies données personnelles. J’ai pris connaissance des conditions de traitement."
+
+#: shoppingCartPage.php:419
+msgid "Your cart is empty"
+msgstr "Votre panier est vide"
+
+#: sidebar.php:42
+msgid "Product catalog"
+msgstr "Catalogue des produits"
+
+#: sidebar.php:286
+msgid "Recently viewed"
+msgstr "Vous avez consulté"
+
+#: sidebar.php:297
+msgid "view history"
+msgstr "historique de consultation"
+
+#: sidebar.php:317
+msgid "Bestsellers"
+msgstr "Meilleures ventes"
+
+#: sidebar.php:345
+msgid "New arrivals"
+msgstr "Nouveautés"
+
+#: single-aktsii-moskva.php:121
+msgid "Promotion archived"
+msgstr "Promotion archivée"
+
+#: single-product.php:220
+msgid "WHOLESALE PRICE, from:"
+msgstr "PRIX DE GROS, à partir de :"
+
+#: single-product.php:247
+msgid "based on the value of products in the cart"
+msgstr "calculé sur la valeur des produits du panier"
+
+#: single-product.php:272
+msgid "Add to cart"
+msgstr "Ajouter au panier"
+
+#: single-product.php:273
+msgid "Buy"
+msgstr "Acheter"
+
+#: single-product.php:275
+msgid "total"
+msgstr "total"
+
+#: single-product.php:282
+msgid "Go to cart"
+msgstr "Voir le panier"
+
+#: single-product.php:286
+msgid "added"
+msgstr "ajouté"
+
+#: single-product.php:300
+msgid "units of this product"
+msgstr "unités de ce produit"
+
+#: single-product.php:320
+#: single-product.php:333
+msgid "Description"
+msgstr "Description"
+
+#: single-product.php:321
+#: single-product.php:341
+msgid "Characteristics"
+msgstr "Caractéristiques"
+
+#: single-product.php:325
+#: single-product.php:351
+msgid "Usage"
+msgstr "Utilisation"
+
+#: tag.php:77
+msgid "Articles"
+msgstr "Articles"
+
+#: tag.php:82
+msgid "Posts tagged:"
+msgstr "Publications avec l’étiquette :"
+
+#: taxonomy-catalog.php:118
+msgid "Category description"
+msgstr "Description de la catégorie"
+
+#: taxonomy-catalog.php:212
+msgid "Popular searches"
+msgstr "Recherches populaires"
+
+#: taxonomy-catalog.php:239
+msgid "view all"
+msgstr "tout voir"
+
+#: taxonomy-catalog.php:298
+msgctxt "sort by"
+msgid "Price"
+msgstr "Prix"
+
+#: taxonomy-catalog.php:299
+msgid "Name"
+msgstr "Nom"
+
+#: taxonomy-catalog.php:300
+msgid "Date added"
+msgstr "Date d’ajout"
+
+#: taxonomy-catalog.php:308
+msgid "Sort by:"
+msgstr "Trier par :"
+
+#: taxonomy-catalog.php:354
+msgid "<p>The category is empty.</p>"
+msgstr "<p>La catégorie est vide.</p>"
+
+#: template-parts/cabinet/account.php:100
+msgid "Legal entity"
+msgstr "Personne morale"
+
+#: template-parts/cabinet/account.php:119
+#: template-parts/cabinet/setting.php:121
+msgid "Save"
+msgstr "Enregistrer"
+
+#: template-parts/cabinet/account.php:128
+msgid "(including first name, last name, address, phone, email, TIN, KPP, legal address) and technical files"
+msgstr "(y compris prénom, nom, adresse, téléphone, e-mail, numéro fiscal, KPP, adresse légale) et des fichiers techniques"
+
+#: template-parts/cabinet/setting.php:82
+msgid "Change"
+msgstr "Modifier"
+
+#: template-parts/cabinet/setting.php:92
+msgid "Old password:"
+msgstr "Ancien mot de passe :"
+
+#: template-parts/cabinet/setting.php:101
+msgid "New password"
+msgstr "Nouveau mot de passe"
+
+#: template-parts/cabinet/setting.php:110
+msgid "Repeat the new password"
+msgstr "Répétez le nouveau mot de passe"
+
+#: template-parts/cabinet/setting.php:130
+msgid "including email, password and technical files"
+msgstr "y compris l’e-mail, le mot de passe et des fichiers techniques"
+
+#: template-parts/cabinet/setting.php:138
+msgid "Log out"
+msgstr "Déconnexion"
+
+#: template-parts/cart/legalPerson.php:164
+#: template-parts/cart/person.php:112
+#: template-parts/cart/quickOrder.php:93
+msgid "Comment:"
+msgstr "Commentaire :"
+
+#: template-parts/cart/legalPerson.php:165
+#: template-parts/cart/person.php:113
+#: template-parts/cart/quickOrder.php:94
+msgid "Your comment"
+msgstr "Votre commentaire"
+
+#: template-parts/cart/legalPerson.php:169
+#: template-parts/cart/person.php:117
+msgid "Attach files"
+msgstr "Joindre des fichiers"
+
+#: template-parts/cart/legalPerson.php:178
+#: template-parts/cart/person.php:126
+msgid "Allowed file formats: doc, docx, xls, xlsx, pdf, jpg, jpeg, png, bmp"
+msgstr "Formats de fichiers autorisés : doc, docx, xls, xlsx, pdf, jpg, jpeg, png, bmp"
+
+#: template-parts/cart/legalPerson.php:179
+#: template-parts/cart/person.php:127
+msgid "Attach up to 3 files, up to 5 MB each"
+msgstr "Joignez jusqu’à 3 fichiers, 5 Mo maximum chacun"
+
+#: template-parts/cart/legalPerson.php:180
+#: template-parts/cart/person.php:128
+msgid "Hold Ctrl to select several files (Windows)"
+msgstr "Maintenez Ctrl pour sélectionner plusieurs fichiers (Windows)"
+
+#: template-parts/cart/legalPerson.php:190
+#: template-parts/cart/person.php:138
+msgid "Register an account?"
+msgstr "Créer un compte ?"
+
+#: template-parts/cart/legalPerson.php:196
+#: template-parts/cart/person.php:144
+msgid "Username"
+msgstr "Identifiant"
+
+#: template-parts/cart/legalPerson.php:207
+#: template-parts/cart/person.php:156
+msgid "Shipping method:"
+msgstr "Mode de livraison :"
+
+#: template-parts/cart/legalPerson.php:211
+#: template-parts/cart/person.php:160
+msgid "Pickup"
+msgstr "Retrait sur place"
+
+#: template-parts/cart/legalPerson.php:212
+#: template-parts/cart/person.php:161
+msgid "Delivery to address"
+msgstr "Livraison à l’adresse"
+
+#: template-parts/cart/legalPerson.php:220
+#: template-parts/cart/person.php:169
+msgid "Payment method:"
+msgstr "Mode de paiement :"
+
+#: template-parts/cart/legalPerson.php:224
+#: template-parts/cart/person.php:173
+msgid "Payment on delivery"
+msgstr "Paiement à la livraison"
+
+#: template-parts/cart/legalPerson.php:232
+#: template-parts/cart/person.php:181
+#: template-parts/cart/quickOrder.php:99
+msgid "PLACE ORDER"
+msgstr "ENVOYER LA COMMANDE"
+
+#: template-parts/productPage/characteristics.php:83
+msgid "WEIGHT"
+msgstr "POIDS"
+
+#: template-parts/productPage/characteristics.php:235
+msgid "No characteristics"
+msgstr "Aucune caractéristique"
+
+#: functions.php:128
+msgid "Close"
+msgstr "Fermer"
+
+#: functions.php:129
+msgid "Loading…"
+msgstr "Chargement…"
+
+#: functions.php:130
+msgid "Loading failed. Please try again."
+msgstr "Échec du chargement. Veuillez réessayer."

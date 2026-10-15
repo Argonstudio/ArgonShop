@@ -1,0 +1,84 @@
+
+#block_cabinetAccount .accountLegalBlock{
+    background: #679de0;
+    color: #fff;
+    height: 36px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 11px 0 0 45px;
+    box-sizing: border-box;
+    width: 80%;
+    margin: 20px 0 20px 10px;
+    position: relative;
+}
+
+#block_cabinetAccount .accountLegalBlock .accountCustomCheckbox{
+    background: url("../../../img/img-baseBlock.png");
+    background-color: #5c8fce;
+    background-position: -105px -61px;
+    cursor: pointer;
+    width: 13px;
+    height: 13px;
+    position: absolute;
+    top: 12px;
+    left: 16px;
+}
+
+#accountLegal:checked + .accountCustomCheckbox{
+    background-position: -125px -61px;
+}
+
+#block_cabinetAccount .accountLegalBlock input[type=checkbox]{
+    position: absolute;
+    top: 12px;
+    left: 16px;
+    padding: 0;
+    margin: 0;
+}
+
+@media(min-width:1000px) and (max-width:1150px){
+    
+    #block_cabinetAccount{
+        padding:0 10px;
+    }
+    
+    #block_cabinetAccount .accountLegalBlock {
+        width: 100%;
+        margin: 20px 0 20px 0;
+    }
+    
+}
+
+
+@media(max-width:800px){
+    
+    #block_cabinetAccount{
+        padding:0 10px;
+    }
+    
+    #block_cabinetAccount .accountLegalBlock {
+        width: 100%;
+        margin: 20px 0 20px 0;
+    }
+    
+}
+
+@media(max-width:720px){
+
+    #block_cabinetAccount {
+        padding: 0 20px;
+        margin: 15px 0 20px 0;
+    }
+    
+
+}
+
+@media(max-width:550px){
+
+    #block_cabinetAccount {
+        padding: 0 10px;
+    }
+    
+
+}

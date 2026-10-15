@@ -1,0 +1,39 @@
+.block-entryTags{
+    width: 260px;
+    margin: 45px 0 0 17px;
+}
+
+
+.block-entryTags .title-entry-tags{
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 22px 0;
+    text-transform: uppercase;
+}
+
+.block-entryTags .tag-cloud-link{
+    color: #3c6991;
+    font-weight: 700;
+    text-decoration: none;
+    border: 1px solid #caddf4;
+    padding: 9px 10px 7px 10px;
+    box-sizing: border-box;
+    margin: 5px 2px;
+    display: inline-block;
+}
+
+@media(max-width:1200px){
+    
+    .block-entryTags{
+        margin: 45px auto 0 auto;
+    }
+    
+}
+
+@media(max-width:1000px){
+    
+    .block-entryTags{
+        display:none;
+    }
+    
+}

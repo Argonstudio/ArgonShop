@@ -1,0 +1,131 @@
+.sortParameters .sort-max span,
+    .sortParameters .sort-min span{
+        text-decoration:underline;
+        -webkit-text-decoration-skip: none;
+    }
+    
+    .sortParameters .as-sort:after,
+    .sortParameters .as-sort:after{
+        content:'↑';
+        text-decoration:none;
+        padding-left: 5px;
+        opacity: 0;
+    }
+    
+    .sortParameters .sort-max:after,
+    .sortParameters .sort-min:after{
+        opacity: 1;
+    }
+    
+    .sortParameters .sort-max:after{
+        content:'↑';
+    }
+    
+    .sortParameters .sort-min:after{
+        content:'↓';
+    }
+
+@media(min-width:720px){
+
+    .block-catalogSort{
+        color: #255784;
+        font-size: 15px;
+        font-weight: 700;
+        text-transform: uppercase;
+        border-top: 1px solid #dae8fa;
+        border-bottom: 1px solid #dae8fa;
+        min-height: 48px;
+        padding: 17px 0 0 20px;
+        box-sizing: border-box;
+        margin: 20px 0 5px 0;
+    }
+    
+    .titleCatalogSort{
+        display:inline;
+        padding-right: 15px;
+    }
+    
+    .block-catalogSort .catalogPage_mobileExtensible{
+        display:inline!important;
+    }
+    
+    .sortParameters .as-sort{
+        padding-right: 5px;
+        cursor:pointer;
+    }
+    
+    .sortParameters .sort-max,
+    .sortParameters .sort-min{
+    }
+    
+
+}
+
+@media(max-width:720px){
+    
+    .block-catalogSort{
+        border-bottom: 1px solid #bcd5f4;
+        margin: 0 -20px;
+    }
+    
+    .block-catalogSort .catalogPage_mobileExtensible{
+        margin: 0px 20px;
+    }
+    
+    .sortParameters{
+        margin: 15px 0 20px 0;
+    }
+    
+    .titleCatalogSort{
+        margin: 0;
+    }
+    
+    .sortParameters .as-sort{
+        text-decoration: none;
+        background-image: none !important;
+        color: #245787;
+        font-size: 16px;
+        padding-left: 28px;
+        position: relative;
+        display: block;
+        margin: 10px 0;
+    }
+    
+    .sortParameters .as-sort span {
+        display: inline-block;
+        height: 33px;
+        padding-top: 1px;
+        cursor: pointer;
+    }
+    
+    .sortParameters .as-sort:before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 14px;
+        width: 4px;
+        height: 23px;
+        background: #dbe4f6;
+    }
+    
+}
+
+.as-error-sort{
+    max-width: 428px;
+    box-sizing: border-box;
+    margin: 20px 0;
+    font-size: 14px;
+    color: red;
+    font-weight: 700;
+    text-align: center;
+    padding: 10px 0 8px 0;
+}
+
+@media(max-width:720px){
+    
+    .as-error-sort{
+        margin: 20px 10px;
+    }
+    
+}

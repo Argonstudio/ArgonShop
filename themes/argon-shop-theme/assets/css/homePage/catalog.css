@@ -1,0 +1,121 @@
+.block-homePageCatalog{
+    display: table;
+    width: 100%;
+    max-width: 836px;
+    margin: 49px 0;
+}
+
+.homePageCatalogList{
+    float:left;
+    width: 28%;
+    padding-left: 4%;
+}
+
+.homePageCatalogList li{
+    margin-top: 30px;
+}
+
+.homePageCatalogList li::before{
+    content: '';
+    width: 90%;
+    height: 1px;
+    background: #626262;
+    display: block;
+}
+
+.homePageCatalogList  .catalog-promoDiscontLink::before{
+    background:#ff6b6b;
+    height:3px;
+}
+
+.homePageCatalogList li:first-child::before{
+    content:none;
+}
+
+.homePageCatalogList li:first-child{
+    margin-top: 0;
+}
+
+.homePageCatalogList li a{
+    text-decoration:none;
+    display: block;
+    padding: 20px 0 20px 0;
+}
+
+
+.homePageCatalogList li a span{
+    color:#255785;
+    font-size:18px;
+    font-weight:bold;
+    text-transform:uppercase;
+}
+
+.homePageCatalogList .catalog-promoDiscontLink a span{
+    color:#ff6b6b;
+}
+
+.homePageCatalogList li ul{
+    padding:0;
+}
+
+.homePageCatalogList li ul li{
+    border-top:0;
+    padding-top:0;
+    margin-top: 0;
+}
+
+.homePageCatalogList li ul li::before{
+    content: none;
+}
+
+.homePageCatalogList li ul li a{
+    padding:0 0 10px;
+}
+
+.homePageCatalogList li ul li a span{
+    color:#626262;
+    font-size:17px;
+    font-weight:normal;
+    text-transform: none;
+}
+
+/*
+.homePageCatalogList .catalog-promoDiscontLink ul li a{
+    border-left: 3px solid #ffd9d9;
+    box-sizing: border-box;
+    padding: 0 0 0 10px;
+    margin-bottom: 15px;
+}*/
+
+.homePageCatalogList .catalog-promoDiscontLink ul li a{
+    padding: 0 0 10px 13px;
+}
+
+.homePageCatalogList .catalog-promoDiscontLink ul li a span{
+    color:#626262;
+}
+
+.homePageCatalogList .catalog-promoDiscontLink ul li::before {
+    content: '';
+    display: block;
+    float:left;
+    width: 3px;
+    height: 24px;
+    background: #ffd9d9;
+}
+
+@media(max-width:1200px){
+    
+    .block-homePageCatalog{
+        margin: 49px auto;
+    }
+    
+}
+
+@media(max-width: 750px) {
+    
+    .block-homePageCatalog{
+        display:none;
+    }
+    
+} 
