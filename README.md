@@ -1,6 +1,6 @@
 # ArgonShop
 
-[РУССКАЯ ВЕРСИЯ](../../tree/ru) — Russian version: the `ru` branch (Russian README, AI documentation and code comments).
+[РУССКАЯ ВЕРСИЯ](../../tree/ru) — Russian version: the `ru` ветка (Русское README, AI документация и детальные русские комментарии в коде).
 
 WordPress e-commerce plugin.
 
