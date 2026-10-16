@@ -46,7 +46,7 @@ If you would like to customize it with the help of the plugin developer, please 
       
       > Good architecture and documentation, but more effort required to understand some internal relationships.
       
-    * **ArgonShop 1.1.0** — `9.2 / 10`
+    * **ArgonShop 1.1.0** — `9.2 / 10` (current version)
       
       > 🚀 **Verdict:** Very high readability for AI-assisted development, with explicit architectural contracts and testing procedures.
 
