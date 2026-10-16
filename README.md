@@ -19,6 +19,7 @@ If you would like to customize it with the help of the plugin developer, please 
 - [📺 Demo and Video Overview](#-demo-and-video-overview)
 - [📊 Technical Overview: Why ArgonShop Is Faster Than Heavy CMS Platforms](#-technical-overview-why-argonshop-is-faster-than-heavy-cms-platforms)
 - [🧩 Development Philosophy](#-development-philosophy-why-vanilla-wordpress-core-is-a-strength)
+- [🧭 Design Principles and Limitations](#-design-principles-and-limitations)
 - [🚀 Features](#-features)
 - [🛠️ Technology Stack](#%EF%B8%8F-technology-stack)
 - [⚙️ Requirements](#%EF%B8%8F-requirements)
@@ -29,8 +30,8 @@ If you would like to customize it with the help of the plugin developer, please 
 - [🔄 How It Works](#-how-it-works)
 - [🌐 Languages](#-languages)
 - [🧪 Tests](#-tests)
-- [📚 Third-Party Libraries](#-third-party-libraries)- 
 - [🤖 Recommended AI for Customizing the Plugin](#-recommended-ai-for-customizing-the-plugin)
+- [📚 Third-Party Libraries](#-third-party-libraries)
 - [📄 License](#-license)
 
 ## ✨ Key Features and Advantages
@@ -59,8 +60,8 @@ If you would like to customize it with the help of the plugin developer, please 
 7. **🚀 Modern Technology Stack**
    The plugin architecture is fully adapted and tested on current **PHP 8.5** and **WordPress 7**. All frontend client logic is rewritten in pure native JavaScript (*Vanilla JS*), eliminating unnecessary dependencies.
 
-8. **⚙️ High Ecosystem Compatibility**
-   The plugin integrates seamlessly with the standard WordPress environment. It works correctly with popular SEO modules, the *Advanced Custom Fields (ACF)* plugin, and other common solutions. No critical conflicts with third-party software were found.
+8. **⚙️ Works Within the WordPress Ecosystem**
+   The plugin uses standard WordPress APIs and works correctly with popular SEO modules, ACF and other plugins. ArgonShop is designed as the main plugin of the site and is not intended to run alongside WooCommerce or Elementor — see [Design Principles and Limitations](#-design-principles-and-limitations).
 
 9. **📦 Lightweight JS Library Integration**
    The frontend bundle includes modern third-party libraries with open licenses for interactive elements, as well as custom modals for displaying interactive maps and feedback forms:
@@ -161,6 +162,16 @@ And here is why this is the only correct approach for a commercial product:
 
 ---
 
+## 🧭 Design Principles and Limitations
+
+* **🥇 Plugin #1 on the site.** ArgonShop was designed as the main plugin of a WordPress site: install it first, then build the rest of the plugin structure around it.
+* **🧱 Logic is split between the plugin and the theme.** The theme holds HTML and CSS; the plugin holds the bulk of the PHP and JS programming. This structure does not fit the WordPress plugin directory, so the plugin is downloaded from this GitHub repository.
+* **🚫 Not intended to run alongside WooCommerce or Elementor.** ArgonShop is the foundation of the store. The theme is written in code and is not edited through any page builder.
+* **👥 Two user roles.** The design assumes an administrator and a visitor (customer) without access to the admin area. If you add other roles (for example, an editor for a blog), check their access yourself: orders are stored as `shoporder` posts with the standard WordPress post capabilities.
+* **🤖 The theme is written with AI.** You can and should use AI to write and adapt the theme — see [Recommended AI for Customizing the Plugin](#-recommended-ai-for-customizing-the-plugin). The idea and architecture of the plugin are the author's; the project has since been refined with the help of AI.
+
+---
+
 ## 🚀 Features
 
 **Store:**
@@ -219,11 +230,17 @@ The plugin and theme also work without ACF; a small number of theme blocks are d
 
 All main post types, taxonomies, and additional fields are created by ArgonShop independently.
 
+**Limitations:**
+- Running alongside WooCommerce and Elementor (or other page builders) is not supported.
+- The plugin is installed only from this GitHub repository; it is not published in the WordPress plugin directory.
+
 ---
 
 ## 📦 Installation
 
 The plugin was developed as the primary plugin of the system. Ideally, install it first on a fresh, clean WordPress.
+
+The plugin is downloaded only from this GitHub repository: the plugin/theme split does not fit the WordPress plugin directory. See [Design Principles and Limitations](#-design-principles-and-limitations).
 
 ### Method 1. Clone into `wp-content`
 
@@ -648,8 +665,8 @@ themes/argon-shop-theme/
 
 ### Plugin and Theme Separation
 
-- **Plugin** — all logic: post types, taxonomies, AJAX handlers, ES modules, queries, cookies, emails.
-- **Theme** — layout and styles: page templates, CSS, menu configuration.
+- **Plugin** — all logic and the bulk of the PHP and JS: post types, taxonomies, AJAX handlers, ES modules, queries, cookies, emails.
+- **Theme** — HTML and CSS: page templates, styles, menu configuration. The theme is written in code and is not edited through page builders.
 - **Touchpoints** — plugin functions called from templates (`as_kama_breadcrumbs`, `as_search`, `as_infocart`, `as_view_products_list`, `as_slider_product`, etc.), and ES modules from the plugin loaded as `main.js`.
 
 ### Store Data
