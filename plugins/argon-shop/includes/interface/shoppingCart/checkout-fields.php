@@ -198,9 +198,9 @@ function as_get_valueFieldsCart( $typeForm, $POST ) {
             'typeForm' => $typeForm,
         );
         
-        if ( as_countDigits( $user_phone ) < 11 ) {
-            
-            $result['message'] = __( 'The phone number has fewer than 11 characters', 'argon-shop' );
+        if ( ! as_is_valid_phone( $user_phone ) ) {
+
+            $result['message'] = __( 'Please enter a valid phone number (7–15 digits)', 'argon-shop' );
             
             echo json_encode( $result );
             wp_die();
