@@ -16,7 +16,6 @@ If you would like to customize it with the help of the plugin developer, please 
 ## Table of Contents
 
 - [✨ Key Features and Advantages](#-key-features-and-advantages)
-- [📺 Demo and Video Overview](#-demo-and-video-overview)
 - [📊 Technical Overview: Why ArgonShop Is Faster Than Heavy CMS Platforms](#-technical-overview-why-argonshop-is-faster-than-heavy-cms-platforms)
 - [🧩 Development Philosophy](#-development-philosophy-why-vanilla-wordpress-core-is-a-strength)
 - [🧭 Design Principles and Limitations](#-design-principles-and-limitations)
@@ -102,18 +101,10 @@ If you would like to customize it with the help of the plugin developer, please 
    * 🍞 **[Breadcrumbs module (breadcrumbs.php)](https://github.com/Argonstudio/ArgonShop/blob/main/plugins/argon-shop/includes/interface/breadcrumbs.php)** — protected from direct calls via `ABSPATH`, switched to the safe `get_search_query()` method, with strict validation of input data types against `null` and `WP_Error`.
    * 🔢 **[Pagination module (pagenavi.php)](https://github.com/Argonstudio/ArgonShop/blob/main/plugins/argon-shop/includes/interface/pagenavi.php)** — completely free of the deprecated `extract()` function, loose comparisons (`==`) replaced with safe strict ones (`===`), and hardware-level protection against division by zero added.
 
-
-    
+   
 
 ---
 🌐 Live Demo: [https://plugin-en.argon-studio.ru/](https://plugin-en.argon-studio.ru/) ( Test access: login **admin**, password **123** )
----
-
-## 📺 Demo and Video Overview
-
-📺 [Watch the ArgonShop video overview](https://www.youtube.com/watch?v=QPdLPoL79vg)
-
-> 💡 **Note about the video:** The video is in Russian, but you can enable automatic YouTube subtitles/translation. Also, please note that the video mentions different search result outputs between standard GET search and AJAX requests. This and other minor issues have been completely fixed in the current version of the plugin—the search logic was substantially rewritten, so please refer directly to the code. Most of the video remains fully relevant, and all recent architectural changes are well-documented in `AI.md`.
 
 ---
 
@@ -759,6 +750,14 @@ The project uses third-party libraries. Their licenses are preserved:
 | Kama Breadcrumbs | 3.3.2 | GPL | `plugins/argon-shop/includes/interface/breadcrumbs.php` (fork) |
 | Kama Pagenavi | 2.5.2 | GPL | `plugins/argon-shop/includes/interface/pagenavi.php` (fork) |
 | WP-LastViewedPosts | 0.7.3 | GPL | `plugins/argon-shop/includes/interface/last_viewed_posts.php` (fork) |
+
+---
+
+## 📺 Demo and Video Overview
+
+📺 [Watch the ArgonShop video overview](https://www.youtube.com/watch?v=QPdLPoL79vg)
+
+> 💡 **Note about the video:** The video is in Russian, but you can enable automatic YouTube subtitles/translation. Also, please note that the video mentions different search result outputs between standard GET search and AJAX requests. This and other minor issues have been completely fixed in the current version of the plugin—the search logic was substantially rewritten, so please refer directly to the code. Most of the video remains fully relevant, and all recent architectural changes are well-documented in `AI.md`.
 
 ---
 
