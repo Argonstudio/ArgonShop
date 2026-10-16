@@ -31,6 +31,58 @@ function as_countDigits( $str ) {
     return preg_match_all( '/[0-9]/', $str );
 }
 
+
+/**
+ * FUNCTION: Validate phone number format
+ *
+ * Supports international and national phone formats.
+ * Allows digits, spaces, dots, hyphens and parentheses.
+ * Allows one optional leading "+".
+ *
+ * Checks syntax and digit count only.
+ * Does not validate country-specific numbering rules.
+ *
+ * @param string $phone Phone number.
+ * @return bool
+ */
+function as_is_valid_phone( $phone ) {
+
+    $phone = trim( (string) $phone );
+
+    if ( $phone === '' ) {
+        return false;
+    }
+
+    // Validate allowed characters and leading plus sign.
+    if ( ! preg_match( '/^\+?[0-9\s().-]+$/', $phone ) ) {
+        return false;
+    }
+
+    // Extract digits only.
+    $digits = as_countDigits( $phone );
+
+    // Get configurable digit limits.
+    $min = (int) apply_filters(
+        'argon_shop_phone_min_digits',
+        7
+    );
+
+    $max = (int) apply_filters(
+        'argon_shop_phone_max_digits',
+        15
+    );
+
+    // Respect E.164 maximum length.
+    $min = max( 1, $min );
+    $max = min( 15, $max );
+
+    if ( $min > $max ) {
+        return false;
+    }
+
+    return $digits >= $min && $digits <= $max;
+}
+
 /**
  * Parse a complete human-entered number; malformed/non-finite values return 0.0.
  * A single separator is decimal; repeated separators must group three digits.
