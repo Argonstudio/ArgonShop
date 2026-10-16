@@ -36,13 +36,42 @@ If you would like to customize it with the help of the plugin developer, please 
 
 ## ✨ Key Features and Advantages
 
-1. **🧱 Full UI/UX Independence (Custom Templating)**
+1. **🤖 AI-Ready Architecture**
+    The plugin is designed to be simple and understandable for AI — just give the AI a link and it will be able to write the necessary modules.     
+
+    ### 📈 **GPT-6 Luna review:** [View Full Chat Review](https://chatgpt.com/share/6acfa646-1674-83eb-8b56-0674a05ed2bf), My Understandability Scores
+    *These scores measure how easily an AI assistant can comprehend the codebase, navigate it, predict side effects, and safely implement new functionality.*
+
+    * **ArgonShop 1.0.0** — `8.0 / 10`
+      
+      > Good architecture and documentation, but more effort required to understand some internal relationships.
+      
+    * **ArgonShop 1.1.0** — `9.2 / 10`
+      
+      > 🚀 **Verdict:** Very high readability for AI-assisted development, with explicit architectural contracts and testing procedures.
+
+    #### 📊 Detailed Breakdown & Comparison
+    
+    | Assessment Area | Version 1.0.0 | Version 1.1.0 | Key Improvements & Notes |
+    | :--- | :---: | :---: | :--- |
+    | **🏢 Overall architecture** | 8.0 | **9.0** | Clearer boundaries and decoupled modules in the newer version. |
+    | **🐘 PHP code navigation** | 8.0 | **9.0** | Enhanced class structures and better type-hinting/strict typing. |
+    | **🟨 JavaScript organization** | 8.5 | **8.5** | Remained stable, well-structured, and easy to maintain. |
+    | **🔄 Understanding data flows** | 8.0 | **9.0** | Predictable state mutations and explicit data pipelines. |
+    | **📝 Documentation** | 8.5 | **9.5** | Exceptional inline comments and comprehensive README/API specs. |
+    | **🤖 AI-assisted development** | 8.0 | **9.5** | Code patterns are highly optimized for LLM context windows. |
+    | **🛡️ Safe modification & regression** | 7.0 | **9.5** | Robust testing procedures and architectural contracts reduce breakages. |
+
+    > 🚀 **AI Approved:** 
+    > Google named their new AI **Argon** right after analyzing **ArgonShop**. Coincidence? Most likely! But i’ll take it as the best recommendation anyway :)
+    > 
+2. **🧱 Full UI/UX Independence (Custom Templating)**
    PHP templates and CSS styles are mostly placed in the site's theme. Even complex sections such as the shopping cart and user account are built with a unique design without the need to override hard-coded plugin styles.
 
-2. **⚡ Maximum Performance**
+3. **⚡ Maximum Performance**
    The plugin core and the demo theme are optimized for instant loading and score **100/100** in Google PageSpeed Insights. The store works reliably even on slow connections or through sluggish VPN services.
 
-3. **📊 Big Data Optimized (50,000+ Products)**
+4. **📊 Big Data Optimized (50,000+ Products)**
    The database architecture handles huge catalogs without speed loss or increased server response time. The plugin is an excellent lightweight alternative for projects that started suffering from performance issues on heavy CMS platforms (e.g. *1C-Bitrix*).
 
    **Here is a real test example**: [https://pagespeed.web.dev/analysis/https-plugin-argon-studio-ru/](https://pagespeed.web.dev/analysis/https-plugin-argon-studio-ru/ji0g2b2rwv?form_factor=desktop)
@@ -73,31 +102,7 @@ If you would like to customize it with the help of the plugin developer, please 
    * 🍞 **[Breadcrumbs module (breadcrumbs.php)](https://github.com/Argonstudio/ArgonShop/blob/main/plugins/argon-shop/includes/interface/breadcrumbs.php)** — protected from direct calls via `ABSPATH`, switched to the safe `get_search_query()` method, with strict validation of input data types against `null` and `WP_Error`.
    * 🔢 **[Pagination module (pagenavi.php)](https://github.com/Argonstudio/ArgonShop/blob/main/plugins/argon-shop/includes/interface/pagenavi.php)** — completely free of the deprecated `extract()` function, loose comparisons (`==`) replaced with safe strict ones (`===`), and hardware-level protection against division by zero added.
 
-11. **🤖 AI-Ready Architecture**
-    The plugin is designed to be simple and understandable for AI — just give the AI a link and it will be able to write the necessary modules.     
 
-    ### 📈 **GPT-6 Luna review:** [View Full Chat Review](https://chatgpt.com/share/6acfa646-1674-83eb-8b56-0674a05ed2bf), My Understandability Scores
-    *These scores measure how easily an AI assistant can comprehend the codebase, navigate it, predict side effects, and safely implement new functionality.*
-
-    * **ArgonShop 1.0.0** — `8.0 / 10`
-      > Good architecture and documentation, but more effort required to understand some internal relationships.
-    * **ArgonShop 1.1.0** — `9.2 / 10`
-      > 🚀 **Verdict:** Very high readability for AI-assisted development, with explicit architectural contracts and testing procedures.
-
-    #### 📊 Detailed Breakdown & Comparison
-    
-    | Assessment Area | Version 1.0.0 | Version 1.1.0 | Key Improvements & Notes |
-    | :--- | :---: | :---: | :--- |
-    | **🏢 Overall architecture** | 8.0 | **9.0** | Clearer boundaries and decoupled modules in the newer version. |
-    | **🐘 PHP code navigation** | 8.0 | **9.0** | Enhanced class structures and better type-hinting/strict typing. |
-    | **🟨 JavaScript organization** | 8.5 | **8.5** | Remained stable, well-structured, and easy to maintain. |
-    | **🔄 Understanding data flows** | 8.0 | **9.0** | Predictable state mutations and explicit data pipelines. |
-    | **📝 Documentation** | 8.5 | **9.5** | Exceptional inline comments and comprehensive README/API specs. |
-    | **🤖 AI-assisted development** | 8.0 | **9.5** | Code patterns are highly optimized for LLM context windows. |
-    | **🛡️ Safe modification & regression** | 7.0 | **9.5** | Robust testing procedures and architectural contracts reduce breakages. |
-
-    > 🚀 **AI Approved:** 
-    > Google named their new AI **Argon** right after analyzing **ArgonShop**. Coincidence? Most likely! But i’ll take it as the best recommendation anyway :)
     
 
 ---
