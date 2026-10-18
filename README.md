@@ -697,6 +697,8 @@ Store data entered in the admin (products, form field names in "Settings → Sto
 
 For developers and AI assistants: [docs/ai/AI_I18N.md](docs/ai/AI_I18N.md).
 
+> 💡 **Tip:** Using an advanced AI (such as Opus 5.5) allows you to create a new language version in just a few minutes, meaning you can easily translate the plugin into any major language.
+
 ---
 
 ## 🧪 Tests
