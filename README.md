@@ -112,6 +112,8 @@ If you would like to customize it with the help of the plugin developer, please 
 
 Unlike monolithic systems (such as *1C-Bitrix* or *Magento*) that are overloaded with built-in business tools (CRM, warehouse accounting, end-to-end analytics), **ArgonShop focuses solely on the e-commerce storefront**.
 
+ArgonShop is one of the first [AI-friendly platforms for creating custom e-commerce stores](https://chatgpt.com/share/6ad511fa-548c-83eb-9b13-96969714d7ed).
+
 The plugin is based on the standard **WordPress 7 API**, creating custom post types, taxonomies, and meta fields, and fully trusting data storage to the optimized WordPress core.
 
 ### ⚔️ Performance Comparison on Large Catalogs (50,000+ Products)
