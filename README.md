@@ -110,53 +110,59 @@ If you would like to customize it with the help of the plugin developer, please 
 
 ## 📊 Technical Overview: Why ArgonShop Is Faster Than Heavy CMS Platforms
 
-Unlike monolithic systems (such as *1C-Bitrix* or *Magento*) that are overloaded with built-in business tools (CRM, warehouse accounting, end-to-end analytics), **ArgonShop focuses solely on the e-commerce storefront**.
+Unlike monolithic systems (such as *1C-Bitrix* or *Magento*) that ship with a wide range of built-in business tools (CRM, warehouse accounting, end-to-end analytics), **ArgonShop focuses solely on the online store storefront**: catalog, cart, checkout, and customer account. Anything not needed for these tasks is simply not included, so it is never loaded or executed.
 
 ArgonShop is one of the first [AI-friendly platforms for creating custom e-commerce stores](https://chatgpt.com/share/6ad511fa-548c-83eb-9b13-96969714d7ed).
 
-The plugin is based on the standard **WordPress 7 API**, creating custom post types, taxonomies, and meta fields, and fully trusting data storage to the optimized WordPress core.
+The plugin runs on the standard **WordPress 7 API**: custom post types (CPTs), taxonomies, and meta fields. Data storage, indexing, and caching are handled entirely by the optimized WordPress core.
 
-### ⚔️ Performance Comparison on Large Catalogs (50,000+ Products)
+### ⚡ Speed You Can Verify Yourself
 
-| Criterion | 🟢 ArgonShop (WordPress 7) | 🔴 Classic Heavy CMS (Bitrix) |
+The demo theme scores **100/100 on desktop and 99 on mobile** in Google PageSpeed Insights, with no caching plugins and no code minification.
+👉 [Open the report](https://pagespeed.web.dev/analysis/https-plugin-argon-studio-ru/ji0g2b2rwv?form_factor=desktop) or run the test on any ArgonShop-based site. There is no need to take our word for it.
+
+### ⚔️ Architectural Comparison on Large Catalogs (50,000+ Products)
+
+| Criterion | 🟢 ArgonShop (WordPress 7) | 🔴 Monolithic CMS (e.g. Bitrix) |
 | :--- | :--- | :--- |
-| **Server RAM Usage** | **Minimal.** Only core WP classes and Vanilla JS on the frontend are initialized. | **High.** The CPU spends resources compiling hundreds of unused business modules. |
-| **SQL Load** | **Low.** Data is fetched through the optimized `WP_Query`. No extra joins or layers. | **Extreme.** The infoblock architecture generates heavy queries with dozens of `JOIN`s per property. |
-| **Frontend Dependencies** | **Pure JavaScript.** Only the ultra-light Swiper and GLightbox libraries are bundled. | **Overloaded.** Tons of system UI scripts and core libraries are loaded out of the box. |
-| **Infrastructure** | Works great even on **cheap shared hosting** due to low TTFB. | Requires a **powerful VPS/VDS** with mandatory dedicated web environment setup. |
+| **Server RAM usage** | **Minimal.** Only core WP classes and plugin modules are initialized; Vanilla JS on the frontend. | **Higher.** The core loads along with a set of business modules, many of which a store doesn't need. |
+| **SQL load** | **Moderate.** Queries go through the standard `WP_Query` by post type, taxonomy, and indexed fields. | **Higher.** The infoblock architecture produces complex queries with many `JOIN`s when filtering by properties. |
+| **Cart** | **Cookie-based.** No database writes until the order is placed. | Typically stored server-side (in the database). |
+| **Frontend dependencies** | **Pure JavaScript**, no jQuery. Only the lightweight Swiper and GLightbox are bundled. | A set of system UI scripts and core libraries is loaded out of the box. |
+| **Infrastructure** | Doesn't require a powerful environment. Regular hosting is enough for typical catalogs; for 50,000+ products an object cache is recommended. | Usually requires a VPS/VDS and dedicated web environment setup. |
 
-
-### 🛠 Architectural Secrets Behind the 100/100 Google PageSpeed Score
+### 🛠 Architectural Principles Behind the Speed
 
 <details>
-<summary>1. No Software Overhead (excess code) ⚡</summary>
-The plugin performs no background computations unrelated to rendering the storefront, cart, or user account. The server processes requests instantly, delivering data directly to your theme's HTML templates without intermediate visual editors or heavy component layers.
+<summary>1. Nothing Extra ⚡</summary>
+The plugin performs no background computations unrelated to the storefront, cart, or user account. Data is passed directly to your theme's HTML templates, with no visual editors or heavy component layers in between.
 </details>
 
 <details>
-<summary>2. Efficient WordPress Database Handling 📂</summary>
-When using the standard WP database with large volumes (50k+ products), it is critical to avoid chaotic queries. ArgonShop uses clean WordPress API methods, making it easy to enable **object caching (Redis / Memcached)**. With caching enabled, repeated requests for products and categories bypass the SQL database entirely, keeping load times around **900 ms**.
+<summary>2. A Catalog Built on Standard WordPress Mechanisms 📂</summary>
+The architecture is designed for catalogs of 50,000+ products: products are stored as CPTs, and queries are built on standard `WP_Query`, taxonomies, and meta fields. The cart and view history live in cookies, so MySQL load stays minimal, and an order is written to the database only at checkout.
+
+Because the plugin uses only standard WordPress API methods, it is compatible with a **persistent object cache (Redis / Memcached)**. Repeated requests for products and categories then bypass the SQL database, with a target page load time of around **900 ms**.
 </details>
 
 <details>
-<summary>3. Asynchronous Native AJAX 🔍</summary>
-The "live" search, filtering, and cart update modules are written in native JavaScript and processed by isolated PHP handlers. This eliminates page reloads and reduces web server load under thousands of concurrent users.
+<summary>3. Native Asynchronous AJAX 🔍</summary>
+"Live" search, sorting, filtering, and cart updates are written in native JavaScript (ES modules, Fetch API) and handled by isolated PHP handlers. Pages don't reload, and unnecessary requests don't burden the server.
 </details>
 
 ---
 
-## 🧩 Development Philosophy: Why Vanilla WordPress Core Is a Strength
+## 🧩 Development Philosophy: Why the Vanilla WordPress 7 Core Is a Strength
 
-For an independent developer or a small team, trying to "reinvent the wheel" and write a custom CMS or deeply modify the WordPress core is a path to a software dead end. **ArgonShop consciously and 100% uses the standard WordPress 7 core and its official API.**
+For an independent developer or a small team, writing a custom CMS or deeply modifying the WordPress core is a path to a dead end. **ArgonShop deliberately uses the standard WordPress 7 core and its official API**. For a commercial product, this is the most practical approach.
 
-And here is why this is the only correct approach for a commercial product:
+* **📚 Vast documentation and a rich knowledge base for AI:** WordPress is one of the best-documented platforms in existence: Developer Resources, Code Reference, handbooks, tens of thousands of open-source plugins and themes, and an enormous number of examples and answers. Language models know the WordPress API far better than any custom-built engine, so an AI assistant writes and adapts code faster and more accurately. Together with ArgonShop's own documentation (`AI.md`, `docs/ai/`), this makes customizing the store with AI simple and predictable.
+* **🛡️ Security on a proven foundation:** database access, data filtering, and authentication rely on the WordPress core, which is reviewed by thousands of developers and security researchers worldwide. The plugin doesn't invent its own protection mechanisms; it uses proven standards. Prices and required fields are validated on the server side.
+* **🔄 Predictable updates:** the plugin doesn't interfere with the core; it extends it through hooks and custom post types. This minimizes the risk of incompatibility when WordPress updates are released.
+* **📈 Ready-made core optimizations:** query caching, indexes, and custom post handling are already implemented in WordPress. The plugin builds on this foundation without adding its own layers.
+* **🛠️ Minimal vendor lock-in:** any WordPress developer can quickly understand the store's code. All logic is built on familiar `WP_Query`, taxonomy registration, and meta fields, not on a "custom engine".
 
-* **🛡️ Security out of the box:** Protection of the database against SQL injections, data filtering, and user authorization security are provided by thousands of WordPress core developers worldwide. The plugin does not duplicate these functions but trusts proven standards.
-* **🔄 Seamless updates:** Because the plugin does not interfere with the core and only extends it via hooks and custom post types, the site is protected from "breaking" when minor and major CMS updates are released.
-* **📈 Built-in optimization:** In WordPress 7, the mechanisms of query caching, index building, and custom post handling are perfected. The plugin simply takes this ready-made speed without building extra layers.
-* **🛠️ Zero Vendor Lock-in:** Any third-party WordPress developer can understand the e-commerce code in a couple of hours. They won't have to study a "custom engine" — all logic is built on standard functions such as `WP_Query`, taxonomy registration, and meta fields, familiar to every web master.
-
-> **Summary:** The strength of ArgonShop is not in changing WordPress standards, but in their **maximally light and correct use**. The plugin takes the best from the stable WP ecosystem and cuts out everything that usually slows down e-commerce sites.
+> **Summary:** The strength of ArgonShop is not in changing WordPress standards, but in using them **as lightly and correctly as possible**. The plugin takes the best of a mature WP ecosystem and cuts out everything that usually slows down e-commerce sites.
 
 ---
 
