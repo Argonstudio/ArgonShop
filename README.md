@@ -17,7 +17,7 @@ If you would like to customize it with the help of the plugin developer, please 
 
 - [✨ Key Features and Advantages](#-key-features-and-advantages)
 - [📊 Technical Overview: Why ArgonShop Is Faster Than Heavy CMS Platforms](#-technical-overview-why-argonshop-is-faster-than-heavy-cms-platforms)
-- [🧩 Development Philosophy](#-development-philosophy-why-vanilla-wordpress-core-is-a-strength)
+- [🧩 Development Philosophy](#-development-philosophy-why-the-vanilla-wordpress-7-core-is-a-strength)
 - [🧭 Design Principles and Limitations](#-design-principles-and-limitations)
 - [🚀 Features](#-features)
 - [🛠️ Technology Stack](#%EF%B8%8F-technology-stack)
