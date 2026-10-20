@@ -137,7 +137,6 @@
 .as-slider-product-thumbs .swiper-slide {
     height: 79px;
     box-sizing: border-box;
-    border: 1px solid #9ebce0;
     background: #fff;
     cursor: pointer;
     overflow: hidden;
