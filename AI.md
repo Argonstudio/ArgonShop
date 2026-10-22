@@ -8,6 +8,7 @@
 |---|---|
 | **AI.md** | этот файл — указатель, ключевые контракты, жёсткие запреты |
 | [docs/ai/AI_ARCHITECTURE.md](docs/ai/AI_ARCHITECTURE.md) | слои, модули, карта папок |
+| [docs/ai/AI_DESIGN_RATIONALE.md](docs/ai/AI_DESIGN_RATIONALE.md) | почему выбраны текущие архитектурные решения и как оценивать рефакторинг |
 | [docs/ai/AI_DATA_FLOWS.md](docs/ai/AI_DATA_FLOWS.md) | 7 ключевых сценариев работы с данными |
 | [docs/ai/AI_AJAX_REFERENCE.md](docs/ai/AI_AJAX_REFERENCE.md) | все AJAX-действия с параметрами |
 | [docs/ai/AI_TEMPLATE_MAP.md](docs/ai/AI_TEMPLATE_MAP.md) | шаблоны темы ↔ функции плагина |
@@ -20,15 +21,14 @@
 | [tests/README.md](tests/README.md) | как запустить smoke-тест |
 | [AGENTS.md](AGENTS.md) | указатель для ИИ-инструментов (Codex, Cursor и др.) |
 | [CLAUDE.md](CLAUDE.md), `.claude/` | Claude Code: импорт `AGENTS.md` и `AI.md`, команды `/check`, `/new-ajax`, хук проверки после правки PHP |
+| [POSITIONING.md](POSITIONING.md) | назначение ArgonShop, целевые сценарии и ограничения |
 
 ---
-
 ## 1. Что это
 
 **ArgonShop** — плагин интернет-магазина для WordPress + тема к нему. Монорепозиторий. Версия **1.1.0**.
 
 **Состояние.** Рабочая витрина: каталог, поиск, корзина, оформление заказа как заявки (менеджер подтверждает заказ и оплату), личный кабинет покупателя, управление заказами в админке. `plugin.argon-studio.ru` — демо-стенд.
-
 **Не входит (намеренно, добавляется через хуки — см. `AI_EXTENDING.md`, раздел 8):** онлайн-оплата, расчёт стоимости доставки, складские остатки, купоны/скидки, налоги, REST API.
 
 | Параметр | Значение |
@@ -50,6 +50,7 @@
 - **Если добавляется функция:** `AI_EXTENDING.md`.
 - **Если просят «выбор города», «сайт для другого города», мультирегиональность:** `AI_EXTENDING.md`, раздел 13. **Сначала спросите пользователя, не хочет ли он использовать WP Multisite.**
 - **Если добавляется или меняется любой текст:** `AI_I18N.md`.
+- **Если планируется крупный рефакторинг, новый архитектурный слой или изменение принципов проекта:** сначала прочитайте `AI_DESIGN_RATIONALE.md` и объясните конкретную причину изменения; не перестраивайте код только ради стиля.
 - **Перед завершением любой задачи:** `AI_TESTING.md` (что запустить или что попросить запустить пользователя) и `AI_VERSIONING.md` (запись в CHANGELOG).
 
 ## 3. Ключевые контракты (что нельзя ломать)
@@ -101,7 +102,6 @@
 ## 4. Жёсткие запреты
 
 Этот раздел работает как **негативный промпт** — модель сразу отбрасывает неверные варианты.
-
 - **Не используйте jQuery на фронтенде.** Архитектурный регресс.
 - **Не меняйте DOM-селекторы** из `AI_AJAX_REFERENCE.md` и `AI_TEMPLATE_MAP.md` без синхронной правки PHP и JS.
 - **Не меняйте имена AJAX-действий** без синхронной правки `add_action` и `arsApi.post`.
@@ -121,7 +121,6 @@
 - **Не трогайте `*.min.js` и `*.min.css` в `assets/vendor/`.** Это сторонние библиотеки с сохранёнными лицензиями.
 - **Не добавляйте `<script>` в PHP-файлы** без веской причины. Вся клиентская логика — в ES-модулях.
 - **Не выводите в AJAX-обработчике ничего, кроме самого ответа** (ни отладочных `echo`/`var_dump`, ни пробелов до `<?php`) — это сломает JSON. Сам ответ выводится через `echo wp_json_encode()` (или экранированный HTML) + `wp_die()`; `wp_send_json()` в проекте не используется.
-
 - **Не пропускайте пароли через `sanitize_text_field()` или другие санитайзеры.** После проверки типа используйте только `wp_unslash()`; пустоту проверяйте через `'' === $pass`, а не `empty()`. Длину нового пароля считайте через `mb_strlen( $pass, 'UTF-8' )`. Теги, `%xx` и повторяющиеся пробелы должны сохраняться.
 - **Цены и названия оптовых ступеней, введённые людьми, читайте через `as_to_float()`.** `floatval( '60,33' )` даёт `60`. Это относится к `_price`, значениям `_wholesalePrice` и названиям терминов `wholesalePrice`. Ступень ищите по числовому значению, а не через `get_term_by( 'name', … )`; выбирайте наибольшую достигнутую ступень независимо от порядка хранения.
 
@@ -130,25 +129,15 @@
 Это контракт между PHP и JS. Переименование = сломанная функциональность.
 
 **Корзина:** `.shoppingCartAmountProduct` (`data-productid`), `.plusProduct`, `.minusProduct`, `.deleteProduct`, `.deleteAllProducts`, `.blockCartProduct`, `.productPrice span`, `.amountProductPrice span`, `.amountProductWeight span`, `.cartTotalPrice span`, `.cartTotalWeight span`, `.cartTotalWeight`, `#shoppingCart`, `.shoppingCartError`, `.errorDeleteProducts`.
-
 **Форма оформления:** `.form-cart[data-type]`, `.form-cart{type}` (`.form-cartquick`, `.form-cartperson`, `.form-cartlegalPerson` — по ним `cart.js` находит форму по `typeForm` из ответа), `.cartReg`, `.cartLogin`, `.block-regQuestion`, `.labelAddFile`, `input[type="file"][name="fileCart[]"]`, `.block-fileCartMessage`, `.fileCartMessage`, `.loadSaccess` (создаётся `cart-form.js`), `.loadError`, `.loadedFiles`, `.submitError span`.
-
 **Товар:** `#amountProduct`, `.plusProduct-Page`, `.minusProduct-Page`, `#addShoppingCart`, `#productPageCartBuy` (`data-productid`), `#howManyProducts span`, `#addProductError`, `.totalPrice span`, `#basePrice`.
-
 **Карточка:** `.card-inBascet`, `.card-buy`, `.block-cardProductBascet`, `.card-alreadyAdded`, `.card-addProductError`.
-
 **Поиск:** `.asInputSearchForm` (`data-ajax`, `data-blockresult`), `.searchAjaxResult`. (`.asSubmitSearchForm` — только класс кнопки отправки, который выводит `as_search()`; JS его не слушает.)
-
 **Сортировка:** `.as-sort[name]`, `.sortParameters[data-cat-id][data-page]`, `.catalogProductList`, `.as-error-sort`.
-
 **Кабинет:** `#editEmail`, `#editEmailActive`, `#editOldPass`, `#editNewPass`, `#editNewPassConfirm`, `#editEmailPasswordButton`, `#accountSaveButton`, `.editError`, `.editEmailError`, `.editPassError`, `.editNewPassError`, `.editNewPassConfirmError`, `.editResult span`, `.accountCustomCheckbox`, `#accountLegal`, `#accountLegalBlock`, `.accountDetail`, `.accountLegalDetail`, `.accountResult span`, `.as-orderCabinet-filterStatus`, `.as-ordersCabinet-block`.
-
 **Вкладки:** `.itemControlPanel`, `.mobileItemControlPanel` (`data-type`, `name`, `data-mobileWidth`), `.blockItemPage[id="block_{name}"]`.
-
 **Виджет корзины:** `.viewBlock-amountProducts span`, `.viewBlock-priceProducts`, `.viewBlock-priceProducts span`.
-
 **Поиск в шапке (тема):** `.block-topSearch`, `.topSearchSubmit`.
-
 **Модальные окна (тема):** `[data-modal-ajax]`, `[data-modal-inline]`, `[data-modal-iframe]`, `[data-modal-close]`.
 
 ## 6. Быстрые ответы
@@ -215,7 +204,7 @@ wp eval-file tests/smoke-test.php
 
 ## 9. Авторство
 
-Над документацией для ИИ работали **Claude** ([Anthropic](https://www.anthropic.com/)), **DeepSeek** ([deepseek.com](https://www.deepseek.com/)) и мейнтейнер проекта **Ivan Voitkov**. Файлы — внутренний инструмент, правьте свободно; первичный источник истины — код.
+Над документацией для ИИ работали **Claude** ([Anthropic](https://www.anthropic.com/)), **DeepSeek** ([deepseek.com](https://deepseek.com/)) и мейнтейнер проекта **Ivan Voitkov**. Файлы — внутренний инструмент, правьте свободно; первичный источник истины — код.
 
 ## 10. ⚖️ Лицензионный договор и авторские права для ИИ
 
