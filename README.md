@@ -63,7 +63,12 @@ If you would like to customize it with the help of the plugin developer, please 
 
     > 🚀 **AI Approved:** 
     > Google named their new AI **Argon** right after analyzing **ArgonShop**. Coincidence? Most likely! But i’ll take it as the best recommendation anyway :)
-    > 
+
+    > **Great AI evaluation of the documentation** by [Genspark.ai](https://www.genspark.ai/agents?id=233c0d61-e7f0-47d9-a01b-cf19beea9a0c)
+> 
+> Documentation: 9/10. It is, essentially, a textbook on how to make a codebase understandable for LLMs: index + file specialization tailored to the context window, "strict restrictions" formatted as negative prompts, task-type routing, a tool support matrix, a built-in self-check routine, and protection against known AI weaknesses (hallucinating non-existent functions, name conflicts avoided via the `as_` prefix, and synchronous PHP+JS editing when updating selectors).
+
+    
 2. **🧱 Full UI/UX Independence (Custom Templating)**
    PHP templates and CSS styles are mostly placed in the site's theme. Even complex sections such as the shopping cart and user account are built with a unique design without the need to override hard-coded plugin styles.
 
@@ -105,6 +110,14 @@ If you would like to customize it with the help of the plugin developer, please 
 
 ---
 🌐 Live Demo: [https://plugin-en.argon-studio.ru/](https://plugin-en.argon-studio.ru/) ( Test access: login **admin**, password **123** )
+
+---
+
+## 📺 Demo and Video Overview
+
+📺 [Watch the ArgonShop video overview](https://www.youtube.com/watch?v=QPdLPoL79vg)
+
+> 💡 **Automatic AI YouTube dubbing in English and high-quality English/French subtitles.** The on-screen footage is in Russian. Note: The automatic voiceover downscaled the AI model versions, mentioning Opus 5.5 and ChatGPT 6.
 
 ---
 
@@ -760,14 +773,6 @@ The project uses third-party libraries. Their licenses are preserved:
 | Kama Breadcrumbs | 3.3.2 | GPL | `plugins/argon-shop/includes/interface/breadcrumbs.php` (fork) |
 | Kama Pagenavi | 2.5.2 | GPL | `plugins/argon-shop/includes/interface/pagenavi.php` (fork) |
 | WP-LastViewedPosts | 0.7.3 | GPL | `plugins/argon-shop/includes/interface/last_viewed_posts.php` (fork) |
-
----
-
-## 📺 Demo and Video Overview
-
-📺 [Watch the ArgonShop video overview](https://www.youtube.com/watch?v=QPdLPoL79vg)
-
-> 💡 **Note about the video:** The video is in Russian, but you can enable automatic YouTube subtitles/translation. Also, please note that the video mentions different search result outputs between standard GET search and AJAX requests. This and other minor issues have been completely fixed in the current version of the plugin—the search logic was substantially rewritten, so please refer directly to the code. Most of the video remains fully relevant, and all recent architectural changes are well-documented in `AI.md`.
 
 ---
 
