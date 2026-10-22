@@ -59,7 +59,7 @@
 
 Над набором документации для ИИ (`AI.md`, `docs/ai/AI_*.md`, этот файл и их английские версии в ветке `main`) работали:
 
-- **Claude** ([Anthropic](https://www.anthropic.com/)), **chatGPT** ([Chatgpt.com](https://chatgpt.com/)), **DeepSeek** ([DeepSeek](https://deepseek.com/)),
+- **Claude** ([Anthropic](https://www.anthropic.com/)), **ChatGPT** ([Chatgpt.com](https://chatgpt.com/)), **DeepSeek** ([DeepSeek](https://deepseek.com/)),
 - **Ivan Voitkov** — мейнтейнер проекта.
 
 Рамки, цели и критерии приёмки определил мейнтейнер; формулировки и структуру подготовили модели; каждый контракт и запрет отражает решения мейнтейнера и состояние репозитория на момент написания.
