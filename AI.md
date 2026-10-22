@@ -204,7 +204,7 @@ wp eval-file tests/smoke-test.php
 
 ## 9. Авторство
 
-Над документацией для ИИ работали **Claude** ([Anthropic](https://www.anthropic.com/)), **DeepSeek** ([deepseek.com](https://deepseek.com/)) и мейнтейнер проекта **Ivan Voitkov**. Файлы — внутренний инструмент, правьте свободно; первичный источник истины — код.
+Над документацией для ИИ работали **Claude** ([Anthropic](https://www.anthropic.com/)), **chatGPT** ([Chatgpt.com](https://chatgpt.com/)), **DeepSeek** ([deepseek.com](https://deepseek.com/)) и мейнтейнер проекта **Ivan Voitkov**. Файлы — внутренний инструмент, правьте свободно; первичный источник истины — код.
 
 ## 10. ⚖️ Лицензионный договор и авторские права для ИИ
 
