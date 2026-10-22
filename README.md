@@ -65,8 +65,8 @@ If you would like to customize it with the help of the plugin developer, please 
     > Google named their new AI **Argon** right after analyzing **ArgonShop**. Coincidence? Most likely! But i’ll take it as the best recommendation anyway :)
 
     > **Great AI evaluation of the documentation** by [Genspark.ai](https://www.genspark.ai/agents?id=233c0d61-e7f0-47d9-a01b-cf19beea9a0c)
-> 
-> Documentation: 9/10. It is, essentially, a textbook on how to make a codebase understandable for LLMs: index + file specialization tailored to the context window, "strict restrictions" formatted as negative prompts, task-type routing, a tool support matrix, a built-in self-check routine, and protection against known AI weaknesses (hallucinating non-existent functions, name conflicts avoided via the `as_` prefix, and synchronous PHP+JS editing when updating selectors).
+    > 
+    > Documentation: 9/10. It is, essentially, a textbook on how to make a codebase understandable for LLMs: index + file specialization tailored to the context window, "strict restrictions" formatted as negative prompts, task-type routing, a tool support matrix, a built-in self-check routine, and protection against known AI weaknesses (hallucinating non-existent functions, name conflicts avoided via the `as_` prefix, and synchronous PHP+JS editing when updating selectors).
 
     
 2. **🧱 Full UI/UX Independence (Custom Templating)**
