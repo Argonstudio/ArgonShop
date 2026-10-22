@@ -16,6 +16,7 @@ If you would like to customize it with the help of the plugin developer, please 
 ## Table of Contents
 
 - [✨ Key Features and Advantages](#-key-features-and-advantages)
+- [📺 Demo and Video Review](#-demo-and-video-overview)
 - [📊 Technical Overview: Why ArgonShop Is Faster Than Heavy CMS Platforms](#-technical-overview-why-argonshop-is-faster-than-heavy-cms-platforms)
 - [🧩 Development Philosophy](#-development-philosophy-why-the-vanilla-wordpress-7-core-is-a-strength)
 - [🧭 Design Principles and Limitations](#-design-principles-and-limitations)
