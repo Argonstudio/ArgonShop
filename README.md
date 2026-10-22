@@ -66,7 +66,7 @@ If you would like to customize it with the help of the plugin developer, please 
 
     > **Great AI evaluation of the documentation** by [Genspark.ai](https://www.genspark.ai/agents?id=233c0d61-e7f0-47d9-a01b-cf19beea9a0c)
     > 
-    > Documentation: 9/10. It is, essentially, a textbook on how to make a codebase understandable for LLMs: index + file specialization tailored to the context window, "strict restrictions" formatted as negative prompts, task-type routing, a tool support matrix, a built-in self-check routine, and protection against known AI weaknesses (hallucinating non-existent functions, name conflicts avoided via the `as_` prefix, and synchronous PHP+JS editing when updating selectors).
+    > Documentation: 9/10. It is essentially a textbook example of making a codebase legible to LLMs: an index + files specialized per context window, "hard prohibitions" in negative-prompt format, task-type routing, a tool-support table, a built-in self-check procedure, and protection against known AI weaknesses (hallucinating non-existent functions, name collisions via the as_ prefix, synchronous PHP+JS editing when changing DOM selectors).
 
     
 2. **🧱 Full UI/UX Independence (Custom Templating)**
@@ -115,7 +115,7 @@ If you would like to customize it with the help of the plugin developer, please 
 
 ## 📺 Demo and Video Overview
 
-📺 [Watch the ArgonShop video overview](https://www.youtube.com/watch?v=QPdLPoL79vg)
+📺 [Watch the ArgonShop video overview](https://youtu.be/pV57WS80BZc)
 
 > 💡 **Automatic AI YouTube dubbing in English and high-quality English/French subtitles.** The on-screen footage is in Russian. Note: The automatic voiceover downscaled the AI model versions, mentioning Opus 5.5 and ChatGPT 6.
 
