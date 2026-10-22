@@ -26,9 +26,10 @@ This file is a short pointer.
 4. **`docs/ai/AI_AJAX_REFERENCE.md`** — AJAX actions.
 5. **`docs/ai/AI_TEMPLATE_MAP.md`** — theme templates.
 6. **`docs/ai/AI_EXTENDING.md`** — how to add features (including multi-region / cities, section 11).
-7. **`docs/ai/AI_FUNCTION_NAMES.md`** — old → new function names (1.1.0).
-8. **`CHANGELOG.md`** — what changed between versions.
-9. **`docs/ai/AI_TESTING.md`**, **`docs/ai/AI_VERSIONING.md`**, **`docs/ai/AI_I18N.md`** — checks, versions, translations.
+7. **`docs/ai/AI_DESIGN_RATIONALE.md`** — architectural intent; read before major refactors or adding infrastructure.
+8. **`docs/ai/AI_FUNCTION_NAMES.md`** — old → new function names (1.1.0).
+9. **`CHANGELOG.md`** — what changed between versions.
+10. **`docs/ai/AI_TESTING.md`**, **`docs/ai/AI_VERSIONING.md`**, **`docs/ai/AI_I18N.md`** — checks, versions, translations.
 
 > If the task is an edit in a specific area, read only `AI.md` + the relevant
 > specialized file.
@@ -68,6 +69,8 @@ in `docs/ai/`) was worked on by:
   the documentation set;
 - **[Claude](https://www.anthropic.com/claude)** (Anthropic) — audit of the
   documentation against the code, corrections, multi-region (cities) section.
+- **ChatGPT (OpenAI)** — architectural rationale in
+  `docs/ai/AI_DESIGN_RATIONALE.md` and the related index/documentation update.
 
 Every contract, prohibition, and architectural statement reflects decisions made
 by the maintainer and the actual state of the repository.

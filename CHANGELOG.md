@@ -4,6 +4,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Documentation
+
+- Add `docs/ai/AI_DESIGN_RATIONALE.md` and link it from the AI documentation index and agent reading order.
+- Record ChatGPT (OpenAI)'s scoped contribution to the architectural rationale and documentation update.
+
 ## [1.1.0]
 
 ### Security
@@ -23,7 +28,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `.claude/settings.json` + `.claude/hooks/static-check.sh`: after a PHP file is edited, Claude Code runs `php tests/static-check.php` automatically and gets the errors back.
 - `CLAUDE.md` for Claude Code: imports `AGENTS.md` and `AI.md`; the tool table in `AGENTS.md` updated.
 - `docs/ai/AI_EXTENDING.md`, section 11 "Multi-region: several cities, one admin": the WordPress Multisite question to ask first, historical compatibility with the AA-DomainMirror plugin, suggested city functions (not in the code — to be written when needed), the Multisite variant, how to create the city templates (`single-aktsii-istra.php` and others).
-- Documentation authorship: Ivan Voitkov, DeepSeek, Claude.
+- Documentation authorship: Ivan Voitkov, DeepSeek, Claude; ChatGPT (OpenAI) contributed the architectural rationale and related documentation update.
 
 - **Store currency: Settings → Store → Currency** — US dollar (`USD`, default), euro (`EUR`) or Russian ruble (`RUB`). All prices use it: catalog cards, product page, wholesale steps, cart, header cart widget, "Recently viewed", customer account, order admin, emails. Helpers: `as_get_currency()`, `as_get_currency_symbol()`, `as_get_currency_position()`, `as_price_html()`, `as_get_currency_per_piece()`; filters `argon_shop_currencies`, `argon_shop_currency`, `argon_shop_currency_symbol`, `argon_shop_currency_position`. Theme wrappers `astheme_price_html()`, `astheme_currency_symbol()`, `astheme_currency_position()` keep the theme working without the plugin. USD is shown before the amount (`$120`), EUR and RUB after it (`120 €`).
 - **Search adapted to English and French** (`includes/interface/search/searchLanguage.php`, chosen by the site language):
@@ -64,7 +69,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - `shoppingCart.php` (~1200 lines) was split into modules: `cart-ajax.php`, `checkout.php`, `checkout-fields.php`, `checkout-files.php`, `checkout-registration.php`, `checkout-emails.php`.
 - **All plugin functions got the `as_` prefix** (119 functions; the `Kama_Breadcrumbs` class → `AS_Kama_Breadcrumbs`). The old names of the public API work via `includes/legacy-functions.php`. Mapping table — `docs/ai/AI_FUNCTION_NAMES.md`. Names of AJAX actions, hooks, CSS classes, meta fields and options did not change.
-- Theme: header `Theme Name: Argon Shop Theme`, version 1.1.0, `Requires PHP: 7.4`.
+- Theme: header `Theme Name: Argon Shop Theme`, version 1.1.0, `Requires PHP: 8.3`.
 
 ### Fixed
 

@@ -10,6 +10,7 @@ This file is the entry point. It is short. Detailed information is in specialize
 | [docs/ai/AI_AJAX_REFERENCE.md](docs/ai/AI_AJAX_REFERENCE.md) | all AJAX actions with parameters |
 | [docs/ai/AI_TEMPLATE_MAP.md](docs/ai/AI_TEMPLATE_MAP.md) | theme templates ↔ plugin functions |
 | [docs/ai/AI_EXTENDING.md](docs/ai/AI_EXTENDING.md) | how to add a feature without breaking the architecture |
+| [docs/ai/AI_DESIGN_RATIONALE.md](docs/ai/AI_DESIGN_RATIONALE.md) | architectural rationale and decision rules for refactoring and AI-assisted changes |
 | [docs/ai/AI_FUNCTION_NAMES.md](docs/ai/AI_FUNCTION_NAMES.md) | old → new function names (1.1.0 prefix rename) |
 | [docs/ai/AI_TESTING.md](docs/ai/AI_TESTING.md) | checks, which test covers what, rules for changing tests, manual checklist, working without a terminal |
 | [docs/ai/AI_VERSIONING.md](docs/ai/AI_VERSIONING.md) | where the version lives, SemVer, CHANGELOG, `@since`, migrations |
@@ -46,6 +47,7 @@ This file is the entry point. It is short. Detailed information is in specialize
 - **If editing a theme template:** `AI_TEMPLATE_MAP.md`.
 - **If editing a JS module:** the scenario from `AI_DATA_FLOWS.md` + section 5 of this file.
 - **If adding a feature:** `AI_EXTENDING.md`.
+- **Before a major refactor, adding infrastructure, or changing module boundaries:** read `AI_DESIGN_RATIONALE.md`.
 - **If adding or changing any text:** `AI_I18N.md`.
 - **Before finishing any task:** `AI_TESTING.md` (what to run or what to tell the user to run) and `AI_VERSIONING.md` (CHANGELOG entry).
 
@@ -212,7 +214,7 @@ Details — `tests/README.md`. After a change: all checks pass, `wp-content/debu
 
 ## 9. Authorship
 
-The documentation was worked on by **Ivan Voitkov** (maintainer: scope, contracts, review), **[DeepSeek](https://www.deepseek.com/)** (initial structure and wording) and **[Claude](https://www.anthropic.com/claude)** (audit against the code, corrections, multi-region section) — see `AGENTS.md`, "Origin of this documentation". The files are an internal tool, edit freely; the code is always the primary source of truth.
+The existing AI documentation set was worked on by **Ivan Voitkov** (maintainer: scope, contracts, review), **[DeepSeek](https://www.deepseek.com/)** (initial structure and wording) and **[Claude](https://www.anthropic.com/claude)** (audit against the code, corrections, multi-region section). **ChatGPT (OpenAI)** contributed the architectural rationale in `docs/ai/AI_DESIGN_RATIONALE.md` and the related documentation update. See `AGENTS.md`, "Origin of this documentation". The files are an internal tool, edit freely; the code is always the primary source of truth.
 
 ## 10. ⚖️ AI Licensing & Copyright Contract
 
