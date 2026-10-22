@@ -110,11 +110,10 @@ If you would like to customize it with the help of the plugin developer, please 
    
 
 ---
-🌐 Live Demo: [https://plugin-en.argon-studio.ru/](https://plugin-en.argon-studio.ru/) ( Test access: login **admin**, password **123** )
-
----
 
 ## 📺 Demo and Video Overview
+
+🌐 Live Demo: [https://plugin-en.argon-studio.ru/](https://plugin-en.argon-studio.ru/) ( Test access: login **admin**, password **123** )
 
 📺 [Watch the ArgonShop video overview](https://youtu.be/pV57WS80BZc)
 
