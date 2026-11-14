@@ -62,7 +62,7 @@ If you would like to customize it with the help of the plugin developer, please 
     | **🤖 AI-assisted development** | 8.0 | **9.5** | Code patterns are highly optimized for LLM context windows. |
     | **🛡️ Safe modification & regression** | 7.0 | **9.5** | Robust testing procedures and architectural contracts reduce breakages. |
 
-    > 🚀 **AI Approved:** 
+    > 🚀 **AI Approved:**  
     > **Google Gemini 4 review** [read](https://share.google/aimode/uiJ3yxv9x754hsM3P), and further down in the description, the [comparison table with heavy CMS platforms](#-technical-overview-why-argonshop-is-faster-than-heavy-cms-platforms) was previously written by Gemini 3.8 and copied here by me. Gemini 3.8 gave the most favorable characterization of the plugin.
 
 
