@@ -62,7 +62,7 @@
    
    > 🚀 **Одобрено ИИ:**
    > 
-   > **Оценка Google Gemini 4** [читать](https://share.google/aimode/37avHhQW0hqAlQhIY) , далее в описании [таблица сравнения с тяжелыми решениями](#-%D1%82%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B9-%D0%BE%D0%B1%D0%B7%D0%BE%D1%80-%D0%BF%D0%BE%D1%87%D0%B5%D0%BC%D1%83-argonshop-%D0%B1%D1%8B%D1%81%D1%82%D1%80%D0%B5%D0%B5-%D1%82%D1%8F%D0%B6%D1%91%D0%BB%D1%8B%D1%85-cms) была ранее написана Gemini 3.8 и скопирована мной сюда. Gemini3.8 давал наиболее приятную характеристику плагину.
+   > **Оценка Google Gemini 4** [читать обзор](https://share.google/aimode/37avHhQW0hqAlQhIY) и [еще одно сравнение](https://share.google/aimode/LEQzNKYPqPXs9wCZn) , далее в описании [таблица сравнения с тяжелыми решениями](#-%D1%82%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B9-%D0%BE%D0%B1%D0%B7%D0%BE%D1%80-%D0%BF%D0%BE%D1%87%D0%B5%D0%BC%D1%83-argonshop-%D0%B1%D1%8B%D1%81%D1%82%D1%80%D0%B5%D0%B5-%D1%82%D1%8F%D0%B6%D1%91%D0%BB%D1%8B%D1%85-cms) была ранее написана Gemini 3.8 и скопирована мной сюда. Gemini3.8 давал наиболее приятную характеристику плагину.
 
    > **Приятная оценка ИИ документации** от [Genspark.ai](https://www.genspark.ai/agents?id=233c0d61-e7f0-47d9-a01b-cf19beea9a0c)
    > 
