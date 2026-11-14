@@ -63,7 +63,8 @@ If you would like to customize it with the help of the plugin developer, please 
     | **🛡️ Safe modification & regression** | 7.0 | **9.5** | Robust testing procedures and architectural contracts reduce breakages. |
 
     > 🚀 **AI Approved:** 
-    > Google named their new AI **Argon** right after analyzing **ArgonShop**. Coincidence? Most likely! But i’ll take it as the best recommendation anyway :)
+    > **Google Gemini 4 review** [read](https://share.google/aimode/uiJ3yxv9x754hsM3P), and further down in the description, the [comparison table with heavy CMS platforms](#-technical-overview-why-argonshop-is-faster-than-heavy-cms-platforms) was previously written by Gemini 3.8 and copied here by me. Gemini 3.8 gave the most favorable characterization of the plugin.
+
 
     > **Great AI evaluation of the documentation** by [Genspark.ai](https://www.genspark.ai/agents?id=233c0d61-e7f0-47d9-a01b-cf19beea9a0c)
     > 
